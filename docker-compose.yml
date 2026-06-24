@@ -1,4 +1,11 @@
 version: "3.9"
+
+x-logging: &default-logging
+  driver: "json-file"
+  options:
+    max-size: "10m"
+    max-file: "3"
+
 services:
   controller:
     build:
@@ -12,6 +19,7 @@ services:
     restart: always
     environment:
       - PYTHONUNBUFFERED=1
+    logging: *default-logging
 
   worker:
     build:
@@ -22,3 +30,35 @@ services:
     restart: always
     environment:
       - PYTHONUNBUFFERED=1
+    logging: *default-logging
+
+  v91-listener:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: v91-listener
+    command: python controller/v91_listener.py
+    volumes:
+      - ./controller:/app/controller:ro
+      - ./data:/app/data
+      - ./secrets:/app/secrets:ro
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      - PYTHONUNBUFFERED=1
+      - V91_DB_PATH=/app/data/v91_independent_state.db
+      - V91_INBOX_PATH=/app/data/inbox
+      - V91_SECRET_KEY_PATH=/app/secrets/v91_secret.key
+      - V91_POLL_INTERVAL=5
+      - V91_HITL_THRESHOLD=0.75
+    healthcheck:
+      test: ["CMD", "python", "-c",
+             "import sqlite3, sys; conn=sqlite3.connect('/app/data/v91_independent_state.db'); conn.execute('SELECT 1 FROM v91_ledger LIMIT 1'); print('ok')"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 15s
+    depends_on:
+      - controller
+    logging: *default-logging

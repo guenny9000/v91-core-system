@@ -26,6 +26,16 @@ jobs:
         run: |
           pytest tests/ -v
 
+      - name: Initialise Listener DB for integration tests
+        run: |
+          mkdir -p data
+          sqlite3 data/v91_independent_state.db < data/init_listener_db.sql
+          echo "DB initialised"
+
+      - name: Run Listener Integration Tests
+        run: |
+          pytest tests/test_listener.py -v
+
       - name: Hash Verification
         run: |
           find ./controller -type f -name "*.py" -exec sha256sum {} \; > audit_hashes.txt
