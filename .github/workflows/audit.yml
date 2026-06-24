@@ -1,0 +1,42 @@
+name: v91 Audit Pipeline
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  audit-checks:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Install Dependencies
+        run: |
+          pip install --no-cache-dir numpy pytest
+
+      - name: Run Unit Tests
+        run: |
+          pytest tests/ -v
+
+      - name: Hash Verification
+        run: |
+          find ./controller -type f -name "*.py" -exec sha256sum {} \; > audit_hashes.txt
+          sha256sum audit_hashes.txt > audit_hashes.sha256
+          echo "Hash verification complete"
+          cat audit_hashes.txt
+
+      - name: Upload Hash Artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: audit-hashes
+          path: |
+            audit_hashes.txt
+            audit_hashes.sha256

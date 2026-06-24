@@ -1,0 +1,24 @@
+version: "3.9"
+services:
+  controller:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: v91-controller
+    command: python controller/controller.py
+    volumes:
+      - ./controller:/app/controller
+      - ./logs:/app/logs
+    restart: always
+    environment:
+      - PYTHONUNBUFFERED=1
+
+  worker:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: v91-worker
+    command: python -u -c "import time; print('Worker idle'); time.sleep(3600)"
+    restart: always
+    environment:
+      - PYTHONUNBUFFERED=1

@@ -1,0 +1,13 @@
+*.pyc
+__pycache__/
+.DS_Store
+*.log
+venv/
+.env
+.pytest_cache/
+*.egg-info/
+dist/
+build/
+logs/
+audit_hashes.txt
+audit_hashes.sha256
