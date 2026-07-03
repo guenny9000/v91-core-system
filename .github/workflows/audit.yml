@@ -44,7 +44,7 @@ jobs:
           cat audit_hashes.txt
 
       - name: Upload Hash Artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: audit-hashes
           path: |
