@@ -4,7 +4,7 @@ services:
       context: .
       dockerfile: Dockerfile
     container_name: v91-controller
-    command: python controller/controller.py
+    command: ["python", "controller/controller.py"]
     volumes:
       - ./controller:/app/controller
       - ./logs:/app/logs
@@ -18,7 +18,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    command: python -u -c "import time; print('Worker placeholder: no task processor configured'); time.sleep(3600)"
+    command: ["python", "-u", "-c", "import time; print('Worker placeholder - no task processor configured'); time.sleep(3600)"]
     restart: "no"
     environment:
       PYTHONUNBUFFERED: "1"
