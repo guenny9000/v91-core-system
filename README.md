@@ -1,90 +1,47 @@
-# v91-core-system — Reality-First Control-Plane Prototype
+# v91-core-system — Reality-First Control Plane
 
-## Current verified scope
+## Principle
+Preserve and protect existing capabilities. Prefer repair, isolation, reversible changes, and recovery over destruction or unnecessary shutdown.
 
-This repository contains a **prototype**, not a production-ready autonomous distributed system. The controller has local metric aggregation, a sliding-window anomaly detector, a feedback-loop example, and unit tests. The repository does **not** currently include a real operating-system/container metrics adapter, a real task-processing worker, a reviewed production action adapter, or evidence of a deployed production environment.
+## Runtime modes
+- `safe` (default): the controller remains running and reports `NO_DATA_AVAILABLE` while waiting for a verified real metrics adapter. It does not invent live telemetry.
+- `simulation`: continuous synthetic test stream, explicitly labelled as synthetic. This tests logic, not real hardware or network health.
+- `live`: currently refuses to start because this repository does not yet contain a provenance-checked real metrics adapter. This is a missing capability, not a reason to present synthetic data as real.
 
-Reality-First status vocabulary:
+The service loop has no automatic time or iteration cut-off. Docker Compose restarts the controller after a crash. Recommendations do not execute shell commands or restart workers.
 
-- `NO_DATA_AVAILABLE`: no usable observation is available.
-- `DOCUMENTED_INPUT`: a value was accepted and recorded; its real-world provenance is still the caller's responsibility.
-- `DECISION_RECORDED`: a recommendation was calculated.
-- `RECOMMENDATION_ONLY`: a recommendation was recorded without executing infrastructure changes.
-- A successful test is evidence only for the tested code path and environment. It is not proof of production operation.
-
-## Safety defaults
-
-- Running without an explicit mode stops safely because no real metrics adapter is configured.
-- Synthetic data is available only in explicitly requested, finite simulation mode.
-- Simulation output is labelled as synthetic and must not be presented as live system telemetry.
-- Control recommendations do not run shell commands, restart containers, or scale services.
-- Missing, invalid, non-finite, negative, or internally inconsistent metrics are rejected.
-- Unknown anomaly status is distinct from “no anomaly”.
-- Docker services do not automatically restart on controller errors.
-- Do not connect a real action adapter until it has independent tests, explicit authorization, bounded permissions, audit logging, and a rollback/recovery plan.
-
-## Run a finite simulation
-
-Python 3.10 or newer is recommended. No third-party package is required by the core modules.
-
-PowerShell:
-
+## Run
+PowerShell simulation:
 ```powershell
 $env:V91_MODE = "simulation"
-$env:V91_SIMULATION_ITERATIONS = "10"
-$env:V91_SIMULATION_INTERVAL_SECONDS = "0"
 python controller/controller.py
 ```
-
-Linux/macOS:
-
-```bash
-V91_MODE=simulation V91_SIMULATION_ITERATIONS=10 python controller/controller.py
-```
-
-Docker Compose (after building the image):
-
+Safe long-running mode:
 ```powershell
-$env:V91_MODE = "simulation"
-$env:V91_SIMULATION_ITERATIONS = "10"
-docker compose up --build controller
+$env:V91_MODE = "safe"
+python controller/controller.py
 ```
+Docker Compose:
+```powershell
+docker compose up --build -d
+docker compose logs -f controller
+```
+No deployment has been performed by editing this repository.
 
-To stop safely without running synthetic data, leave `V91_MODE` unset or set it to `safe`. The default controller path exits with a clear message because no real metrics adapter is implemented. The Compose worker is explicitly a placeholder and does not process tasks.
-
-The simulation is finite and uses synthetic random values. It does not test live hardware, a real network, Docker orchestration, or production reliability.
-
-## Run tests
-
+## Tests
 ```bash
 python -m pytest -q
 ```
 
-Tests should run in an isolated CI or development environment. No test should require Docker privileges or change external services.
+## Hardware adaptation
+Per-machine adaptation should use actual CPU, memory, GPU, thermal, OS, and workload measurements. Automatic hardware discovery and per-hardware policy selection are not yet implemented. They need source provenance, safe bounds, tests, and reversible policy changes.
 
-## Hardware adaptability
+## Evidence status
+- Continuous controller loop: implemented in repository code.
+- Synthetic simulation: implemented and labelled.
+- Real metrics adapter: not implemented.
+- Task-processing worker: placeholder.
+- Real infrastructure action adapter: not implemented.
+- Production deployment and live service health: unverified.
 
-The project should be configured per machine rather than assuming every device has the same CPU, memory, GPU, thermal headroom, or operating system. For now, this is a **design requirement, not an implemented automatic hardware detector**. Before a hardware profile is called implemented, it needs:
-
-1. documented measurements from the target machine;
-2. explicit resource limits and safe defaults;
-3. tests for low-resource and high-resource profiles;
-4. no automatic privilege escalation or unapproved external action;
-5. a recorded configuration and test result.
-
-Do not infer hardware capacity from a model name alone, and do not publish guessed CPU, RAM, GPU, latency, drift, or availability figures.
-
-## Architecture and next steps
-
-1. Implement a real metrics adapter with source identity, timestamps, units, freshness checks, and validation.
-2. Keep metric collection separate from policy decisions and external actions.
-3. Add integration tests with mocked services before testing any real service.
-4. Add immutable audit storage only with a clearly defined storage policy and independent verification.
-5. Add deployment-specific checks, least-privilege permissions, secrets scanning, dependency pinning, and recovery procedures.
-6. Mark each capability as unknown, documented, implemented, verified, or productive based on evidence.
-
-## Status
-
-**Current status: prototype; safe finite simulation available; production operation unverified.**
-
-No claim of live operation, autonomous deployment, immutable storage, multi-node consensus, or production readiness is made by this README.
+A successful CI run verifies only the tested branch and paths; it does not prove production operation.
