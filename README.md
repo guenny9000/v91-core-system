@@ -20,6 +20,7 @@ Reality-First status vocabulary:
 - Control recommendations do not run shell commands, restart containers, or scale services.
 - Missing, invalid, non-finite, negative, or internally inconsistent metrics are rejected.
 - Unknown anomaly status is distinct from “no anomaly”.
+- Docker services do not automatically restart on controller errors.
 - Do not connect a real action adapter until it has independent tests, explicit authorization, bounded permissions, audit logging, and a rollback/recovery plan.
 
 ## Run a finite simulation
@@ -40,6 +41,16 @@ Linux/macOS:
 ```bash
 V91_MODE=simulation V91_SIMULATION_ITERATIONS=10 python controller/controller.py
 ```
+
+Docker Compose (after building the image):
+
+```powershell
+$env:V91_MODE = "simulation"
+$env:V91_SIMULATION_ITERATIONS = "10"
+docker compose up --build controller
+```
+
+To stop safely without running synthetic data, leave `V91_MODE` unset or set it to `safe`. The default controller path exits with a clear message because no real metrics adapter is implemented. The Compose worker is explicitly a placeholder and does not process tasks.
 
 The simulation is finite and uses synthetic random values. It does not test live hardware, a real network, Docker orchestration, or production reliability.
 
