@@ -11,7 +11,9 @@ services:
     restart: "no"
     environment:
       PYTHONUNBUFFERED: "1"
-      V91_MODE: "safe"
+      V91_MODE: "${V91_MODE:-safe}"
+      V91_SIMULATION_ITERATIONS: "${V91_SIMULATION_ITERATIONS:-10}"
+      V91_SIMULATION_INTERVAL_SECONDS: "${V91_SIMULATION_INTERVAL_SECONDS:-0}"
 
   # Placeholder only: this service does not process tasks yet.
   worker:
