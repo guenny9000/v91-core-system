@@ -4,7 +4,7 @@
 This module is deliberately safe by default:
 - no fabricated metrics are treated as real observations;
 - simulation must be explicitly requested;
-- control actions never invoke Docker, a shell, or external services;
+- control recommendations never invoke Docker, a shell, or external services;
 - missing/invalid measurements fail closed.
 
 A production metrics adapter and an independently reviewed action adapter are
@@ -81,13 +81,13 @@ class ControlPlane:
         error_anomaly = self.anomaly_detector.detect("errors", avg_errors)
 
         # Recommendations only: no infrastructure changes are performed here.
-        if error_anomaly and avg_errors > 5:
+        if error_anomaly is True and avg_errors > 5:
             decision = "reduce_load"
-        elif latency_anomaly and avg_latency > 200:
+        elif latency_anomaly is True and avg_latency > 200:
             decision = "review_capacity"
-        elif avg_events < 10 and not error_anomaly:
+        elif avg_events < 10 and error_anomaly is False:
             decision = "review_low_traffic"
-        elif avg_latency < 50 and avg_errors == 0:
+        elif avg_latency < 50 and avg_errors == 0 and latency_anomaly is False:
             decision = "review_resource_saving"
         else:
             decision = None
@@ -96,7 +96,7 @@ class ControlPlane:
         return decision
 
     def execute_action(self, action: str | None) -> dict[str, Any]:
-        """Record a recommendation without executing external side effects."""
+        """Return a recommendation status without claiming an action was executed."""
         allowed_recommendations = {
             "reduce_load",
             "review_capacity",
@@ -112,7 +112,6 @@ class ControlPlane:
                 "side_effects": False,
             }
         self.last_action = action
-        self.feedback_loop.record_action(action)
         return {
             "status": "RECOMMENDATION_ONLY",
             "action": action,
