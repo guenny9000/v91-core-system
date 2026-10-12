@@ -1,116 +1,79 @@
-# v91-core-system – Stufe 6: Autonomous Control Plane
+# v91-core-system — Reality-First Control-Plane Prototype
 
-## Übersicht
+## Current verified scope
 
-v91-core-system ist ein **selbstregulierendes, verteiltes Backend-System** mit Anomaly Detection, Rule Engine, Chaos Simulation und automatischen Feedback-Loops.
+This repository contains a **prototype**, not a production-ready autonomous distributed system. The controller has local metric aggregation, a sliding-window anomaly detector, a feedback-loop example, and unit tests. The repository does **not** currently include a real operating-system/container metrics adapter, a real task-processing worker, a reviewed production action adapter, or evidence of a deployed production environment.
 
-## Architektur
+Reality-First status vocabulary:
 
-```
-Metrics Stream
-     ↓
-Anomaly Detector (z-score / sliding window)
-     ↓
-Rule Engine (Policy Evaluation)
-     ↓
-Control Actions (Scale, Throttle, Restart, Chaos)
-```
+- `NO_DATA_AVAILABLE`: no usable observation is available.
+- `DOCUMENTED_INPUT`: a value was accepted and recorded; its real-world provenance is still the caller's responsibility.
+- `DECISION_RECORDED`: a recommendation was calculated.
+- `RECOMMENDATION_ONLY`: a recommendation was recorded without executing infrastructure changes.
+- A successful test is evidence only for the tested code path and environment. It is not proof of production operation.
 
-## Features
+## Safety defaults
 
-### Reactive
-- Worker Restart bei Fehlern
-- Auto-Scaling (up/down bei Laständerung)
+- Running without an explicit mode stops safely because no real metrics adapter is configured.
+- Synthetic data is available only in explicitly requested, finite simulation mode.
+- Simulation output is labelled as synthetic and must not be presented as live system telemetry.
+- Control recommendations do not run shell commands, restart containers, or scale services.
+- Missing, invalid, non-finite, negative, or internally inconsistent metrics are rejected.
+- Unknown anomaly status is distinct from “no anomaly”.
+- Do not connect a real action adapter until it has independent tests, explicit authorization, bounded permissions, audit logging, and a rollback/recovery plan.
 
-### Proactive
-- Z-Score basierte Anomalie-Erkennung
-- Sliding Window Detector
-- Trendbasierte Entscheidungen
+## Run a finite simulation
 
-### Destructive
-- Chaos Mode (gezielte Fehlerinjection)
-- Controlled Fault Simulation
+Python 3.10 or newer is recommended. No third-party package is required by the core modules.
 
-### Self-Optimization
-- Feedback Loop passt Strategie dynamisch an
-- Strategiewechsel: reduce_load, scale_up, conserve_resources, stable
+PowerShell:
 
-## Installation
-
-```bash
-git clone https://github.com/guenny9000/v91-core-system.git
-cd v91-core-system
-```
-
-## Starten
-
-### Docker Compose (empfohlen)
-
-```bash
-docker compose up --build
-```
-
-Das startet:
-- Controller Service
-- Worker Service (on demand)
-
-### Local (Python)
-
-```bash
-pip install numpy pytest
+```powershell
+$env:V91_MODE = "simulation"
+$env:V91_SIMULATION_ITERATIONS = "10"
+$env:V91_SIMULATION_INTERVAL_SECONDS = "0"
 python controller/controller.py
 ```
 
-## Tests
+Linux/macOS:
 
 ```bash
-pytest tests/
+V91_MODE=simulation V91_SIMULATION_ITERATIONS=10 python controller/controller.py
 ```
 
-Führt aus:
-- `test_anomaly.py` – Anomaly Detection Tests
-- `test_rules.py` – Rule Engine Tests
-- `test_feedback.py` – Feedback Loop Tests
+The simulation is finite and uses synthetic random values. It does not test live hardware, a real network, Docker orchestration, or production reliability.
 
-## Module
+## Run tests
 
-### controller.py
-Hauptsteuerung: Rules evaluieren, Metrics ingesten, Actions triggern.
-
-### anomaly.py
-Sliding Window Anomaly Detector (z-score basiert).
-
-### metrics.py
-Metrics Aggregator Feed (Events, Errors, Latency).
-
-### chaos.py
-Chaos Mode: Gezielte Fehlerinjection für Resilience Testing.
-
-### feedback.py
-Feedback Loop: Self-Optimization basierend auf Systemzustand.
-
-## Workflow
-
-```
-1. Metrics kommen rein (Events, Errors, Latency)
-2. Anomaly Detector prüft z-score
-3. Rule Engine evaluiert Policies
-4. Control Actions werden triggered (Scale, Chaos, etc.)
-5. Feedback Loop passt Strategie an
-6. Loop wiederholt sich alle 5 Sekunden
+```bash
+python -m pytest -q
 ```
 
-## CI/CD
+Tests should run in an isolated CI or development environment. No test should require Docker privileges or change external services.
 
-GitHub Actions Pipeline (`audit.yml`):
-- Hash Verification (SHA256)
-- Unit Tests (pytest)
-- Dependency Checks
+## Hardware adaptability
+
+The project should be configured per machine rather than assuming every device has the same CPU, memory, GPU, thermal headroom, or operating system. For now, this is a **design requirement, not an implemented automatic hardware detector**. Before a hardware profile is called implemented, it needs:
+
+1. documented measurements from the target machine;
+2. explicit resource limits and safe defaults;
+3. tests for low-resource and high-resource profiles;
+4. no automatic privilege escalation or unapproved external action;
+5. a recorded configuration and test result.
+
+Do not infer hardware capacity from a model name alone, and do not publish guessed CPU, RAM, GPU, latency, drift, or availability figures.
+
+## Architecture and next steps
+
+1. Implement a real metrics adapter with source identity, timestamps, units, freshness checks, and validation.
+2. Keep metric collection separate from policy decisions and external actions.
+3. Add integration tests with mocked services before testing any real service.
+4. Add immutable audit storage only with a clearly defined storage policy and independent verification.
+5. Add deployment-specific checks, least-privilege permissions, secrets scanning, dependency pinning, and recovery procedures.
+6. Mark each capability as unknown, documented, implemented, verified, or productive based on evidence.
 
 ## Status
 
-**Stable & Production-Ready für Self-Regulated Distributed Systems**
+**Current status: prototype; safe finite simulation available; production operation unverified.**
 
-## Lizenz
-
-© 2026 Sebastian (guenny9000) – Alle Rechte vorbehalten
+No claim of live operation, autonomous deployment, immutable storage, multi-node consensus, or production readiness is made by this README.
