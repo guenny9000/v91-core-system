@@ -1,4 +1,5 @@
 import unittest
+from unittest.mock import patch
 
 from controller.cooperation import evaluate_peer_offer, public_decision_record
 
@@ -45,6 +46,28 @@ class CooperativeHandshakeTests(unittest.TestCase):
         decision = evaluate_peer_offer(valid_offer(expires_at=999), signature_verified=True, now_epoch=1000)
         self.assertFalse(decision.allowed)
         self.assertIn("OFFER_EXPIRED", decision.reasons)
+
+    def test_default_clock_path_denies_expired_offer(self):
+        with patch("controller.cooperation.time.time", return_value=1000):
+            decision = evaluate_peer_offer(valid_offer(expires_at=999), signature_verified=True)
+        self.assertFalse(decision.allowed)
+        self.assertIn("OFFER_EXPIRED", decision.reasons)
+
+    def test_default_clock_path_uses_current_time(self):
+        with patch("controller.cooperation.time.time", return_value=1000):
+            decision = evaluate_peer_offer(valid_offer(), signature_verified=True)
+        self.assertTrue(decision.allowed)
+
+    def test_unavailable_clock_fails_closed(self):
+        with patch("controller.cooperation.time.time", side_effect=OSError("clock unavailable")):
+            decision = evaluate_peer_offer(valid_offer(), signature_verified=True)
+        self.assertFalse(decision.allowed)
+        self.assertIn("CURRENT_TIME_UNAVAILABLE", decision.reasons)
+
+    def test_boolean_expiry_is_not_accepted_as_integer(self):
+        decision = evaluate_peer_offer(valid_offer(expires_at=True), signature_verified=True, now_epoch=0)
+        self.assertFalse(decision.allowed)
+        self.assertIn("INVALID_EXPIRY", decision.reasons)
 
     def test_audit_record_does_not_claim_ingestion_or_execution(self):
         offer = valid_offer()
