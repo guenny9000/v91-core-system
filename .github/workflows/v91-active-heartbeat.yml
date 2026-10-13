@@ -1,6 +1,9 @@
 name: V91 active heartbeat
 
 on:
+  push:
+    branches:
+      - "fix/reality-first-safe-controller-2026-10-12"
   workflow_dispatch:
   schedule:
     # GitHub Actions cron uses UTC. Scheduled runs start only on the default branch.
