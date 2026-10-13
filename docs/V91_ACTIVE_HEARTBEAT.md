@@ -4,7 +4,7 @@
 This workflow replaces passive-only documentation with a real, scheduled GitHub Actions check. It is configured to run every six hours (UTC) and can also be started manually. Each run executes the repository test suite and saves a timestamped JSON artifact containing the exact commit and run identity.
 
 ## Activation boundary
-- The workflow is stored on the feature branch and is not scheduled by GitHub until it is merged into the repository's default branch.
+- The workflow is stored on the feature branch. Pushes to this named feature branch are configured to trigger a run for initial verification. The six-hour schedule is not activated until the workflow is merged into the repository's default branch.
 - A manual run may be started against a branch if repository permissions and GitHub Actions settings allow it.
 - Creating this file does not itself start a run. A run ID and result are required before claiming a heartbeat has executed.
 - This workflow monitors only the repository test suite on a GitHub-hosted runner. It does not monitor the user's PC, local V91 processes, other models, external services, world events, or news feeds.
