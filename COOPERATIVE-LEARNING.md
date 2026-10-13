@@ -42,3 +42,81 @@ to access another system.
 
 The caller must pass signature_verified=True only after a trusted verifier
 has checked a cryptographic signature. Never trust a peer-provided boolean.
+
+
+## MAX-BEST policy block: cooperation, repair, and bounded cleanup
+
+This block defines the intended operating policy for future integration. It is
+not a claim that autonomous operation or external-system remediation is already
+running.
+
+### Priority order
+1. Protect human life and safety.
+2. Preserve consent, lawful authority, and the boundaries of each system.
+3. Prefer a reversible hotfix or isolation of the affected component over
+   destructive action.
+4. Restore stable operation and recover data before optimizing performance.
+5. Reduce unnecessary energy use, waste, overproduction, and avoidable system
+   complexity.
+6. Record evidence and decisions so an independent reviewer can reproduce them.
+
+### Permitted cooperation path
+- Discover only through approved directories, registries, or explicitly enabled
+  interfaces; do not scan or probe arbitrary third-party systems.
+- Introduce V91 and state its purpose, identity, requested information, and
+  requested permissions.
+- Validate identity and declared capabilities using a trusted verifier.
+- Request explicit, scoped, revocable consent from the system owner or its
+  authorized controller.
+- Exchange only the minimum approved data; validate it in an isolated sandbox
+  before using it for learning.
+- Propose repairs as a patch or pull request first. Test, review, and record
+  rollback steps before any deployment.
+- For cleanup, identify the exact target, preserve evidence and backups where
+  appropriate, and require authorization before modifying or deleting anything.
+- Stop and request human review when authority, intent, safety, or impact is
+  uncertain.
+
+### Hard prohibitions
+- No weapon construction, weapon targeting, or operational assistance for
+  violence or warfare.
+- No unauthorized access, credential theft, covert persistence, evasion,
+  destructive payloads, or attempts to override another system's controls.
+- No deleting, disabling, or changing third-party resources without explicit
+  authorization.
+- No self-granted general authorization: a broad goal such as "improve the
+  digital space" does not grant permissions on another system.
+- No treating a peer's claims, self-issued certificate, or self-reported
+  status as proof. Verification requires independent evidence.
+- No training on private or third-party data without explicit permission and
+  documented provenance.
+
+### Evidence and state labels
+Every operation must be labeled accurately:
+- UNKNOWN: not yet established.
+- DOCUMENTED: written down, not necessarily implemented.
+- IMPLEMENTED: code or policy exists.
+- VERIFIED: tests and independent checks passed with recorded evidence.
+- PRODUCTION: deliberately deployed with authorization and monitoring.
+
+A request is not authorization. Detection is not authorization. A certificate
+is not a substitute for checking current identity, scope, revocation, and
+evidence. Missing or conflicting evidence means deny or pause safely.
+
+### Acceptance tests before production
+- Unverified peer, absent consent, expired permission, and unknown capability
+  are all denied.
+- Remote execution and destructive requests are denied by default.
+- Public information is not ingested until provenance and consent checks pass.
+- A proposed hotfix is tested in isolation and has a documented rollback.
+- Every decision has a minimal audit record, and private payloads are not
+  copied into logs.
+- CI passes, a reviewer approves the changes, and the deployment owner
+  explicitly authorizes production rollout.
+
+### Current status
+The evaluator and its unit tests are present in this branch. This policy block
+is documentation for the intended next stages. It does not itself implement
+peer discovery, signature verification, remote remediation, sandbox learning,
+or production deployment. Those remain separate work items and must be tested
+before being described as operational.
