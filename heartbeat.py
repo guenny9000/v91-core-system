@@ -7,10 +7,19 @@ NO_DATA_AVAILABLE; application health remains unknown.
 from __future__ import annotations
 
 from datetime import datetime, timezone
+from pathlib import Path
+import sys
 from typing import Any
 
 import ledger
-from controller.real_metrics import collect_host_metrics
+
+# The repository also has a top-level controller.py, so load the adapter from
+# the controller directory explicitly instead of treating "controller" as a
+# package (which would resolve to that module on some Python import paths).
+_CONTROLLER_DIR = Path(__file__).resolve().parent / "controller"
+if str(_CONTROLLER_DIR) not in sys.path:
+    sys.path.insert(0, str(_CONTROLLER_DIR))
+from real_metrics import collect_host_metrics  # noqa: E402
 
 MAX_CPU_THRESHOLD_PERCENT = 85.0
 
