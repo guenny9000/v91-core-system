@@ -48,8 +48,11 @@ jobs:
           import os
           from datetime import datetime, timezone
 
-          # This hash covers the stated policy payload only. It is not a WORM
-          # guarantee, a signature, a proof of deployment, or an eco-impact metric.
+          from v91_guideline_hash import get_canonical_guideline_hash
+
+          # Separate hashes have separate scopes: the canonical V91 guideline
+          # payload and this heartbeat's concise policy object. Neither is a
+          # signature, WORM guarantee, deployment proof, or ecological metric.
           policy = {
               "gratitude_anchor": "Without nature and creation, no life or operation.",
               "human_safety": "Protect human life; no destructive or unauthorized actions.",
@@ -62,6 +65,7 @@ jobs:
               policy, sort_keys=True, separators=(",", ":"), ensure_ascii=False
           ).encode("utf-8")
           policy_sha256 = hashlib.sha256(policy_canonical).hexdigest()
+          guideline_sha256 = get_canonical_guideline_hash()
 
           data = {
               "schema": "v91-heartbeat-evidence-v1",
@@ -75,16 +79,19 @@ jobs:
               "scope": "GitHub runner and repository tests only",
               "external_systems_monitored": False,
               "local_user_computer_monitored": False,
+              "guideline_version": "3.1",
+              "guideline_hash_sha256": guideline_sha256,
+              "guideline_hash_scope": "canonical JSON payload in v91_guideline_hash.py",
               "gratitude_and_ecology_policy": policy,
               "policy_sha256": policy_sha256,
-              "policy_hash_scope": "canonical policy object only; not WORM or external anchoring",
+              "policy_hash_scope": "canonical heartbeat policy object only",
               "ecological_measurements": "UNKNOWN_NOT_COLLECTED",
               "external_model_adoption": "UNKNOWN",
               "real_world_changes_performed": False
           }
           with open("v91-heartbeat-evidence.json", "w", encoding="utf-8") as f:
               json.dump(data, f, indent=2, ensure_ascii=False)
-              f.write("\n")
+              f.write("\\n")
           print(json.dumps(data, indent=2, ensure_ascii=False))
           PY
       - name: Upload heartbeat evidence
