@@ -1,8 +1,11 @@
 """Tests for the fail-closed read-only host metrics adapter."""
+import os
+import sys
 import unittest
 from types import SimpleNamespace
 
-from controller.real_metrics import collect_host_metrics
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "controller"))
+from real_metrics import collect_host_metrics
 
 
 class FakePsutil:
