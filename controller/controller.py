@@ -12,6 +12,7 @@ from typing import Any
 from anomaly import AnomalyDetector
 from feedback import FeedbackLoop
 from metrics import MetricsFeed
+from real_metrics import collect_host_metrics
 
 class ControlPlane:
     def __init__(self, history_size: int = 100):
@@ -24,6 +25,7 @@ class ControlPlane:
         self.last_action = None
         self.last_decision_status = "NO_DATA_AVAILABLE"
         self.iteration = 0
+        self.last_host_metrics = {"status": "NO_DATA_AVAILABLE", "reason": "not_sampled_yet"}
 
     @staticmethod
     def _validate_metric(latency: Any, errors: Any, events: Any):
@@ -84,7 +86,7 @@ class ControlPlane:
         if mode not in {"safe", "simulation", "live"}:
             raise ValueError("V91_MODE must be safe, simulation, or live")
         if mode == "live":
-            raise RuntimeError("Live mode unavailable: no real metrics adapter is implemented.")
+            raise RuntimeError("Live mode unavailable: host telemetry alone is not a complete application metrics or authorized action adapter.")
         print(f"[V91] SERVICE_STARTED mode={mode}", flush=True)
         if mode == "simulation":
             print("[V91] Synthetic metrics only; not evidence of live hardware.", flush=True)
@@ -101,8 +103,27 @@ class ControlPlane:
                 if self.iteration % 10 == 0:
                     print(f"[SIM {self.iteration}] synthetic_only=true latency_ms={latency:.1f} errors={errors} events={events} strategy={strategy} status={result['status']} recommendation={action}", flush=True)
             elif self.iteration % 12 == 0:
+                # Read-only host telemetry is informative, but cannot be substituted
+                # for application latency/error/request metrics used by the rules.
+                self.last_host_metrics = collect_host_metrics()
                 self.last_decision_status = "NO_DATA_AVAILABLE"
-                print("[V91] STATUS=NO_DATA_AVAILABLE; service remains active; waiting for verified real metrics adapter.", flush=True)
+                host = self.last_host_metrics
+                if host.get("status") == "DOCUMENTED":
+                    print(
+                        "[V91] HOST_TELEMETRY=DOCUMENTED "
+                        f"cpu_percent={host['cpu_percent']:.1f} "
+                        f"memory_used_percent={host['memory_used_percent']:.1f} "
+                        f"source={host['source']} timestamp_utc={host['timestamp_utc']} "
+                        "APPLICATION_METRICS=NO_DATA_AVAILABLE",
+                        flush=True,
+                    )
+                else:
+                    print(
+                        "[V91] HOST_TELEMETRY=NO_DATA_AVAILABLE "
+                        f"reason={host.get('reason', 'unknown')} "
+                        "APPLICATION_METRICS=NO_DATA_AVAILABLE; service remains active.",
+                        flush=True,
+                    )
             time.sleep(5)
 
 if __name__ == "__main__":
