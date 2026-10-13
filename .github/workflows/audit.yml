@@ -8,7 +8,12 @@ on:
 
 jobs:
   audit-checks:
-    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        python-version: ['3.11']
+    runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
@@ -16,28 +21,25 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.11'
+          python-version: ${{ matrix.python-version }}
 
       - name: Install Dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install --no-cache-dir pytest
+          python -m pip install pytest psutil
 
       - name: Run Unit Tests
         run: |
           python -m pytest tests/ -v
 
-      - name: Hash Verification
+      - name: Cross-platform Hash Verification
         run: |
-          find ./controller -type f -name "*.py" -exec sha256sum {} \; > audit_hashes.txt
-          sha256sum audit_hashes.txt > audit_hashes.sha256
-          echo "Hash verification complete"
-          cat audit_hashes.txt
+          python -c "import hashlib,pathlib; files=sorted(pathlib.Path('controller').rglob('*.py')); lines=''.join(hashlib.sha256(p.read_bytes()).hexdigest()+'  '+p.as_posix()+'\n' for p in files); pathlib.Path('audit_hashes.txt').write_text(lines,encoding='utf-8',newline=''); digest=hashlib.sha256(pathlib.Path('audit_hashes.txt').read_bytes()).hexdigest(); pathlib.Path('audit_hashes.sha256').write_text(digest+'  audit_hashes.txt\n',encoding='utf-8',newline=''); print(lines); print('manifest_sha256='+digest)"
 
       - name: Upload Hash Artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: audit-hashes
+          name: audit-hashes-${{ matrix.os }}
           path: |
             audit_hashes.txt
             audit_hashes.sha256
