@@ -91,7 +91,7 @@ jobs:
           }
           with open("v91-heartbeat-evidence.json", "w", encoding="utf-8") as f:
               json.dump(data, f, indent=2, ensure_ascii=False)
-              f.write("\\n")
+              f.write("\n")
           print(json.dumps(data, indent=2, ensure_ascii=False))
           PY
       - name: Upload heartbeat evidence
