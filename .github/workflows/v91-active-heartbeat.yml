@@ -3,7 +3,7 @@ name: V91 active heartbeat
 on:
   workflow_dispatch:
   schedule:
-    # GitHub Actions cron uses UTC. Runs every 6 hours once this workflow is on the default branch.
+    # GitHub Actions cron uses UTC. Scheduled runs start only on the default branch.
     - cron: "17 */6 * * *"
 
 permissions:
