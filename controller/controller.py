@@ -81,6 +81,12 @@ class ControlPlane:
         self.feedback_loop.record_action(action)
         return {"status": "RECOMMENDATION_ONLY", "action": action, "side_effects": False}
 
+    def sample_host_metrics(self):
+        """Store a read-only host snapshot without treating it as app telemetry."""
+        self.last_host_metrics = collect_host_metrics()
+        self.last_decision_status = "NO_DATA_AVAILABLE"
+        return self.last_host_metrics.copy()
+
     def run(self):
         mode = os.getenv("V91_MODE", "safe").strip().lower()
         if mode not in {"safe", "simulation", "live"}:
@@ -105,9 +111,7 @@ class ControlPlane:
             elif self.iteration % 12 == 0:
                 # Read-only host telemetry is informative, but cannot be substituted
                 # for application latency/error/request metrics used by the rules.
-                self.last_host_metrics = collect_host_metrics()
-                self.last_decision_status = "NO_DATA_AVAILABLE"
-                host = self.last_host_metrics
+                host = self.sample_host_metrics()
                 if host.get("status") == "DOCUMENTED":
                     print(
                         "[V91] HOST_TELEMETRY=DOCUMENTED "
