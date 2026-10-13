@@ -18,6 +18,23 @@ def test_missing_evidence_stays_unknown_and_is_prioritized():
     assert proposal["execution_performed"] is False
 
 
+def test_authorization_does_not_fake_a_heartbeat_or_create_evidence():
+    result = build_plan([{
+        "name": "active-node-01",
+        "evidence": [],
+        "authorized": True,
+        "reversible": True,
+        "baseline": None,
+        "measured_benefit": None,
+    }])
+    proposal = result["proposals"][0]
+    # Authorization is not evidence that a heartbeat service exists or ran.
+    assert proposal["action"] == "collect_evidence"
+    assert proposal["status"] == "PROPOSAL_ONLY"
+    assert proposal["execution_performed"] is False
+    assert result["actions_executed"] is False
+
+
 def test_evidence_does_not_grant_authorization():
     result = build_plan([{
         "name": "service-a",
