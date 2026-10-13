@@ -8,6 +8,7 @@ verification; default behavior is deny.
 from __future__ import annotations
 
 from dataclasses import dataclass
+import time
 from typing import Any, Mapping
 
 
@@ -38,7 +39,8 @@ def evaluate_peer_offer(
     """Fail-closed evaluation of a peer's voluntary cooperation offer.
 
     signature_verified must come from a trusted cryptographic verifier, not
-    from a field in the peer-supplied offer. now_epoch is injectable for tests.
+    from a field in the peer-supplied offer. now_epoch is injectable for tests;
+    ordinary callers use the system clock. If the clock cannot be read, deny.
     """
     reasons: list[str] = []
 
@@ -69,8 +71,22 @@ def evaluate_peer_offer(
     expires_at = offer.get("expires_at")
     if not isinstance(expires_at, int) or isinstance(expires_at, bool):
         reasons.append("INVALID_EXPIRY")
-    elif now_epoch is not None and expires_at <= now_epoch:
-        reasons.append("OFFER_EXPIRED")
+
+    if now_epoch is None:
+        try:
+            now_epoch = int(time.time())
+        except (OSError, OverflowError, ValueError):
+            reasons.append("CURRENT_TIME_UNAVAILABLE")
+    elif not isinstance(now_epoch, int) or isinstance(now_epoch, bool):
+        reasons.append("INVALID_CURRENT_TIME")
+
+    if isinstance(expires_at, int) and not isinstance(expires_at, bool):
+        if isinstance(now_epoch, int) and not isinstance(now_epoch, bool):
+            if expires_at <= now_epoch:
+                reasons.append("OFFER_EXPIRED")
+        else:
+            if "CURRENT_TIME_UNAVAILABLE" not in reasons:
+                reasons.append("INVALID_CURRENT_TIME")
 
     if reasons:
         return Decision("DENY", (), tuple(reasons))
