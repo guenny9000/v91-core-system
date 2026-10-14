@@ -50,7 +50,7 @@ jobs:
           docker compose up --detach --build
           for attempt in $(seq 1 40); do
             if [ -f runtime/results/ci-hash.json ] && [ -f runtime/v91-observer.json ]; then
-              if python -c 'import json,sys; d=json.load(open("runtime/v91-observer.json", encoding="utf-8")); sys.exit(0 if d.get("audit",{}).get("last_event",{}).get("phase") == "TASK_COMPLETED" and d.get("queue_counts",{}).get("done") == 1 else 1)'; then
+              if python -c 'import json,sys; d=json.load(open("runtime/v91-observer.json", encoding="utf-8")); sys.exit(0 if (d.get("audit",{}).get("last_event") or {}).get("phase") == "TASK_COMPLETED" and d.get("queue_counts",{}).get("done") == 1 else 1)'; then
                 break
               fi
             fi
