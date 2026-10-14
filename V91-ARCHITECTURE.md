@@ -27,7 +27,7 @@ Remaining gaps: application-level latency/error metrics are not connected; the a
 
 1. Unknown values remain `UNKNOWN`; missing data is not replaced by a success value.
 2. A synthetic or simulated result must never be presented as live evidence.
-3. Detection does not authorize an action. Any future actuator requires a separate, explicit authorization boundary and narrowly scoped privileges.
+3. Detection does not authorize an action. Every real actuator requires a separate, explicit authorization boundary and narrowly scoped privileges.
 4. Invalid, non-finite, or negative metric values are rejected before evaluation.
 5. Existing source data is not rewritten by tests. Test artifacts are not proof of immutability or production operation.
 6. A checksum proves only that bytes match a specific digest; it does not prove who produced them, when they were produced, or that the underlying claim is true.
