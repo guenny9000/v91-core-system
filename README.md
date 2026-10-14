@@ -1,39 +1,33 @@
-# v91-core-system – Stufe 6: Autonomous Control Plane
+# V91 Core System – Reality-First, lokaler Betrieb
 
-## Übersicht
+## Zweck und aktueller Umfang
 
-v91-core-system ist ein **selbstregulierendes, verteiltes Backend-System** mit Anomaly Detection, Rule Engine, Chaos Simulation und automatischen Feedback-Loops.
+V91 ist ein schrittweise ausgebautes System für überprüfbare lokale Aufgaben, Beobachtung und begrenzte Betriebssteuerung. Implementierte Funktionen werden von geplanten Zielen getrennt. Ein grüner Test bedeutet nur, dass der konkret getestete Ablauf bestanden wurde – keine pauschale Produktionsfreigabe.
 
-## Architektur
+## Aktuell implementierte Betriebswege
 
 ```
-Metrics Stream
-     ↓
-Anomaly Detector (z-score / sliding window)
-     ↓
-Rule Engine (Policy Evaluation)
-     ↓
-Control Actions (Scale, Throttle, Restart, Chaos)
+Lokale JSON-Aufgabe
+        ↓
+Warteschlange und Eingabeprüfung
+        ↓
+Zugelassener Worker (Datei-Hash / Vergleich / Status)
+        ↓
+Ergebnisdatei + Audit-Ereignis
+        ↓
+Observer prüft Warteschlange und Audit-Format
 ```
 
-## Features
+Die optionale Host-Steuerung liest reale Docker-Zustände und Ressourcenwerte. Sie kann ausschließlich die Worker-Anzahl innerhalb festgelegter Grenzen ändern und ist standardmäßig nicht zum Ausführen realer Änderungen freigeschaltet. Zufällige Demonstrationswerte werden nicht als Live-Messwerte verwendet.
 
-### Reactive
-- Worker Restart bei Fehlern
-- Auto-Scaling (up/down bei Laständerung)
+## Weiterentwicklungsbereiche
 
-### Proactive
-- Z-Score basierte Anomalie-Erkennung
-- Sliding Window Detector
-- Trendbasierte Entscheidungen
+- **Beobachtung:** tatsächliche Warteschlangen-, Container- und Ressourcenwerte; fehlende Daten werden als unbekannt behandelt.
+- **Betrieb:** begrenzte Worker-Skalierung mit dokumentierter Entscheidung, Nachprüfung und Rücksetzversuch.
+- **Algorithmen:** Anomalieerkennung, Regeln, Rückkopplung und Fehler-Simulation bleiben getrennt zu prüfen, bevor sie reale Aktionen steuern.
+- **Nachweis:** Unit-Tests und Container-Integrationstests belegen nur die getesteten Pfade. Audit-Dateien sind derzeit weder manipulationssicher (WORM) noch extern signiert.
 
-### Destructive
-- Chaos Mode (gezielte Fehlerinjection)
-- Controlled Fault Simulation
-
-### Self-Optimization
-- Feedback Loop passt Strategie dynamisch an
-- Strategiewechsel: reduce_load, scale_up, conserve_resources, stable
+Nicht implementierte oder nicht nachgewiesene Fähigkeiten – etwa allgemeines autonomes Handeln, verteilte Modelltrainingsabläufe, produktive globale Telemetrie oder automatische Reparatur beliebiger Dienste – werden nicht als verfügbar ausgegeben.
 
 ## Installation
 
