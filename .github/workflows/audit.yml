@@ -20,7 +20,7 @@ jobs:
 
       - name: Install Dependencies
         run: |
-          pip install --no-cache-dir numpy pytest
+          pip install --no-cache-dir pytest
 
       - name: Validate Docker Compose configuration
         run: docker compose --file docker-compose.yml config --quiet
