@@ -118,7 +118,7 @@ GitHub Actions Pipeline (`audit.yml`):
 
 ## Live Docker control (host-side, opt-in)
 
-The main `controller/controller.py` loop remains a clearly labeled synthetic demonstration. It does not feed random values into a real actuator.
+The Docker Compose stack now runs a real local observer plus a shared-queue worker. The synthetic `controller/controller.py` demonstration remains available for manual testing only and is not used as the default Compose controller.
 
 For real local observation and bounded worker scaling, use `controller/runtime_control.py` **on the Docker host**. It reads actual Compose container state and `docker stats`; missing or unhealthy observations fail closed instead of falling back to random values. It only controls the Compose service named `worker`, with a hard limit of 1–3 replicas. The worker service must not define a fixed `container_name`, because Docker Compose cannot scale such a service.
 
@@ -143,3 +143,20 @@ Scale-up requires live Docker resource pressure (CPU at least 75% or memory at l
 To keep observing with the Windows launcher, add `-Watch` (and optionally `-IntervalSeconds 60`). The minimum interval is 15 seconds. To permit capacity reduction as well, add `-AllowScaleDown`; this is a separate opt-in. Use the exact project name of the existing stack; the script does not create or switch to a guessed project. The host-side script must be run where the Docker CLI can access that stack. It is deliberately not given the Docker socket inside the controller container.
 
 This is real, bounded Docker Compose control, not proof that the worker performs useful application work. The current worker command is an idle placeholder; connect a real workload and its health checks before interpreting scale changes as application-level improvement.
+
+
+## Submit a real offline task
+
+Place the input file under `workspace/` and create one JSON file in `queue/pending/`. Example `queue/pending/hash-demo.json`:
+
+```json
+{
+  "task_id": "hash-demo",
+  "action": "sha256_file",
+  "relative_path": "example.txt"
+}
+```
+
+For an integrity comparison, use `"action": "verify_sha256"` and add `"expected_sha256": "64-hexadecimal-characters"`. For a worker health/queue snapshot, use `{"task_id":"health-demo","action":"health_snapshot"}`. Task IDs must be unique and match the filename stem. The worker claims tasks by atomic rename, rejects unsupported fields/actions, never overwrites an existing result, and records completion/failure in the shared audit log. The workspace is mounted read-only inside containers.
+
+On Windows, create the host folders `queue`, `runtime`, and `workspace` next to `docker-compose.yml` if they do not exist, then start the stack with `docker compose up -d --build`. To scale workers under measured resource pressure, use the host-side controller documented above. No Docker socket is mounted inside the observer or worker containers.
