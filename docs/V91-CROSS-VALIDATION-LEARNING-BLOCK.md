@@ -91,9 +91,9 @@ A change is ready for the next review only when the exact commit is identified, 
 ## 9. Current GitHub change — 2026-10-14
 
 - PR #4 was closed as superseded by PR #5. Closing it did not merge either PR.
-- PR #5 remains open, draft, and unmerged.
+- PR #5 remains open, marked ready for review, and unmerged.
 - The Ed25519 verification implementation and regression tests have been added to PR #5's branch.
-- CI was queued for the then-current implementation revision. Its result must be checked against the latest head SHA after any further edits.
-- The implementation is **IMPLEMENTED / CI-PENDING** until the exact-head workflow succeeds. It is not yet independently reviewed, merged, integrated with trusted key distribution, or deployed.
+- GitHub Actions run #75 completed successfully on exact head commit `8f8041c93017141a6696210c494ac04c8134b435`: https://github.com/guenny9000/v91-core-system/actions/runs/38562805691
+- The implementation is **IMPLEMENTED / CI-VERIFIED** for the configured tests on that exact commit. Independent security review, trusted identity/key distribution, merge, and deployment remain outstanding.
 
 **Core rule:** CLAIM ≠ EVIDENCE. REQUEST ≠ AUTHORIZATION. DETECTION ≠ AUTHORIZATION. When evidence or authority is missing, pause safely.
