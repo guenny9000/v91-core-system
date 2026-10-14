@@ -1,9 +1,10 @@
-""""V91 cooperative peer handshake and learning-consent policy.
+"""V91 cooperative peer handshake and learning-consent policy.
 
-This module evaluates a declared peer offer. It does not discover hosts,
-connect to remote systems, execute commands, or ingest peer data. The
-high-level signed-offer path verifies Ed25519 over the canonical JSON encoding
-of the complete offer before applying the fail-closed policy.
+External trust boundaries must use evaluate_signed_peer_offer(), which verifies
+Ed25519 over canonical JSON before evaluating consent and capability policy.
+The policy-only helper is private and is not a safe external entry point.
+This module does not discover hosts, connect remotely, execute commands, or
+ingest peer data.
 """
 from __future__ import annotations
 
@@ -61,22 +62,16 @@ def verify_ed25519_signature(
     except (InvalidSignature, TypeError, ValueError):
         return False
     except Exception:
-        # Fail closed if the cryptographic backend raises an unexpected error.
         return False
 
 
-def evaluate_peer_offer(
+def _evaluate_peer_offer_policy(
     offer: Mapping[str, Any],
     *,
-    signature_verified: bool = False,
+    signature_verified: bool,
     now_epoch: int | None = None,
 ) -> Decision:
-    """Fail-closed evaluation of a peer's voluntary cooperation offer.
-
-    signature_verified is intended only for callers that have already used a
-    trusted cryptographic verifier. Prefer evaluate_signed_peer_offer at
-    external trust boundaries; never read this value from the peer's offer.
-    """
+    """Internal policy evaluator; only trusted verification code may set True."""
     reasons: list[str] = []
 
     if signature_verified is not True:
@@ -132,6 +127,15 @@ def evaluate_peer_offer(
     return Decision("ALLOW_READ_ONLY", permitted, ("EXPLICIT_CONSENT_AND_POLICY_CHECKS_PASSED",))
 
 
+def evaluate_peer_offer(
+    offer: Mapping[str, Any], *, now_epoch: int | None = None
+) -> Decision:
+    """Safe public policy entry point without signature evidence: always deny."""
+    return _evaluate_peer_offer_policy(
+        offer, signature_verified=False, now_epoch=now_epoch
+    )
+
+
 def evaluate_signed_peer_offer(
     offer: Mapping[str, Any],
     *,
@@ -139,12 +143,14 @@ def evaluate_signed_peer_offer(
     signature_bytes: bytes,
     now_epoch: int | None = None,
 ) -> Decision:
-    """Verify a peer's Ed25519 signature over canonical offer JSON, then evaluate it."""
+    """Verify Ed25519 over canonical offer JSON, then evaluate policy."""
     message = canonical_offer_bytes(offer)
     verified = message is not None and verify_ed25519_signature(
         public_key_bytes, message, signature_bytes
     )
-    return evaluate_peer_offer(offer, signature_verified=verified, now_epoch=now_epoch)
+    return _evaluate_peer_offer_policy(
+        offer, signature_verified=verified, now_epoch=now_epoch
+    )
 
 
 def public_decision_record(offer: Mapping[str, Any], decision: Decision) -> dict[str, Any]:
