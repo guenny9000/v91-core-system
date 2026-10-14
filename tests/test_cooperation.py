@@ -40,6 +40,15 @@ class CooperativeHandshakeTests(unittest.TestCase):
         self.assertFalse(decision.allowed)
         self.assertIn("PEER_SIGNATURE_NOT_VERIFIED", decision.reasons)
 
+    def test_truthy_non_boolean_signature_result_is_rejected(self):
+        for untrusted_value in (1, "yes", "verified"):
+            with self.subTest(signature_verified=untrusted_value):
+                decision = evaluate_peer_offer(
+                    valid_offer(), signature_verified=untrusted_value, now_epoch=1000
+                )
+                self.assertFalse(decision.allowed)
+                self.assertIn("PEER_SIGNATURE_NOT_VERIFIED", decision.reasons)
+
     def test_no_consent_denied(self):
         decision = evaluate_peer_offer(valid_offer(consent=False), signature_verified=True, now_epoch=1000)
         self.assertFalse(decision.allowed)
