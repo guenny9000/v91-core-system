@@ -26,6 +26,9 @@ jobs:
         run: |
           pytest tests/ -v
 
+      - name: Compile runtime modules
+        run: python -m py_compile controller/*.py
+
       - name: Hash Verification
         run: |
           find ./controller -type f -name "*.py" -exec sha256sum {} \; > audit_hashes.txt
