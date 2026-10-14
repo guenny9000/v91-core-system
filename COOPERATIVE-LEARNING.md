@@ -30,9 +30,10 @@ to access another system.
   `evaluate_signed_peer_offer()`; do not set a trusted boolean from peer input.
 - Not implemented: network discovery, transport, persistent ledger integration,
   actual model training, remote remediation, or production deployment.
-- Verification status: GitHub CI has been triggered for the implementation
-  commit. Until the exact-head workflow completes successfully and is reviewed,
-  the code is IMPLEMENTED / CI-PENDING, not VERIFIED or PRODUCTION.
+- Verification status: GitHub Actions run #75 completed successfully for commit
+  `8f8041c93017141a6696210c494ac04c8134b435`. The configured tests and hash step
+  passed on that commit. This establishes CI success, not independent security
+  review, trusted peer identity, integration, merge, or production deployment.
 
 ## Signature format
 The signer signs UTF-8 bytes of JSON serialized with sorted keys, compact
