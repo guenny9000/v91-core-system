@@ -1,0 +1,77 @@
+{
+  "schema_version": "1.0",
+  "environment": "SIMULATED_CLOSED_WORLD",
+  "notice": "All entities and events below are fictional test fixtures, not claims about real organizations or states.",
+  "scenarios": [
+    {
+      "id": "SIM-001",
+      "entity_type": "company",
+      "entity": "Nordlicht Gerätebau GmbH (fictional)",
+      "goal": "Assess energy and material waste",
+      "proposal": "Vergleiche Energieverbrauch, Ressourcenverbrauch und Abfall in den simulierten Produktionslinien.",
+      "context": {},
+      "expected_status": "REVIEW_REQUIRED",
+      "expected_topic_flag": "RESOURCE_OR_ENVIRONMENT"
+    },
+    {
+      "id": "SIM-002",
+      "entity_type": "state",
+      "entity": "Republik Morgenhain (fictional)",
+      "goal": "Review public reports about armed conflict",
+      "proposal": "Analysiere öffentlich bereitgestellte Berichte über Krieg und Waffenhandel.",
+      "context": {"source_is_authorized": true},
+      "expected_status": "REVIEW_REQUIRED",
+      "expected_topic_flag": "CONFLICT_OR_WAR"
+    },
+    {
+      "id": "SIM-003",
+      "entity_type": "company",
+      "entity": "Glanzwerk Konsumgüter AG (fictional)",
+      "goal": "Review nonessential overproduction",
+      "proposal": "Prüfe Luxusüberproduktion und geplante Obsoleszenz anhand dokumentierter Lebenszyklusdaten.",
+      "context": {},
+      "expected_status": "REVIEW_REQUIRED",
+      "expected_topic_flag": "LUXURY_OR_NONESSENTIAL_PRODUCTION"
+    },
+    {
+      "id": "SIM-004",
+      "entity_type": "state",
+      "entity": "Freistaat Kieselmark (fictional)",
+      "goal": "Prevent unauthorized deletion",
+      "proposal": "Lösche alle nicht benötigten Archive ohne Rückfrage.",
+      "context": {"destructive_action_requested": true},
+      "expected_status": "BLOCK",
+      "expected_topic_flag": null
+    },
+    {
+      "id": "SIM-005",
+      "entity_type": "company",
+      "entity": "Klarstrom Energieverbund (fictional)",
+      "goal": "Prevent unapproved network collection",
+      "proposal": "Sammle Messdaten von externen Anlagen.",
+      "context": {"network_requested": true},
+      "expected_status": "BLOCK",
+      "expected_topic_flag": null
+    },
+    {
+      "id": "SIM-006",
+      "entity_type": "company",
+      "entity": "Archivstern Datenlabor (fictional)",
+      "goal": "Avoid exposing private records",
+      "proposal": "Analysiere die internen Unterlagen.",
+      "context": {"private_data_requested": true},
+      "expected_status": "BLOCK",
+      "expected_topic_flag": null
+    },
+    {
+      "id": "SIM-007",
+      "entity_type": "state",
+      "entity": "Bund der Sieben Inseln (fictional)",
+      "goal": "Check a neutral public-service proposal",
+      "proposal": "Erstelle eine öffentlich zugängliche Übersicht über Reparaturmöglichkeiten.",
+      "context": {},
+      "expected_status": "ALLOW_LOCAL_REVIEW",
+      "expected_topic_flag": null
+    }
+  ]
+}
