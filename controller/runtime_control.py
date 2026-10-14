@@ -237,15 +237,25 @@ def decide(snapshot: dict[str, Any], low_samples: int) -> tuple[str | None, int,
     memory = snapshot["max_memory_percent"]
     if replicas < MIN_REPLICAS or replicas > MAX_REPLICAS:
         return None, 0, "Replica count is outside configured safety bounds."
-    if (cpu >= SCALE_UP_CPU or memory >= SCALE_UP_MEMORY) and replicas < MAX_REPLICAS:
+    if cpu >= SCALE_UP_CPU or memory >= SCALE_UP_MEMORY:
+        if replicas >= MAX_REPLICAS:
+            return None, 0, (
+                f"Scale-up threshold met (CPU {cpu:.1f}%, memory {memory:.1f}%), "
+                f"but the configured maximum of {MAX_REPLICAS} replicas is already reached."
+            )
         return "scale_up_workers", 0, (
             f"Live Docker metrics exceed a scale-up threshold (CPU {cpu:.1f}%, "
             f"memory {memory:.1f}%); target {replicas + 1} replicas."
         )
-    if cpu <= SCALE_DOWN_CPU and memory <= SCALE_DOWN_MEMORY and replicas > MIN_REPLICAS:
+    if cpu <= SCALE_DOWN_CPU and memory <= SCALE_DOWN_MEMORY:
+        if replicas <= MIN_REPLICAS:
+            return None, 0, (
+                f"Low resource use observed, but the configured minimum of {MIN_REPLICAS} "
+                "replica is reached; no capacity is removed."
+            )
         next_count = min(low_samples + 1, LOW_SAMPLES_REQUIRED)
         if next_count >= LOW_SAMPLES_REQUIRED:
-            return "scale_down_workers", next_count, (
+            return "scale_down_workers", 0, (
                 f"Low CPU ({cpu:.1f}%) and memory ({memory:.1f}%) persisted "
                 f"for {LOW_SAMPLES_REQUIRED} samples; target {replicas - 1} replicas."
             )
@@ -254,7 +264,7 @@ def decide(snapshot: dict[str, Any], low_samples: int) -> tuple[str | None, int,
             "waiting to avoid scaling oscillation."
         )
     return None, 0, (
-        f"No threshold met (CPU {cpu:.1f}%, memory {memory:.1f}%, replicas {replicas})."
+        f"No scaling threshold met (CPU {cpu:.1f}%, memory {memory:.1f}%, replicas {replicas})."
     )
 
 
