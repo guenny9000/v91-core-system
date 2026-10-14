@@ -100,3 +100,22 @@ def test_run_cycle_only_proposes_when_actions_are_not_enabled(monkeypatch, tmp_p
     assert event["target_replicas"] == 2
     assert event["expected_effect"]
     assert event["rollback_plan"]
+
+
+def test_scale_down_is_not_executed_without_separate_opt_in(monkeypatch, tmp_path):
+    snapshot = {
+        "timestamp_utc": "2026-10-14T00:00:00.000Z",
+        "source": "DOCKER_LIVE", "project": "v91-test", "service": "worker",
+        "replicas": 2, "running": 2, "max_cpu_percent": 5.0,
+        "max_memory_percent": 10.0, "containers": [],
+    }
+    monkeypatch.setattr(rc, "collect_snapshot", lambda *_: snapshot)
+    state_path = tmp_path / "runtime" / "v91-controller-state.json"
+    state_path.parent.mkdir(parents=True)
+    state_path.write_text('{"low_resource_samples": 2}', encoding="utf-8")
+    def forbidden_scale(*_args, **_kwargs):
+        raise AssertionError("scale-down must not run without explicit opt-in")
+    monkeypatch.setattr(rc, "scale_worker", forbidden_scale)
+    result = rc.run_cycle(tmp_path / "compose.yml", "v91-test", tmp_path / "runtime", True)
+    assert result["action"] == "scale_down_workers"
+    assert result["status"] == "PROPOSED_SCALE_DOWN_REQUIRES_OPT_IN"
