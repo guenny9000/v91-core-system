@@ -52,6 +52,10 @@ jobs:
           }
           TASK
           docker compose up --detach --build
+          for container in v91-controller v91-core-system-worker-1; do
+            network_mode="$(docker inspect --format '{{.HostConfig.NetworkMode}}' "$container")"
+            test "$network_mode" = "none"
+          done
           for attempt in $(seq 1 40); do
             if [ -f runtime/results/ci-hash.json ] && [ -f runtime/v91-observer.json ]; then
               if python -c 'import json,sys; d=json.load(open("runtime/v91-observer.json", encoding="utf-8")); a=d.get("audit") or {}; e=a.get("last_event") or {}; q=d.get("queue_counts") or {}; sys.exit(0 if e.get("phase") == "TASK_COMPLETED" and q.get("done") == 1 else 1)' >/dev/null 2>&1; then
