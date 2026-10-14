@@ -12,7 +12,9 @@ cooperation = importlib.util.module_from_spec(SPEC)
 sys.modules[SPEC.name] = cooperation
 SPEC.loader.exec_module(cooperation)
 
-evaluate_peer_offer = cooperation.evaluate_peer_offer
+# These tests isolate policy behavior. Public callers must use the signed API.
+evaluate_peer_offer = cooperation._evaluate_peer_offer_policy
+public_evaluate_peer_offer = cooperation.evaluate_peer_offer
 public_decision_record = cooperation.public_decision_record
 
 
@@ -30,7 +32,12 @@ def valid_offer(**overrides):
 
 
 class CooperativeHandshakeTests(unittest.TestCase):
-    def test_valid_signed_offer_allows_only_read_only_capabilities(self):
+    def test_public_entry_point_denies_without_cryptographic_proof(self):
+        decision = public_evaluate_peer_offer(valid_offer(), now_epoch=1000)
+        self.assertFalse(decision.allowed)
+        self.assertIn("PEER_SIGNATURE_NOT_VERIFIED", decision.reasons)
+
+    def test_valid_verified_offer_policy_allows_only_read_only_capabilities(self):
         decision = evaluate_peer_offer(valid_offer(), signature_verified=True, now_epoch=1000)
         self.assertTrue(decision.allowed)
         self.assertEqual(decision.allowed_capabilities, ("describe", "share_public_metadata"))
