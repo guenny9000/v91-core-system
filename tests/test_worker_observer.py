@@ -66,7 +66,9 @@ def test_worker_claims_processes_and_audits_task(monkeypatch, tmp_path):
     assert len(list((worker.QUEUE_ROOT / "done").glob("*.json"))) == 1
     assert not list((worker.QUEUE_ROOT / "pending").glob("*.json"))
     events = [json.loads(line) for line in (worker.RUNTIME_ROOT / "v91-actions.jsonl").read_text(encoding="utf-8").splitlines()]
-    assert [event["phase"] for event in events] == ["TASK_CLAIMED", "TASK_COMPLETED"]
+    assert [event["phase"] for event in events] == ["TASK_CLAIMED", "TASK_STARTED", "TASK_COMPLETED"]
+    assert events[1]["purpose"] == task["purpose"]
+    assert events[1]["expected_effect"] == task["expected_effect"]
     assert events[-1]["result_summary"]["sha256"] == result["sha256"]
 
 
