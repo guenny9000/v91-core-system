@@ -101,7 +101,7 @@ def atomic_result(task_id: str, payload: dict[str, Any]) -> Path:
     return result_path
 
 
-def execute_task(task: dict[str, Any], task_id: str) -> dict[str, Any]:
+def validate_task_envelope(task: Any, task_id: str) -> tuple[str, str, str]:
     if not isinstance(task, dict):
         raise ControlError("Task document must be a JSON object.")
     allowed_fields = {"task_id", "action", "relative_path", "expected_sha256", "purpose", "expected_effect"}
@@ -117,6 +117,11 @@ def execute_task(task: dict[str, Any], task_id: str) -> dict[str, Any]:
     for field_name, value in (("purpose", purpose), ("expected_effect", expected_effect)):
         if not isinstance(value, str) or not value.strip() or len(value.strip()) > 500:
             raise ControlError(f"{field_name} must be a non-empty string of at most 500 characters.")
+    return action, purpose.strip(), expected_effect.strip()
+
+
+def execute_task(task: dict[str, Any], task_id: str) -> dict[str, Any]:
+    action, purpose, expected_effect = validate_task_envelope(task, task_id)
     base = {
         "task_id": task_id,
         "action": action,
@@ -179,6 +184,13 @@ def process_one() -> bool:
         if claimed.stat().st_size > MAX_TASK_BYTES:
             raise ControlError("Task document exceeds the 64 KiB limit.")
         task = json.loads(claimed.read_text(encoding="utf-8"))
+        action, purpose, expected_effect = validate_task_envelope(task, task_id)
+        append_audit(RUNTIME_ROOT / "v91-actions.jsonl", {
+            "timestamp_utc": utc_now(), "phase": "TASK_STARTED",
+            "task_id": task_id, "worker_id": f"{socket.gethostname()}:{os.getpid()}",
+            "source": "LOCAL_WORKER", "status": "AUTHORIZED_LOCAL_TASK",
+            "action": action, "purpose": purpose, "expected_effect": expected_effect,
+        })
         result = execute_task(task, task_id)
         result_path = atomic_result(task_id, result)
         append_audit(RUNTIME_ROOT / "v91-actions.jsonl", {
