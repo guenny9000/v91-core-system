@@ -28,6 +28,7 @@ def test_worker_hashes_real_workspace_file(monkeypatch, tmp_path):
     }, "job_01")
     assert result["status"] == "COMPLETED"
     assert result["matches_expected"] is True
+    assert result["verification_status"] == "MATCH"
     assert result["sha256"] == expected
     assert result["source"] == "LOCAL_WORKER"
 
@@ -59,6 +60,7 @@ def test_worker_claims_processes_and_audits_task(monkeypatch, tmp_path):
     assert not list((worker.QUEUE_ROOT / "pending").glob("*.json"))
     events = [json.loads(line) for line in (worker.RUNTIME_ROOT / "v91-actions.jsonl").read_text(encoding="utf-8").splitlines()]
     assert [event["phase"] for event in events] == ["TASK_CLAIMED", "TASK_COMPLETED"]
+    assert events[-1]["result_summary"]["sha256"] == result["sha256"]
 
 
 def test_worker_never_overwrites_existing_result(monkeypatch, tmp_path):
@@ -89,3 +91,24 @@ def test_observer_reports_real_queue_counts_and_audit_errors(monkeypatch, tmp_pa
     assert result["audit"]["events"] == 1
     assert result["audit"]["parse_errors"] == 1
     assert result["status"] == "PENDING_WITNESS"
+
+
+def test_worker_reports_hash_mismatch_as_mismatch_not_success(monkeypatch, tmp_path):
+    configure_worker(monkeypatch, tmp_path)
+    (worker.WORKSPACE_ROOT / "evidence.txt").write_text("real content", encoding="utf-8")
+    result = worker.execute_task({
+        "task_id": "job_05", "action": "verify_sha256",
+        "relative_path": "evidence.txt", "expected_sha256": "0" * 64,
+    }, "job_05")
+    assert result["status"] == "COMPLETED"
+    assert result["matches_expected"] is False
+    assert result["verification_status"] == "MISMATCH"
+
+
+def test_worker_rejects_oversized_workspace_file(monkeypatch, tmp_path):
+    configure_worker(monkeypatch, tmp_path)
+    target = worker.WORKSPACE_ROOT / "large.bin"
+    target.write_bytes(b"x")
+    monkeypatch.setattr(worker, "MAX_WORKSPACE_FILE_BYTES", 0)
+    with pytest.raises(ControlError, match="512 MiB"):
+        worker.workspace_file("large.bin")
