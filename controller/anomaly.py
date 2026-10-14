@@ -13,10 +13,12 @@ from statistics import mean, stdev
 
 class AnomalyDetector:
     def __init__(self, window_size=20, z_threshold=2.5):
-        if window_size < 5:
-            raise ValueError("window_size must be at least 5")
-        if z_threshold <= 0:
-            raise ValueError("z_threshold must be positive")
+        if isinstance(window_size, bool) or not isinstance(window_size, int) or window_size < 5:
+            raise ValueError("window_size must be an integer of at least 5")
+        if isinstance(z_threshold, bool) or not isinstance(z_threshold, (int, float)):
+            raise ValueError("z_threshold must be a finite positive number")
+        if not isfinite(float(z_threshold)) or z_threshold <= 0:
+            raise ValueError("z_threshold must be a finite positive number")
 
         self.window_size = window_size
         self.z_threshold = z_threshold
@@ -28,7 +30,9 @@ class AnomalyDetector:
 
     def detect(self, metric_type, value):
         """Return True when value is anomalous relative to prior observations."""
-        if metric_type not in self.windows:
+        if not isinstance(metric_type, str) or metric_type not in self.windows:
+            return False
+        if isinstance(value, bool):
             return False
 
         try:
