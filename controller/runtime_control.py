@@ -106,6 +106,42 @@ def compose_prefix(compose_file: Path, project_name: str) -> list[str]:
     return ["docker", "compose", "--project-name", project_name, "--file", str(compose_file)]
 
 
+def resolve_project_name(compose_file: Path, explicit_name: str = "") -> str:
+    """Use an explicit project name or uniquely match the existing stack by Compose file."""
+    if explicit_name:
+        if not all(ch.isalnum() or ch in "-_" for ch in explicit_name):
+            raise ControlError("V91_PROJECT_NAME contains unsupported characters.")
+        return explicit_name
+    records = parse_json_lines(run_command(["docker", "compose", "ls", "--format", "json"]))
+    target = os.path.normcase(str(compose_file.resolve()))
+    matches = []
+    for record in records:
+        name = record.get("Name") or record.get("name")
+        config_files = record.get("ConfigFiles") or record.get("configFiles") or ""
+        if not isinstance(name, str) or not name:
+            continue
+        if isinstance(config_files, str):
+            paths = [part.strip() for part in config_files.split(",") if part.strip()]
+        elif isinstance(config_files, list) and all(isinstance(part, str) for part in config_files):
+            paths = config_files
+        else:
+            continue
+        normalized = []
+        for item in paths:
+            try:
+                normalized.append(os.path.normcase(str(Path(item).expanduser().resolve())))
+            except (OSError, RuntimeError):
+                continue
+        if target in normalized:
+            matches.append(name)
+    if len(matches) != 1:
+        raise ControlError(
+            "Could not uniquely identify an existing Compose project for this file; "
+            "set V91_PROJECT_NAME to the exact existing project name. No project was created."
+        )
+    return matches[0]
+
+
 def collect_snapshot(compose_file: Path, project_name: str) -> dict[str, Any]:
     """Read actual container state and Docker resource metrics; no synthetic fallback."""
     prefix = compose_prefix(compose_file, project_name)
@@ -372,10 +408,16 @@ def main(argv: list[str] | None = None) -> int:
     args = parser.parse_args(argv)
     if args.interval_seconds < 15 or args.interval_seconds > 3600:
         parser.error("--interval-seconds must be between 15 and 3600")
-    if args.watch and not args.project:
-        parser.error("Set V91_PROJECT_NAME to the existing Docker Compose project name.")
     compose_file = Path(args.compose_file).expanduser().resolve()
     runtime_dir = Path(args.runtime_dir).expanduser().resolve()
+    try:
+        project_name = resolve_project_name(compose_file, args.project)
+    except ControlError as exc:
+        print(json.dumps({
+            "timestamp_utc": utc_now(), "status": "PENDING_WITNESS",
+            "error_type": type(exc).__name__, "detail": str(exc),
+        }, sort_keys=True), file=sys.stderr)
+        return 2
     allow_actions_value = os.getenv("V91_ENABLE_REAL_ACTIONS", "0").strip()
     allow_scale_down_value = os.getenv("V91_ALLOW_SCALE_DOWN", "0").strip()
     if allow_actions_value not in {"0", "1"}:
@@ -384,12 +426,10 @@ def main(argv: list[str] | None = None) -> int:
         parser.error("V91_ALLOW_SCALE_DOWN must be exactly 0 or 1.")
     allow_actions = allow_actions_value == "1"
     allow_scale_down = allow_scale_down_value == "1"
-    if not args.project:
-        parser.error("Set V91_PROJECT_NAME to the existing Docker Compose project name.")
     while True:
         try:
             result = run_cycle(
-                compose_file, args.project, runtime_dir, allow_actions, allow_scale_down
+                compose_file, project_name, runtime_dir, allow_actions, allow_scale_down
             )
             print(json.dumps(result, sort_keys=True, indent=2))
             if result["status"] in {"ROLLBACK_FAILED"}:
