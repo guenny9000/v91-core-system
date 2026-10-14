@@ -29,6 +29,7 @@ KNOWN_CLASSES = frozenset({
     "production_change",
     *DENIED_CLASSES,
 })
+NETWORK_CLASSES = frozenset({"network_read", "network_write"})
 MUTATING_CLASSES = frozenset({
     "file_write", "network_write", "model_change", "production_change",
 })
@@ -119,11 +120,11 @@ def authorize_action(
 
     if action_class not in policy.allowed_capabilities:
         return deny("CAPABILITY_NOT_GRANTED", f"Keine explizite Freigabe für {action_class}.")
-    if request.get("network_required", False) and not policy.allow_network:
+    if (action_class in NETWORK_CLASSES or request.get("network_required", False)) and not policy.allow_network:
         return deny("NETWORK_DISABLED", "Netzwerkzugriff ist standardmäßig gesperrt.")
-    if request.get("model_change", False) and not policy.allow_model_changes:
+    if (action_class == "model_change" or request.get("model_change", False)) and not policy.allow_model_changes:
         return deny("MODEL_CHANGE_DISABLED", "Modelländerungen benötigen eine separate Freigabe.")
-    if request.get("production_change", False) and not policy.allow_production_changes:
+    if (action_class == "production_change" or request.get("production_change", False)) and not policy.allow_production_changes:
         return deny("PRODUCTION_CHANGE_DISABLED", "Produktionsänderungen sind standardmäßig gesperrt.")
     if action_class in MUTATING_CLASSES and policy.require_human_approval_for_mutations and not human_approved:
         return deny("HUMAN_APPROVAL_REQUIRED", "Ändernde Aktion benötigt eine ausdrückliche menschliche Freigabe.")
