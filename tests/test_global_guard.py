@@ -1,6 +1,13 @@
+import importlib.util
 import unittest
+from pathlib import Path
 
-from global_guard.policy import GuardPolicy, authorize_action
+POLICY_PATH = Path(__file__).resolve().parents[1] / "global_guard" / "policy.py"
+SPEC = importlib.util.spec_from_file_location("v91_global_guard_policy", POLICY_PATH)
+POLICY = importlib.util.module_from_spec(SPEC)
+SPEC.loader.exec_module(POLICY)
+GuardPolicy = POLICY.GuardPolicy
+authorize_action = POLICY.authorize_action
 
 
 def request(**overrides):
