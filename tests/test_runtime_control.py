@@ -123,16 +123,16 @@ def test_scale_down_is_not_executed_without_separate_opt_in(monkeypatch, tmp_pat
 
 def test_collect_snapshot_reads_live_compose_and_docker_stats(monkeypatch, tmp_path):
     compose = tmp_path / "compose.yml"
-    compose.write_text("services:\\n  worker:\\n    image: example\\n", encoding="utf-8")
+    compose.write_text("services:\n  worker:\n    image: example\n", encoding="utf-8")
     calls = []
     def fake_command(args, timeout=25):
         calls.append(args)
         if args[-2:] == ["config", "--services"]:
-            return "worker\\ncontroller\\n"
+            return "worker\ncontroller\n"
         if args[-3:] == ["ps", "--all", "--format", "json"]:
             return '[{"Name":"v91-worker-1","Service":"worker","State":"running","Health":"healthy"}]'
         if args[:2] == ["docker", "stats"]:
-            return '{"Name":"v91-worker-1","CPUPerc":"81.00%","MemPerc":"43.00%"}\\n'
+            return '{"Name":"v91-worker-1","CPUPerc":"81.00%","MemPerc":"43.00%"}\n'
         raise AssertionError(f"unexpected command: {args}")
     monkeypatch.setattr(rc, "run_command", fake_command)
     snapshot = rc.collect_snapshot(compose.resolve(), "v91-test")
