@@ -37,12 +37,20 @@ def _setup_db(db_path: str) -> None:
 
 
 def _make_event(payload: dict, key: bytes = TEST_KEY, ts_offset_s: int = 0) -> bytes:
-    """Build a valid SafeSignal-signed event envelope."""
-    payload_bytes = json.dumps(payload, sort_keys=True, separators=(",", ":")).encode()
-    sig = hmac.new(key, payload_bytes, hashlib.sha256).hexdigest()
+    """Build an event whose signature covers protocol version, timestamp, and payload."""
     ts = datetime.fromtimestamp(
         time.time() + ts_offset_s, tz=timezone.utc
     ).strftime("%Y-%m-%dT%H:%M:%SZ")
+    signed_message = {
+        "protocol": "SafeSignal",
+        "version": "1",
+        "ts": ts,
+        "payload": payload,
+    }
+    signed_bytes = json.dumps(
+        signed_message, sort_keys=True, separators=(",", ":"), ensure_ascii=False
+    ).encode("utf-8")
+    sig = hmac.new(key, signed_bytes, hashlib.sha256).hexdigest()
     event = {
         "safesignal": {"version": "1", "sig": sig, "ts": ts},
         "payload": payload,
@@ -113,6 +121,30 @@ def test_safesignal_unsupported_version():
     assert not valid
     assert "unsupported" in reason
     print("✓ test_safesignal_unsupported_version")
+
+def test_safesignal_timestamp_tampering_is_rejected():
+    """A captured signature cannot be reused with a refreshed timestamp."""
+    payload = {"event_type": "test", "source": "pytest", "data": {}}
+    event = json.loads(_make_event(payload))
+    event["safesignal"]["ts"] = "2099-01-01T00:00:00Z"
+    valid, reason = listener.safesignal_check(event, json.dumps(event).encode(), TEST_KEY)
+    assert not valid
+    assert "signature mismatch" in reason
+
+
+def test_safesignal_timestamp_is_required():
+    payload = {"event_type": "test", "source": "pytest", "data": {}}
+    event = json.loads(_make_event(payload))
+    del event["safesignal"]["ts"]
+    valid, reason = listener.safesignal_check(event, json.dumps(event).encode(), TEST_KEY)
+    assert not valid
+    assert "ts is required" in reason
+
+
+def test_payload_non_object_is_rejected():
+    valid, reason = listener.validate_payload(["not", "an", "object"])
+    assert not valid
+    assert "JSON object" in reason
 
 
 # ── Schema Validation Tests ───────────────────────────────────────────────────
@@ -279,6 +311,36 @@ def test_inbox_empty_no_errors():
     print("✓ test_inbox_empty_no_errors")
 
 
+def test_exact_duplicate_event_is_idempotent():
+    """The same signed bytes must not create a second ledger entry."""
+    with tempfile.TemporaryDirectory() as tmpdir:
+        db_path = os.path.join(tmpdir, "test.db")
+        _setup_db(db_path)
+        inbox = Path(tmpdir) / "inbox"
+        inbox.mkdir()
+        payload = {"event_type": "user_login", "source": "web", "data": {"uid": "1"}}
+        raw = _make_event(payload)
+        (inbox / "first.json").write_bytes(raw)
+        listener.watch_inbox(str(inbox), TEST_KEY, db_path)
+        (inbox / "duplicate.json").write_bytes(raw)
+        listener.watch_inbox(str(inbox), TEST_KEY, db_path)
+        assert _count(db_path, "v91_ledger") == 1
+        assert _count(db_path, "v91_audit_log", "action='ledger_accepted'") == 1
+        assert not (inbox / "duplicate.json").exists()
+
+
+def test_database_failure_preserves_inbox_file():
+    """Never discard the only copy if durable audit/quarantine storage fails."""
+    with tempfile.TemporaryDirectory() as tmpdir:
+        db_path = os.path.join(tmpdir, "uninitialised.db")
+        inbox = Path(tmpdir) / "inbox"
+        inbox.mkdir()
+        bad_file = inbox / "bad.json"
+        bad_file.write_bytes(b"not json")
+        listener.watch_inbox(str(inbox), TEST_KEY, db_path)
+        assert bad_file.exists()
+
+
 def test_multiple_events_processed():
     """Multiple events in inbox are all processed."""
     with tempfile.TemporaryDirectory() as tmpdir:
@@ -314,6 +376,9 @@ if __name__ == "__main__":
     test_safesignal_missing_envelope()
     test_safesignal_old_timestamp()
     test_safesignal_unsupported_version()
+    test_safesignal_timestamp_tampering_is_rejected()
+    test_safesignal_timestamp_is_required()
+    test_payload_non_object_is_rejected()
     test_validate_payload_valid()
     test_validate_payload_missing_field()
     test_validate_payload_empty_event_type()
@@ -327,4 +392,6 @@ if __name__ == "__main__":
     test_missing_safesignal_quarantined()
     test_inbox_empty_no_errors()
     test_multiple_events_processed()
+    test_exact_duplicate_event_is_idempotent()
+    test_database_failure_preserves_inbox_file()
     print("\n✓ All v91 listener tests passed")
