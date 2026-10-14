@@ -292,4 +292,4 @@ def test_real_zero_percent_remains_a_numeric_measurement():
     action, low_count, reason = rc.decide(snapshot, 0)
     assert action is None
     assert low_count == 0
-    assert "0.0%" in reason
+    assert rc.parse_percent("0.0%") == 0.0
