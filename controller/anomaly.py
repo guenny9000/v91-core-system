@@ -1,19 +1,27 @@
 #!/usr/bin/env python3
-"""Sliding-window anomaly detection using only prior observations as baseline."""
+"""
+Anomaly Detector – sliding-window z-score detection.
 
-import math
+A candidate is compared with the prior baseline, then added to the window.
+Invalid or non-finite values are ignored and do not contaminate the baseline.
+"""
+
 from collections import deque
+from math import isfinite
 from statistics import mean, stdev
 
 
 class AnomalyDetector:
     def __init__(self, window_size=20, z_threshold=2.5):
-        if isinstance(window_size, bool) or not isinstance(window_size, int) or window_size < 2:
-            raise ValueError("window_size must be an integer >= 2")
-        if isinstance(z_threshold, bool) or not isinstance(z_threshold, (int, float)) or not math.isfinite(z_threshold) or z_threshold <= 0:
+        if isinstance(window_size, bool) or not isinstance(window_size, int) or window_size < 5:
+            raise ValueError("window_size must be an integer of at least 5")
+        if isinstance(z_threshold, bool) or not isinstance(z_threshold, (int, float)):
             raise ValueError("z_threshold must be a finite positive number")
+        if not isfinite(float(z_threshold)) or z_threshold <= 0:
+            raise ValueError("z_threshold must be a finite positive number")
+
         self.window_size = window_size
-        self.z_threshold = float(z_threshold)
+        self.z_threshold = z_threshold
         self.windows = {
             "latency": deque(maxlen=window_size),
             "errors": deque(maxlen=window_size),
@@ -21,35 +29,45 @@ class AnomalyDetector:
         }
 
     def detect(self, metric_type, value):
-        """Return True for an outlier relative to the prior window; reject invalid input."""
-        if metric_type not in self.windows:
+        """Return True when value is anomalous relative to prior observations."""
+        if not isinstance(metric_type, str) or metric_type not in self.windows:
             return False
-        if isinstance(value, bool) or not isinstance(value, (int, float)) or not math.isfinite(value):
-            raise ValueError("metric value must be a finite number")
+        if isinstance(value, bool):
+            return False
+
+        try:
+            candidate = float(value)
+        except (TypeError, ValueError):
+            return False
+        if not isfinite(candidate):
+            return False
 
         window = self.windows[metric_type]
-        anomalous = False
+        is_anomaly = False
+
+        # Compare against historical values before adding the candidate.
         if len(window) >= 5:
             values = list(window)
-            center = mean(values)
-            spread = stdev(values)
-            if spread == 0:
-                anomalous = value != center
+            baseline_mean = mean(values)
+            baseline_stdev = stdev(values)
+            if baseline_stdev == 0:
+                is_anomaly = candidate != baseline_mean
             else:
-                anomalous = abs((value - center) / spread) > self.z_threshold
+                z_score = (candidate - baseline_mean) / baseline_stdev
+                is_anomaly = abs(z_score) > self.z_threshold
 
-        # Add the new observation only after scoring it against the previous baseline.
-        window.append(value)
-        return anomalous
+        window.append(candidate)
+        return is_anomaly
 
     def get_stats(self, metric_type):
-        """Return statistics for the stored window, or None for an unknown metric."""
+        """Get current statistics for a metric type."""
         if metric_type not in self.windows:
             return None
-        window = self.windows[metric_type]
-        if not window:
+
+        values = list(self.windows[metric_type])
+        if not values:
             return {"count": 0, "mean": 0, "stdev": 0, "min": None, "max": None}
-        values = list(window)
+
         return {
             "count": len(values),
             "mean": mean(values),
