@@ -1,0 +1,47 @@
+{
+  "manifest_version": "1.0",
+  "project": "V91 MAX BEST",
+  "purpose": "Portable learning and work handoff for independent models and isolated testing",
+  "shared_learning_block": "learning-blocks/V91_MAX_BEST_CROSS_MODEL_LEARNING_BLOCK.md",
+  "isolated_test_record_template": "learning-blocks/ISOLATED_TEST_ROOM_RESULT_TEMPLATE.md",
+  "protocol": "docs/V91_MAX_BEST_RAGNAROK_PROTOCOL.md",
+  "proposal_engine": "ragnarok/engine.py",
+  "engine_tests": "tests/test_ragnarok_engine.py",
+  "suggested_participants": [
+    {
+      "role": "research",
+      "model_family": "Gemini or another research-capable model",
+      "task": "Compare current official documentation and source-backed integration methods; provide source URLs, publication/version dates, limitations, and contradictions. Do not claim that any integration was activated."
+    },
+    {
+      "role": "implementation",
+      "model_family": "Copilot or another code-focused model",
+      "task": "Inspect the branch and tests, identify one small improvement, add a regression test, make a minimal reversible patch, and report exact test commands/results."
+    },
+    {
+      "role": "independent_review",
+      "model_family": "Claude or another independent reviewer",
+      "task": "Review the exact diff for regressions, permission errors, privacy leaks, unsafe side effects, missing tests, and rollback gaps. Cite exact files/lines."
+    },
+    {
+      "role": "offline_reproduction",
+      "model_family": "Local model",
+      "task": "Reproduce tests using supplied repository state, record runtime/dependencies and exact output, and label unavailable network/data as UNKNOWN."
+    }
+  ],
+  "handoff_rules": [
+    "Do not assume models share memory, files, tools, or network access.",
+    "Pass the shared learning block and relevant files explicitly to each participant.",
+    "Require a receipt from each participant listing inputs actually inspected.",
+    "No participant's statement counts as verification without reproducible evidence.",
+    "Integrate only reviewed, minimal, reversible changes; run CI against the exact resulting commit.",
+    "Do not merge or deploy solely because a model recommends it."
+  ],
+  "status": {
+    "shared_block": "DOCUMENTED",
+    "cross_model_delivery": "UNKNOWN",
+    "cross_model_adoption": "UNKNOWN",
+    "isolated_test_room": "DOCUMENTED_TEMPLATE_ONLY",
+    "global_activation": "NOT_CLAIMED"
+  }
+}

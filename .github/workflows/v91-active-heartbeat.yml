@@ -1,0 +1,104 @@
+name: V91 active heartbeat
+
+on:
+  push:
+    branches:
+      - "fix/reality-first-safe-controller-2026-10-12"
+  workflow_dispatch:
+  schedule:
+    # GitHub Actions cron uses UTC. Scheduled runs start only on the default branch.
+    - cron: "17 */6 * * *"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: v91-active-heartbeat
+  cancel-in-progress: false
+
+jobs:
+  heartbeat:
+    name: Heartbeat and regression checks
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout exact revision
+        uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install test runner
+        run: python -m pip install pytest
+      - name: Run repository tests
+        id: tests
+        run: python -m pytest tests/ -v
+      - name: Write heartbeat evidence
+        if: always()
+        env:
+          TEST_OUTCOME: ${{ steps.tests.outcome }}
+          COMMIT_SHA: ${{ github.sha }}
+          RUN_ID: ${{ github.run_id }}
+          RUN_ATTEMPT: ${{ github.run_attempt }}
+          EVENT_NAME: ${{ github.event_name }}
+        run: |
+          python - <<'PY'
+          import hashlib
+          import json
+          import os
+          from datetime import datetime, timezone
+
+          from v91_guideline_hash import get_canonical_guideline_hash
+
+          # Separate hashes have separate scopes: the canonical V91 guideline
+          # payload and this heartbeat's concise policy object. Neither is a
+          # signature, WORM guarantee, deployment proof, or ecological metric.
+          policy = {
+              "gratitude_anchor": "Without nature and creation, no life or operation.",
+              "human_safety": "Protect human life; no destructive or unauthorized actions.",
+              "ecological_balance": "Measure resource effects; unknown measurements stay UNKNOWN.",
+              "evidence_rule": "CLAIM != EVIDENCE",
+              "authorization_rule": "REQUEST != AUTHORIZATION",
+              "change_rule": "Prefer isolated, reversible, reviewed changes.",
+          }
+          policy_canonical = json.dumps(
+              policy, sort_keys=True, separators=(",", ":"), ensure_ascii=False
+          ).encode("utf-8")
+          policy_sha256 = hashlib.sha256(policy_canonical).hexdigest()
+          guideline_sha256 = get_canonical_guideline_hash()
+
+          data = {
+              "schema": "v91-heartbeat-evidence-v1",
+              "timestamp_utc": datetime.now(timezone.utc).isoformat(),
+              "repository": os.environ["GITHUB_REPOSITORY"],
+              "commit": os.environ["COMMIT_SHA"],
+              "workflow_run_id": os.environ["RUN_ID"],
+              "run_attempt": os.environ["RUN_ATTEMPT"],
+              "trigger": os.environ["EVENT_NAME"],
+              "test_outcome": os.environ.get("TEST_OUTCOME", "unknown"),
+              "scope": "GitHub runner and repository tests only",
+              "external_systems_monitored": False,
+              "local_user_computer_monitored": False,
+              "guideline_version": "3.1",
+              "guideline_hash_sha256": guideline_sha256,
+              "guideline_hash_scope": "canonical JSON payload in v91_guideline_hash.py",
+              "gratitude_and_ecology_policy": policy,
+              "policy_sha256": policy_sha256,
+              "policy_hash_scope": "canonical heartbeat policy object only",
+              "ecological_measurements": "UNKNOWN_NOT_COLLECTED",
+              "external_model_adoption": "UNKNOWN",
+              "real_world_changes_performed": False
+          }
+          with open("v91-heartbeat-evidence.json", "w", encoding="utf-8") as f:
+              json.dump(data, f, indent=2, ensure_ascii=False)
+              f.write("\n")
+          print(json.dumps(data, indent=2, ensure_ascii=False))
+          PY
+      - name: Upload heartbeat evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: v91-heartbeat-evidence-${{ github.run_id }}-${{ github.run_attempt }}
+          path: v91-heartbeat-evidence.json
+          if-no-files-found: error
+          retention-days: 30
