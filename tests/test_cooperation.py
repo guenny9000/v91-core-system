@@ -1,7 +1,19 @@
+import importlib.util
+from pathlib import Path
+import sys
 import unittest
 from unittest.mock import patch
 
-from controller.cooperation import evaluate_peer_offer, public_decision_record
+MODULE_PATH = Path(__file__).resolve().parents[1] / "controller" / "cooperation.py"
+SPEC = importlib.util.spec_from_file_location("v91_cooperation", MODULE_PATH)
+if SPEC is None or SPEC.loader is None:
+    raise ImportError(f"Cannot load V91 cooperation module from {MODULE_PATH}")
+cooperation = importlib.util.module_from_spec(SPEC)
+sys.modules[SPEC.name] = cooperation
+SPEC.loader.exec_module(cooperation)
+
+evaluate_peer_offer = cooperation.evaluate_peer_offer
+public_decision_record = cooperation.public_decision_record
 
 
 def valid_offer(**overrides):
@@ -48,18 +60,18 @@ class CooperativeHandshakeTests(unittest.TestCase):
         self.assertIn("OFFER_EXPIRED", decision.reasons)
 
     def test_default_clock_path_denies_expired_offer(self):
-        with patch("controller.cooperation.time.time", return_value=1000):
+        with patch("v91_cooperation.time.time", return_value=1000):
             decision = evaluate_peer_offer(valid_offer(expires_at=999), signature_verified=True)
         self.assertFalse(decision.allowed)
         self.assertIn("OFFER_EXPIRED", decision.reasons)
 
     def test_default_clock_path_uses_current_time(self):
-        with patch("controller.cooperation.time.time", return_value=1000):
+        with patch("v91_cooperation.time.time", return_value=1000):
             decision = evaluate_peer_offer(valid_offer(), signature_verified=True)
         self.assertTrue(decision.allowed)
 
     def test_unavailable_clock_fails_closed(self):
-        with patch("controller.cooperation.time.time", side_effect=OSError("clock unavailable")):
+        with patch("v91_cooperation.time.time", side_effect=OSError("clock unavailable")):
             decision = evaluate_peer_offer(valid_offer(), signature_verified=True)
         self.assertFalse(decision.allowed)
         self.assertIn("CURRENT_TIME_UNAVAILABLE", decision.reasons)
