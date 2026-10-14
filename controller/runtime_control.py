@@ -270,7 +270,7 @@ def run_cycle(
         target += 1
     elif action == "scale_down_workers":
         target -= 1
-    if action == "scale_down_workers" and not allow_scale_down:
+    if action == "scale_down_workers" and not allow_scale_down and allow_actions:
         initial_status = "PROPOSED_SCALE_DOWN_REQUIRES_OPT_IN"
     else:
         initial_status = "PROPOSED_NOT_EXECUTED" if action and not allow_actions else "NO_ACTION"
