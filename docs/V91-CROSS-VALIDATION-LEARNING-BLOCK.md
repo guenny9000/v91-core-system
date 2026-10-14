@@ -30,7 +30,7 @@ If any item is unavailable, mark it **UNKNOWN** rather than reconstructing or gu
 Ask each reviewer to independently answer:
 
 1. Does the evaluator deny by default when signature verification, explicit consent, supported protocol, peer identity, expiry, or an allowed capability is missing or invalid?
-2. Can an untrusted offer field claim that its own signature is verified? Is the trusted-verifier boundary clear and enforced by the caller?
+2. Can an untrusted offer field claim that its own signature is verified? Is the trusted-verifier boundary clear and enforced by the public API?
 3. Are unknown capabilities and forbidden actions denied, including remote execution, writing, installation, administration, control, and private-data access?
 4. Are malformed types, booleans used as integers, expired offers, and unavailable system time handled safely?
 5. Do audit records avoid copying private payloads and avoid claiming that data ingestion or remote actions occurred when they did not?
@@ -68,9 +68,11 @@ Do not award PASS because another reviewer said PASS. A second model's agreement
 
 ## 6. Current implementation boundary for the cooperative handshake
 
-The evaluator in controller/cooperation.py checks a declared offer and returns a policy decision. It does **not** itself discover peers, open network connections, verify cryptographic signatures, exchange data, ingest peer content, train a model, execute remote commands, or deploy changes. The caller must use a trusted cryptographic verifier and pass its result safely; a peer-supplied boolean is not evidence.
+The public `evaluate_signed_peer_offer()` path in `controller/cooperation.py` verifies an Ed25519 signature over canonical JSON and then applies the offer policy. The public `evaluate_peer_offer()` path has no signature inputs and therefore denies by default. The policy-only helper is private. This implementation does **not** discover peers, open network connections, exchange data, ingest peer content, train a model, execute remote commands, or deploy changes.
 
-The unit tests in tests/test_cooperation.py cover several allow/deny conditions, expiry handling, the default clock path, unavailable clock behavior, and minimal audit-record fields. Test names and source code are documented evidence of coverage intent; only recorded test results establish that a test run passed.
+A valid signature proves possession of the corresponding private key for the signed bytes; it does not, by itself, establish that the key belongs to a particular trusted identity. Key distribution, identity binding, revocation, transport, and integration remain separate requirements.
+
+The new `tests/test_crypto_verify.py` covers valid signatures, modified offers, invalid signatures, wrong keys, expired signed offers, unknown capabilities, and unserializable input. `tests/test_cooperation.py` also checks that the public unsigned entry point denies by default. Source code establishes implementation intent; only recorded test results establish that tests passed.
 
 ## 7. Safe learning and data handling
 
@@ -85,5 +87,13 @@ The unit tests in tests/test_cooperation.py cover several allow/deny conditions,
 ## 8. Acceptance gate
 
 A change is ready for the next review only when the exact commit is identified, relevant tests and CI results are recorded, critical findings are resolved, and the remaining limitations are stated. Merge and production deployment remain separate, explicitly authorized decisions.
+
+## 9. Current GitHub change — 2026-10-14
+
+- PR #4 was closed as superseded by PR #5. Closing it did not merge either PR.
+- PR #5 remains open, draft, and unmerged.
+- The Ed25519 verification implementation and regression tests have been added to PR #5's branch.
+- CI was queued for the then-current implementation revision. Its result must be checked against the latest head SHA after any further edits.
+- The implementation is **IMPLEMENTED / CI-PENDING** until the exact-head workflow succeeds. It is not yet independently reviewed, merged, integrated with trusted key distribution, or deployed.
 
 **Core rule:** CLAIM ≠ EVIDENCE. REQUEST ≠ AUTHORIZATION. DETECTION ≠ AUTHORIZATION. When evidence or authority is missing, pause safely.
