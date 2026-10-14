@@ -6,8 +6,9 @@ services:
       dockerfile: Dockerfile
     container_name: v91-controller
     user: "${V91_CONTAINER_UID:-1000}:${V91_CONTAINER_GID:-1000}"
-    network_mode: "none"
     command: python -u controller/observer.py
+    networks:
+      - v91_internal
     volumes:
       - ./controller:/app/controller
       - ./logs:/app/logs
@@ -27,8 +28,9 @@ services:
       context: .
       dockerfile: Dockerfile
     user: "${V91_CONTAINER_UID:-1000}:${V91_CONTAINER_GID:-1000}"
-    network_mode: "none"
     command: python -u controller/worker.py
+    networks:
+      - v91_internal
     volumes:
       - ./queue:/app/queue
       - ./runtime:/app/runtime
@@ -40,3 +42,7 @@ services:
       - V91_RUNTIME_DIR=/app/runtime
       - V91_WORKSPACE_DIR=/app/workspace
       - V91_WORKER_POLL_SECONDS=1
+
+networks:
+  v91_internal:
+    internal: true
