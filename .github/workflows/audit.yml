@@ -32,8 +32,45 @@ jobs:
       - name: Compile runtime modules
         run: python -m py_compile controller/*.py
 
-      - name: Build container image
-        run: docker build --tag v91-core-system:ci .
+      - name: Build and test real Compose worker/observer
+        shell: bash
+        run: |
+          set -euo pipefail
+          cleanup() { docker compose down --remove-orphans >/dev/null 2>&1 || true; }
+          trap cleanup EXIT
+          mkdir -p queue/pending queue/processing queue/done queue/failed runtime/results workspace
+          printf 'V91 container integration\n' > workspace/ci-example.txt
+          cat > queue/pending/ci-hash.json <<'TASK'
+          {
+            "task_id": "ci-hash",
+            "action": "sha256_file",
+            "relative_path": "ci-example.txt"
+          }
+          TASK
+          docker compose up --detach --build
+          for attempt in $(seq 1 40); do
+            if [ -f runtime/results/ci-hash.json ] && [ -f runtime/v91-observer.json ]; then
+              if python -c 'import json,sys; d=json.load(open("runtime/v91-observer.json", encoding="utf-8")); sys.exit(0 if d.get("audit",{}).get("last_event",{}).get("phase") == "TASK_COMPLETED" and d.get("queue_counts",{}).get("done") == 1 else 1)'; then
+                break
+              fi
+            fi
+            sleep 1
+          done
+          python - <<'PY'
+          import hashlib, json
+          from pathlib import Path
+
+          result = json.loads(Path("runtime/results/ci-hash.json").read_text(encoding="utf-8"))
+          assert result["status"] == "COMPLETED", result
+          assert result["sha256"] == hashlib.sha256(b"V91 container integration\n").hexdigest(), result
+          events = [json.loads(line) for line in Path("runtime/v91-actions.jsonl").read_text(encoding="utf-8").splitlines()]
+          assert [event["phase"] for event in events] == ["TASK_CLAIMED", "TASK_COMPLETED"], events
+          observed = json.loads(Path("runtime/v91-observer.json").read_text(encoding="utf-8"))
+          assert observed["status"] == "OBSERVED", observed
+          assert observed["queue_counts"]["done"] == 1, observed
+          assert observed["audit"]["last_event"]["phase"] == "TASK_COMPLETED", observed
+          print("V91 Compose integration verified: real task processed, hash checked, audit and observer confirmed.")
+          PY
 
       - name: Hash Verification
         run: |
