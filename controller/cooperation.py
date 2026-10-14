@@ -1,8 +1,10 @@
 """V91 cooperative peer handshake and learning-consent policy.
 
-External trust boundaries must use evaluate_signed_peer_offer(), which verifies
-Ed25519 over canonical JSON before evaluating consent and capability policy.
-The policy-only helper is private and is not a safe external entry point.
+External callers may use evaluate_signed_peer_offer() only after loading the
+public key from an independently trusted peer-to-key mapping. The function
+verifies Ed25519 over canonical JSON before evaluating consent and capability
+policy, but it does not bind peer_id to the supplied key or establish trust in a
+self-supplied key. The policy-only helper is not a safe external entry point.
 This module does not discover hosts, connect remotely, execute commands, or
 ingest peer data.
 """
@@ -143,7 +145,12 @@ def evaluate_signed_peer_offer(
     signature_bytes: bytes,
     now_epoch: int | None = None,
 ) -> Decision:
-    """Verify Ed25519 over canonical offer JSON, then evaluate policy."""
+    """Verify canonical offer JSON, then evaluate policy.
+
+    Important: public_key_bytes must come from a trusted source independent of
+    the offer. A key supplied by the peer proves only possession of that key;
+    it does not authenticate the claimed peer_id or establish key trust.
+    """
     message = canonical_offer_bytes(offer)
     verified = message is not None and verify_ed25519_signature(
         public_key_bytes, message, signature_bytes
