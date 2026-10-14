@@ -55,3 +55,28 @@ def test_anomaly_stats():
     stats = detector.get_stats("latency")
     assert stats["count"] == 10
     assert stats["mean"] > 100
+
+def test_boolean_sample_is_not_treated_as_numeric_metric():
+    detector = AnomalyDetector()
+    for _ in range(5):
+        detector.detect("latency", 100)
+    assert detector.detect("latency", True) is False
+    assert detector.get_stats("latency")["count"] == 5
+
+
+def test_invalid_detector_configuration_is_rejected():
+    for window_size in [True, 4.5, 0]:
+        try:
+            AnomalyDetector(window_size=window_size)
+        except ValueError:
+            pass
+        else:
+            raise AssertionError(f"invalid window_size accepted: {window_size!r}")
+
+    for threshold in [True, 0, -1, float("nan"), float("inf")]:
+        try:
+            AnomalyDetector(z_threshold=threshold)
+        except ValueError:
+            pass
+        else:
+            raise AssertionError(f"invalid z_threshold accepted: {threshold!r}")
