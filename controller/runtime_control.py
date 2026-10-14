@@ -252,7 +252,10 @@ def scale_worker(compose_file: Path, project_name: str, replicas: int) -> None:
     run_command(prefix + ["up", "--detach", "--scale", f"{ALLOWED_SERVICE}={replicas}", ALLOWED_SERVICE], timeout=120)
 
 
-def run_cycle(compose_file: Path, project_name: str, runtime_dir: Path, allow_actions: bool) -> dict[str, Any]:
+def run_cycle(
+    compose_file: Path, project_name: str, runtime_dir: Path,
+    allow_actions: bool, allow_scale_down: bool = False,
+) -> dict[str, Any]:
     if not runtime_dir.is_absolute():
         raise ControlError("Runtime directory must be absolute.")
     audit_path = runtime_dir / "v91-actions.jsonl"
@@ -267,6 +270,10 @@ def run_cycle(compose_file: Path, project_name: str, runtime_dir: Path, allow_ac
         target += 1
     elif action == "scale_down_workers":
         target -= 1
+    if action == "scale_down_workers" and not allow_scale_down:
+        initial_status = "PROPOSED_SCALE_DOWN_REQUIRES_OPT_IN"
+    else:
+        initial_status = "PROPOSED_NOT_EXECUTED" if action and not allow_actions else "NO_ACTION"
     event = {
         "event_id": event_id,
         "timestamp_utc": utc_now(),
@@ -288,11 +295,11 @@ def run_cycle(compose_file: Path, project_name: str, runtime_dir: Path, allow_ac
             "No infrastructure change."
         ),
         "rollback_plan": f"Restore worker replica count to {snapshot['replicas']} if post-check fails.",
-        "status": "PROPOSED_NOT_EXECUTED" if action and not allow_actions else "NO_ACTION",
+        "status": initial_status,
     }
     append_audit(audit_path, event)
     result = dict(event)
-    if not action or not allow_actions:
+    if not action or not allow_actions or (action == "scale_down_workers" and not allow_scale_down):
         return result
 
     try:
@@ -344,14 +351,21 @@ def main(argv: list[str] | None = None) -> int:
         parser.error("Set V91_PROJECT_NAME to the existing Docker Compose project name.")
     compose_file = Path(args.compose_file).expanduser().resolve()
     runtime_dir = Path(args.runtime_dir).expanduser().resolve()
-    allow_actions = os.getenv("V91_ENABLE_REAL_ACTIONS", "0").strip() == "1"
-    if os.getenv("V91_ENABLE_REAL_ACTIONS", "0").strip() not in {"0", "1"}:
+    allow_actions_value = os.getenv("V91_ENABLE_REAL_ACTIONS", "0").strip()
+    allow_scale_down_value = os.getenv("V91_ALLOW_SCALE_DOWN", "0").strip()
+    if allow_actions_value not in {"0", "1"}:
         parser.error("V91_ENABLE_REAL_ACTIONS must be exactly 0 or 1.")
+    if allow_scale_down_value not in {"0", "1"}:
+        parser.error("V91_ALLOW_SCALE_DOWN must be exactly 0 or 1.")
+    allow_actions = allow_actions_value == "1"
+    allow_scale_down = allow_scale_down_value == "1"
     if not args.project:
         parser.error("Set V91_PROJECT_NAME to the existing Docker Compose project name.")
     while True:
         try:
-            result = run_cycle(compose_file, args.project, runtime_dir, allow_actions)
+            result = run_cycle(
+                compose_file, args.project, runtime_dir, allow_actions, allow_scale_down
+            )
             print(json.dumps(result, sort_keys=True, indent=2))
             if result["status"] in {"ROLLBACK_FAILED"}:
                 return 2
