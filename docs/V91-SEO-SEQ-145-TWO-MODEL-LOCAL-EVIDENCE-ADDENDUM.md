@@ -196,3 +196,28 @@ Proceed with read-only inspection and isolated tests, not broad production activ
 9. Do not merge PRs, rotate or reveal credentials, delete state, stop processes, or deploy changes without explicit authorization and a reviewed change plan.
 
 This sequence allows useful progress now while keeping the production boundary evidence-based.
+
+
+## 9. Exact-head CI confirmation and next-stage gate — 2026-10-14
+
+A fresh GitHub API check confirms that the latest report commit, `f627a8ce125d5c18b04dd2712b028fd821089195`, has a completed successful workflow:
+- Workflow: `v91 Audit Pipeline`
+- Run: #64, ID `38508114680`
+- Job: `audit-checks` — completed / success
+- Run URL: https://github.com/guenny9000/v91-core-system/actions/runs/38508114680
+
+This is stronger than the earlier #63 result for the report's latest revision: #64 passed on the exact current report commit. It confirms the repository's configured CI checks for that commit only.
+
+Current PR #5 head is `f627a8ce125d5c18b04dd2712b028fd821089195`; PR #5 remains open, draft, and unmerged. PR #4 remains open, draft, and unmerged. No merge or production deployment was performed.
+
+### Next-stage decision
+**Advance to the next engineering stage: yes — controlled validation and implementation work. Unrestricted production activation: no.**
+
+Next stage means:
+1. Use #64 as the current CI baseline.
+2. Review and close any unresolved code-review findings on PR #4, including a regression test for the default clock/expiry path.
+3. Add end-to-end tests only inside an isolated checkout or sandbox; do not connect to external systems.
+4. Validate local process identity, data-pull success, logs, and state transitions from evidence rather than status text.
+5. Require a fresh CI run on any new code commit, review, and explicit authorization before merge or deployment.
+
+State labels: latest report commit CI = **VERIFIED FROM GITHUB API**; implementation and local runtime end-to-end = **NOT YET ESTABLISHED**; production = **NOT AUTHORIZED / NOT ESTABLISHED**.
