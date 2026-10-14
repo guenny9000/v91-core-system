@@ -53,8 +53,10 @@ jobs:
           TASK
           docker compose up --detach --build
           for container in v91-controller v91-core-system-worker-1; do
-            network_mode="$(docker inspect --format '{{.HostConfig.NetworkMode}}' "$container")"
-            test "$network_mode" = "none"
+            network_name="$(docker inspect --format '{{range $name, $settings := .NetworkSettings.Networks}}{{$name}}{{end}}' "$container")"
+            test -n "$network_name"
+            internal_network="$(docker network inspect --format '{{.Internal}}' "$network_name")"
+            test "$internal_network" = "true"
           done
           for attempt in $(seq 1 40); do
             if [ -f runtime/results/ci-hash.json ] && [ -f runtime/v91-observer.json ]; then
