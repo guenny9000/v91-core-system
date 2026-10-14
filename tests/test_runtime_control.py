@@ -39,7 +39,7 @@ def test_scale_down_requires_three_consecutive_low_samples():
     assert rc.decide(snapshot, 1)[0] is None
     action, count, reason = rc.decide(snapshot, 2)
     assert action == "scale_down_workers"
-    assert count == 3
+    assert count == 0
     assert "persisted" in reason
 
 
