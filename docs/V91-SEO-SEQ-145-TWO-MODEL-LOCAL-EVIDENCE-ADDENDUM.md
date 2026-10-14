@@ -159,3 +159,40 @@ This supersedes the earlier statement in this addendum that no workflow run had 
 At this refresh, PR #5 remains open, draft, unmerged, and reported mergeable by GitHub. The successful workflow is evidence for the checks run on this exact commit; it is not merge approval, proof of local Windows runtime state, proof of full cryptographic ledger integrity, or proof of production deployment.
 
 **Updated classification:** exact-head GitHub CI = **VERIFIED FROM GITHUB API**; PR merge = **NOT MERGED**; local runtime identity = **UNKNOWN**; production deployment = **NOT ESTABLISHED**.
+
+
+## 8. Follow-up: run #63 completed and next-step decision — 2026-10-14
+
+Fresh GitHub API query confirms:
+- Workflow run #63, ID `38507015977`
+- Exact head: `f035a03be74635ad97a6d49869eef102f0b98ffa`
+- Status/conclusion: `completed / success`
+- Job `audit-checks`: completed successfully
+- Unit tests, hash verification, and hash-artifact upload: successful
+- Run URL: https://github.com/guenny9000/v91-core-system/actions/runs/38507015977
+
+Run #63 validates the newer documentation commit. It repeats the same workflow checks as run #62 on a different commit; it does not introduce a new runtime capability. It is useful confirmation that the evidence addendum itself did not break the repository's current CI checks.
+
+### Current PR state
+- PR #4, "Add consent-gated cooperative peer handshake": open, draft, unmerged; head `470859c2a6d9447e4b4867f8dec6cfbeb5a398fe`.
+- PR #5, "Add V91 SEO/SEQ-145 global merge evidence report": open, draft, unmerged; head `f035a03be74635ad97a6d49869eef102f0b98ffa`.
+- GitHub reports both as mergeable at the time of this query. Mergeability is not approval or evidence of safe production readiness.
+
+### Production decision
+**Decision: CI-verified documentation branch; NOT approved for unrestricted production rollout.**
+
+Reason: the successful workflow proves only the configured tests and hash step for the exact commit. The cooperative module's own code documentation says it evaluates a declared peer offer; it does not perform host discovery, remote connections, cryptographic signature verification, remote command execution, or peer-data ingestion. The current PRs are still drafts and unmerged. Local Windows process identity and end-to-end operation remain unverified here.
+
+### Safe forward progress for the local models
+Proceed with read-only inspection and isolated tests, not broad production activation:
+1. Record local UTC timestamp, repository path, branch, exact commit, and clean/dirty status.
+2. Map each visible process to executable path, command line, start time, parent process, and corresponding log path. Do not dump environment variables or secret values.
+3. For every daemon/orchestrator, identify its input, output, state file, error handling, and whether it is making real external calls or only writing status text.
+4. Inspect the two `v93_monitor.py` instances for intentional separation; do not stop either until the difference is understood.
+5. Validate daily data-pull history using timestamps and output records; distinguish scheduled configuration from successful execution.
+6. Run targeted tests in an isolated checkout; preserve command, exit code, test names, stdout/stderr, and hashes.
+7. For peer cooperation, test default-deny behavior, consent scope, expiry handling, invalid signatures supplied by a trusted verifier, and rejection of execution/admin/private-data capabilities. Do not connect to third-party systems.
+8. Return findings in the format: VERIFIED / FAILED / UNKNOWN / EVIDENCE / NEXT SAFE STEP.
+9. Do not merge PRs, rotate or reveal credentials, delete state, stop processes, or deploy changes without explicit authorization and a reviewed change plan.
+
+This sequence allows useful progress now while keeping the production boundary evidence-based.
