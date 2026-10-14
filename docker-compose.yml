@@ -15,12 +15,24 @@ services:
     restart: always
     environment:
       - PYTHONUNBUFFERED=1
+      - V91_QUEUE_DIR=/app/queue
+      - V91_RUNTIME_DIR=/app/runtime
+      - V91_WORKSPACE_DIR=/app/workspace:ro
+      - V91_OBSERVER_POLL_SECONDS=10
 
   worker:
     build:
       context: .
       dockerfile: Dockerfile
-    command: python -u -c "import time; print('Worker idle'); time.sleep(3600)"
+    command: python -u controller/worker.py
+    volumes:
+      - ./queue:/app/queue
+      - ./runtime:/app/runtime
+      - ./workspace:/app/workspace:ro
     restart: always
     environment:
       - PYTHONUNBUFFERED=1
+      - V91_QUEUE_DIR=/app/queue
+      - V91_RUNTIME_DIR=/app/runtime
+      - V91_WORKSPACE_DIR=/app/workspace
+      - V91_WORKER_POLL_SECONDS=1
