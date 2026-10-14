@@ -1,7 +1,12 @@
 import json
+import sys
 import tempfile
 import unittest
 from pathlib import Path
+
+# The existing repository test configuration does not always add the project
+# root to sys.path. Make this standalone package import deterministic.
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from global_guard.feedback import append_feedback, make_feedback_record, summarize_feedback
 from global_guard.scenario_runner import load_scenarios, run_scenarios, write_report
