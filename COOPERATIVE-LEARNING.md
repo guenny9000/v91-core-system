@@ -27,8 +27,13 @@ to access another system.
   audit-record boundaries.
 - Not implemented: network discovery, transport, cryptographic signature
   verification, persistent ledger integration, or actual model training.
-- Not yet verified: tests have not been run by this GitHub edit operation.
-  CI must pass before merging or describing the feature as production-ready.
+- Verified by GitHub Actions run #66 on code commit
+  `1491cdeb85d774d62db0802a8aa3e697543936b2`: the `Run Unit Tests`,
+  `Hash Verification`, and `Upload Hash Artifacts` steps all completed
+  successfully. Run: https://github.com/guenny9000/v91-core-system/actions/runs/38510257846
+- This verifies only the checks in that run; it does not establish production
+  deployment, trusted signature verification, networking, persistent ledger
+  integration, or model training. Any code change requires a new CI result.
 
 ## Example offer
     {
