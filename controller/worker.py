@@ -26,6 +26,8 @@ POLL_SECONDS = float(os.getenv("V91_WORKER_POLL_SECONDS", "1"))
 TASK_ID_RE = re.compile(r"^[A-Za-z0-9_-]{1,80}$")
 SHA256_RE = re.compile(r"^[a-fA-F0-9]{64}$")
 ALLOWED_ACTIONS = {"health_snapshot", "sha256_file", "verify_sha256"}
+MAX_TASK_BYTES = 64 * 1024
+MAX_WORKSPACE_FILE_BYTES = 512 * 1024 * 1024
 STARTED = time.monotonic()
 STOP = False
 
@@ -58,6 +60,8 @@ def workspace_file(relative_path: Any) -> Path:
         raise ControlError("Requested workspace file does not exist.") from exc
     if not resolved.is_relative_to(WORKSPACE_ROOT) or not resolved.is_file():
         raise ControlError("Requested path is not a regular file inside the workspace.")
+    if resolved.stat().st_size > MAX_WORKSPACE_FILE_BYTES:
+        raise ControlError("Workspace file exceeds the 512 MiB processing limit.")
     return resolved
 
 
@@ -133,7 +137,10 @@ def execute_task(task: dict[str, Any], task_id: str) -> dict[str, Any]:
     if not isinstance(expected, str) or not SHA256_RE.fullmatch(expected):
         raise ControlError("expected_sha256 must contain exactly 64 hexadecimal characters.")
     matches = hmac.compare_digest(digest.lower(), expected.lower())
-    return {**base, "status": "COMPLETED", "matches_expected": matches}
+    return {
+        **base, "status": "COMPLETED", "matches_expected": matches,
+        "verification_status": "MATCH" if matches else "MISMATCH",
+    }
 
 
 def claim_one() -> Path | None:
@@ -162,6 +169,8 @@ def process_one() -> bool:
             "task_id": task_id, "worker_id": f"{socket.gethostname()}:{os.getpid()}",
             "source": "LOCAL_QUEUE", "status": "CLAIMED",
         })
+        if claimed.stat().st_size > MAX_TASK_BYTES:
+            raise ControlError("Task document exceeds the 64 KiB limit.")
         task = json.loads(claimed.read_text(encoding="utf-8"))
         result = execute_task(task, task_id)
         result_path = atomic_result(task_id, result)
@@ -170,6 +179,12 @@ def process_one() -> bool:
             "task_id": task_id, "result_file": result_path.name,
             "source": "LOCAL_WORKER", "status": result["status"],
             "action": result["action"],
+            "result_summary": {
+                key: result[key] for key in (
+                    "sha256", "size_bytes", "matches_expected",
+                    "verification_status", "evidence_status",
+                ) if key in result
+            },
         })
         destination = QUEUE_ROOT / "done" / claimed.name
         os.rename(claimed, destination)
