@@ -43,3 +43,22 @@ if __name__ == "__main__":
     test_anomaly_detection_spike()
     test_anomaly_stats()
     print("\n✓ All anomaly tests passed")
+
+
+
+def test_anomaly_uses_prior_window_for_spike():
+    detector = AnomalyDetector(z_threshold=2.5)
+    for _ in range(8):
+        assert detector.detect("latency", 100) is False
+    assert detector.detect("latency", 500) is True
+
+
+def test_anomaly_rejects_non_finite_values():
+    import math
+    import pytest
+
+    detector = AnomalyDetector()
+    with pytest.raises(ValueError):
+        detector.detect("latency", math.nan)
+    with pytest.raises(ValueError):
+        detector.detect("latency", math.inf)

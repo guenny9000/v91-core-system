@@ -20,11 +20,71 @@ jobs:
 
       - name: Install Dependencies
         run: |
-          pip install --no-cache-dir numpy pytest
+          pip install --no-cache-dir pytest
+
+      - name: Validate Docker Compose configuration
+        run: docker compose --file docker-compose.yml config --quiet
 
       - name: Run Unit Tests
         run: |
           pytest tests/ -v
+
+      - name: Compile runtime modules
+        run: python -m py_compile controller/*.py
+
+      - name: Build and test real Compose worker/observer
+        shell: bash
+        run: |
+          set -euo pipefail
+          export V91_CONTAINER_UID="$(id -u)"
+          export V91_CONTAINER_GID="$(id -g)"
+          cleanup() { docker compose down --remove-orphans >/dev/null 2>&1 || true; }
+          trap cleanup EXIT
+          mkdir -p queue/pending queue/processing queue/done queue/failed runtime/results workspace
+          printf 'V91 container integration\n' > workspace/ci-example.txt
+          cat > queue/pending/ci-hash.json <<'TASK'
+          {
+            "task_id": "ci-hash",
+            "action": "sha256_file",
+            "relative_path": "ci-example.txt",
+            "purpose": "Verify the container can process a real local file.",
+            "expected_effect": "Return the correct SHA-256 digest and byte count."
+          }
+          TASK
+          docker compose up --detach --build
+          for container in v91-controller v91-core-system-worker-1; do
+            network_name="$(docker inspect --format '{{range $name, $settings := .NetworkSettings.Networks}}{{$name}}{{end}}' "$container")"
+            test -n "$network_name"
+            internal_network="$(docker network inspect --format '{{.Internal}}' "$network_name")"
+            test "$internal_network" = "true"
+          done
+          for attempt in $(seq 1 40); do
+            if [ -f runtime/results/ci-hash.json ] && [ -f runtime/v91-observer.json ]; then
+              if python -c 'import json,sys; d=json.load(open("runtime/v91-observer.json", encoding="utf-8")); a=d.get("audit") or {}; e=a.get("last_event") or {}; q=d.get("queue_counts") or {}; sys.exit(0 if e.get("phase") == "TASK_COMPLETED" and q.get("done") == 1 else 1)' >/dev/null 2>&1; then
+                break
+              fi
+            fi
+            sleep 1
+          done
+          test -f runtime/results/ci-hash.json
+          test -f runtime/v91-observer.json
+          python - <<'PY'
+          import hashlib, json
+          from pathlib import Path
+
+          result = json.loads(Path("runtime/results/ci-hash.json").read_text(encoding="utf-8"))
+          assert result["status"] == "COMPLETED", result
+          assert result["sha256"] == hashlib.sha256(b"V91 container integration\n").hexdigest(), result
+          events = [json.loads(line) for line in Path("runtime/v91-actions.jsonl").read_text(encoding="utf-8").splitlines()]
+          assert [event["phase"] for event in events] == ["TASK_CLAIMED", "TASK_STARTED", "TASK_COMPLETED"], events
+          assert events[1]["purpose"] == "Verify the container can process a real local file.", events
+          assert events[1]["expected_effect"] == "Return the correct SHA-256 digest and byte count.", events
+          observed = json.loads(Path("runtime/v91-observer.json").read_text(encoding="utf-8"))
+          assert observed["status"] == "OBSERVED", observed
+          assert observed["queue_counts"]["done"] == 1, observed
+          assert observed["audit"]["last_event"]["phase"] == "TASK_COMPLETED", observed
+          print("V91 Compose integration verified: real task processed, hash checked, audit and observer confirmed.")
+          PY
 
       - name: Hash Verification
         run: |
@@ -34,7 +94,7 @@ jobs:
           cat audit_hashes.txt
 
       - name: Upload Hash Artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: audit-hashes
           path: |
