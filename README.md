@@ -142,7 +142,7 @@ Scale-up requires live Docker resource pressure (CPU at least 75% or memory at l
 
 To keep observing with the Windows launcher, add `-Watch` (and optionally `-IntervalSeconds 60`). The minimum interval is 15 seconds. To permit capacity reduction as well, add `-AllowScaleDown`; this is a separate opt-in. Use the exact project name of the existing stack; the script does not create or switch to a guessed project. The host-side script must be run where the Docker CLI can access that stack. It is deliberately not given the Docker socket inside the controller container.
 
-This is real, bounded Docker Compose control, not proof that the worker performs useful application work. The current worker command is an idle placeholder; connect a real workload and its health checks before interpreting scale changes as application-level improvement.
+The worker now performs real offline tasks from `queue/pending/`: `health_snapshot`, `sha256_file`, and `verify_sha256`. The observer writes actual queue and audit-log state to `runtime/v91-observer.json`. Scaling verifies container capacity and records resource deltas; it does not by itself prove an application-level performance improvement.
 
 
 ## Submit a real offline task
