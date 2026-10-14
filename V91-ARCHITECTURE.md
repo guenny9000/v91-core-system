@@ -1,25 +1,27 @@
 # V91 Core System – Architecture and verified scope
 
 **Status:** documented prototype; CI-tested behavior is limited to the tests in this repository.
-**Current mode:** synthetic simulation only. **No host or Docker control actions are enabled.**
+**Deployment mode:** Compose runs a local filesystem observer and real offline task workers. The synthetic controller is manual/demo only. Bounded host-side Docker control is available through an explicit opt-in CLI; it is not automatically enabled by the container.
 
 ## What exists in this repository
 
-- `controller/controller.py`: creates synthetic metric samples, evaluates simple rules, and records proposed actions without executing them.
-- `controller/anomaly.py`: sliding-window anomaly detection. Each sample is scored against prior observations before it is added to the window.
-- `controller/metrics.py`: in-memory event counters and recent latency history.
-- `controller/feedback.py`: in-memory strategy selection based on the supplied values.
-- `controller/chaos.py`: helper functions for simulated degradation and exceptions. They are not wired to production infrastructure.
-- `tests/`: unit and safety regression tests.
-- `.github/workflows/audit.yml`: runs tests and produces source checksum artifacts.
+- `controller/controller.py`: manual synthetic demonstration only; random samples are never used by the live actuator.
+- `controller/observer.py`: records actual local queue counts and audit-log parsing state in `runtime/v91-observer.json`.
+- `controller/worker.py`: processes an offline JSON task queue with an allowlist: health snapshot, SHA-256 calculation, and SHA-256 comparison. It rejects arbitrary shell/code and workspace path traversal.
+- `controller/runtime_control.py`: host-side adapter reads actual Docker Compose container state and Docker CPU/memory percentages. It can scale only the `worker` service, within hard bounds, after explicit opt-in.
+- `controller/anomaly.py`, `metrics.py`, `feedback.py`, and `chaos.py`: reusable algorithm/demo modules; the synthetic/demo paths are not treated as live telemetry.
+- `tests/`: unit and safety regression tests for decisions, queue processing, audit order, effect measurement, rollback, and input boundaries.
+- `.github/workflows/audit.yml`: validates Compose configuration, runs tests/compilation, and produces source checksum artifacts.
 
 ## Data and action boundaries
 
-The controller currently generates values with Python's random-number generator. These values are **synthetic**, not operating-system, Docker, network, energy, or production telemetry. Reports must preserve that distinction.
+The manual demonstration in `controller/controller.py` generates random values. These values are **synthetic**, not operating-system, Docker, network, energy, or production telemetry. The Compose stack does not use these values for control decisions.
 
-The action names `scale_up_workers`, `scale_down_workers`, and `activate_chaos_mode` are proposals only. The current controller does not execute shell commands, restart containers, scale workers, or change the host.
+The host-side runtime controller reads live Docker/Compose state. Scale-up requires `V91_ENABLE_REAL_ACTIONS=1`; scale-down additionally requires `V91_ALLOW_SCALE_DOWN=1`. Only the allow-listed `worker` service can be scaled, between one and three replicas. Each decision is written before an action; after an action, the replica/running state is checked, resource deltas are recorded, and a failed verification triggers a rollback attempt.
 
-There is no implemented production metrics adapter, actuator authorization service, durable audit ledger, signed evidence envelope, external trust witness, or deployment verification in this repository. Other repositories may describe planned components, but those descriptions do not prove that the components are implemented or connected here.
+The task worker accepts only `health_snapshot`, `sha256_file`, and `verify_sha256`. It uses no network, shell, or arbitrary code execution. Inputs are bounded and file paths must remain inside the read-only workspace.
+
+Remaining gaps: application-level latency/error metrics are not connected; the audit JSONL file is not WORM or signed; event truth and real-world identity are not independently attested; and no useful application workload or production deployment has been verified.
 
 ## V91 operating principles
 
@@ -46,4 +48,4 @@ A successful GitHub Actions run proves only that the configured steps passed for
 
 ## Future work, not current capability
 
-A future real-control design should first provide: a validated read-only metrics adapter; a typed proposal format; independent policy authorization; a separately deployed least-privilege actuator; bounded operations with rollback; structured audit events; and integration tests using a disposable environment. None of these future items should be marked implemented until the repository contains the code and repeatable evidence.
+Next improvements should connect actual application-level health/latency/error telemetry, strengthen audit durability and signing, add explicit worker health checks, and test action/rollback against a disposable Compose project. The current CI tests logic with mocked Docker responses; it does not prove that this user's Docker host is running or that a live scaling operation succeeded.
