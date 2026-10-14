@@ -329,7 +329,34 @@ def run_cycle(
         raise ControlError("Runtime directory must be absolute.")
     audit_path = runtime_dir / "v91-actions.jsonl"
     state_path = runtime_dir / "v91-controller-state.json"
-    snapshot = collect_snapshot(compose_file, project_name)
+    try:
+        snapshot = collect_snapshot(compose_file, project_name)
+    except ControlError as exc:
+        # Missing or unusable telemetry is UNKNOWN, never a measured zero.
+        # Persist the failed observation so an end-of-day audit can distinguish
+        # "no data" from a real 0% CPU/memory sample. No action is considered.
+        event = {
+            "event_id": str(uuid.uuid4()),
+            "timestamp_utc": utc_now(),
+            "phase": "OBSERVATION",
+            "source": "OBSERVATION_ATTEMPT",
+            "project": project_name,
+            "service": ALLOWED_SERVICE,
+            "observed": {
+                "cpu_percent": {"value": None, "status": "UNKNOWN"},
+                "memory_percent": {"value": None, "status": "UNKNOWN"},
+                "replicas": {"value": None, "status": "UNKNOWN"},
+                "running": {"value": None, "status": "UNKNOWN"},
+            },
+            "action": "NO_ACTION",
+            "authorization": "NOT_USED",
+            "status": "NO_DATA_AVAILABLE",
+            "error_type": type(exc).__name__,
+            "reason": "Required live Docker state or resource metrics could not be verified.",
+        }
+        append_audit(audit_path, event)
+        return event
+
     low_samples = read_low_sample_count(state_path)
     action, next_low_samples, reason = decide(snapshot, low_samples)
     write_state(state_path, next_low_samples)
@@ -442,7 +469,7 @@ def main(argv: list[str] | None = None) -> int:
                 compose_file, project_name, runtime_dir, allow_actions, allow_scale_down
             )
             print(json.dumps(result, sort_keys=True, indent=2))
-            if result["status"] in {"ROLLBACK_FAILED"}:
+            if result["status"] in {"ROLLBACK_FAILED", "NO_DATA_AVAILABLE"}:
                 return 2
         except ControlError as exc:
             print(json.dumps({
