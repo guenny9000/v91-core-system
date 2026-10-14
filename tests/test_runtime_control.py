@@ -217,7 +217,7 @@ def test_effect_is_not_claimed_when_resource_metrics_do_not_improve():
 
 def test_resolve_project_name_requires_unique_existing_stack(monkeypatch, tmp_path):
     compose = tmp_path / "docker-compose.yml"
-    compose.write_text("services:\\n  worker:\\n    image: example\\n", encoding="utf-8")
+    compose.write_text("services:\n  worker:\n    image: example\n", encoding="utf-8")
     record = [{"Name": "v91-local", "ConfigFiles": str(compose.resolve())}]
     monkeypatch.setattr(rc, "run_command", lambda *_args, **_kwargs: json.dumps(record))
     assert rc.resolve_project_name(compose.resolve()) == "v91-local"
@@ -225,7 +225,7 @@ def test_resolve_project_name_requires_unique_existing_stack(monkeypatch, tmp_pa
 
 def test_resolve_project_name_fails_closed_when_ambiguous(monkeypatch, tmp_path):
     compose = tmp_path / "docker-compose.yml"
-    compose.write_text("services:\\n  worker:\\n    image: example\\n", encoding="utf-8")
+    compose.write_text("services:\n  worker:\n    image: example\n", encoding="utf-8")
     record = [
         {"Name": "v91-a", "ConfigFiles": str(compose.resolve())},
         {"Name": "v91-b", "ConfigFiles": str(compose.resolve())},
@@ -237,6 +237,6 @@ def test_resolve_project_name_fails_closed_when_ambiguous(monkeypatch, tmp_path)
 
 def test_explicit_project_name_avoids_discovery(monkeypatch, tmp_path):
     compose = tmp_path / "docker-compose.yml"
-    compose.write_text("services:\\n  worker:\\n    image: example\\n", encoding="utf-8")
+    compose.write_text("services:\n  worker:\n    image: example\n", encoding="utf-8")
     monkeypatch.setattr(rc, "run_command", lambda *_args, **_kwargs: pytest.fail("should not query project list"))
     assert rc.resolve_project_name(compose.resolve(), "v91-local") == "v91-local"
