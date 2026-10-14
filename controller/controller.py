@@ -9,6 +9,7 @@ A real metrics adapter and a separately reviewed actuator are required before
 real-world control actions can be enabled.
 """
 
+import math
 import random
 import time
 from collections import deque
@@ -39,7 +40,14 @@ class ControlPlane:
         self.metrics_mode = "SIMULATION"
 
     def ingest_metric(self, latency, errors, events):
-        """Record one metric snapshot; callers must label its source correctly."""
+        """Record a valid synthetic metric snapshot; never treat it as live telemetry."""
+        for name, value in (("latency", latency), ("errors", errors), ("events", events)):
+            if isinstance(value, bool) or not isinstance(value, (int, float)) or not math.isfinite(value):
+                raise ValueError(f"{name} must be a finite number")
+            if value < 0:
+                raise ValueError(f"{name} must not be negative")
+        if not float(errors).is_integer() or not float(events).is_integer():
+            raise ValueError("errors and events must be whole numbers")
         metric = {
             "timestamp": time.time(),
             "latency": latency,
