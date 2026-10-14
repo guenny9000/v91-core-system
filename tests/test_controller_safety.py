@@ -37,3 +37,22 @@ def test_unknown_action_is_rejected(capsys):
     assert controller.last_action is None
     assert controller.last_action_status == "REJECTED_UNKNOWN_ACTION"
     assert "rejected" in capsys.readouterr().out
+
+
+
+def test_invalid_metrics_are_rejected():
+    import math
+    import pytest
+
+    controller = ControlPlane()
+    for values in (
+        (-1, 0, 10),
+        (100, -1, 10),
+        (100, 0, -1),
+        (math.nan, 0, 10),
+        (100, math.inf, 10),
+        (True, 0, 10),
+        (100, 0.5, 10),
+    ):
+        with pytest.raises(ValueError):
+            controller.ingest_metric(*values)
