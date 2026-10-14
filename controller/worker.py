@@ -104,7 +104,7 @@ def atomic_result(task_id: str, payload: dict[str, Any]) -> Path:
 def execute_task(task: dict[str, Any], task_id: str) -> dict[str, Any]:
     if not isinstance(task, dict):
         raise ControlError("Task document must be a JSON object.")
-    allowed_fields = {"task_id", "action", "relative_path", "expected_sha256"}
+    allowed_fields = {"task_id", "action", "relative_path", "expected_sha256", "purpose", "expected_effect"}
     if set(task) - allowed_fields:
         raise ControlError("Task contains unsupported fields.")
     if task.get("task_id") != task_id or not isinstance(task_id, str) or not TASK_ID_RE.fullmatch(task_id):
@@ -112,9 +112,16 @@ def execute_task(task: dict[str, Any], task_id: str) -> dict[str, Any]:
     action = task.get("action")
     if not isinstance(action, str) or action not in ALLOWED_ACTIONS:
         raise ControlError("Unknown task action.")
+    purpose = task.get("purpose")
+    expected_effect = task.get("expected_effect")
+    for field_name, value in (("purpose", purpose), ("expected_effect", expected_effect)):
+        if not isinstance(value, str) or not value.strip() or len(value.strip()) > 500:
+            raise ControlError(f"{field_name} must be a non-empty string of at most 500 characters.")
     base = {
         "task_id": task_id,
         "action": action,
+        "purpose": purpose.strip(),
+        "expected_effect": expected_effect.strip(),
         "timestamp_utc": utc_now(),
         "source": "LOCAL_WORKER",
         "evidence_status": "OBSERVED_LOCAL_STATE",
@@ -182,7 +189,7 @@ def process_one() -> bool:
             "result_summary": {
                 key: result[key] for key in (
                     "sha256", "size_bytes", "matches_expected",
-                    "verification_status", "evidence_status",
+                    "verification_status", "evidence_status", "purpose", "expected_effect",
                 ) if key in result
             },
         })
