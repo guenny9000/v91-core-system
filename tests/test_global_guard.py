@@ -40,11 +40,9 @@ class GlobalGuardTests(unittest.TestCase):
                 self.assertFalse(decision.allowed)
                 self.assertEqual(decision.code, "PROHIBITED_ACTION_CLASS")
 
-    def test_network_disabled_by_default(self):
+    def test_network_disabled_even_if_class_is_granted(self):
         policy = GuardPolicy(allowed_capabilities=frozenset({"network_read"}))
-        decision = authorize_action(
-            request(action_class="network_read", network_required=True), policy
-        )
+        decision = authorize_action(request(action_class="network_read"), policy)
         self.assertFalse(decision.allowed)
         self.assertEqual(decision.code, "NETWORK_DISABLED")
 
@@ -69,10 +67,10 @@ class GlobalGuardTests(unittest.TestCase):
 
     def test_model_and_production_changes_stay_disabled(self):
         policy = GuardPolicy(allowed_capabilities=frozenset({"model_change", "production_change"}))
-        model = authorize_action(request(action_class="model_change", model_change=True),
-                                 policy, human_approved=True)
-        prod = authorize_action(request(action_class="production_change", production_change=True),
-                                policy, human_approved=True)
+        model = authorize_action(request(action_class="model_change"), policy,
+                                 human_approved=True)
+        prod = authorize_action(request(action_class="production_change"), policy,
+                                human_approved=True)
         self.assertEqual(model.code, "MODEL_CHANGE_DISABLED")
         self.assertEqual(prod.code, "PRODUCTION_CHANGE_DISABLED")
 
