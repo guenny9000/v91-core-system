@@ -32,6 +32,9 @@ jobs:
       - name: Compile runtime modules
         run: python -m py_compile controller/*.py
 
+      - name: Build container image
+        run: docker build --tag v91-core-system:ci .
+
       - name: Hash Verification
         run: |
           find ./controller -type f -name "*.py" -exec sha256sum {} \; > audit_hashes.txt
