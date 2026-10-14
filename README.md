@@ -125,7 +125,7 @@ For real local observation and bounded worker scaling, use `controller/runtime_c
 First run observe-and-plan mode (no infrastructure changes):
 
 ```powershell
-python controller/runtime_control.py --once
+.\scripts\Start-V91RuntimeControl.ps1
 ```
 
 The script tries to identify one already-running Compose project by matching its recorded config file. If zero or multiple projects match, it refuses to guess. Then set `V91_PROJECT_NAME` to the exact existing project name and retry.
@@ -135,12 +135,11 @@ The command records a JSONL decision under `runtime/v91-actions.jsonl`, includin
 Only after reviewing the plan, enable real **scale-up** actions explicitly:
 
 ```powershell
-$env:V91_ENABLE_REAL_ACTIONS = "1"
-python controller/runtime_control.py --once
+.\scripts\Start-V91RuntimeControl.ps1 -EnableRealActions
 ```
 
 Scale-up requires live Docker resource pressure (CPU at least 75% or memory at least 80%), is limited to one replica per cycle, and is capped at three replicas. Scale-down requires three consecutive low-resource samples and a separate `V91_ALLOW_SCALE_DOWN=1`; it is not enabled by the general action switch. Post-action state is checked; if verification fails, the controller attempts to restore the previous replica count and records the result.
 
-To keep observing, use `--watch --interval-seconds 60`. The minimum interval is 15 seconds. Use the exact project name of the existing stack; the script does not create or switch to a guessed project. The host-side script must be run where the Docker CLI can access that stack. It is deliberately not given the Docker socket inside the controller container.
+To keep observing with the Windows launcher, add `-Watch` (and optionally `-IntervalSeconds 60`). The minimum interval is 15 seconds. To permit capacity reduction as well, add `-AllowScaleDown`; this is a separate opt-in. Use the exact project name of the existing stack; the script does not create or switch to a guessed project. The host-side script must be run where the Docker CLI can access that stack. It is deliberately not given the Docker socket inside the controller container.
 
 This is real, bounded Docker Compose control, not proof that the worker performs useful application work. The current worker command is an idle placeholder; connect a real workload and its health checks before interpreting scale changes as application-level improvement.
