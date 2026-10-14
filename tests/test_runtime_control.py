@@ -129,7 +129,7 @@ def test_collect_snapshot_reads_live_compose_and_docker_stats(monkeypatch, tmp_p
         calls.append(args)
         if args[-2:] == ["config", "--services"]:
             return "worker\ncontroller\n"
-        if args[-3:] == ["ps", "--all", "--format", "json"]:
+        if args[-4:] == ["ps", "--all", "--format", "json"]:
             return '[{"Name":"v91-worker-1","Service":"worker","State":"running","Health":"healthy"}]'
         if args[:2] == ["docker", "stats"]:
             return '{"Name":"v91-worker-1","CPUPerc":"81.00%","MemPerc":"43.00%"}\n'
