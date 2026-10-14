@@ -240,3 +240,19 @@ def test_explicit_project_name_avoids_discovery(monkeypatch, tmp_path):
     compose.write_text("services:\n  worker:\n    image: example\n", encoding="utf-8")
     monkeypatch.setattr(rc, "run_command", lambda *_args, **_kwargs: pytest.fail("should not query project list"))
     assert rc.resolve_project_name(compose.resolve(), "v91-local") == "v91-local"
+
+
+def test_scale_up_limit_is_reported_without_false_no_threshold_claim():
+    snapshot = {"replicas": 3, "max_cpu_percent": 99.0, "max_memory_percent": 95.0}
+    action, low_count, reason = rc.decide(snapshot, 0)
+    assert action is None
+    assert low_count == 0
+    assert "maximum" in reason
+
+
+def test_minimum_replica_limit_is_reported_without_capacity_reduction():
+    snapshot = {"replicas": 1, "max_cpu_percent": 5.0, "max_memory_percent": 10.0}
+    action, low_count, reason = rc.decide(snapshot, 2)
+    assert action is None
+    assert low_count == 0
+    assert "minimum" in reason
