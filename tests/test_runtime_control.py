@@ -258,3 +258,38 @@ def test_minimum_replica_limit_is_reported_without_capacity_reduction():
     assert action is None
     assert low_count == 0
     assert "minimum" in reason
+
+
+
+def test_missing_live_metrics_are_audited_as_unknown_not_zero(monkeypatch, tmp_path):
+    def unavailable(*_args, **_kwargs):
+        raise rc.ControlError("Docker stats unavailable")
+    monkeypatch.setattr(rc, "collect_snapshot", unavailable)
+
+    result = rc.run_cycle(
+        tmp_path / "compose.yml", "v91-test", tmp_path / "runtime",
+        allow_actions=True,
+    )
+
+    assert result["status"] == "NO_DATA_AVAILABLE"
+    assert result["action"] == "NO_ACTION"
+    assert result["observed"]["cpu_percent"] == {"value": None, "status": "UNKNOWN"}
+    assert result["observed"]["memory_percent"] == {"value": None, "status": "UNKNOWN"}
+    assert result["observed"]["replicas"] == {"value": None, "status": "UNKNOWN"}
+    event = json.loads(
+        (tmp_path / "runtime" / "v91-actions.jsonl").read_text(encoding="utf-8")
+    )
+    assert event["status"] == "NO_DATA_AVAILABLE"
+    assert event["observed"]["cpu_percent"]["value"] is None
+    assert event["observed"]["cpu_percent"]["status"] == "UNKNOWN"
+    assert event["action"] == "NO_ACTION"
+
+
+def test_real_zero_percent_remains_a_numeric_measurement():
+    snapshot = {
+        "replicas": 1, "max_cpu_percent": 0.0, "max_memory_percent": 0.0,
+    }
+    action, low_count, reason = rc.decide(snapshot, 0)
+    assert action is None
+    assert low_count == 0
+    assert "0.0%" in reason
