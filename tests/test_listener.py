@@ -311,8 +311,8 @@ def test_inbox_empty_no_errors():
     print("✓ test_inbox_empty_no_errors")
 
 
-def test_exact_duplicate_event_is_idempotent():
-    """The same signed bytes must not create a second ledger entry."""
+def test_semantically_identical_event_is_idempotent():
+    """Whitespace/key-order changes must not replay the same signed event."""
     with tempfile.TemporaryDirectory() as tmpdir:
         db_path = os.path.join(tmpdir, "test.db")
         _setup_db(db_path)
@@ -322,7 +322,10 @@ def test_exact_duplicate_event_is_idempotent():
         raw = _make_event(payload)
         (inbox / "first.json").write_bytes(raw)
         listener.watch_inbox(str(inbox), TEST_KEY, db_path)
-        (inbox / "duplicate.json").write_bytes(raw)
+        # Same signed object, re-serialized with different whitespace and key order.
+        equivalent_raw = json.dumps(json.loads(raw), sort_keys=True, separators=(",", ":")).encode()
+        assert equivalent_raw != raw
+        (inbox / "duplicate.json").write_bytes(equivalent_raw)
         listener.watch_inbox(str(inbox), TEST_KEY, db_path)
         assert _count(db_path, "v91_ledger") == 1
         assert _count(db_path, "v91_audit_log", "action='ledger_accepted'") == 1
@@ -392,6 +395,6 @@ if __name__ == "__main__":
     test_missing_safesignal_quarantined()
     test_inbox_empty_no_errors()
     test_multiple_events_processed()
-    test_exact_duplicate_event_is_idempotent()
+    test_semantically_identical_event_is_idempotent()
     test_database_failure_preserves_inbox_file()
     print("\n✓ All v91 listener tests passed")
