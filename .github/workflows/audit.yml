@@ -46,7 +46,9 @@ jobs:
           {
             "task_id": "ci-hash",
             "action": "sha256_file",
-            "relative_path": "ci-example.txt"
+            "relative_path": "ci-example.txt",
+            "purpose": "Verify the container can process a real local file.",
+            "expected_effect": "Return the correct SHA-256 digest and byte count."
           }
           TASK
           docker compose up --detach --build
