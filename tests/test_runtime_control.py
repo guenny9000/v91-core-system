@@ -119,6 +119,8 @@ def test_scale_down_is_not_executed_without_separate_opt_in(monkeypatch, tmp_pat
     result = rc.run_cycle(tmp_path / "compose.yml", "v91-test", tmp_path / "runtime", True)
     assert result["action"] == "scale_down_workers"
     assert result["status"] == "PROPOSED_SCALE_DOWN_REQUIRES_OPT_IN"
+    persisted = json.loads(state_path.read_text(encoding="utf-8"))
+    assert persisted["low_resource_samples"] == 0
 
 
 def test_collect_snapshot_reads_live_compose_and_docker_stats(monkeypatch, tmp_path):
