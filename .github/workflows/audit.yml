@@ -43,3 +43,4 @@ jobs:
           path: |
             audit_hashes.txt
             audit_hashes.sha256
+          retention-days: 90
