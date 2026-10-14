@@ -73,16 +73,21 @@ payload = {
     "source": "web-frontend",
     "data": {"user_id": "u-001", "ip": "192.168.1.1"}
 }
-payload_bytes = json.dumps(payload, sort_keys=True, separators=(",", ":")).encode()
-sig = hmac.new(SECRET, payload_bytes, hashlib.sha256).hexdigest()
+ts = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+signed_message = {
+    "protocol": "SafeSignal",
+    "version": "1",
+    "ts": ts,
+    "payload": payload,
+}
+signed_bytes = json.dumps(
+    signed_message, sort_keys=True, separators=(",", ":"), ensure_ascii=False
+).encode("utf-8")
+sig = hmac.new(SECRET, signed_bytes, hashlib.sha256).hexdigest()
 
 event = {
-    "safesignal": {
-        "version": "1",
-        "sig": sig,
-        "ts": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
-    },
-    "payload": payload
+    "safesignal": {"version": "1", "sig": sig, "ts": ts},
+    "payload": payload,
 }
 print(json.dumps(event, indent=2))
 ```
@@ -94,7 +99,7 @@ python /tmp/gen_test_event.py > ./data/inbox/test_event_001.json
 Watch the logs – within 5 seconds you should see:
 
 ```
-[INFO] v91-listener LEDGER       event_id=<uuid> type=user_login confidence=1.000
+[INFO] v91-listener LEDGER       event_id=<canonical-envelope-sha256> type=user_login confidence=1.000
 ```
 
 ### Test HITL routing
