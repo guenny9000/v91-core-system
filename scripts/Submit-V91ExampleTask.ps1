@@ -29,6 +29,8 @@ $task = @{
     task_id = $taskId
     action = "sha256_file"
     relative_path = "example.txt"
+    purpose = "Calculate a reproducible SHA-256 digest for the bundled example input."
+    expected_effect = "Produce a result containing the file digest and byte count."
 } | ConvertTo-Json -Depth 4
 
 $utf8NoBom = [System.Text.UTF8Encoding]::new($false)
