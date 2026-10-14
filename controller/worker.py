@@ -84,7 +84,7 @@ def atomic_result(task_id: str, payload: dict[str, Any]) -> Path:
     result_path = RUNTIME_ROOT / "results" / f"{task_id}.json"
     encoded = (json.dumps(payload, sort_keys=True, allow_nan=False, indent=2) + "\n").encode("utf-8")
     try:
-        fd = os.open(str(result_path), os.O_CREAT | os.O_EXCL | os.O_WRONLY, 0o600)
+        fd = os.open(str(result_path), os.O_CREAT | os.O_EXCL | os.O_WRONLY, 0o644)
     except FileExistsError as exc:
         raise ControlError("A result already exists for this task_id; refusing to overwrite it.") from exc
     try:
