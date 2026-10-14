@@ -43,7 +43,7 @@ class CooperativeHandshakeTests(unittest.TestCase):
         self.assertEqual(decision.allowed_capabilities, ("describe", "share_public_metadata"))
 
     def test_missing_signature_fails_closed(self):
-        decision = evaluate_peer_offer(valid_offer(), now_epoch=1000)
+        decision = evaluate_peer_offer(valid_offer(), signature_verified=False, now_epoch=1000)
         self.assertFalse(decision.allowed)
         self.assertIn("PEER_SIGNATURE_NOT_VERIFIED", decision.reasons)
 
