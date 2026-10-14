@@ -6,4 +6,4 @@ RUN pip install --no-cache-dir numpy pytest redis
 
 COPY . .
 
-CMD ["python", "controller/controller.py"]
+CMD ["python", "-u", "controller/observer.py"]
