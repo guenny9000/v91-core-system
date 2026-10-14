@@ -44,7 +44,9 @@ def evaluate_peer_offer(
     """
     reasons: list[str] = []
 
-    if not signature_verified:
+    # Require the literal boolean True; truthy values such as 1 or "yes"
+    # are not proof that a trusted verifier accepted the peer signature.
+    if signature_verified is not True:
         reasons.append("PEER_SIGNATURE_NOT_VERIFIED")
     if offer.get("protocol_version") != PROTOCOL_VERSION:
         reasons.append("UNSUPPORTED_PROTOCOL_VERSION")
