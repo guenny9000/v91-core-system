@@ -235,39 +235,61 @@ def _utcnow() -> str:
 
 # ── Event Processing Pipeline ─────────────────────────────────────────────────
 
+def _already_recorded(event_id: str, db_path: str) -> bool | None:
+    """Return whether an event is durably recorded; None means DB state is unknown."""
+    try:
+        with get_db(db_path) as conn:
+            row = conn.execute(
+                "SELECT 1 FROM v91_audit_log WHERE event_id = ? LIMIT 1",
+                (event_id,),
+            ).fetchone()
+        return row is not None
+    except sqlite3.Error as exc:
+        logger.error("Cannot check idempotency state; preserving event: %s", exc)
+        return None
+
+
+def _remove_duplicate_inbox_file(file_path: Path) -> None:
+    try:
+        file_path.unlink()
+    except OSError as exc:
+        logger.error("Could not remove duplicate inbox file %s: %s", file_path, exc)
+
+
 def process_file(file_path: Path, key: bytes, db_path: str) -> None:
     """Process one inbox file idempotently; keep it if durable recording fails."""
     raw_bytes = file_path.read_bytes()
     raw_hash = hashlib.sha256(raw_bytes).hexdigest()
-    # Deterministic ID prevents the same exact inbox item being recorded twice.
-    event_id = raw_hash
-
     logger.info("Processing %s  sha256=%s", file_path.name, raw_hash[:16])
-
-    # If a prior attempt committed but failed to unlink the file, remove only
-    # after confirming a durable audit-log record already exists.
-    try:
-        with get_db(db_path) as conn:
-            already_recorded = conn.execute(
-                "SELECT 1 FROM v91_audit_log WHERE event_id = ? LIMIT 1",
-                (event_id,),
-            ).fetchone()
-    except sqlite3.Error as exc:
-        logger.error("Cannot check idempotency state; preserving %s: %s", file_path.name, exc)
-        return
-    if already_recorded:
-        logger.info("Already recorded %s; removing duplicate inbox copy", file_path.name)
-        try:
-            file_path.unlink()
-        except OSError as exc:
-            logger.error("Could not remove duplicate inbox file %s: %s", file_path, exc)
-        return
 
     try:
         event = json.loads(raw_bytes)
     except json.JSONDecodeError as exc:
+        # Malformed input has no canonical event object; use its raw-byte hash.
+        event_id = raw_hash
+        recorded = _already_recorded(event_id, db_path)
+        if recorded is None:
+            return
+        if recorded:
+            _remove_duplicate_inbox_file(file_path)
+            return
         _quarantine_file(file_path, event_id, f"json_parse_error: {exc}",
                          raw_bytes.decode(errors="replace"), raw_hash, db_path)
+        return
+
+    # Hash the canonical full envelope (including the signature). This makes
+    # whitespace/key-order changes to the same signed event idempotent while a
+    # changed signature or timestamp yields a different ID.
+    canonical_event = json.dumps(
+        event, sort_keys=True, separators=(",", ":"), ensure_ascii=False
+    ).encode("utf-8")
+    event_id = hashlib.sha256(canonical_event).hexdigest()
+    recorded = _already_recorded(event_id, db_path)
+    if recorded is None:
+        return
+    if recorded:
+        logger.info("Already recorded %s; removing duplicate inbox copy", file_path.name)
+        _remove_duplicate_inbox_file(file_path)
         return
 
     # ── SafeSignal verification ───────────────────────────────────────────────
