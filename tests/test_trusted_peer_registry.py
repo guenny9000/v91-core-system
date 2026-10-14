@@ -1,7 +1,17 @@
 import base64
+import importlib.util
+from pathlib import Path
+import sys
 import unittest
 
-from controller.trusted_peer_registry import resolve_trusted_ed25519_key
+MODULE_PATH = Path(__file__).resolve().parents[1] / "controller" / "trusted_peer_registry.py"
+SPEC = importlib.util.spec_from_file_location("v91_trusted_peer_registry_test", MODULE_PATH)
+if SPEC is None or SPEC.loader is None:
+    raise ImportError(f"Cannot load V91 trusted peer registry from {MODULE_PATH}")
+registry_module = importlib.util.module_from_spec(SPEC)
+sys.modules[SPEC.name] = registry_module
+SPEC.loader.exec_module(registry_module)
+resolve_trusted_ed25519_key = registry_module.resolve_trusted_ed25519_key
 
 
 class TrustedPeerRegistryTests(unittest.TestCase):
