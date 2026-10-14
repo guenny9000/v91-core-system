@@ -1,114 +1,73 @@
-# V91 Core System – Reality-First, lokaler Betrieb
+# V91 Core System
 
-## Zweck und aktueller Umfang
+## Purpose
 
-V91 ist ein schrittweise ausgebautes System für überprüfbare lokale Aufgaben, Beobachtung und begrenzte Betriebssteuerung. Implementierte Funktionen werden von geplanten Zielen getrennt. Ein grüner Test bedeutet nur, dass der konkret getestete Ablauf bestanden wurde – keine pauschale Produktionsfreigabe.
+V91 Core System is a Python project for experimenting with metrics processing, anomaly detection, rule evaluation, feedback strategies, and resilience testing. Its intended direction is a local-first resilience core with verifiable evidence and optional external synchronization.
 
-## Aktuell implementierte Betriebswege
+**Current maturity: experimental. Not certified or demonstrated as production-ready.** A repository description, CI success, or generated status report is not evidence that a service is deployed, continuously running, secure in every environment, or operating globally.
 
-```
-Lokale JSON-Aufgabe
-        ↓
-Warteschlange und Eingabeprüfung
-        ↓
-Zugelassener Worker (Datei-Hash / Vergleich / Status)
-        ↓
-Ergebnisdatei + Audit-Ereignis
-        ↓
-Observer prüft Warteschlange und Audit-Format
-```
+## Reality-first status
 
-Die optionale Host-Steuerung liest reale Docker-Zustände und Ressourcenwerte. Sie kann ausschließlich die Worker-Anzahl innerhalb festgelegter Grenzen ändern und ist standardmäßig nicht zum Ausführen realer Änderungen freigeschaltet. Zufällige Demonstrationswerte werden nicht als Live-Messwerte verwendet.
+Use these states precisely:
 
-## Weiterentwicklungsbereiche
+- `UNKNOWN`: no adequate evidence is available.
+- `DOCUMENTED`: a requirement or design is written down.
+- `IMPLEMENTED`: code exists at a named revision.
+- `VERIFIED`: a specific, reproducible check passed for a specific revision and environment.
+- `PRODUCTION`: only after deployment, monitoring, recovery, security, and operational acceptance evidence exists.
 
-- **Beobachtung:** tatsächliche Warteschlangen-, Container- und Ressourcenwerte; fehlende Daten werden als unbekannt behandelt.
-- **Betrieb:** begrenzte Worker-Skalierung mit dokumentierter Entscheidung, Nachprüfung und Rücksetzversuch.
-- **Algorithmen:** Anomalieerkennung, Regeln, Rückkopplung und Fehler-Simulation bleiben getrennt zu prüfen, bevor sie reale Aktionen steuern.
-- **Nachweis:** Unit-Tests und Container-Integrationstests belegen nur die getesteten Pfade. Audit-Dateien sind derzeit weder manipulationssicher (WORM) noch extern signiert.
+A claim is not evidence. Record the exact commit, command, environment, timestamp, result, and relevant artifact for each verification. Missing evidence must not be reported as a pass.
 
-Nicht implementierte oder nicht nachgewiesene Fähigkeiten – etwa allgemeines autonomes Handeln, verteilte Modelltrainingsabläufe, produktive globale Telemetrie oder automatische Reparatur beliebiger Dienste – werden nicht als verfügbar ausgegeben.
+## Design goals
 
-## Installation
+- Local checks should remain available when GitHub or the network is unavailable.
+- GitHub should be an optional place to exchange source, reviews, and signed update proposals—not a runtime dependency.
+- New code and external model suggestions should be staged and tested in isolation before use.
+- Untrusted inputs must be validated as data, never executed as code.
+- Updates should have explicit trust roots, signature verification, revocation handling, and a tested rollback path.
+- Automatic actions must follow least privilege and be bounded by explicit resource and safety limits.
+- Fault injection or chaos tests must remain opt-in and confined to a disposable test environment. Do not use them against a live system without a separately approved test plan.
+
+These are design goals; this README does not assert that all of them are already implemented.
+
+## Repository layout
+
+- `controller/`: controller, metrics, anomaly detection, feedback, and fault-simulation modules.
+- `tests/`: unit tests for selected modules.
+- `Dockerfile` and `docker-compose.yml`: container configuration for development/testing.
+- `V91-ARCHITECTURE.md`: broader architecture notes. Treat descriptions of services, endpoints, SLAs, signing, retention, or federation as proposals unless matching implementation and reproducible evidence are linked.
+
+## Development checks
+
+The repository has historically documented these commands; check the current environment and dependencies before running them:
 
 ```bash
-git clone https://github.com/guenny9000/v91-core-system.git
-cd v91-core-system
+pip install numpy pytest
+pytest tests/
 ```
 
-## Starten
-
-### Docker Compose (empfohlen)
+Container-based development has been documented as:
 
 ```bash
 docker compose up --build
 ```
 
-Das startet:
-- Controller Service
-- Worker Service (on demand)
+Run tests in a development or isolated environment first. Do not assume that the container configuration, health endpoints, or service integrations have been validated merely because files exist.
 
-### Local (Python)
+## Evidence and security limitations
 
-```bash
-pip install numpy pytest
-python controller/controller.py
-```
+- A passing unit test verifies only the behavior exercised by that test.
+- A successful CI run applies only to the exact revision and checks shown by that run.
+- A SHA-256 hash can help detect changes to recorded bytes; it does not establish that the underlying data is true, authenticate a publisher by itself, or make storage immutable.
+- A digital signature proves that the signed bytes validate under a particular key; trusted identity, key distribution, rotation, and revocation require separate design and verification.
+- No statement here claims global telemetry, autonomous global enforcement, continuous local operation, WORM compliance, or a production deployment.
 
-## Tests
+## Remaining milestones
 
-```bash
-pytest tests/
-```
-
-Führt aus:
-- `test_anomaly.py` – Anomaly Detection Tests
-- `test_rules.py` – Rule Engine Tests
-- `test_feedback.py` – Feedback Loop Tests
-
-## Module
-
-### controller.py
-Hauptsteuerung: Rules evaluieren, Metrics ingesten, Actions triggern.
-
-### anomaly.py
-Sliding Window Anomaly Detector (z-score basiert).
-
-### metrics.py
-Metrics Aggregator Feed (Events, Errors, Latency).
-
-### chaos.py
-Chaos Mode: Gezielte Fehlerinjection für Resilience Testing.
-
-### feedback.py
-Feedback Loop: Self-Optimization basierend auf Systemzustand.
-
-## Workflow
-
-```
-1. Metrics kommen rein (Events, Errors, Latency)
-2. Anomaly Detector prüft z-score
-3. Rule Engine evaluiert Policies
-4. Control Actions werden triggered (Scale, Chaos, etc.)
-5. Feedback Loop passt Strategie an
-6. Loop wiederholt sich alle 5 Sekunden
-```
-
-## CI/CD
-
-GitHub Actions Pipeline (`audit.yml`):
-- Hash Verification (SHA256)
-- Unit Tests (pytest)
-- Dependency Checks
-
-## Status
-
-**Prototyp: CI-geprüfte Funktionen sind konkret dokumentiert; keine pauschale Produktionsfreigabe.**
-
-## Lizenz
-
-© 2026 Sebastian (guenny9000) – Alle Rechte vorbehalten
-
+1. Verify signed updates, key revocation, and rollback against explicit test cases.
+2. Add a trusted external anchor if WORM-like retention is required; do not label plain JSONL as immutable.
+3. Connect real application-level latency/error metrics only through a named, tested source.
+4. Run a small, reversible local pilot and preserve its raw measurements.
 
 ## Live Docker control (host-side, opt-in)
 
@@ -156,3 +115,7 @@ Place the input file under `workspace/` and create one JSON file in `queue/pendi
 For an integrity comparison, use `"action": "verify_sha256"` and add `"expected_sha256": "64-hexadecimal-characters"`. Every task must also include a short `purpose` and `expected_effect` (each at most 500 characters); the worker rejects undocumented tasks before performing work. For a worker health/queue snapshot, use `{"task_id":"health-demo","action":"health_snapshot","purpose":"Check local worker and queue state.","expected_effect":"Return observed queue counts and worker uptime."}`. Task IDs must be unique and match the filename stem. The worker claims tasks by atomic rename, rejects unsupported fields/actions, never overwrites an existing result, and records completion/failure in the shared audit log. The workspace is mounted read-only inside containers. Both services share a private Docker network marked `internal: true`: local services can communicate on that network when explicitly added, but it has no external-network route. The worker itself makes no network calls. No Docker socket is mounted into either container.
 
 On Windows, start the stack with `docker compose up -d --build`. To submit a real example task without hand-writing JSON, run `.\scripts\Submit-V91ExampleTask.ps1`; it copies a small example input into the workspace and writes a uniquely named task into the pending queue. The worker result appears under `runtime/results/`. To scale workers under measured resource pressure, use the host-side controller documented above. No Docker socket is mounted inside the observer or worker containers.
+
+## License
+
+© 2026 Sebastian (guenny9000) – Alle Rechte vorbehalten
