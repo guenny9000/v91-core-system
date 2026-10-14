@@ -10,8 +10,8 @@ to access another system.
 2. Ask: request explicit, scoped consent before exchanging information.
 3. Limit: allow only public description and explicitly approved public
    metadata in this first version.
-4. Verify: a trusted cryptographic verifier must validate the peer's
-   signature before the offer can be accepted.
+4. Verify: the public signed-offer path validates an Ed25519 signature over
+   the canonical JSON representation of the complete offer.
 5. Expire: offers have a deadline; expired offers are denied.
 6. Learn carefully: this version does not ingest or train on peer data.
    A future learning pipeline must require a separate consent scope, provenance,
@@ -22,13 +22,24 @@ to access another system.
    credential requests, or private-data access.
 
 ## Implementation status
-- Implemented in this branch: deterministic offer-policy evaluator and unit
-  tests for signature gating, consent, forbidden capabilities, expiry, and
-  audit-record boundaries.
-- Not implemented: network discovery, transport, cryptographic signature
-  verification, persistent ledger integration, or actual model training.
-- Not yet verified: tests have not been run by this GitHub edit operation.
-  CI must pass before merging or describing the feature as production-ready.
+- Implemented in this branch: policy evaluator, Ed25519 signature verification,
+  canonical offer serialization, and regression tests for valid/invalid
+  signatures, tampering, key mismatch, consent, expiry, and capability denial.
+- The public `evaluate_peer_offer()` entry point denies because it has no
+  cryptographic proof. External callers should use
+  `evaluate_signed_peer_offer()`; do not set a trusted boolean from peer input.
+- Not implemented: network discovery, transport, persistent ledger integration,
+  actual model training, remote remediation, or production deployment.
+- Verification status: GitHub CI has been triggered for the implementation
+  commit. Until the exact-head workflow completes successfully and is reviewed,
+  the code is IMPLEMENTED / CI-PENDING, not VERIFIED or PRODUCTION.
+
+## Signature format
+The signer signs UTF-8 bytes of JSON serialized with sorted keys, compact
+separators, `ensure_ascii=False`, and `allow_nan=False`. Both signer and
+verifier must use this exact representation. The public key must be obtained
+from a separately trusted identity/key-distribution process; a self-declared
+key alone does not establish peer identity.
 
 ## Example offer
     {
@@ -39,10 +50,6 @@ to access another system.
       "requested_capabilities": ["describe", "share_public_metadata"],
       "expires_at": 2000000000
     }
-
-The caller must pass signature_verified=True only after a trusted verifier
-has checked a cryptographic signature. Never trust a peer-provided boolean.
-
 
 ## MAX-BEST policy block: cooperation, repair, and bounded cleanup
 
@@ -65,7 +72,8 @@ running.
   interfaces; do not scan or probe arbitrary third-party systems.
 - Introduce V91 and state its purpose, identity, requested information, and
   requested permissions.
-- Validate identity and declared capabilities using a trusted verifier.
+- Validate identity and declared capabilities using a trusted verifier and a
+  separately trusted key source.
 - Request explicit, scoped, revocable consent from the system owner or its
   authorized controller.
 - Exchange only the minimum approved data; validate it in an isolated sandbox
@@ -104,19 +112,12 @@ is not a substitute for checking current identity, scope, revocation, and
 evidence. Missing or conflicting evidence means deny or pause safely.
 
 ### Acceptance tests before production
-- Unverified peer, absent consent, expired permission, and unknown capability
-  are all denied.
+- Invalid/missing signatures, absent consent, expired permission, and unknown
+  capability are all denied.
 - Remote execution and destructive requests are denied by default.
 - Public information is not ingested until provenance and consent checks pass.
 - A proposed hotfix is tested in isolation and has a documented rollback.
 - Every decision has a minimal audit record, and private payloads are not
   copied into logs.
-- CI passes, a reviewer approves the changes, and the deployment owner
-  explicitly authorizes production rollout.
-
-### Current status
-The evaluator and its unit tests are present in this branch. This policy block
-is documentation for the intended next stages. It does not itself implement
-peer discovery, signature verification, remote remediation, sandbox learning,
-or production deployment. Those remain separate work items and must be tested
-before being described as operational.
+- CI passes, an independent reviewer approves the changes, and the deployment
+  owner explicitly authorizes any production rollout.
