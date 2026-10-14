@@ -168,7 +168,9 @@ def test_authorized_scale_up_is_audited_before_action_and_verified(monkeypatch, 
     monkeypatch.setattr(rc, "collect_snapshot", lambda *_: next(snapshots))
     result = rc.run_cycle(tmp_path / "compose.yml", "v91-test", tmp_path / "runtime", True)
     assert observed["replicas"] == 2
-    assert result["status"] == "VERIFIED"
+    assert result["status"] == "ACTION_VERIFIED"
+    assert result["effect_status"] == "MEASURED_IMPROVEMENT"
+    assert result["cpu_delta_percentage_points"] == -45.0
     assert result["after"]["replicas"] == 2
     events = [json.loads(line) for line in (tmp_path / "runtime" / "v91-actions.jsonl").read_text(encoding="utf-8").splitlines()]
     assert [event["phase"] for event in events] == ["DECISION", "VERIFY"]
@@ -202,3 +204,12 @@ def test_failed_post_check_attempts_rollback_and_records_result(monkeypatch, tmp
     events = [json.loads(line) for line in (tmp_path / "runtime" / "v91-actions.jsonl").read_text(encoding="utf-8").splitlines()]
     assert [event["phase"] for event in events] == ["DECISION", "ROLLBACK"]
     assert events[-1]["status"] == "ROLLED_BACK"
+
+
+def test_effect_is_not_claimed_when_resource_metrics_do_not_improve():
+    before = {"max_cpu_percent": 90.0, "max_memory_percent": 40.0, "replicas": 1}
+    after = {"max_cpu_percent": 92.0, "max_memory_percent": 41.0, "replicas": 2}
+    result = rc.measure_effect(before, after, "scale_up_workers")
+    assert result["effect_status"] == "EFFECT_NOT_CONFIRMED"
+    assert result["cpu_delta_percentage_points"] == 2.0
+    assert result["replica_delta"] == 1
