@@ -109,7 +109,7 @@ GitHub Actions Pipeline (`audit.yml`):
 
 ## Status
 
-**Stable & Production-Ready für Self-Regulated Distributed Systems**
+**Prototyp: CI-geprüfte Funktionen sind konkret dokumentiert; keine pauschale Produktionsfreigabe.**
 
 ## Lizenz
 
@@ -125,9 +125,10 @@ For real local observation and bounded worker scaling, use `controller/runtime_c
 First run observe-and-plan mode (no infrastructure changes):
 
 ```powershell
-$env:V91_PROJECT_NAME = "YOUR_EXISTING_COMPOSE_PROJECT"
 python controller/runtime_control.py --once
 ```
+
+The script tries to identify one already-running Compose project by matching its recorded config file. If zero or multiple projects match, it refuses to guess. Then set `V91_PROJECT_NAME` to the exact existing project name and retry.
 
 The command records a JSONL decision under `runtime/v91-actions.jsonl`, including the live observation, reason, expected effect, authorization state, and rollback plan. The log is append-only by this program, but it is not WORM or signed evidence.
 
