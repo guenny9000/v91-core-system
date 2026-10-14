@@ -73,50 +73,64 @@ def verify_signature(payload: bytes, provided_sig: str, key: bytes) -> bool:
     return hmac.compare_digest(expected, provided_sig)
 
 
+def signed_message_bytes(version: str, timestamp: str, payload: dict) -> bytes:
+    """Canonical bytes signed by SafeSignal; binds version, timestamp, and payload."""
+    message = {
+        "protocol": "SafeSignal",
+        "version": version,
+        "ts": timestamp,
+        "payload": payload,
+    }
+    return json.dumps(
+        message, sort_keys=True, separators=(",", ":"), ensure_ascii=False
+    ).encode("utf-8")
+
+
 def safesignal_check(event: dict, raw_bytes: bytes, key: bytes) -> tuple[bool, str]:
     """
-    Validate an event against the SafeSignal protocol.
-    Returns (valid: bool, reason: str).
-
-    Expected event envelope:
-      {
-        "safesignal": {
-          "version": "1",
-          "sig": "<hmac-sha256-hex>",
-          "ts":  "<iso8601-utc>"
-        },
-        "payload": { ... }
-      }
+    Validate the SafeSignal envelope. The signature covers protocol version,
+    timestamp, and payload so a captured signature cannot be given a fresh
+    timestamp to bypass the replay window.
     """
+    if not isinstance(event, dict):
+        return False, "event must be a JSON object"
+
     ss = event.get("safesignal")
-    if not ss:
+    if not isinstance(ss, dict):
         return False, "missing safesignal envelope"
 
-    version = ss.get("version", "")
+    version = ss.get("version")
     if version != "1":
         return False, f"unsupported SafeSignal version: {version!r}"
 
-    provided_sig = ss.get("sig", "")
-    if not provided_sig:
+    provided_sig = ss.get("sig")
+    if not isinstance(provided_sig, str) or not provided_sig:
         return False, "safesignal.sig is empty"
 
-    # The signature is over the canonical JSON of the 'payload' field only
-    payload_bytes = json.dumps(event.get("payload", {}), sort_keys=True, separators=(",", ":")).encode()
-    if not verify_signature(payload_bytes, provided_sig, key):
+    timestamp = ss.get("ts")
+    if not isinstance(timestamp, str) or not timestamp.strip():
+        return False, "safesignal.ts is required"
+
+    payload = event.get("payload")
+    if not isinstance(payload, dict):
+        return False, "payload must be a JSON object"
+
+    try:
+        parsed_timestamp = datetime.fromisoformat(timestamp.replace("Z", "+00:00"))
+        if parsed_timestamp.tzinfo is None:
+            return False, "timestamp must include a timezone"
+    except ValueError:
+        return False, f"invalid timestamp: {timestamp!r}"
+
+    signed_bytes = signed_message_bytes(version, timestamp, payload)
+    if not verify_signature(signed_bytes, provided_sig, key):
         return False, "signature mismatch"
 
-    # Replay-attack guard: reject events older than 5 minutes
-    ts_str = ss.get("ts", "")
-    if ts_str:
-        try:
-            ts = datetime.fromisoformat(ts_str.replace("Z", "+00:00"))
-            age_seconds = (datetime.now(timezone.utc) - ts).total_seconds()
-            if age_seconds > 300:
-                return False, f"event too old: {age_seconds:.0f}s"
-            if age_seconds < -60:
-                return False, f"event timestamp in future: {age_seconds:.0f}s"
-        except ValueError:
-            return False, f"invalid timestamp: {ts_str!r}"
+    age_seconds = (datetime.now(timezone.utc) - parsed_timestamp).total_seconds()
+    if age_seconds > 300:
+        return False, f"event too old: {age_seconds:.0f}s"
+    if age_seconds < -60:
+        return False, f"event timestamp in future: {age_seconds:.0f}s"
 
     return True, "ok"
 
@@ -127,13 +141,20 @@ REQUIRED_PAYLOAD_FIELDS = {"event_type", "source", "data"}
 
 
 def validate_payload(payload: dict) -> tuple[bool, str]:
-    """Basic schema validation for event payloads."""
+    """Validate the payload shape before any routing or confidence scoring."""
+    if not isinstance(payload, dict):
+        return False, "payload must be a JSON object"
     missing = REQUIRED_PAYLOAD_FIELDS - payload.keys()
     if missing:
         return False, f"missing payload fields: {sorted(missing)}"
     event_type = payload.get("event_type", "")
     if not isinstance(event_type, str) or not event_type.strip():
         return False, "payload.event_type must be a non-empty string"
+    source = payload.get("source")
+    if not isinstance(source, str) or not source.strip():
+        return False, "payload.source must be a non-empty string"
+    if not isinstance(payload.get("data"), dict):
+        return False, "payload.data must be a JSON object"
     return True, "ok"
 
 
@@ -215,12 +236,32 @@ def _utcnow() -> str:
 # ── Event Processing Pipeline ─────────────────────────────────────────────────
 
 def process_file(file_path: Path, key: bytes, db_path: str) -> None:
-    """End-to-end processing of one inbox file."""
+    """Process one inbox file idempotently; keep it if durable recording fails."""
     raw_bytes = file_path.read_bytes()
     raw_hash = hashlib.sha256(raw_bytes).hexdigest()
-    event_id = str(uuid.uuid4())
+    # Deterministic ID prevents the same exact inbox item being recorded twice.
+    event_id = raw_hash
 
     logger.info("Processing %s  sha256=%s", file_path.name, raw_hash[:16])
+
+    # If a prior attempt committed but failed to unlink the file, remove only
+    # after confirming a durable audit-log record already exists.
+    try:
+        with get_db(db_path) as conn:
+            already_recorded = conn.execute(
+                "SELECT 1 FROM v91_audit_log WHERE event_id = ? LIMIT 1",
+                (event_id,),
+            ).fetchone()
+    except sqlite3.Error as exc:
+        logger.error("Cannot check idempotency state; preserving %s: %s", file_path.name, exc)
+        return
+    if already_recorded:
+        logger.info("Already recorded %s; removing duplicate inbox copy", file_path.name)
+        try:
+            file_path.unlink()
+        except OSError as exc:
+            logger.error("Could not remove duplicate inbox file %s: %s", file_path, exc)
+        return
 
     try:
         event = json.loads(raw_bytes)
@@ -236,7 +277,12 @@ def process_file(file_path: Path, key: bytes, db_path: str) -> None:
                          raw_bytes.decode(errors="replace"), raw_hash, db_path)
         return
 
-    payload = event.get("payload", {})
+    if not isinstance(event, dict):
+        _quarantine_file(file_path, event_id, "event_not_object",
+                         raw_bytes.decode(errors="replace"), raw_hash, db_path)
+        return
+
+    payload = event.get("payload")
 
     # ── Payload schema validation ─────────────────────────────────────────────
     schema_ok, schema_reason = validate_payload(payload)
@@ -267,9 +313,14 @@ def process_file(file_path: Path, key: bytes, db_path: str) -> None:
                         event_id, event_type, confidence)
         conn.commit()
 
-    # Remove processed file from inbox to prevent re-processing
-    file_path.unlink()
-    logger.debug("Removed processed file: %s", file_path.name)
+    # Remove only after the database transaction has committed.
+    try:
+        file_path.unlink()
+        logger.debug("Removed processed file: %s", file_path.name)
+    except OSError as exc:
+        # The next poll sees the committed audit_log event_id and safely
+        # removes the duplicate without inserting a second record.
+        logger.error("Could not remove processed file %s: %s", file_path, exc)
 
 
 def _quarantine_file(file_path: Path, event_id: str, reason: str,
@@ -283,7 +334,9 @@ def _quarantine_file(file_path: Path, event_id: str, reason: str,
             insert_audit_log(conn, event_id, "quarantined", reason)
             conn.commit()
     except sqlite3.Error as exc:
-        logger.error("DB error during quarantine: %s", exc)
+        # Fail closed: do not delete the only copy if quarantine was not durable.
+        logger.error("DB error during quarantine; preserving %s: %s", file_path.name, exc)
+        return
     try:
         file_path.unlink()
     except OSError as exc:
