@@ -25,6 +25,8 @@ def test_worker_hashes_real_workspace_file(monkeypatch, tmp_path):
     result = worker.execute_task({
         "task_id": "job_01", "action": "verify_sha256",
         "relative_path": "evidence.txt", "expected_sha256": expected,
+        "purpose": "Verify the known evidence file against an independently calculated digest.",
+        "expected_effect": "Confirm byte-for-byte integrity when the digests match.",
     }, "job_01")
     assert result["status"] == "COMPLETED"
     assert result["matches_expected"] is True
@@ -44,13 +46,17 @@ def test_worker_rejects_unknown_or_malformed_actions(monkeypatch, tmp_path):
     configure_worker(monkeypatch, tmp_path)
     for action in ("run_shell", ["sha256_file"], {"action": "sha256_file"}):
         with pytest.raises(ControlError):
-            worker.execute_task({"task_id": "job_02", "action": action}, "job_02")
+            worker.execute_task({"task_id": "job_02", "action": action, "purpose": "Test input rejection.", "expected_effect": "Reject malformed or disallowed task action."}, "job_02")
 
 
 def test_worker_claims_processes_and_audits_task(monkeypatch, tmp_path):
     configure_worker(monkeypatch, tmp_path)
     (worker.WORKSPACE_ROOT / "sample.txt").write_text("real file", encoding="utf-8")
-    task = {"task_id": "job_03", "action": "sha256_file", "relative_path": "sample.txt"}
+    task = {
+        "task_id": "job_03", "action": "sha256_file", "relative_path": "sample.txt",
+        "purpose": "Calculate a reproducible digest for the sample input.",
+        "expected_effect": "Return the file SHA-256 and byte count.",
+    }
     (worker.QUEUE_ROOT / "pending" / "job_03.json").write_text(json.dumps(task), encoding="utf-8")
     assert worker.process_one() is True
     result = json.loads((worker.RUNTIME_ROOT / "results" / "job_03.json").read_text(encoding="utf-8"))
@@ -100,6 +106,8 @@ def test_worker_reports_hash_mismatch_as_mismatch_not_success(monkeypatch, tmp_p
     result = worker.execute_task({
         "task_id": "job_05", "action": "verify_sha256",
         "relative_path": "evidence.txt", "expected_sha256": "0" * 64,
+        "purpose": "Test mismatch handling.",
+        "expected_effect": "Report MISMATCH without claiming a match.",
     }, "job_05")
     assert result["status"] == "COMPLETED"
     assert result["matches_expected"] is False
@@ -113,3 +121,14 @@ def test_worker_rejects_oversized_workspace_file(monkeypatch, tmp_path):
     monkeypatch.setattr(worker, "MAX_WORKSPACE_FILE_BYTES", 0)
     with pytest.raises(ControlError, match="512 MiB"):
         worker.workspace_file("large.bin")
+
+
+def test_worker_requires_a_documented_purpose_and_expected_effect(monkeypatch, tmp_path):
+    configure_worker(monkeypatch, tmp_path)
+    (worker.WORKSPACE_ROOT / "evidence.txt").write_text("real content", encoding="utf-8")
+    with pytest.raises(ControlError, match="purpose"):
+        worker.execute_task({
+            "task_id": "job_06", "action": "sha256_file",
+            "relative_path": "evidence.txt",
+            "expected_effect": "Calculate the file digest.",
+        }, "job_06")
