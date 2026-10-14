@@ -95,3 +95,47 @@ At the latest check, PR #4 and PR #5 were both **open, draft, and unmerged**. Bo
 Recommended safe sequence: finish review of PR #4, merge it only through the repository's required approval process, then refresh/rebase PR #5 against the updated `main`, rerun checks on the new exact head SHA, and review the reduced documentation-only diff. Do not treat CI success alone as merge authorization.
 
 **Updated state:** exact-commit CI = **VERIFIED FROM GITHUB API**; local measurements/tests = **OPERATOR-REPORTED**; PR merge = **NOT MERGED**; global merge = **UNKNOWN**; production = **NOT ESTABLISHED**.
+
+
+## 6. Cross-repository status check — 2026-10-14
+
+The following states were queried directly through the GitHub connector. This is repository/CI evidence only; it does not establish that the user's local Windows processes are V91 or that a production runtime is active.
+
+### v91-core-system
+
+- PR #4 head `470859c2a6d9447e4b4867f8dec6cfbeb5a398fe`: open, draft, unmerged; GitHub reported mergeable.
+- Workflow run #58, ID `38489344409`: completed/success. The `audit-checks` job and its listed steps were successful.
+- PR #5 head `c5f61af21b7afcef4dc27674400d3e42fde497e8`: open, draft, unmerged; GitHub reported mergeable.
+- Workflow run #61, ID `38504959949`: completed/success for the exact PR #5 head queried. The `audit-checks` job and its listed steps were successful.
+- Commit comparison confirms PR #5 is three commits ahead of PR #4's head, with zero commits behind it; the comparison lists only the two evidence-report documents as the additional files relative to that head.
+- Run #61: https://github.com/guenny9000/v91-core-system/actions/runs/38504959949
+- Run #58: https://github.com/guenny9000/v91-core-system/actions/runs/38489344409
+
+### guenny9000-uni-lern-bloc
+
+- PR #2 head `81157439c3033145fe13b550cfab321f8c49ff78`: open, draft, unmerged; GitHub reported mergeable.
+- Workflow run #2, ID `38462050168`: completed/success. The contract-validation and regression-test steps were successful for the queried run.
+- PR #3 head `ecd2a64ddc1d0f57834a4369722ee3d60eaa2041`: open, not draft, unmerged; GitHub reported mergeable. The current query did not return a pull-request-triggered workflow run for this exact head. This is **NO RUN FOUND BY THIS QUERY**, not proof that no other type of check ever ran.
+- Run #2: https://github.com/guenny9000/guenny9000-uni-lern-bloc/actions/runs/38462050168
+
+### V91_Agathon
+
+- PR #1 head `13760de60972ce559411576697f716b45c258c31`: open, draft, unmerged; GitHub reported mergeable.
+- Workflow run #6, ID `38105795099`: completed/success. Both listed test jobs, Python 3.10 and 3.12, completed successfully.
+- Run #6: https://github.com/guenny9000/V91_Agathon/actions/runs/38105795099
+
+### Aurelia-Prisma
+
+- PR #233 head `b59534cc6c5d443e877bfc943a69da56c3759265`: open, draft, unmerged; GitHub reported mergeable.
+- The current query did not return a pull-request-triggered workflow run for this exact head. Treat the current check status as **NOT VERIFIED BY THIS QUERY**.
+- The PR describes a credential-remediation change; it explicitly does not revoke external keys or rewrite Git history. Those are separate security tasks and must not be presumed completed.
+
+### Interpretation and remaining gaps
+
+- Multiple V91-related repositories have real open branches/PRs and successful GitHub workflow runs. This is stronger evidence than a model merely stating that work exists.
+- The checked PRs remain unmerged. A successful workflow verifies only the checks that ran on the specific commit; it does not prove cross-repository integration, local Windows runtime identity, model-to-model networking, cryptographic peer verification, training, or production deployment.
+- The user's observation that Windows windows open and close automatically is recorded as **OPERATOR-OBSERVED LOCAL AUTOMATION**. No local process list, executable path, process command line, V91 log correlation, or local commit/version was available in this GitHub-only check; attribution to V91 remains **UNKNOWN**.
+- Next low-impact local evidence capture, when the user or an authorized local model can access Windows: timestamped process list with executable path and command line for the relevant process; corresponding V91 log entries; the log's file path and current size/last-write time; exact local Git commit and dirty status; and a minimal health/status output. Do not stop processes or modify files during discovery.
+- No PR was merged and no production deployment was performed by this check.
+
+**Updated classification:** selected GitHub CI runs = **VERIFIED FROM GITHUB API**; open PRs = **DOCUMENTED/OBSERVED IN GITHUB**; local automated window activity = **OPERATOR-OBSERVED, V91 ATTRIBUTION UNKNOWN**; cross-repository production operation = **NOT ESTABLISHED**.
