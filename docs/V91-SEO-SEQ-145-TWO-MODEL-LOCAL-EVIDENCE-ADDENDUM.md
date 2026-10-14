@@ -67,3 +67,31 @@ For each local run, preserve:
 Avoid placing secrets, credentials, personal data, or private payloads in the report. Do not describe a local file as GitHub-linked evidence unless its contents or hash are actually committed and inspected.
 
 **Core rule:** CLAIM ≠ EVIDENCE. A second model's matching report improves cross-checking but is not a substitute for reproducible execution evidence.
+
+
+## 5. Follow-up evidence reported on 2026-10-14
+
+The operator supplied a further report claiming that `nvidia-smi -q -d MEMORY` showed 16,303 MiB total, 326 MiB reserved, 5,218 MiB used, and 10,760 MiB free. These numbers are internally close but sum to 16,304 MiB, one MiB above the reported total. The reserved-memory explanation is plausible, but the raw command output has not been independently captured by this reviewer; retain it as **OPERATOR-SUPPLIED** until the original output is committed or otherwise made inspectable. Do not state that the arithmetic is exact.
+
+The operator also supplied a local Git test report showing 10 tests passed on a local `pr-5` checkout, plus SHA-256 values for three local audit files. These are reported local results, not independently reproduced here. A file hash identifies those exact file bytes only when the file itself is available for re-hashing; it does not establish WORM storage or ledger immutability.
+
+### GitHub Actions — directly queried
+
+For commit `2d121c03df13d7dfa440b844f67d7fa8a9a33c72`, GitHub's workflow-run API returned:
+- Workflow: `v91 Audit Pipeline`
+- Run ID: `38504159083` (run number 60)
+- Status/conclusion: `completed / success`
+- Job: `audit-checks` — completed successfully
+- Steps reported successful: checkout, Python setup, dependency installation, unit tests, hash verification, and artifact upload
+
+Run link: https://github.com/guenny9000/v91-core-system/actions/runs/38504159083
+
+This verifies that GitHub reports a successful workflow for that exact commit. It does not establish that all security properties are proven, that local hardware values were tested by CI, that the PR is merged, or that anything is deployed to production.
+
+### PR relationship — directly queried
+
+At the latest check, PR #4 and PR #5 were both **open, draft, and unmerged**. Both reported `mergeable: true`. PR #5's changed-file list includes the six shared cooperative-handshake/workflow files plus the two report files. The local claim that PR #5 is a linear superset of PR #4 is consistent with the reported branch history, but the repository's merge state remains unchanged until a merge actually occurs.
+
+Recommended safe sequence: finish review of PR #4, merge it only through the repository's required approval process, then refresh/rebase PR #5 against the updated `main`, rerun checks on the new exact head SHA, and review the reduced documentation-only diff. Do not treat CI success alone as merge authorization.
+
+**Updated state:** exact-commit CI = **VERIFIED FROM GITHUB API**; local measurements/tests = **OPERATOR-REPORTED**; PR merge = **NOT MERGED**; global merge = **UNKNOWN**; production = **NOT ESTABLISHED**.
