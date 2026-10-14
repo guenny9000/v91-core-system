@@ -17,7 +17,7 @@ services:
       - PYTHONUNBUFFERED=1
       - V91_QUEUE_DIR=/app/queue
       - V91_RUNTIME_DIR=/app/runtime
-      - V91_WORKSPACE_DIR=/app/workspace:ro
+      - V91_WORKSPACE_DIR=/app/workspace
       - V91_OBSERVER_POLL_SECONDS=10
 
   worker:
