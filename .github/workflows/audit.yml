@@ -36,6 +36,8 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
+          export V91_CONTAINER_UID="$(id -u)"
+          export V91_CONTAINER_GID="$(id -g)"
           cleanup() { docker compose down --remove-orphans >/dev/null 2>&1 || true; }
           trap cleanup EXIT
           mkdir -p queue/pending queue/processing queue/done queue/failed runtime/results workspace
@@ -50,12 +52,12 @@ jobs:
           docker compose up --detach --build
           for attempt in $(seq 1 40); do
             if [ -f runtime/results/ci-hash.json ] && [ -f runtime/v91-observer.json ]; then
-              if python -c 'import json,sys; d=json.load(open("runtime/v91-observer.json", encoding="utf-8")); sys.exit(0 if (d.get("audit",{}).get("last_event") or {}).get("phase") == "TASK_COMPLETED" and d.get("queue_counts",{}).get("done") == 1 else 1)'; then
-                break
-              fi
+              break
             fi
             sleep 1
           done
+          test -f runtime/results/ci-hash.json
+          test -f runtime/v91-observer.json
           python - <<'PY'
           import hashlib, json
           from pathlib import Path
