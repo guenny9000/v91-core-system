@@ -139,3 +139,23 @@ The following states were queried directly through the GitHub connector. This is
 - No PR was merged and no production deployment was performed by this check.
 
 **Updated classification:** selected GitHub CI runs = **VERIFIED FROM GITHUB API**; open PRs = **DOCUMENTED/OBSERVED IN GITHUB**; local automated window activity = **OPERATOR-OBSERVED, V91 ATTRIBUTION UNKNOWN**; cross-repository production operation = **NOT ESTABLISHED**.
+
+
+## 7. Exact-head CI refresh — 2026-10-14
+
+A fresh GitHub Actions query after the previous section found a completed workflow run for the then-current PR #5 head:
+
+- Commit: `a9344c90ee7770caa955a27b420128bcae97a97c`
+- Workflow: `v91 Audit Pipeline`
+- Run number: 62; run ID: `38506166503`
+- Event: `pull_request`
+- Conclusion: `success`
+- Job: `audit-checks` — completed successfully
+- Successful steps include unit tests, hash verification, and hash-artifact upload.
+- Run: https://github.com/guenny9000/v91-core-system/actions/runs/38506166503
+
+This supersedes the earlier statement in this addendum that no workflow run had yet been found for commit `a9344c90ee7770caa955a27b420128bcae97a97c`. The earlier statement was accurate at the time of that query but is no longer current.
+
+At this refresh, PR #5 remains open, draft, unmerged, and reported mergeable by GitHub. The successful workflow is evidence for the checks run on this exact commit; it is not merge approval, proof of local Windows runtime state, proof of full cryptographic ledger integrity, or proof of production deployment.
+
+**Updated classification:** exact-head GitHub CI = **VERIFIED FROM GITHUB API**; PR merge = **NOT MERGED**; local runtime identity = **UNKNOWN**; production deployment = **NOT ESTABLISHED**.
