@@ -252,6 +252,29 @@ def scale_worker(compose_file: Path, project_name: str, replicas: int) -> None:
     run_command(prefix + ["up", "--detach", "--scale", f"{ALLOWED_SERVICE}={replicas}", ALLOWED_SERVICE], timeout=120)
 
 
+def measure_effect(before: dict[str, Any], after: dict[str, Any], action: str) -> dict[str, Any]:
+    """Report observed deltas separately from successful actuator verification."""
+    cpu_delta = round(after["max_cpu_percent"] - before["max_cpu_percent"], 2)
+    memory_delta = round(after["max_memory_percent"] - before["max_memory_percent"], 2)
+    effect = {
+        "cpu_delta_percentage_points": cpu_delta,
+        "memory_delta_percentage_points": memory_delta,
+        "replica_delta": after["replicas"] - before["replicas"],
+        "effect_status": "EFFECT_NOT_CONFIRMED",
+    }
+    if action == "scale_up_workers":
+        cpu_triggered = before["max_cpu_percent"] >= SCALE_UP_CPU
+        memory_triggered = before["max_memory_percent"] >= SCALE_UP_MEMORY
+        improved = (
+            (cpu_triggered and cpu_delta <= -1.0)
+            or (memory_triggered and memory_delta <= -1.0)
+        )
+        effect["effect_status"] = "MEASURED_IMPROVEMENT" if improved else "EFFECT_NOT_CONFIRMED"
+    elif action == "scale_down_workers":
+        effect["effect_status"] = "EFFICIENCY_EFFECT_NOT_ASSESSED"
+    return effect
+
+
 def run_cycle(
     compose_file: Path, project_name: str, runtime_dir: Path,
     allow_actions: bool, allow_scale_down: bool = False,
@@ -307,12 +330,14 @@ def run_cycle(
         post = collect_snapshot(compose_file, project_name)
         if post["replicas"] != target or post["running"] != target:
             raise ControlError("Post-action replica count or running-state verification failed.")
+        effect = measure_effect(snapshot, post, action)
         append_audit(audit_path, {
             "event_id": event_id, "timestamp_utc": utc_now(), "phase": "VERIFY",
-            "source": "DOCKER_LIVE", "before_replicas": snapshot["replicas"],
-            "target_replicas": target, "after": post, "status": "VERIFIED",
+            "source": "DOCKER_LIVE", "before": snapshot,
+            "target_replicas": target, "after": post,
+            "action_status": "ACTION_VERIFIED", **effect,
         })
-        result.update({"status": "VERIFIED", "after": post})
+        result.update({"status": "ACTION_VERIFIED", "after": post, **effect})
         return result
     except Exception as exc:
         rollback_status = "ROLLBACK_FAILED"
