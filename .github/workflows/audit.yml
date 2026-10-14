@@ -23,7 +23,7 @@ jobs:
 
       - name: Install Dependencies
         run: |
-          pip install --no-cache-dir numpy pytest
+          pip install --no-cache-dir numpy pytest cryptography
 
       - name: Run Unit Tests
         run: |
