@@ -1,0 +1,47 @@
+name: V91 Windows local verification script
+
+on:
+  pull_request:
+    branches: ["main"]
+    paths:
+      - "scripts/V91-Local-Verify.ps1"
+      - "docs/V91_WINDOWS_LOCAL_VERIFICATION.md"
+      - ".github/workflows/windows-local-verify.yml"
+  push:
+    branches: ["main"]
+    paths:
+      - "scripts/V91-Local-Verify.ps1"
+      - "docs/V91_WINDOWS_LOCAL_VERIFICATION.md"
+      - ".github/workflows/windows-local-verify.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  windows-local-verify:
+    runs-on: windows-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install test dependency
+        run: python -m pip install pytest numpy
+
+      - name: Run local verification script without Docker
+        shell: pwsh
+        run: ./scripts/V91-Local-Verify.ps1 -SkipDockerComposeCheck
+
+      - name: Upload local verification evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: v91-windows-local-verification
+          path: artifacts/v91-local-verify-*
+          if-no-files-found: warn
+          retention-days: 14
