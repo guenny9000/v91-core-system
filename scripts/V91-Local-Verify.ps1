@@ -106,3 +106,12 @@ $script:Summary | Add-Content -LiteralPath $SummaryPath -Encoding UTF8
 Write-Host ""
 Write-Host "Fertig. Belege liegen in: $EvidenceDir"
 Write-Host "Es wurden keine Container gestartet, keine Daten repariert und kein Code gepullt."
+
+# Fail closed: CI must fail if any required check failed, even if logs were written.
+$Failures = @($script:Summary | Where-Object { $_ -match '\| FAIL \|' })
+if ($Failures.Count -gt 0) {
+    Write-Host "Gesamtstatus: FAIL ($($Failures.Count) fehlgeschlagene Prüfung(en))."
+    exit 1
+}
+Write-Host "Gesamtstatus: PASS (keine Prüfung als FAIL protokolliert; UNKNOWN bleibt separat sichtbar)."
+exit 0
