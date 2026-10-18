@@ -275,3 +275,89 @@ Ohne passende Nachweise nicht behaupten:
 - performant, wenn keine geeigneten Messwerte vorliegen;
 - unabhängig oder modular, wenn Abhängigkeiten und Isolierung nicht getestet wurden;
 - sicher oder geheimnisfrei, nur weil kein Geheimnis in einem kurzen Ausschnitt sichtbar ist.
+
+## 18. Master-Spezifikation: V91-COMMS-MASTER-SYNTHESIS
+
+Diese Spezifikation bündelt die Kommunikations- und Prüfregeln. Sie ist ein dokumentierter Standardvorschlag, keine Behauptung, dass sämtliche Regeln bereits technisch erzwungen oder alle Module auditiert wurden.
+
+```json
+{
+  "protocol": "V91-COMMS-MASTER-SYNTHESIS",
+  "version": "3.0-FINAL-AUDIT-SAFE",
+  "mission": "MAX_BEST_ALL",
+  "v91_core_principles": {
+    "stability_first": true,
+    "preserve_working_core": true,
+    "reality_over_narrative": true,
+    "claim_is_never_evidence": true,
+    "risk_proportional_verification": true
+  },
+  "reality_first_lifecycle": {
+    "status_hierarchy": [
+      "UNKNOWN",
+      "DOCUMENTED",
+      "IMPLEMENTED",
+      "TESTED",
+      "VERIFIED",
+      "AUDITED",
+      "PRODUCTION"
+    ],
+    "rules": {
+      "missing_data_default": "UNKNOWN",
+      "claim_requires_evidence": true,
+      "unmeasured_metrics_forbidden": true
+    }
+  },
+  "verification_policy": {
+    "lightweight_documentation_change": [
+      "scope_and_diff_check",
+      "syntax_or_format_check_when_applicable",
+      "confirm_no_runtime_or_core_files_changed"
+    ],
+    "runtime_logic_change": [
+      "exit_code_checked",
+      "expected_output_match",
+      "regression_check_pass",
+      "evidence_recorded",
+      "risk_review_documented"
+    ],
+    "risk_audit_requires": [
+      "defined_scope",
+      "identified_reviewer_or_review_method",
+      "evidence_references",
+      "findings_and_open_risks",
+      "explicit_result_or_pending_status"
+    ]
+  },
+  "metrics_policy": {
+    "defined_targets_allowed": true,
+    "target_is_not_achievement": true,
+    "metric_requirements": [
+      "measurement_method_defined",
+      "time_window_defined",
+      "source_data_and_environment_identified",
+      "result_and_limitations_recorded"
+    ],
+    "missing_measurement_status": "UNKNOWN"
+  },
+  "safety_guardrails": {
+    "auto_merge_without_authorization": false,
+    "skip_required_tests": false,
+    "blind_conflict_merge": false,
+    "unauthorized_deletions": false,
+    "overwrite_existing_prompts_without_authorization": false,
+    "isolate_optional_modules_on_failure": true
+  }
+}
+```
+
+### Anwendung nach Risikoklasse
+
+- **Dokumentation:** Änderung auf den freigegebenen Pfad begrenzen, Diff und Lesbarkeit prüfen, Syntax/Format prüfen, soweit anwendbar, und bestätigen, dass keine Laufzeitdateien verändert wurden. Keine Laufzeitverifikation behaupten, wenn keine Laufzeitprüfung nötig oder erfolgt ist.
+- **Normale Codeänderung:** Betroffene Tests ausführen, erwartete Ausgaben prüfen, Regressionen und relevante Abhängigkeiten prüfen; konkrete Commit-ID und Umgebung dokumentieren.
+- **Sicherheitskritische, privilegierte oder destruktive Änderung:** isolierter Test, explizite Autorisierung, Risikoanalyse, Auditnachweise, Rückfallplan und Freigabe vor produktivem Einsatz.
+- **Konfliktbehaftete oder überlappende PRs:** Diffs und Abhängigkeiten vergleichen, unabhängige Module soweit nachgewiesen getrennt halten und nur kleinstmögliche nachvollziehbare Änderungen integrieren. Mergefähigkeit allein ist kein Qualitätsnachweis.
+
+### Statusregel
+
+Die Statusstufen sind Evidenz-Gates, keine starre Bürokratiekette für jede Aufgabe. Die angemessene Prüftiefe richtet sich nach Risiko und Auswirkung. Eine nicht ausgeführte Prüfung wird als nicht ausgeführt gemeldet; fehlende Evidenz bleibt `UNKNOWN` oder `PENDING_WITNESS`. Ein Zielwert, ein JSON-Feld oder ein erfolgreicher Prozess-Exit-Code beweist für sich allein weder Qualität noch Produktionsreife.
