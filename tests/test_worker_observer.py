@@ -62,7 +62,10 @@ def test_worker_claims_processes_and_audits_task(monkeypatch, tmp_path):
     result = json.loads((worker.RUNTIME_ROOT / "results" / "job_03.json").read_text(encoding="utf-8"))
     assert result["status"] == "COMPLETED"
     assert result["size_bytes"] == len(b"real file")
-    assert (worker.RUNTIME_ROOT / "results" / "job_03.json").stat().st_mode & 0o777 == 0o644
+    import os
+    # Permission bits differ on Windows; only enforce on non-Windows platforms
+    if os.name != "nt":
+        assert (worker.RUNTIME_ROOT / "results" / "job_03.json").stat().st_mode & 0o777 == 0o644
     assert len(list((worker.QUEUE_ROOT / "done").glob("*.json"))) == 1
     assert not list((worker.QUEUE_ROOT / "pending").glob("*.json"))
     events = [json.loads(line) for line in (worker.RUNTIME_ROOT / "v91-actions.jsonl").read_text(encoding="utf-8").splitlines()]

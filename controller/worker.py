@@ -73,6 +73,8 @@ def sha256_file(path: Path) -> tuple[str, int]:
             block = stream.read(1024 * 1024)
             if not block:
                 break
+            # Normalize Windows CRLF to LF for consistent hashing across platforms
+            block = block.replace(b"\r\n", b"\n")
             size += len(block)
             digest.update(block)
     return digest.hexdigest(), size
@@ -92,6 +94,8 @@ def atomic_result(task_id: str, payload: dict[str, Any]) -> Path:
             stream.write(encoded)
             stream.flush()
             os.fsync(stream.fileno())
+            # Ensure result file has 0o644 permissions on all platforms
+            os.chmod(result_path, 0o644)
     except Exception:
         try:
             result_path.unlink()
