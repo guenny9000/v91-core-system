@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: v91-controller
+  labels:
+    app: v91
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: v91
+  template:
+    metadata:
+      labels:
+        app: v91
+    spec:
+      containers:
+        - name: v91-controller
+          image: python:3.12-slim
+          command: ["python", "/app/ledger/bootstrap.py"]
+          env:
+            - name: V91_ENABLE_REAL_ACTIONS
+              value: "1"
+            - name: V91_ALLOW_SCALE_DOWN
+              value: "1"
+          volumeMounts:
+            - name: app-volume
+              mountPath: /app
+      volumes:
+        - name: app-volume
+          hostPath:
+            path: "C:/Users/AN.DER.ARBEIT/Downloads/v91_system"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: v91-controller-service
+spec:
+  selector:
+    app: v91
+  ports:
+    - protocol: TCP
+      port: 9091
+      targetPort: 9091
+  type: ClusterIP

@@ -1,0 +1,12 @@
+{
+    "created": "2026-10-07T15:13:08.1465701+02:00",
+    "version": "V91-BETA",
+    "allowed_processes": [
+        "v91_all_in_one.py",
+        "python",
+        "python3",
+        "bootstrap.py",
+        "install_service.ps1",
+        "health_server.py"
+    ]
+}

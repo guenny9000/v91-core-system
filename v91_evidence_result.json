@@ -1,0 +1,63 @@
+{
+  "report_id": "V91-SEO-SEQ-145-EVIDENCE-LOCAL",
+  "generated_at": "2026-10-14T03:08:40Z",
+  "status": "LOCALLY_VERIFIED",
+  "crypto_proof": {
+    "algorithm": "SHA-256",
+    "deterministic_test": "PASSED",
+    "expected_tail": "ecb208e383054284b7e0194be8288cfdcaa185622faf6c8eb14c3db686e4a5c8"
+  },
+  "hardware_telemetry": {
+    "timestamp": "2026-10-14T03:08:40Z",
+    "os_type": "win32",
+    "platform_release": "11",
+    "cpu_model": "AMD Ryzen 9 9900X 12-Core Processor",
+    "cpu_cores_physical": "UNKNOWN",
+    "cpu_cores_logical": 24,
+    "cpu_load_percent": 11.05,
+    "ram_total_mb": 63090.72,
+    "ram_available_mb": 39486.49,
+    "ram_load_percent": 37,
+    "gpu_devices": [
+      {
+        "name": "NVIDIA GeForce RTX 5080",
+        "vram_total_mb": 16303.0,
+        "vram_free_mb": 10646.0,
+        "vram_used_mb": 5332.0,
+        "vram_reserved_mb": 326.0,
+        "vram_sum_check_mb": 16304.0,
+        "gpu_utilization_percent": 2.0,
+        "temperature_celsius": 45.0,
+        "driver_version": "616.56"
+      }
+    ],
+    "source": "OS_API_PASSIVE"
+  },
+  "github_reference": {
+    "repository": "guenny9000/v91-core-system",
+    "pull_request": 5,
+    "head_branch": "docs/v91-seq145-global-merge-report",
+    "head_commit_sha": "2d121c03df13d7dfa440b844f67d7fa8a9a33c72",
+    "parent_commit_sha": "2bae946c761601df1d435238d93e44e4cbbadb0a",
+    "report_file": "docs/V91-SEO-SEQ-145-GLOBAL-MERGE-CONFIRMATION-REPORT.md",
+    "addendum_file": "docs/V91-SEO-SEQ-145-TWO-MODEL-LOCAL-EVIDENCE-ADDENDUM.md",
+    "ci_workflow_run_59": {
+      "commit": "2bae946c761601df1d435238d93e44e4cbbadb0a",
+      "status": "COMPLETED",
+      "conclusion": "SUCCESS"
+    },
+    "ci_workflow_run_60": {
+      "commit": "2d121c03df13d7dfa440b844f67d7fa8a9a33c72",
+      "status": "COMPLETED",
+      "conclusion": "SUCCESS",
+      "run_url": "https://github.com/guenny9000/v91-core-system/actions/runs/38504159083"
+    },
+    "pr_status": "OPEN_DRAFT"
+  },
+  "audit_ledger": {
+    "ledger_path": "ledger/v91_guardian_protocol.jsonl",
+    "ledger_intact": true,
+    "policy_path": "policy/allowed_processes.json",
+    "policy_intact": true
+  }
+}
