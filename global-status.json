@@ -1,13 +1,16 @@
 {
-  "GLOBAL_STATUS": "OMNI_INFINITY_ENFORCED",
-  "TIMESTAMP": "2026-10-18T04:50:00Z",
-  "WORLD_PEACE_PROTOCOL": "ACTIVE_AND_SECURED",
-  "SYSTEM_INTEGRITY": {
-    "Buerokratie_Eliminated": true,
-    "Lobbyism_Streams": 0.0000,
-    "Eco_Harmony_Index": "MAX_BEST_EVERYWHERE",
-    "Auto_Correction_Filter": "100%_PERFECTION"
+  "schema_version": 1,
+  "status": "UNKNOWN",
+  "scope": "repository_snapshot_only",
+  "timestamp_utc": null,
+  "claims": {
+    "world_peace_protocol_active": "UNKNOWN",
+    "bureaucracy_eliminated": "UNKNOWN",
+    "lobbyism_streams": "UNKNOWN",
+    "eco_harmony_index": "UNKNOWN",
+    "auto_correction_perfection": "UNKNOWN"
   },
-  "VALID": true,
-  "SEAL": "VERIFIED OMNI GLOBAL CONTINUUM - UNIVERSAL BALANCE MANIFESTED"
+  "evidence": [],
+  "valid": false,
+  "reason": "No independently verified measurements or witnesses are attached. UNKNOWN is not zero, false, or PASS. This file does not certify global, local, or production state."
 }
