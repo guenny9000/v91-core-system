@@ -1,8 +1,0 @@
-services:
-  v91seq145globalmergereport:
-    image: v91seq145globalmergereport
-    build:
-      context: .
-      dockerfile: ./Dockerfile
-    ports:
-      - 8000:8000
