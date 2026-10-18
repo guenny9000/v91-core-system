@@ -19,4 +19,4 @@ if (-Not (Test-Path $NssmPath)) {
 & $NssmPath set $ServiceName Start "SERVICE_AUTO_START"
 & $NssmPath set $ServiceName AppRestartDelay 5000
 
-Write-Host "Service $ServiceName installed and set to auto-start. Use 'nssm start $ServiceName' to run now."
+Write-Host "Service $ServiceName installed and set to auto-start. Starting service now..."; & $NssmPath start $ServiceName
