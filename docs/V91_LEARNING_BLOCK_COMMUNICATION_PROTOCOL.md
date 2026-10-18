@@ -8,13 +8,15 @@ Einheitlicher Kommunikationsvertrag für V91, lokale Agenten, optionale Modelle,
 
 ## 2. Verbindliche Statuskette
 
-`UNKNOWN → DOCUMENTED → IMPLEMENTED → VERIFIED → PRODUCTION`
+`UNKNOWN → DOCUMENTED → IMPLEMENTED → TESTED → VERIFIED → AUDITED → PRODUCTION`
 
 - `UNKNOWN`: Nachweis fehlt oder reicht nicht aus.
 - `DOCUMENTED`: Anforderung oder Design ist beschrieben.
 - `IMPLEMENTED`: Code existiert in einer benannten Revision.
-- `VERIFIED`: Ein reproduzierbarer Check bestand in einer angegebenen Umgebung.
-- `PRODUCTION`: Zusätzlich liegen Betriebs-, Sicherheits-, Überwachungs-, Wiederherstellungs- und Abnahmenachweise vor.
+- `TESTED`: Benannte Tests wurden auf einem angegebenen Commit in einer angegebenen Umgebung tatsächlich ausgeführt; Ergebnisse und Fehler sind dokumentiert.
+- `VERIFIED`: Die festgelegten Anforderungen und erwarteten Ergebnisse wurden anhand reproduzierbarer Nachweise geprüft. Ein Exit-Code allein reicht nicht.
+- `AUDITED`: Ein dokumentierter Auditumfang wurde anhand konkreter Artefakte geprüft; Prüfer, Umfang, offene Punkte und Ergebnis sind festgehalten. Ein erfolgreicher CI-Lauf ist nicht automatisch ein unabhängiges Audit.
+- `PRODUCTION`: Zusätzlich liegen die erforderlichen Betriebs-, Sicherheits-, Überwachungs-, Wiederherstellungs- und Abnahmenachweise vor; Verantwortliche haben die Freigabe erteilt.
 
 Keine Stufe wird automatisch übersprungen. CI beweist nur, was der konkrete CI-Lauf tatsächlich prüft. Lokale isolierte Messungen zählen als Evidenz für die angegebene lokale Umgebung, wenn Version, Kommando, Zeitpunkt, Messmethode, Ergebnis und Artefakte nachvollziehbar sind.
 
@@ -183,3 +185,93 @@ Français: Une affirmation n'est pas une preuve. L'inconnu reste inconnu. Aucune
 ## 13. Reifegrad-Hinweis
 
 Dieser Lernblock ist eine Dokumentations- und Kommunikationsgrundlage. Er beweist nicht, dass jede Regel bereits im V91-Code erzwungen wird. Umsetzung muss durch Codeprüfung und reproduzierbare Tests separat nachgewiesen werden.
+
+## 14. Test, Verifikation und Audit sauber unterscheiden
+
+Ein erfolgreicher Prozess-Exit-Code ist nur ein einzelnes Signal, kein Funktionsbeweis. Je nach Aufgabe müssen die Kriterien vor dem Test festgelegt werden:
+
+- Testkommando und getesteter Commit sind dokumentiert.
+- Exit-Code und tatsächliche Ausgabe werden geprüft.
+- Erwartete Ergebnisse werden mit beobachteten Ergebnissen verglichen.
+- Regressionsprüfungen decken betroffene vorhandene Funktionen ab.
+- Logs und Artefakte werden referenziert; fehlende Artefakte bleiben als fehlend markiert.
+- Nicht ausgeführte, übersprungene oder wegen fehlender Umgebung unmögliche Checks werden ausdrücklich ausgewiesen.
+- Ein Audit prüft zusätzlich den definierten Umfang, die Nachweiskette, offene Risiken und die Grenzen der Aussage.
+
+Die Stufen sind Reifegrad-Gates, keine Pflicht, für jede kleine Dokumentationsänderung eine Produktionsfreigabe zu erzeugen. Für eine reine Dokumentationsänderung kann der ehrliche Status weiterhin `DOCUMENTED` sein.
+
+## 15. Qualitätsziele und Messregeln
+
+Ziele sind von gemessenen Ergebnissen zu trennen. Beispiel für einen noch zu konkretisierenden Zielkatalog:
+
+```json
+{
+  "objective_metrics": [
+    {
+      "name": "critical_errors",
+      "target": 0,
+      "measurement_window": "must_be_defined",
+      "source": "must_be_defined",
+      "status": "UNKNOWN"
+    },
+    {
+      "name": "data_loss_incidents",
+      "target": 0,
+      "measurement_window": "must_be_defined",
+      "source": "must_be_defined",
+      "status": "UNKNOWN"
+    },
+    {
+      "name": "secret_leaks",
+      "target": 0,
+      "measurement_window": "must_be_defined",
+      "source": "must_be_defined",
+      "status": "UNKNOWN"
+    },
+    {
+      "name": "availability",
+      "target": "must_be_defined_from_requirements",
+      "measurement_window": "must_be_defined",
+      "source": "must_be_defined",
+      "status": "UNKNOWN"
+    }
+  ]
+}
+```
+
+- Keine pauschale Angabe wie `">99%"` verwenden, solange Messgröße, Zeitraum, Stichprobe, Quelle und Berechnung nicht festgelegt sind.
+- Ein Zielwert von null ist ein gewünschtes Ziel, kein Beweis, dass kein Vorfall aufgetreten ist.
+- Messwerte müssen Umgebung, Version, Zeitraum, Methode und Rohdaten-/Artefaktreferenz enthalten.
+- Wenn Messwerte fehlen, lautet der Status `UNKNOWN` oder `NO_DATA_AVAILABLE`, niemals automatisch null oder PASS.
+
+## 16. Sichere Standardregeln
+
+```json
+{
+  "v91_core_rule": {
+    "priority": "STABILITY_FIRST",
+    "preserve_working_systems": true,
+    "reality_over_narrative": true,
+    "measure_before_claim": true,
+    "audit_before_production": true,
+    "regression_is_failure": true,
+    "auto_merge": false,
+    "skip_required_tests": false,
+    "assume_verified": false,
+    "automatic_destructive_cleanup": false,
+    "rewrite_existing_prompts_without_authorization": false
+  }
+}
+```
+
+Diese Werte dokumentieren die gewünschte Policy. Sie beweisen nicht, dass die Laufzeit sie technisch erzwingt. Das muss separat durch Codeprüfung und Tests belegt werden.
+
+## 17. Unzulässige Erfolgsbehauptungen ohne Belege
+
+Ohne passende Nachweise nicht behaupten:
+
+- in Produktion funktionsfähig, wenn keine Betriebsnachweise vorliegen;
+- verifiziert, wenn die definierten Prüfungen nicht ausgeführt wurden;
+- performant, wenn keine geeigneten Messwerte vorliegen;
+- unabhängig oder modular, wenn Abhängigkeiten und Isolierung nicht getestet wurden;
+- sicher oder geheimnisfrei, nur weil kein Geheimnis in einem kurzen Ausschnitt sichtbar ist.
