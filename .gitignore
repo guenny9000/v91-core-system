@@ -1,13 +1,50 @@
-*.pyc
-__pycache__/
-.DS_Store
-*.log
-venv/
+## v91-core-system: Security & Secrets
+
+# ─── General ───────────────────────────────────────────────────────────────────
+# Never commit actual secrets, keys, or credentials to this repository.
+# If you accidentally commit a secret, rotate it immediately.
+
+# ─── Secret key files ─────────────────────────────────────────────────────────
+secrets/
+*.key
+*.pem
+*.p12
+*.pfx
+*.crt
+*.csr
+
+# ─── Pattern: Block common secret file names ──────────────────────────────────
 .env
-.pytest_cache/
+.env.*
+!.env.example
+
+# ─── Python ────────────────────────────────────────────────────────────────────
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
 *.egg-info/
 dist/
 build/
+.eggs/
+
+# ─── Test artefacts ────────────────────────────────────────────────────────────
+.coverage
+.pytest_cache/
+htmlcov/
+
+# ─── Docker ────────────────────────────────────────────────────────────────────
 logs/
+
+# ─── Audit hashes (generated in CI, not stored in repo) ───────────────────────
 audit_hashes.txt
 audit_hashes.sha256
+
+# ─── IDE / OS ─────────────────────────────────────────────────────────────────
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db

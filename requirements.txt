@@ -1,0 +1,7 @@
+# Runtime dependencies for v91-core-system
+# Pin minor versions; patch may float for security fixes.
+numpy>=1.26,<2.0
+redis>=5.0,<6.0
+
+# Dev / test extras (not installed in the production image)
+# Install with:  pip install -r requirements-dev.txt

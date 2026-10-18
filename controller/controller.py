@@ -11,10 +11,20 @@ Main service that:
 """
 
 import json
-import time
+import logging
 import os
+import random
+import subprocess
+import time
 from collections import deque
 from statistics import mean, stdev
+
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s [%(levelname)s] controller %(message)s",
+    datefmt="%Y-%m-%dT%H:%M:%SZ",
+)
+logger = logging.getLogger("controller")
 
 from anomaly import AnomalyDetector
 from metrics import MetricsFeed
@@ -65,33 +75,41 @@ class ControlPlane:
 
         return None
 
-    def execute_action(self, action):
-        """Execute a control action."""
+    def execute_action(self, action: str) -> None:
+        """Execute a control action via subprocess (no shell injection risk)."""
+        def _compose(*args: str) -> None:
+            """Run a docker compose sub-command, log errors but never raise."""
+            cmd = ["docker", "compose", *args]
+            result = subprocess.run(cmd, capture_output=True, text=True)  # noqa: S603
+            if result.returncode != 0:
+                logger.warning("compose command failed: %s", result.stderr.strip())
+
         if action == "scale_up_workers":
-            print("[CONTROL] Scaling up workers...")
-            os.system("docker compose up --scale worker=3 -d 2>/dev/null || true")
+            logger.info("Scaling up workers (3 replicas)")
+            _compose("up", "--scale", "worker=3", "-d")
         elif action == "scale_down_workers":
-            print("[CONTROL] Scaling down workers...")
-            os.system("docker compose up --scale worker=1 -d 2>/dev/null || true")
+            logger.info("Scaling down workers (1 replica)")
+            _compose("up", "--scale", "worker=1", "-d")
         elif action == "activate_chaos_mode":
-            print("[CONTROL] Activating chaos mode...")
-            os.system("docker compose restart worker 2>/dev/null || true")
+            logger.info("Activating chaos mode – restarting worker")
+            _compose("restart", "worker")
         elif action == "conserve_resources":
-            print("[CONTROL] System healthy, conserving resources.")
+            logger.info("System healthy – conserving resources")
+        else:
+            logger.warning("Unknown action: %s", action)
 
         self.last_action = action
         self.feedback_loop.record_action(action)
 
     def run(self):
         """Main control loop."""
-        print("[CONTROLLER] Starting v91 Control Plane...")
+        logger.info("Starting v91 Control Plane")
         iteration = 0
 
         while True:
             iteration += 1
 
             # Simulate metric generation
-            import random
             latency = random.uniform(50, 300)
             errors = random.randint(0, 10)
             events = random.randint(5, 100)
@@ -107,15 +125,15 @@ class ControlPlane:
             strategy = self.feedback_loop.adjust_strategy({
                 "errors": errors,
                 "latency": latency,
-                "events": events
+                "events": events,
             })
 
-            # Log state
+            # Log state every 10 iterations
             if iteration % 10 == 0:
-                print(
-                    f"[ITER {iteration}] Latency: {latency:.1f}ms, "
-                    f"Errors: {errors}, Events: {events}, "
-                    f"Strategy: {strategy}, Last Action: {self.last_action}"
+                logger.info(
+                    "[ITER %d] Latency=%.1fms Errors=%d Events=%d "
+                    "Strategy=%s LastAction=%s",
+                    iteration, latency, errors, events, strategy, self.last_action,
                 )
 
             time.sleep(5)
