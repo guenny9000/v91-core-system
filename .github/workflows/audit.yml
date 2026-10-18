@@ -23,17 +23,19 @@ jobs:
 
       - name: Install Dependencies
         run: |
-          pip install --no-cache-dir numpy pytest cryptography
+          python -m pip install --upgrade pip
+          python -m pip install --no-cache-dir pytest cryptography
 
       - name: Run Unit Tests
-        run: |
-          pytest tests/ -v
+        run: python -m pytest tests/ -v
+
+      - name: Compile runtime modules
+        run: python -m py_compile controller/*.py
 
       - name: Hash Verification
         run: |
           find ./controller -type f -name "*.py" -exec sha256sum {} \; > audit_hashes.txt
           sha256sum audit_hashes.txt > audit_hashes.sha256
-          echo "Hash verification complete"
           cat audit_hashes.txt
 
       - name: Upload Hash Artifacts
@@ -44,9 +46,10 @@ jobs:
             audit_hashes.txt
             audit_hashes.sha256
           retention-days: 90
-        - name: Upload Global Status
-          uses: actions/upload-artifact@v4
-          with:
-            name: global-status
-            path: global-status.json
-            retention-days: 90
+
+      - name: Upload Global Status Snapshot
+        uses: actions/upload-artifact@v4
+        with:
+          name: global-status
+          path: global-status.json
+          retention-days: 90
