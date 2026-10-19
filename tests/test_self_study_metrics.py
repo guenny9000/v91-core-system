@@ -23,6 +23,8 @@ def test_evaluate_efficiency_fails_closed_for_missing_or_invalid_inputs():
         (100.0, -1.0, 1),
         (100.0, float("nan"), 1),
         (100.0, 80.0, 0),
+        (100.0, 80.0, True),
+        (100.0, 80.0, 1.0),
     ]:
         result = evaluate_efficiency(baseline, candidate, samples)
         assert result["measurement_status"] == "UNKNOWN"
