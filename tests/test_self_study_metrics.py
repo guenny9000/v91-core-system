@@ -1,6 +1,11 @@
 """Tests for fail-closed isolated efficiency calculation."""
 
-from controller.self_study_metrics import evaluate_efficiency
+import os
+import sys
+
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "controller"))
+
+from self_study_metrics import evaluate_efficiency
 
 
 def test_evaluate_efficiency_labels_isolated_measurement_without_production_claim():
