@@ -21,6 +21,7 @@ def evaluate_efficiency(
         or isinstance(candidate_seconds, bool)
         or not isinstance(baseline_seconds, (int, float))
         or not isinstance(candidate_seconds, (int, float))
+        or isinstance(sample_count, bool)
         or not isinstance(sample_count, int)
         or sample_count < 1
         or not isfinite(float(baseline_seconds))
