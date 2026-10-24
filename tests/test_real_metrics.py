@@ -1,6 +1,9 @@
 """Tests for the optional, read-only host telemetry adapter."""
+import os
+import sys
 from types import SimpleNamespace
 
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "controller"))
 from real_metrics import collect_host_metrics
 
 
