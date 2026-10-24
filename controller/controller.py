@@ -18,6 +18,7 @@ from statistics import mean
 from anomaly import AnomalyDetector
 from metrics import MetricsFeed
 from feedback import FeedbackLoop
+from real_metrics import collect_host_metrics
 
 
 class ControlPlane:
@@ -38,6 +39,7 @@ class ControlPlane:
         self.last_action = None
         self.last_action_status = "NO_ACTION"
         self.metrics_mode = "SIMULATION"
+        self.last_host_metrics = {"status": "NO_DATA_AVAILABLE", "reason": "not_sampled_yet"}
 
     def ingest_metric(self, latency, errors, events):
         """Record a valid synthetic metric snapshot; never treat it as live telemetry."""
@@ -99,6 +101,11 @@ class ControlPlane:
             "not executed (synthetic metrics / no live actuator)."
         )
         return False
+
+    def sample_host_metrics(self):
+        """Read host CPU/memory separately; never substitute them for app metrics."""
+        self.last_host_metrics = collect_host_metrics()
+        return self.last_host_metrics.copy()
 
     def run(self):
         """Run the simulation loop; no host or Docker actions are performed."""
