@@ -1,7 +1,15 @@
+import importlib.util
 import json
 from pathlib import Path
 
-from scripts.v91_dashboard import build_report, read_observer, render_text
+MODULE_PATH = Path(__file__).resolve().parents[1] / "scripts" / "v91_dashboard.py"
+SPEC = importlib.util.spec_from_file_location("v91_dashboard", MODULE_PATH)
+assert SPEC is not None and SPEC.loader is not None
+DASHBOARD = importlib.util.module_from_spec(SPEC)
+SPEC.loader.exec_module(DASHBOARD)
+build_report = DASHBOARD.build_report
+read_observer = DASHBOARD.read_observer
+render_text = DASHBOARD.render_text
 
 
 def write_observer(runtime: Path, *, status="OBSERVED", parse_errors=0):
