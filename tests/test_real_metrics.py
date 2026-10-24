@@ -19,7 +19,7 @@ class FakePsutil:
 
 def test_valid_snapshot_has_source_and_timestamp():
     result = collect_host_metrics(FakePsutil)
-    assert result["status"] == "DOCUMENTED"
+    assert result["status"] == "DATA_AVAILABLE"
     assert result["source"] == "psutil.host"
     assert result["timestamp_utc"]
     assert result["cpu_percent"] == 17.5
