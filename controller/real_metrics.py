@@ -38,7 +38,7 @@ def collect_host_metrics(psutil_module: Any = None) -> dict[str, Any]:
         if not (0 <= cpu <= 100 and total > 0 and 0 <= available <= total and 0 <= used_percent <= 100):
             raise ValueError("telemetry values outside valid bounds")
         return {
-            "status": "DOCUMENTED",
+            "status": "DATA_AVAILABLE",
             "source": "psutil.host",
             "timestamp_utc": datetime.now(timezone.utc).isoformat(),
             "monotonic_sample_seconds": time.monotonic(),
