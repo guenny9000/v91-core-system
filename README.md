@@ -119,3 +119,41 @@ On Windows, start the stack with `docker compose up -d --build`. To submit a rea
 ## License
 
 © 2026 Sebastian (guenny9000) – Alle Rechte vorbehalten
+
+
+## Installation, syntax and platform checks
+
+Use the repository's declared Python version and dependencies as the starting point. The GitHub Actions audit currently runs Python 3.11 on Ubuntu; a local result on another Python version or operating system is useful but is not a substitute for the CI result on the exact commit.
+
+### Minimal local validation
+
+From the repository root, in an isolated environment:
+
+```bash
+python --version
+python -m pip install --upgrade pip
+python -m pip install pytest
+python -m py_compile controller/*.py v91_*.py tests/*.py
+python -m pytest tests/ -v
+docker compose --file docker-compose.yml config --quiet
+```
+
+The compile command checks Python syntax without starting the runtime. The test command checks the behaviors covered by the tests. The Compose command checks configuration parsing; none of these alone proves production readiness. Run the Docker integration workflow where Docker is available.
+
+On Windows PowerShell, the equivalent Python commands can be run from the repository root; if shell wildcard expansion differs, compile files individually or use a short Python script with `pathlib`. Do not assume a Bash command or path is portable to PowerShell.
+
+### Syntax, encoding and translation errors
+
+When a command fails, classify the failure before changing code:
+
+1. **Syntax/parse error:** the source cannot be parsed by the selected language version. Run the compiler or parser first.
+2. **Encoding or line-ending issue:** inspect the file encoding (prefer UTF-8), BOM, LF/CRLF handling, and accidental replacement characters. Do not repair text by blind global replacement.
+3. **Version/platform mismatch:** record the exact Python version, operating system, shell, and command. Check APIs and path separators supported by that environment.
+4. **Dependency/configuration error:** verify installed package versions and parse JSON, YAML, and Compose files with their actual validators.
+5. **Runtime/test failure:** preserve the full traceback and failing test, reproduce it, make the smallest safe correction, then rerun the focused test and the full suite.
+
+Automated repair should preserve the original, create a reviewable diff, run bounded checks, and report the exact commit and command results. If validation fails or the cause is uncertain, stop the change and report the evidence; do not label it fixed. Do not create a second overlapping pull request for the same fix—extend the existing change where appropriate.
+
+### Installation and environment evidence
+
+Before calling an installation verified, record the operating system, Python version, dependency-install result, Compose validation result (if applicable), test result, commit SHA, and log/artifact reference. A README instruction is documentation, not proof that installation succeeded on a particular machine.
