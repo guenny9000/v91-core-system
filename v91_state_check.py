@@ -28,7 +28,7 @@ def validate_telemetry_entry(entry: dict[str, Any]) -> tuple[bool, list[str]]:
         errors.append(f"invalid state: {state!r}")
 
     evidence_id = entry.get("evidence_log_id")
-    if state in {"VERIFIZIERT", "PRODUKTIV"} and (
+    if isinstance(state, str) and state in {"VERIFIZIERT", "PRODUKTIV"} and (
         not isinstance(evidence_id, str) or not evidence_id.strip()
     ):
         errors.append(f"{state} requires a non-empty evidence_log_id")
