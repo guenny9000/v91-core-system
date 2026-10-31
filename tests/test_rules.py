@@ -4,6 +4,9 @@ Unit Tests – Rule Engine
 """
 
 import sys
+import io
+if sys.platform == "win32" and hasattr(sys.stdout, "buffer"):
+    sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8", errors="replace")
 import os
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'controller'))
 

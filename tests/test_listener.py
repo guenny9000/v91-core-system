@@ -10,6 +10,9 @@ import json
 import os
 import sqlite3
 import sys
+import io
+if sys.platform == "win32" and hasattr(sys.stdout, "buffer"):
+    sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8", errors="replace")
 import tempfile
 import time
 from datetime import datetime, timezone
@@ -256,9 +259,11 @@ def test_invalid_signature_quarantined():
 
         assert _count(db_path, "v91_quarantine") == 1
         assert _count(db_path, "v91_ledger") == 0
-        row = sqlite3.connect(db_path).execute(
+        conn_q = sqlite3.connect(db_path)
+        row = conn_q.execute(
             "SELECT reason FROM v91_quarantine"
         ).fetchone()
+        conn_q.close()
         assert "signature mismatch" in row[0]
     print("✓ test_invalid_signature_quarantined")
 
