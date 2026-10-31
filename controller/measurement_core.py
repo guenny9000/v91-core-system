@@ -38,9 +38,16 @@ def metric(value: float | int | None, unit: str, source: str, reason: str | None
         return {"value": None, "unit": unit, "status": "UNKNOWN", "source": source, "reason": reason or "No verified source available"}
     if isinstance(value, bool) or not isinstance(value, (int, float)):
         raise MeasurementError("Metric value must be numeric or None")
-    number = float(value)
-    if not math.isfinite(number) or number < 0:
-        raise MeasurementError("Metric value must be finite and non-negative")
+    if isinstance(value, int):
+        if value < 0:
+            raise MeasurementError("Metric value must be finite and non-negative")
+        number: int | float = value
+    else:
+        number = float(value)
+        if not math.isfinite(number) or number < 0:
+            raise MeasurementError("Metric value must be finite and non-negative")
+    if unit == "%" and number > 100:
+        raise MeasurementError("Percentage metrics must be between 0 and 100")
     return {"value": number, "unit": unit, "status": "DATA_AVAILABLE", "source": source}
 
 
