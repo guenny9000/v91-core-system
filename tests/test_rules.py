@@ -9,6 +9,25 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'controller'))
 
 from metrics import MetricsFeed
 
+def test_empty_metrics_are_unknown():
+    feed = MetricsFeed()
+    assert feed.get_error_rate() is None
+    assert feed.get_recent_average_latency() is None
+    snapshot = feed.snapshot()
+    assert snapshot["error_rate"] is None
+    assert snapshot["error_rate_status"] == "UNKNOWN"
+    assert snapshot["latency"] is None
+    assert snapshot["latency_status"] == "UNKNOWN"
+
+
+def test_invalid_latency_is_rejected():
+    import pytest
+    feed = MetricsFeed()
+    for value in (-1, float("nan"), float("inf"), True):
+        with pytest.raises(ValueError):
+            feed.record_event(latency=value)
+
+
 def test_error_rate_calculation():
     """Test error rate calculation."""
     feed = MetricsFeed()
@@ -40,7 +59,7 @@ def test_snapshot():
     print("✓ test_snapshot passed")
 
 if __name__ == "__main__":
-    test_error_rate_calculation()
+    test_empty_metrics_are_unknown()\n    test_invalid_latency_is_rejected()\n    test_error_rate_calculation()
     test_latency_tracking()
     test_snapshot()
     print("\n✓ All rule tests passed")
