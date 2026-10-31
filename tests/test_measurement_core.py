@@ -5,7 +5,7 @@ from pathlib import Path
 
 import pytest
 
-from measurement_core import (
+from controller.measurement_core import (
     GENESIS, MeasurementError, append_snapshot, event_hash, metric,
     verify_ledger,
 )
