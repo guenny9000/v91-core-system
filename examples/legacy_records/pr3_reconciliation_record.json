@@ -1,0 +1,43 @@
+{
+  "change_id": "PR3-RECONCILE-20261101",
+  "scope": "v91-core-system#3",
+  "owner": "maintainers",
+  "authorized": true,
+  "irreversible": false,
+  "baseline": {
+    "cost": "33 files touched; 57 commits ahead and 57 behind main",
+    "risk": "high merge conflict surface in runtime and safety modules",
+    "alternatives": "selective cherry-pick by verified feature group"
+  },
+  "evidence": {
+    "sources": [
+      "git rev-list counts on 2026-11-01",
+      "trial merge conflict report (10 conflict files)"
+    ],
+    "uncertainty": "medium"
+  },
+  "legal_review": {
+    "approved": true
+  },
+  "safety_review": {
+    "approved": true,
+    "independent_review": true
+  },
+  "tests": {
+    "regression_ok": false,
+    "summary": "not executable due to merge conflicts"
+  },
+  "rollback": {
+    "documented": true,
+    "plan_ref": "do not merge PR #3 directly; reconcile in isolated branch"
+  },
+  "seven_questions": {
+    "q1": true,
+    "q2": true,
+    "q3": false,
+    "q4": false,
+    "q5": true,
+    "q6": true,
+    "q7": true
+  }
+}
