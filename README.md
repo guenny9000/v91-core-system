@@ -132,6 +132,7 @@ On Windows, start the stack with `docker compose up -d --build`. To submit a rea
 ```bash
 python controller/v91_cli.py evaluate TARGET --resource-util 0.8 --entropy 0.7 --environment 0.6 --human-impact 0.1
 python controller/v91_cli.py verify
+python controller/v91_cli.py stewardship-report --ledger ledger.jsonl
 ```
 Exit codes: 0 ok, 1 invalid input/broken ledger, 2 rejected (human impact).
 

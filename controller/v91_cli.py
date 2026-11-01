@@ -45,6 +45,9 @@ def main(argv: list[str] | None = None) -> int:
     rp = sub.add_parser("report", help="verified totals (chain must be valid)")
     rp.add_argument("--ledger", default=DEFAULT_LEDGER)
 
+    sr = sub.add_parser("stewardship-report", help="decision counts and percentages")
+    sr.add_argument("--ledger", default=DEFAULT_LEDGER)
+
     co = sub.add_parser("collect-local", help="record real local memory-in-use samples to CSV")
     co.add_argument("--out", required=True)
     co.add_argument("--samples", type=int, default=10)
@@ -89,6 +92,13 @@ def main(argv: list[str] | None = None) -> int:
             return 1
         print(json.dumps({**chain, **verified_summary(args.ledger)}, indent=2))
         return 0
+
+    if args.cmd == "stewardship-report":
+        from stewardship_report import summarize
+
+        result = summarize(args.ledger)
+        print(json.dumps(result, indent=2))
+        return 0 if result["chain_valid"] else 1
 
     if args.cmd == "legacy-gate":
         from legacy_gate import evaluate_record, load_record
