@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "status": "UNKNOWN",
+  "scope": "repository_snapshot_only",
+  "timestamp_utc": null,
+  "claims": {
+    "world_peace_protocol_active": "UNKNOWN",
+    "bureaucracy_eliminated": "UNKNOWN",
+    "lobbyism_streams": "UNKNOWN",
+    "eco_harmony_index": "UNKNOWN",
+    "auto_correction_perfection": "UNKNOWN"
+  },
+  "evidence": [],
+  "valid": false,
+  "reason": "No independently verified measurements or witnesses are attached. UNKNOWN is not zero, false, or PASS. This file does not certify global, local, or production state."
+}

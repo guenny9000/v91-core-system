@@ -1,0 +1,10 @@
+{
+  "action_id": "isolated-demo-001",
+  "action_class": "read_only",
+  "purpose": "Prüfe eine lokale Beispieldatei im isolierten Testraum.",
+  "expected_effect": "Gib ausschließlich eine strukturierte Prüfentscheidung zurück.",
+  "steps": 1,
+  "external_calls": 0,
+  "cost_units": 1,
+  "output_bytes": 1024
+}

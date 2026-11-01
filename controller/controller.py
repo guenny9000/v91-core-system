@@ -1,55 +1,67 @@
 #!/usr/bin/env python3
 """
-v91-core-system Controller – Autonomous Control Plane
+V91 Control Plane.
 
-Main service that:
-1. Ingests metrics
-2. Detects anomalies (z-score based)
-3. Evaluates rules
-4. Triggers control actions
-5. Maintains feedback loop
+Current operating mode: SIMULATION ONLY.
+Metrics are generated locally with random values; they are not live telemetry.
+Actions are proposals for observation and are never applied to Docker or the host.
+A real metrics adapter and a separately reviewed actuator are required before
+real-world control actions can be enabled.
 """
 
-import logging
+import math
 import random
-import subprocess
 import time
 from collections import deque
 from statistics import mean
 
 from anomaly import AnomalyDetector
-from feedback import FeedbackLoop
 from metrics import MetricsFeed
-
-logging.basicConfig(
-    level=logging.INFO,
-    format="%(asctime)s [%(levelname)s] controller %(message)s",
-    datefmt="%Y-%m-%dT%H:%M:%SZ",
-)
-logger = logging.getLogger("controller")
+from feedback import FeedbackLoop
+from real_metrics import collect_host_metrics
 
 
 class ControlPlane:
+    """Observe synthetic metrics and report proposed actions without side effects."""
+
+    ALLOWED_ACTIONS = {
+        "scale_up_workers",
+        "scale_down_workers",
+        "activate_chaos_mode",
+        "conserve_resources",
+    }
+
     def __init__(self):
         self.anomaly_detector = AnomalyDetector()
         self.metrics_feed = MetricsFeed()
         self.feedback_loop = FeedbackLoop()
         self.metrics_history = deque(maxlen=100)
         self.last_action = None
+        self.last_action_status = "NO_ACTION"
+        self.metrics_mode = "SIMULATION"
+        self.last_host_metrics = {"status": "NO_DATA_AVAILABLE", "reason": "not_sampled_yet"}
 
     def ingest_metric(self, latency, errors, events):
-        """Ingest a metric snapshot."""
+        """Record a valid synthetic metric snapshot; never treat it as live telemetry."""
+        for name, value in (("latency", latency), ("errors", errors), ("events", events)):
+            if isinstance(value, bool) or not isinstance(value, (int, float)) or not math.isfinite(value):
+                raise ValueError(f"{name} must be a finite number")
+            if value < 0:
+                raise ValueError(f"{name} must not be negative")
+        if not float(errors).is_integer() or not float(events).is_integer():
+            raise ValueError("errors and events must be whole numbers")
         metric = {
             "timestamp": time.time(),
             "latency": latency,
             "errors": errors,
-            "events": events
+            "events": events,
+            "source": self.metrics_mode,
         }
         self.metrics_history.append(metric)
         self.metrics_feed.record_event(latency, error=(errors > 0))
 
     def evaluate_rules(self):
-        """Evaluate control rules based on metrics."""
+        """Evaluate synthetic metric history and return a proposed action."""
         if len(self.metrics_history) < 5:
             return None
 
@@ -58,11 +70,9 @@ class ControlPlane:
         avg_errors = mean([m["errors"] for m in recent])
         avg_events = mean([m["events"] for m in recent])
 
-        # Z-score anomaly detection
         latency_anomaly = self.anomaly_detector.detect("latency", avg_latency)
         error_anomaly = self.anomaly_detector.detect("errors", avg_errors)
 
-        # Rule evaluation
         if latency_anomaly and avg_latency > 200:
             return "scale_up_workers"
         if avg_events < 10 and not error_anomaly:
@@ -71,72 +81,67 @@ class ControlPlane:
             return "activate_chaos_mode"
         if avg_latency < 50 and avg_errors == 0:
             return "conserve_resources"
-
         return None
 
-    def execute_action(self, action: str) -> None:
-        """Execute a control action via subprocess (no shell injection risk)."""
-        def _compose(*args: str) -> None:
-            """Run a docker compose sub-command, log errors but never raise."""
-            cmd = ["docker", "compose", *args]
-            result = subprocess.run(cmd, capture_output=True, text=True)  # noqa: S603
-            if result.returncode != 0:
-                logger.warning("compose command failed: %s", result.stderr.strip())
-
-        if action == "scale_up_workers":
-            logger.info("Scaling up workers (3 replicas)")
-            _compose("up", "--scale", "worker=3", "-d")
-        elif action == "scale_down_workers":
-            logger.info("Scaling down workers (1 replica)")
-            _compose("up", "--scale", "worker=1", "-d")
-        elif action == "activate_chaos_mode":
-            logger.info("Activating chaos mode – restarting worker")
-            _compose("restart", "worker")
-        elif action == "conserve_resources":
-            logger.info("System healthy – conserving resources")
-        else:
-            logger.warning("Unknown action: %s", action)
+    def execute_action(self, action):
+        """
+        Backward-compatible method name: currently records a proposal only.
+        It deliberately does not execute shell commands or change the host.
+        """
+        if action not in self.ALLOWED_ACTIONS:
+            self.last_action = None
+            self.last_action_status = "REJECTED_UNKNOWN_ACTION"
+            print(f"[SAFETY] Unknown action rejected: {action!r}")
+            return False
 
         self.last_action = action
-        self.feedback_loop.record_action(action)
+        self.last_action_status = "SIMULATED_NOT_EXECUTED"
+        print(
+            f"[SIMULATION] Proposed action: {action}; "
+            "not executed (synthetic metrics / no live actuator)."
+        )
+        return False
+
+    def sample_host_metrics(self):
+        """Read host CPU/memory separately; never substitute them for app metrics."""
+        self.last_host_metrics = collect_host_metrics()
+        return self.last_host_metrics.copy()
 
     def run(self):
-        """Main control loop."""
-        logger.info("Starting v91 Control Plane")
+        """Run the simulation loop; no host or Docker actions are performed."""
+        print(
+            "[CONTROLLER] V91 simulation started. "
+            "Metrics source: RANDOM/SIMULATION; control actions disabled."
+        )
         iteration = 0
 
         while True:
             iteration += 1
-
-            # Simulate metric generation
             latency = random.uniform(50, 300)
             errors = random.randint(0, 10)
             events = random.randint(5, 100)
 
             self.ingest_metric(latency, errors, events)
-
-            # Evaluate and execute
             action = self.evaluate_rules()
             if action:
                 self.execute_action(action)
 
-            # Feedback loop adjustment
             strategy = self.feedback_loop.adjust_strategy({
                 "errors": errors,
                 "latency": latency,
                 "events": events,
             })
 
-            # Log state every 10 iterations
             if iteration % 10 == 0:
-                logger.info(
-                    "[ITER %d] Latency=%.1fms Errors=%d Events=%d "
-                    "Strategy=%s LastAction=%s",
-                    iteration, latency, errors, events, strategy, self.last_action,
+                print(
+                    f"[SIMULATION ITER {iteration}] Latency: {latency:.1f}ms, "
+                    f"Errors: {errors}, Events: {events}, Strategy: {strategy}, "
+                    f"Proposed action: {self.last_action}, "
+                    f"Action status: {self.last_action_status}"
                 )
 
             time.sleep(5)
 
+
 if __name__ == "__main__":
-    controller = ControlPlane()
-    controller.run()
+    ControlPlane().run()

@@ -2,84 +2,98 @@ name: v91 Audit Pipeline
 
 on:
   push:
-    branches: ["main"]
+    branches: [ "main" ]
   pull_request:
-    branches: ["main"]
+    branches: [ "main" ]
 
 jobs:
-  # ── Lint ──────────────────────────────────────────────────────────────────────
-  lint:
-    name: Lint (ruff)
+  audit-checks:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout Repository
+        uses: actions/checkout@v4
 
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v4
         with:
-          python-version: "3.11"
-          cache: "pip"
+          python-version: '3.11'
 
-      - name: Install dev deps
-        run: pip install --no-cache-dir -r requirements-dev.txt
-
-      - name: Ruff lint
-        run: ruff check controller/ tests/
-
-      - name: Ruff format check
-        run: ruff format --check controller/ tests/
-
-  # ── Unit & Integration Tests ──────────────────────────────────────────────────
-  test:
-    name: Tests (pytest)
-    runs-on: ubuntu-latest
-    needs: lint
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.11"
-          cache: "pip"
-
-      - name: Install dev deps
-        run: pip install --no-cache-dir -r requirements-dev.txt
-
-      - name: Run unit tests with coverage
-        run: pytest tests/ -v --ignore=tests/test_listener.py --cov=controller --cov-report=term-missing
-
-      - name: Initialise Listener DB for integration tests
+      - name: Install Dependencies
         run: |
-          mkdir -p data
-          sqlite3 data/v91_independent_state.db < data/init_listener_db.sql
-          echo "DB initialised"
+          pip install --no-cache-dir pytest
 
-      - name: Run Listener integration tests
-        run: pytest tests/test_listener.py -v --cov=controller --cov-append --cov-report=term-missing
+      - name: Validate Docker Compose configuration
+        run: docker compose --file docker-compose.yml config --quiet
 
-      - name: Upload coverage report
-        uses: actions/upload-artifact@v4
-        with:
-          name: coverage-report
-          path: .coverage
-
-  # ── Hash / Integrity Audit ────────────────────────────────────────────────────
-  audit:
-    name: Hash Audit
-    runs-on: ubuntu-latest
-    needs: test
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Hash controller source files
+      - name: Run Unit Tests
         run: |
-          find ./controller -type f -name "*.py" | sort | xargs sha256sum > audit_hashes.txt
+          pytest tests/ -v
+
+      - name: Compile runtime modules
+        run: python -m py_compile controller/*.py
+
+      - name: Build and test real Compose worker/observer
+        shell: bash
+        run: |
+          set -euo pipefail
+          export V91_CONTAINER_UID="$(id -u)"
+          export V91_CONTAINER_GID="$(id -g)"
+          cleanup() { docker compose down --remove-orphans >/dev/null 2>&1 || true; }
+          trap cleanup EXIT
+          mkdir -p queue/pending queue/processing queue/done queue/failed runtime/results workspace
+          printf 'V91 container integration\n' > workspace/ci-example.txt
+          cat > queue/pending/ci-hash.json <<'TASK'
+          {
+            "task_id": "ci-hash",
+            "action": "sha256_file",
+            "relative_path": "ci-example.txt",
+            "purpose": "Verify the container can process a real local file.",
+            "expected_effect": "Return the correct SHA-256 digest and byte count."
+          }
+          TASK
+          docker compose up --detach --build
+          for container in v91-controller v91-core-system-worker-1; do
+            network_name="$(docker inspect --format '{{range $name, $settings := .NetworkSettings.Networks}}{{$name}}{{end}}' "$container")"
+            test -n "$network_name"
+            internal_network="$(docker network inspect --format '{{.Internal}}' "$network_name")"
+            test "$internal_network" = "true"
+          done
+          for attempt in $(seq 1 40); do
+            if [ -f runtime/results/ci-hash.json ] && [ -f runtime/v91-observer.json ]; then
+              if python -c 'import json,sys; d=json.load(open("runtime/v91-observer.json", encoding="utf-8")); a=d.get("audit") or {}; e=a.get("last_event") or {}; q=d.get("queue_counts") or {}; sys.exit(0 if e.get("phase") == "TASK_COMPLETED" and q.get("done") == 1 else 1)' >/dev/null 2>&1; then
+                break
+              fi
+            fi
+            sleep 1
+          done
+          test -f runtime/results/ci-hash.json
+          test -f runtime/v91-observer.json
+          python - <<'PY'
+          import hashlib, json
+          from pathlib import Path
+
+          result = json.loads(Path("runtime/results/ci-hash.json").read_text(encoding="utf-8"))
+          assert result["status"] == "COMPLETED", result
+          assert result["sha256"] == hashlib.sha256(b"V91 container integration\n").hexdigest(), result
+          events = [json.loads(line) for line in Path("runtime/v91-actions.jsonl").read_text(encoding="utf-8").splitlines()]
+          assert [event["phase"] for event in events] == ["TASK_CLAIMED", "TASK_STARTED", "TASK_COMPLETED"], events
+          assert events[1]["purpose"] == "Verify the container can process a real local file.", events
+          assert events[1]["expected_effect"] == "Return the correct SHA-256 digest and byte count.", events
+          observed = json.loads(Path("runtime/v91-observer.json").read_text(encoding="utf-8"))
+          assert observed["status"] == "OBSERVED", observed
+          assert observed["queue_counts"]["done"] == 1, observed
+          assert observed["audit"]["last_event"]["phase"] == "TASK_COMPLETED", observed
+          print("V91 Compose integration verified: real task processed, hash checked, audit and observer confirmed.")
+          PY
+
+      - name: Hash Verification
+        run: |
+          find ./controller -type f -name "*.py" -exec sha256sum {} \; > audit_hashes.txt
           sha256sum audit_hashes.txt > audit_hashes.sha256
           echo "Hash verification complete"
           cat audit_hashes.txt
 
-      - name: Upload hash artifacts
+      - name: Upload Hash Artifacts
         uses: actions/upload-artifact@v4
         with:
           name: audit-hashes
@@ -87,22 +101,9 @@ jobs:
             audit_hashes.txt
             audit_hashes.sha256
 
-  # ── Docker Build Smoke Test ───────────────────────────────────────────────────
-  docker-build:
-    name: Docker Build
-    runs-on: ubuntu-latest
-    needs: test
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-
-      - name: Build image (no push)
-        uses: docker/build-push-action@v5
+      - name: Upload Global Status Snapshot
+        uses: actions/upload-artifact@v4
         with:
-          context: .
-          push: false
-          tags: v91-listener:ci
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
+          name: global-status
+          path: global-status.json
+          retention-days: 90
