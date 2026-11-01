@@ -51,3 +51,5 @@ Thumbs.db
 
 # Runtime ledgers
 *_ledger.jsonl
+
+runtime/v91-observer.json
