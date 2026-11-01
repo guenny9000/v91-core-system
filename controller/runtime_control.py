@@ -19,7 +19,7 @@ import subprocess
 import sys
 import time
 import uuid
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
@@ -40,7 +40,7 @@ class ControlError(RuntimeError):
 
 
 def utc_now() -> str:
-    return datetime.now(timezone.utc).isoformat(timespec="milliseconds").replace("+00:00", "Z")
+    return datetime.now(UTC).isoformat(timespec="milliseconds").replace("+00:00", "Z")
 
 
 def parse_json_lines(raw: str) -> list[dict[str, Any]]:
@@ -277,7 +277,7 @@ def append_audit(audit_path: Path, event: dict[str, Any]) -> None:
     except FileExistsError as exc:
         raise ControlError(f"Audit lock already exists: {lock_path}; inspect it, do not delete blindly.") from exc
     try:
-        os.write(lock_fd, f"pid={os.getpid()} timestamp={utc_now()}\n".encode("utf-8"))
+        os.write(lock_fd, f"pid={os.getpid()} timestamp={utc_now()}\n".encode())
         os.fsync(lock_fd)
         with audit_path.open("a", encoding="utf-8") as stream:
             stream.write(json.dumps(event, sort_keys=True, separators=(",", ":"), allow_nan=False) + "\n")

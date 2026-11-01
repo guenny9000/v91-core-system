@@ -9,8 +9,7 @@ from __future__ import annotations
 import argparse
 import json
 import shutil
-import sys
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
@@ -89,7 +88,7 @@ def build_report(runtime_dir: Path = DEFAULT_RUNTIME, queue_dir: Path = DEFAULT_
     overall = "OBSERVED" if observer.get("status") == "OBSERVED" and disk.get("status") == "OBSERVED" else "UNKNOWN_OR_INCOMPLETE"
     return {
         "schema_version": 1,
-        "generated_at_utc": datetime.now(timezone.utc).isoformat(timespec="seconds").replace("+00:00", "Z"),
+        "generated_at_utc": datetime.now(UTC).isoformat(timespec="seconds").replace("+00:00", "Z"),
         "overall_status": overall,
         "observer": observer,
         "queue_filesystem_counts": queue_dirs,

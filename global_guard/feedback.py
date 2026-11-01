@@ -6,9 +6,10 @@ to production policy. A human/reviewer must approve any resulting policy change.
 from __future__ import annotations
 
 import json
-from datetime import datetime, timezone
+from collections.abc import Mapping
+from datetime import UTC, datetime
 from pathlib import Path
-from typing import Any, Mapping
+from typing import Any
 
 ALLOWED_LABELS = frozenset({
     "correct_allow",
@@ -51,7 +52,7 @@ def make_feedback_record(
     return {
         "schema_version": "1.0",
         "case_id": case_id,
-        "recorded_at": datetime.now(timezone.utc).isoformat(),
+        "recorded_at": datetime.now(UTC).isoformat(),
         "request": dict(request),
         "decision_code": decision_code,
         "actual_allowed": actual_allowed,
@@ -71,7 +72,7 @@ def append_feedback(path: str | Path, record: Mapping[str, Any]) -> None:
 
 
 def summarize_feedback(path: str | Path) -> dict[str, Any]:
-    counts = {label: 0 for label in sorted(ALLOWED_LABELS)}
+    counts = dict.fromkeys(sorted(ALLOWED_LABELS), 0)
     total = 0
     for line_number, line in enumerate(Path(path).read_text(encoding="utf-8").splitlines(), start=1):
         if not line.strip():

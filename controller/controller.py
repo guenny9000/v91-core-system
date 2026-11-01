@@ -16,8 +16,8 @@ from collections import deque
 from statistics import mean
 
 from anomaly import AnomalyDetector
-from metrics import MetricsFeed
 from feedback import FeedbackLoop
+from metrics import MetricsFeed
 from real_metrics import collect_host_metrics
 
 

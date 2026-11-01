@@ -1,7 +1,7 @@
 """Safe local demo; no external connections or system actions."""
-from pathlib import Path
 import json
 import sys
+from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 from addons.v91_guardrail import PolicyContext, evaluate  # noqa: E402

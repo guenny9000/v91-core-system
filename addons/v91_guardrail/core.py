@@ -1,9 +1,9 @@
 """Read-only policy evaluation. No network, filesystem, subprocess, or model calls."""
 from __future__ import annotations
 
-from dataclasses import asdict, dataclass
 import re
-from typing import Iterable
+from collections.abc import Iterable
+from dataclasses import asdict, dataclass
 
 
 @dataclass(frozen=True)

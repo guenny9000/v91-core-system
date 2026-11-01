@@ -5,8 +5,9 @@ This runner evaluates policy decisions only; it deliberately never executes tool
 from __future__ import annotations
 
 import json
+from collections.abc import Iterable, Mapping
 from pathlib import Path
-from typing import Any, Iterable, Mapping
+from typing import Any
 
 from .policy import GuardPolicy, authorize_action
 

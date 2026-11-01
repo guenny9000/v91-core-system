@@ -1,8 +1,8 @@
 import base64
 import importlib.util
-from pathlib import Path
 import sys
 import unittest
+from pathlib import Path
 
 MODULE_PATH = Path(__file__).resolve().parents[1] / "controller" / "trusted_peer_registry.py"
 SPEC = importlib.util.spec_from_file_location("v91_trusted_peer_registry_test", MODULE_PATH)

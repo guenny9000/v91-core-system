@@ -5,9 +5,9 @@ latency, request/error counts, GPU metrics, or production health.
 """
 from __future__ import annotations
 
-from datetime import datetime, timezone
 import math
 import time
+from datetime import UTC, datetime
 from typing import Any
 
 
@@ -21,7 +21,7 @@ def collect_host_metrics(psutil_module: Any = None) -> dict[str, Any]:
                 "status": "NO_DATA_AVAILABLE",
                 "reason": "psutil_not_installed",
                 "source": None,
-                "timestamp_utc": datetime.now(timezone.utc).isoformat(),
+                "timestamp_utc": datetime.now(UTC).isoformat(),
             }
 
     try:
@@ -40,7 +40,7 @@ def collect_host_metrics(psutil_module: Any = None) -> dict[str, Any]:
         return {
             "status": "DATA_AVAILABLE",
             "source": "psutil.host",
-            "timestamp_utc": datetime.now(timezone.utc).isoformat(),
+            "timestamp_utc": datetime.now(UTC).isoformat(),
             "monotonic_sample_seconds": time.monotonic(),
             "cpu_percent": float(cpu),
             "memory_total_bytes": int(total),
@@ -53,5 +53,5 @@ def collect_host_metrics(psutil_module: Any = None) -> dict[str, Any]:
             "status": "NO_DATA_AVAILABLE",
             "reason": "telemetry_read_failed",
             "source": "psutil.host",
-            "timestamp_utc": datetime.now(timezone.utc).isoformat(),
+            "timestamp_utc": datetime.now(UTC).isoformat(),
         }

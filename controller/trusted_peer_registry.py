@@ -8,8 +8,8 @@ from __future__ import annotations
 
 import base64
 import binascii
-from typing import Any, Mapping
-
+from collections.abc import Mapping
+from typing import Any
 
 ED25519_PUBLIC_KEY_BYTES = 32
 

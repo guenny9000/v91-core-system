@@ -42,6 +42,7 @@ def test_unknown_action_is_rejected(capsys):
 
 def test_invalid_metrics_are_rejected():
     import math
+
     import pytest
 
     controller = ControlPlane()
