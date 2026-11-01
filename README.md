@@ -121,3 +121,12 @@ GitHub Actions Pipeline (`audit.yml`):
 - `controller/enforcement.py`: scores proposals, hard veto on human impact, records decisions only (`executed: false`). It never shuts down anything; execution needs a separate, explicitly authorised interface.
 - Claims such as global operation or enforcement are not provided by this code; only what the tests verify.
 
+
+### CLI
+
+```bash
+python controller/v91_cli.py evaluate TARGET --resource-util 0.8 --entropy 0.7 --environment 0.6 --human-impact 0.1
+python controller/v91_cli.py verify
+```
+Exit codes: 0 ok, 1 invalid input/broken ledger, 2 rejected (human impact).
+
