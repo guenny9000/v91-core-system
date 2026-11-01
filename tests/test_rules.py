@@ -12,6 +12,25 @@ from metrics import MetricsFeed  # noqa: E402
 # Existing tests (updated for None-returning API)
 # ---------------------------------------------------------------------------
 
+def test_empty_metrics_are_unknown():
+    feed = MetricsFeed()
+    assert feed.get_error_rate() is None
+    assert feed.get_recent_average_latency() is None
+    snapshot = feed.snapshot()
+    assert snapshot["error_rate"] is None
+    assert snapshot["error_rate_status"] == "UNKNOWN"
+    assert snapshot["latency"] is None
+    assert snapshot["latency_status"] == "UNKNOWN"
+
+
+def test_invalid_latency_is_rejected():
+    import pytest
+    feed = MetricsFeed()
+    for value in (-1, float("nan"), float("inf"), True):
+        with pytest.raises(ValueError):
+            feed.record_event(latency=value)
+
+
 def test_error_rate_calculation():
     feed = MetricsFeed()
     for i in range(10):
@@ -79,6 +98,9 @@ def test_invalid_latency_rejected():
 # ---------------------------------------------------------------------------
 
 if __name__ == "__main__":
+    test_empty_metrics_are_unknown()
+    test_invalid_latency_is_rejected()
+    test_invalid_latency_rejected()
     test_error_rate_calculation()
     test_latency_tracking()
     test_snapshot()
