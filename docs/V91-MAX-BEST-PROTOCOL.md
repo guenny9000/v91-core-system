@@ -44,6 +44,8 @@ A claim is not evidence. Documentation of this protocol alone is only `DOCUMENTE
 Safety-critical physical-engineering proposals require independent, qualified
 review and site-specific evidence; software tests do not certify physical
 systems. See [the V91-UAPO evidence and safety review](./V91_UAPO_REVIEW.md).
+For cross-domain governance and legacy reform assessment, use the
+[V91 legacy transformation framework](./V91_LEGACY_TRANSFORMATION.md).
 
 ## Reporting format
 
