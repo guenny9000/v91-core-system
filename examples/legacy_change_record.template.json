@@ -1,0 +1,43 @@
+{
+  "change_id": "LG-YYYYMMDD-001",
+  "scope": "v91-core-system",
+  "owner": "responsible-team",
+  "authorized": false,
+  "irreversible": false,
+  "baseline": {
+    "cost": "documented",
+    "risk": "documented",
+    "alternatives": "documented"
+  },
+  "evidence": {
+    "sources": [
+      "actions-run-id",
+      "local-test-report"
+    ],
+    "uncertainty": "documented"
+  },
+  "legal_review": {
+    "approved": false
+  },
+  "safety_review": {
+    "approved": false,
+    "independent_review": false
+  },
+  "tests": {
+    "regression_ok": false,
+    "summary": "pending"
+  },
+  "rollback": {
+    "documented": false,
+    "plan_ref": "pending"
+  },
+  "seven_questions": {
+    "q1": false,
+    "q2": false,
+    "q3": false,
+    "q4": false,
+    "q5": false,
+    "q6": false,
+    "q7": false
+  }
+}

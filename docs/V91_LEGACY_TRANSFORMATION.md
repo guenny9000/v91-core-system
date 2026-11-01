@@ -102,3 +102,20 @@ Vor Freigabe müssen dokumentiert sein:
 5. Autorisierung und Rollback.
 
 Ohne diese fünf Punkte bleibt der Status `PROPOSED` oder `UNKNOWN`.
+
+## Praktische Nutzung im Repository
+
+1. Kopie von
+   [legacy_change_record.template.json](../examples/legacy_change_record.template.json)
+   erstellen und ausfüllen.
+2. Gate ausführen:
+
+```bash
+python controller/v91_cli.py legacy-gate --record examples/legacy_change_record.template.json
+```
+
+Ergebnis:
+
+- `READY`: formale Freigabevoraussetzungen erfüllt.
+- `NEEDS_REFORM`: mindestens eine der 7 Fragen negativ.
+- `BLOCKED` / `REJECTED` / `UNKNOWN`: Freigabe nicht zulässig.

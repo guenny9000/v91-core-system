@@ -50,6 +50,9 @@ def main(argv: list[str] | None = None) -> int:
     co.add_argument("--samples", type=int, default=10)
     co.add_argument("--interval", type=float, default=1.0)
 
+    lg = sub.add_parser("legacy-gate", help="evaluate legacy transformation evidence record")
+    lg.add_argument("--record", required=True, help="JSON record file")
+
     args = parser.parse_args(argv)
 
     if args.cmd == "collect-local":
@@ -86,6 +89,17 @@ def main(argv: list[str] | None = None) -> int:
             return 1
         print(json.dumps({**chain, **verified_summary(args.ledger)}, indent=2))
         return 0
+
+    if args.cmd == "legacy-gate":
+        from legacy_gate import evaluate_record, load_record
+
+        try:
+            result = evaluate_record(load_record(args.record))
+        except (OSError, ValueError, json.JSONDecodeError) as exc:
+            print(f"error: {exc}", file=sys.stderr)
+            return 1
+        print(json.dumps(result, indent=2))
+        return 0 if result["decision"] == "READY" else 3
 
     if args.cmd == "verify":
         report = verify_chain(args.ledger)
