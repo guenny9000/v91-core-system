@@ -38,6 +38,7 @@ def main(argv: list[str] | None = None) -> int:
     im.add_argument("--after", required=True, help="CSV timestamp,value,source_type")
     im.add_argument("--unit", required=True)
     im.add_argument("--co2-factor", type=float, default=None, help="kg CO2 per unit (cite source)")
+    im.add_argument("--co2-source", default=None, help="required with --co2-factor")
     im.add_argument("--higher-is-better", action="store_true")
     im.add_argument("--ledger", default=DEFAULT_LEDGER)
 
@@ -65,6 +66,7 @@ def main(argv: list[str] | None = None) -> int:
             result = compute_impact(
                 args.measure, load_csv(args.baseline), load_csv(args.after), args.unit,
                 args.co2_factor, higher_is_worse=not args.higher_is_better,
+                co2_source=args.co2_source,
             )
             from ledger import HashChainLedger
 

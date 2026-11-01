@@ -1,0 +1,9 @@
+timestamp,value,source_type
+2026-11-01T02:10:00Z,1350.2,direct_sensor
+2026-11-01T02:10:30Z,1345.5,direct_sensor
+2026-11-01T02:11:00Z,1352.0,direct_sensor
+2026-11-01T02:11:30Z,1348.9,direct_sensor
+2026-11-01T02:12:00Z,1346.1,direct_sensor
+2026-11-01T02:12:30Z,1351.4,direct_sensor
+2026-11-01T02:13:00Z,1347.8,direct_sensor
+2026-11-01T02:13:30Z,1349.2,direct_sensor

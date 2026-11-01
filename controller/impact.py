@@ -72,8 +72,15 @@ def compute_impact(
     unit: str,
     co2_factor_kg_per_unit: float | None = None,
     higher_is_worse: bool = True,
+    co2_source: str | None = None,
 ) -> dict[str, Any]:
     """Compare two real measurement periods. saved > 0 means improvement."""
+    if co2_factor_kg_per_unit is not None and not (co2_source and co2_source.strip()):
+        raise ValueError("co2_source is required when a CO2 factor is given")
+    if co2_factor_kg_per_unit is not None and (
+        not math.isfinite(co2_factor_kg_per_unit) or co2_factor_kg_per_unit < 0
+    ):
+        raise ValueError("co2 factor must be a finite non-negative number")
     base, base_bad = _parse(baseline_rows)
     after, after_bad = _parse(after_rows)
     errors: list[str] = []
@@ -114,6 +121,7 @@ def compute_impact(
         if co2_factor_kg_per_unit is not None:
             result["co2_saved_kg_per_sample"] = round(diff * co2_factor_kg_per_unit, 6)
             result["co2_factor_kg_per_unit"] = co2_factor_kg_per_unit
+            result["co2_factor_source"] = co2_source.strip()  # type: ignore[union-attr]
 
     if not errors:
         result["status"] = "VALID" if result["saved_per_sample"] > 0 else "NO_IMPROVEMENT"

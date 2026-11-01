@@ -21,8 +21,17 @@ BASE = rows([100, 101, 99, 100, 102, 98], 1)
 AFTER = rows([80, 81, 79, 80, 82, 78], 2)
 
 
+def test_co2_factor_requires_source():
+    import pytest
+
+    with pytest.raises(ValueError):
+        compute_impact("kwh", BASE, AFTER, "kWh", co2_factor_kg_per_unit=0.4)
+    r = compute_impact("kwh", BASE, AFTER, "kWh", 0.4, co2_source="UBA")
+    assert r["co2_factor_source"] == "UBA"
+
+
 def test_real_improvement_is_valid_with_co2():
-    r = compute_impact("kwh", BASE, AFTER, "kWh", co2_factor_kg_per_unit=0.4)
+    r = compute_impact("kwh", BASE, AFTER, "kWh", co2_factor_kg_per_unit=0.4, co2_source="t")
     assert r["status"] == "VALID" and r["saved_per_sample"] == 20.0
     assert r["co2_saved_kg_per_sample"] == 8.0
 
@@ -56,8 +65,8 @@ def test_worsening_is_not_counted_as_valid(tmp_path):
 def test_only_valid_counts_in_summary(tmp_path):
     path = str(tmp_path / "l.jsonl")
     ledger = HashChainLedger(path)
-    record_impact(ledger, compute_impact("a", BASE, AFTER, "u", 0.5))
-    record_impact(ledger, compute_impact("b", BASE, BASE[:2] and rows([100] * 6, 2), "u", 0.5))
+    record_impact(ledger, compute_impact("a", BASE, AFTER, "u", 0.5, co2_source="t"))
+    record_impact(ledger, compute_impact("b", BASE, BASE[:2] and rows([100] * 6, 2), "u", 0.5, co2_source="t"))
     assert verify_chain(path)["chain_valid"]
     s = verified_summary(path)
     assert s["impacts_total"] == 2 and s["impacts_valid"] == 1
