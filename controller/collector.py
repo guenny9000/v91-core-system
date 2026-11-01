@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 """Real local measurements (stdlib only): memory in use (MB) of this machine."""
 
-import ctypes
 import csv
+import ctypes
 import os
 import sys
 import time
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 
 def memory_used_mb() -> float:
@@ -40,7 +40,7 @@ def collect(path: str, samples: int, interval: float) -> None:
             writer.writerow(["timestamp", "value", "source_type"])
         for i in range(samples):
             writer.writerow(
-                [datetime.now(timezone.utc).isoformat(), round(memory_used_mb(), 2), "direct_sensor"]
+                [datetime.now(UTC).isoformat(), round(memory_used_mb(), 2), "direct_sensor"]
             )
             if i < samples - 1:
                 time.sleep(interval)

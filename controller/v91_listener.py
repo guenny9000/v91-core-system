@@ -27,7 +27,7 @@ import sqlite3
 import time
 import uuid
 from contextlib import contextmanager
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 
 # ── Logging ──────────────────────────────────────────────────────────────────
@@ -127,7 +127,7 @@ def safesignal_check(event: dict, raw_bytes: bytes, key: bytes) -> tuple[bool, s
     if not verify_signature(signed_bytes, provided_sig, key):
         return False, "signature mismatch"
 
-    age_seconds = (datetime.now(timezone.utc) - parsed_timestamp).total_seconds()
+    age_seconds = (datetime.now(UTC) - parsed_timestamp).total_seconds()
     if age_seconds > 300:
         return False, f"event too old: {age_seconds:.0f}s"
     if age_seconds < -60:
@@ -235,7 +235,7 @@ def insert_audit_log(conn: sqlite3.Connection, event_id: str,
 
 
 def _utcnow() -> str:
-    return datetime.now(timezone.utc).isoformat(timespec="seconds")
+    return datetime.now(UTC).isoformat(timespec="seconds")
 
 
 # ── Event Processing Pipeline ─────────────────────────────────────────────────

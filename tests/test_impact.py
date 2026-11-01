@@ -66,7 +66,8 @@ def test_only_valid_counts_in_summary(tmp_path):
     path = str(tmp_path / "l.jsonl")
     ledger = HashChainLedger(path)
     record_impact(ledger, compute_impact("a", BASE, AFTER, "u", 0.5, co2_source="t"))
-    record_impact(ledger, compute_impact("b", BASE, BASE[:2] and rows([100] * 6, 2), "u", 0.5, co2_source="t"))
+    flat = rows([100] * 6, 2)
+    record_impact(ledger, compute_impact("b", BASE, flat, "u", 0.5, co2_source="t"))
     assert verify_chain(path)["chain_valid"]
     s = verified_summary(path)
     assert s["impacts_total"] == 2 and s["impacts_valid"] == 1

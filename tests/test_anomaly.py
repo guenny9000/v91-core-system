@@ -3,29 +3,31 @@
 Unit Tests – Anomaly Detector
 """
 
-import sys
 import os
+import sys
+
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'controller'))
 
 from anomaly import AnomalyDetector
 
+
 def test_anomaly_detection_normal():
     """Test that normal values are not flagged as anomalies."""
     detector = AnomalyDetector()
-    for i in range(10):
+    for _ in range(10):
         result = detector.detect("latency", 100)  # Consistent value
-    assert result == False, "Normal values should not be anomalies"
+    assert not result, "Normal values should not be anomalies"
     print("✓ test_anomaly_detection_normal passed")
 
 def test_anomaly_detection_spike():
     """Test that spikes are detected as anomalies."""
     detector = AnomalyDetector(z_threshold=2.0)
     # Create baseline
-    for i in range(10):
+    for _ in range(10):
         detector.detect("latency", 100)
     # Inject spike
     result = detector.detect("latency", 500)
-    assert result == True, "Spike should be detected as anomaly"
+    assert result, "Spike should be detected as anomaly"
     print("✓ test_anomaly_detection_spike passed")
 
 def test_anomaly_stats():

@@ -10,14 +10,16 @@ Main service that:
 5. Maintains feedback loop
 """
 
-import json
 import logging
-import os
 import random
 import subprocess
 import time
 from collections import deque
-from statistics import mean, stdev
+from statistics import mean
+
+from anomaly import AnomalyDetector
+from feedback import FeedbackLoop
+from metrics import MetricsFeed
 
 logging.basicConfig(
     level=logging.INFO,
@@ -26,9 +28,6 @@ logging.basicConfig(
 )
 logger = logging.getLogger("controller")
 
-from anomaly import AnomalyDetector
-from metrics import MetricsFeed
-from feedback import FeedbackLoop
 
 class ControlPlane:
     def __init__(self):

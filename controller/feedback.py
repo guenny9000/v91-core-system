@@ -5,6 +5,7 @@ Feedback Loop – Self-Optimization based on system state
 
 import time
 
+
 class FeedbackLoop:
     def __init__(self):
         self.strategy = "stable"

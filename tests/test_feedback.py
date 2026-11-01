@@ -3,11 +3,13 @@
 Unit Tests – Feedback Loop
 """
 
-import sys
 import os
+import sys
+
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'controller'))
 
 from feedback import FeedbackLoop
+
 
 def test_strategy_adjustment_high_errors():
     """Test strategy adjustment with high errors."""

@@ -12,14 +12,13 @@ import sqlite3
 import sys
 import tempfile
 import time
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 
 # Allow importing from controller/
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "controller"))
 
 import v91_listener as listener
-
 
 # ── Fixtures ──────────────────────────────────────────────────────────────────
 
@@ -39,7 +38,7 @@ def _setup_db(db_path: str) -> None:
 def _make_event(payload: dict, key: bytes = TEST_KEY, ts_offset_s: int = 0) -> bytes:
     """Build an event whose signature covers protocol version, timestamp, and payload."""
     ts = datetime.fromtimestamp(
-        time.time() + ts_offset_s, tz=timezone.utc
+        time.time() + ts_offset_s, tz=UTC
     ).strftime("%Y-%m-%dT%H:%M:%SZ")
     signed_message = {
         "protocol": "SafeSignal",

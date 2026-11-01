@@ -6,6 +6,7 @@ Anomaly Detector – Sliding Window + Z-Score based detection
 from collections import deque
 from statistics import mean, stdev
 
+
 class AnomalyDetector:
     def __init__(self, window_size=20, z_threshold=2.5):
         self.window_size = window_size

@@ -4,7 +4,7 @@ Chaos Mode – Controlled Fault Injection for Resilience Testing
 """
 
 import random
-import time
+
 
 class ChaosSimulator:
     def __init__(self, failure_rate=0.1):
