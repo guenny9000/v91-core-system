@@ -17,4 +17,5 @@ known-first-party = ["controller"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
-addopts = "-v --tb=short"
+addopts = "-v --tb=short -p no:cacheprovider"
+asyncio_mode = "strict"

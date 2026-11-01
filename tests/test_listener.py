@@ -10,9 +10,6 @@ import json
 import os
 import sqlite3
 import sys
-import io
-if sys.platform == "win32" and hasattr(sys.stdout, "buffer"):
-    sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8", errors="replace")
 import tempfile
 import time
 from datetime import datetime, timezone

@@ -114,3 +114,10 @@ GitHub Actions Pipeline (`audit.yml`):
 ## Lizenz
 
 © 2026 Sebastian (guenny9000) – Alle Rechte vorbehalten
+
+## Ledger & Stewardship Gate (advisory)
+
+- `controller/ledger.py`: append-only SHA-256 hash chain (tamper-evident, verifies on open, resumes head after restart).
+- `controller/enforcement.py`: scores proposals, hard veto on human impact, records decisions only (`executed: false`). It never shuts down anything; execution needs a separate, explicitly authorised interface.
+- Claims such as global operation or enforcement are not provided by this code; only what the tests verify.
+

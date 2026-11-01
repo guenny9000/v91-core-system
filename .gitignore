@@ -48,3 +48,6 @@ audit_hashes.sha256
 *.swo
 .DS_Store
 Thumbs.db
+
+# Runtime ledgers
+*_ledger.jsonl
