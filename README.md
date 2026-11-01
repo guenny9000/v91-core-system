@@ -130,3 +130,15 @@ python controller/v91_cli.py verify
 ```
 Exit codes: 0 ok, 1 invalid input/broken ledger, 2 rejected (human impact).
 
+
+### Impact from real measurements
+
+```bash
+python controller/v91_cli.py collect-local --out base.csv --samples 10   # real RAM-in-use samples
+# ... apply a real measure, then:
+python controller/v91_cli.py collect-local --out after.csv --samples 10
+python controller/v91_cli.py impact my-measure --baseline base.csv --after after.csv --unit MB --co2-factor <kg/unit, cite source>
+python controller/v91_cli.py report
+```
+CSV format: `timestamp,value,source_type` (direct_sensor|calculated|estimated|manual_entry). A saving is VALID only with enough samples, DQI >= 0.85, baseline before after-period, and a difference above 2x measurement noise; everything else is QUARANTINE. The CO2 factor is never assumed.
+
