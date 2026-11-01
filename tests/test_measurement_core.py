@@ -1,17 +1,19 @@
 from __future__ import annotations
 
 import json
-from pathlib import Path
-
 import os
 import sys
+from pathlib import Path
 
 import pytest
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "controller"))
 
 from measurement_core import (
-    GENESIS, MeasurementError, append_snapshot, event_hash, metric,
+    GENESIS,
+    MeasurementError,
+    append_snapshot,
+    metric,
     verify_ledger,
 )  # noqa: E402
 

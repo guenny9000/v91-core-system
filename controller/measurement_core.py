@@ -15,9 +15,8 @@ import math
 import os
 import shutil
 import sys
-import time
 import uuid
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
@@ -30,7 +29,7 @@ class MeasurementError(RuntimeError):
 
 
 def utc_now() -> str:
-    return datetime.now(timezone.utc).isoformat(timespec="milliseconds").replace("+00:00", "Z")
+    return datetime.now(UTC).isoformat(timespec="milliseconds").replace("+00:00", "Z")
 
 
 def metric(value: float | int | None, unit: str, source: str, reason: str | None = None) -> dict[str, Any]:
@@ -153,7 +152,7 @@ def append_snapshot(path: Path, snapshot: dict[str, Any]) -> dict[str, Any]:
     except FileExistsError as exc:
         raise MeasurementError("Ledger lock exists; inspect it manually before retrying") from exc
     try:
-        os.write(lock_fd, f"pid={os.getpid()} time={utc_now()}\n".encode("utf-8"))
+        os.write(lock_fd, f"pid={os.getpid()} time={utc_now()}\n".encode())
         os.fsync(lock_fd)
         state = verify_ledger(path)
         payload = {

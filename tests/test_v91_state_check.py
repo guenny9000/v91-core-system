@@ -1,5 +1,4 @@
 import pytest
-
 from v91_state_check import validate_telemetry_entry
 
 
