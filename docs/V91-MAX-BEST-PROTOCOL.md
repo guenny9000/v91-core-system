@@ -41,6 +41,10 @@ Use the project states precisely:
 
 A claim is not evidence. Documentation of this protocol alone is only `DOCUMENTED`.
 
+Safety-critical physical-engineering proposals require independent, qualified
+review and site-specific evidence; software tests do not certify physical
+systems. See [the V91-UAPO evidence and safety review](./V91_UAPO_REVIEW.md).
+
 ## Reporting format
 
 For each cycle, report:
