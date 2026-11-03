@@ -135,6 +135,7 @@ class PeerRegistry:
         self._future_skew = float(max_future_skew_seconds)
         self._last_sequence: dict[str, int] = {}
         self._states: dict[str, PeerResult] = {}
+        self._accepted_at: dict[str, float] = {}
 
     @property
     def states(self) -> dict[str, PeerResult]:
@@ -232,8 +233,6 @@ class PeerRegistry:
                         result.sequence,
                     )
         return self.states
-
-    _accepted_at: dict[str, float] = {}
 
     def receive_and_track(self, message: Mapping[str, Any], *, now: float | None = None) -> PeerResult:
         """Receive a heartbeat and retain receiver-time for stale marking."""
