@@ -156,7 +156,7 @@ class PeerRegistry:
             key_id = message["key_id"]
             sequence = message["sequence"]
             timestamp = message["timestamp"]
-            if message["schema_version"] != SCHEMA_VERSION:
+            if isinstance(message["schema_version"], bool) or message["schema_version"] != SCHEMA_VERSION:
                 raise HeartbeatError("unsupported schema version")
             if not isinstance(peer_id, str) or not peer_id:
                 raise HeartbeatError("invalid peer_id")
@@ -202,18 +202,19 @@ class PeerRegistry:
         if not hmac.compare_digest(signature, expected_signature):
             return PeerResult(peer_id, "INVALID", "signature verification failed", sequence)
 
+        age = float(current_time) - float(timestamp)
+        if age < -self._future_skew:
+            return PeerResult(peer_id, "INVALID", "heartbeat timestamp is too far in the future", sequence)
         previous = self._last_sequence.get(peer_id, 0)
         if sequence <= previous:
             return PeerResult(peer_id, "INVALID", "replay or non-increasing sequence", sequence)
         self._last_sequence[peer_id] = sequence
 
-        age = float(current_time) - float(timestamp)
         if age > self._max_age:
             result = PeerResult(peer_id, "STALE", "heartbeat exceeded freshness window", sequence)
-        elif age < -self._future_skew:
-            result = PeerResult(peer_id, "INVALID", "heartbeat timestamp is too far in the future", sequence)
         else:
             result = PeerResult(peer_id, "ALIVE_VERIFIED", "signature and freshness verified", sequence)
+            self._accepted_at[peer_id] = float(current_time)
         self._states[peer_id] = result
         return result
 
