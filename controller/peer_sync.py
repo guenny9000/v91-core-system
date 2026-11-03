@@ -7,12 +7,12 @@ not a public-key identity system or non-repudiation mechanism.
 """
 from __future__ import annotations
 
-from dataclasses import dataclass
 import hashlib
 import hmac
 import json
 import math
 import time
+from dataclasses import dataclass
 from typing import Any, Mapping
 
 SCHEMA_VERSION = 1
@@ -156,7 +156,10 @@ class PeerRegistry:
             key_id = message["key_id"]
             sequence = message["sequence"]
             timestamp = message["timestamp"]
-            if isinstance(message["schema_version"], bool) or message["schema_version"] != SCHEMA_VERSION:
+            if (
+                isinstance(message["schema_version"], bool)
+                or message["schema_version"] != SCHEMA_VERSION
+            ):
                 raise HeartbeatError("unsupported schema version")
             if not isinstance(peer_id, str) or not peer_id:
                 raise HeartbeatError("invalid peer_id")
@@ -204,7 +207,9 @@ class PeerRegistry:
 
         age = float(current_time) - float(timestamp)
         if age < -self._future_skew:
-            return PeerResult(peer_id, "INVALID", "heartbeat timestamp is too far in the future", sequence)
+            return PeerResult(
+                peer_id, "INVALID", "heartbeat timestamp is too far in the future", sequence
+            )
         previous = self._last_sequence.get(peer_id, 0)
         if sequence <= previous:
             return PeerResult(peer_id, "INVALID", "replay or non-increasing sequence", sequence)
@@ -213,7 +218,9 @@ class PeerRegistry:
         if age > self._max_age:
             result = PeerResult(peer_id, "STALE", "heartbeat exceeded freshness window", sequence)
         else:
-            result = PeerResult(peer_id, "ALIVE_VERIFIED", "signature and freshness verified", sequence)
+            result = PeerResult(
+                peer_id, "ALIVE_VERIFIED", "signature and freshness verified", sequence
+            )
             self._accepted_at[peer_id] = float(current_time)
         self._states[peer_id] = result
         return result
@@ -235,7 +242,9 @@ class PeerRegistry:
                     )
         return self.states
 
-    def receive_and_track(self, message: Mapping[str, Any], *, now: float | None = None) -> PeerResult:
+    def receive_and_track(
+        self, message: Mapping[str, Any], *, now: float | None = None
+    ) -> PeerResult:
         """Receive a heartbeat and retain receiver-time for stale marking."""
         current_time = time.time() if now is None else now
         result = self.receive(message, now=current_time)
