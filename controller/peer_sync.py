@@ -12,11 +12,11 @@ import hmac
 import json
 import math
 import time
+from collections.abc import Mapping
 from dataclasses import dataclass
-from typing import Any, Mapping
+from typing import Any
 
 SCHEMA_VERSION = 1
-ZERO_HASH = "0" * 64
 
 
 class HeartbeatError(ValueError):
