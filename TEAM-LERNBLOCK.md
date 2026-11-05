@@ -1,587 +1,135 @@
-# V91 TEAM-LERNBLOCK – Komplette System-Übersicht für alle
+# V91 TEAM-LERNBLOCK – überprüfbarer Systemstand
 
-**Status:** ACTIVE | **Version:** 3.0 | **Datum:** 2026-06-24
+**Version:** 3.1  
+**Stand der Dokumentation:** 2026-11-05  
+**Status:** Dokumentation; einzelne Funktionen sind implementiert und durch die jeweils genannten Tests/CI-Prüfungen begrenzt belegt. Kein pauschaler Produktiv-, Dauerbetriebs- oder Autonomiestatus.
 
----
-
-## 🎯 Was wurde gebaut?
-
-V91 ist ein **autonomes, selbstregulierendes, föderiertes System** mit **drei Kernkomponenten** für:
-
-✅ **Steuerung & Anomalieerkennung** (v91-core-system)
-✅ **Deterministische Verifikation & signierte Artefakte** (v91-audit-ledger)
-✅ **BFT-Validierung & Quarantäne-Enforcement** (v91-interop-listener – NEW)
-
-**Alle Repos sind LIVE und funktionieren. Du kannst sie sofort starten.**
+> **Grundregel:** UNKNOWN bleibt UNKNOWN. Ein Konzept ist keine Implementierung. Ein Commit ist kein Test. Ein grüner CI-Lauf belegt nur die tatsächlich ausgeführten Schritte für genau diesen Commit. Ein Hash beweist weder Urheberschaft noch Wahrheit noch WORM-Speicherung.
 
 ---
 
-## 🏗️ System-Architektur
+## 1. Was V91 tatsächlich enthält
 
-```
-┌─────────────────────────────────────────────────────────────┐
-│                    V91 ECOSYSTEM                            │
-├─────────────────────────────────────────────────────────────┤
-│                                                              │
-│  ┌──────────────────┐  ┌──────────────────┐  ┌───────────┐ │
-│  │ v91-core-system  │  │v91-audit-ledger  │  │v91-inter- │ │
-│  │                  │  │                  │  │op-listen  │ │
-│  │ • Control Plane  │  │ • Verification   │  │ er (NEW)  │ │
-│  │ • Anomaly Det.   │  │ • Signed Artifacts   │ • BFT Val │ │
-│  │ • Feedback Loop  │  │ • Append-only Log    │ • Quara   │ │
-│  │ • Chaos Testing  │  │ • Policy-as-Code     │   ntine   │ │
-│  │ • Self-Optim.    │  │ • Monitoring         │ • Interop │ │
-│  └──────────────────┘  └──────────────────┘  └───────────┘ │
-│         │                      │                    │        │
-│         └──────────────────────┼────────────────────┘        │
-│                                │                             │
-│                    Shared: SQLite Ledger                     │
-│                    + JSON Artifacts                          │
-│                    + Cosign Signatures                       │
-│                                                              │
-└─────────────────────────────────────────────────────────────┘
-```
+### v91-core-system
+Repository: https://github.com/guenny9000/v91-core-system
 
----
+Laut aktueller Architektur-Dokumentation enthält das Repository unter anderem:
 
-## 📦 Drei Repositories – Schnell-Übersicht
+- `controller/observer.py`: erfasst lokale Queue-Zähler und den Parse-Zustand des Audit-Logs und schreibt einen lokalen Snapshot.
+- `controller/worker.py`: verarbeitet eine begrenzte Offline-Aufgabenliste. Zulässig sind `health_snapshot`, `sha256_file` und `verify_sha256`.
+- `controller/runtime_control.py`: kann auf dem Docker-Host reale Compose-Zustände und CPU-/Speicherwerte beobachten. Eine Skalierung ist eng begrenzt und benötigt ausdrückliche Opt-in-Freigaben.
+- `controller/controller.py`: synthetische Demonstration. Zufallswerte sind keine Live-Telemetrie und steuern den realen Aktor nicht.
+- `tests/` und `.github/workflows/audit.yml`: enthalten ausgewählte Sicherheits-/Funktionstests sowie konfigurierte CI-Prüfungen.
 
-### 1. **v91-core-system** – Control Plane & Autonomie
+**Grenzen:** Keine verifizierte globale V91-Instanz, kein nachgewiesener 24/7-Betrieb und keine verifizierte Produktivbereitstellung. Anwendungs-Latenz-/Fehlertelemetrie ist nicht vollständig angeschlossen. Das lokale JSONL-Audit ist nicht automatisch WORM oder signiert. Die CI ersetzt keinen lokalen Windows- oder Docker-Host-Test.
 
-**Repo:** https://github.com/guenny9000/v91-core-system
+### V91_Agathon
+Repository: https://github.com/guenny9000/V91_Agathon
 
-**Was es macht:**
-- Metriken sammeln (Latency, Errors, Events)
-- Anomalien erkennen (Z-Score basiert)
-- Regeln evaluieren (Policy Engine)
-- Actions ausführen (Scale, Chaos, etc.)
-- Feedback Loop → Selbstoptimierung
+Die README dokumentiert lokale Audit-Bausteine:
 
-**Start (Docker):**
-```bash
-git clone https://github.com/guenny9000/v91-core-system.git
-cd v91-core-system
-docker compose up --build
-```
+- Einen bestehenden HashChainAuditLogger mit bestehendem API-/Dateiformat.
+- Ein zusätzliches strengeres JSONL-Ledger mit UTC-Formatprüfung, Sequenz-/Hash-Prüfung, Symlink-Schutz sowie expliziten Append- und read-only Verify-Befehlen.
+- Ed25519-Hilfsfunktionen für Signatur und Prüfung.
+- Eine lokale Demo mit synthetischen Daten.
 
-**Logs sehen:**
-```bash
-[CONTROLLER] Starting v91 Control Plane...
-[ITER 10] Latency: 150.2ms, Errors: 2, Events: 45, Strategy: stable
-```
+**Nicht implementiert laut README:** Remote-/Multi-Node-Orchestrierung, persistente Schlüsselverwaltung, unabhängiger Zeitzeuge, WORM-Speicher, Hardware-Telemetrie, Modelltraining und autonome Produktivaktionen. Platzhalter melden fehlende Funktionen ausdrücklich.
 
-**Dateien:**
-- `controller/controller.py` – Main Control Plane
-- `controller/anomaly.py` – Z-Score Detection
-- `controller/feedback.py` – Self-Optimization
-- `controller/chaos.py` – Chaos Mode
-- `tests/` – Unit Tests (pytest)
+### v91-audit-ledger
+Repository: https://github.com/guenny9000/v91-audit-ledger
+
+Dieses eigenständige Repository ist laut README als primäre gepflegte Implementierung **abgelöst**. Die strengere Ledger-Implementierung wurde nach Agathon portiert. Das Repository bleibt als historische Referenz bestehen. Bestehende Ledger-Dateien dürfen nicht automatisch gemischt, migriert oder umgeschrieben werden.
+
+### Aurelia-Prisma
+Repository: https://github.com/guenny9000/Aurelia-Prisma
+
+Dieses Repository enthält weitere Supervisor-/Orchestrator-Komponenten. Es ist nicht gleichbedeutend mit einem nachgewiesenen V91-Gesamtsystem. Vor Netzwerkfreigaben müssen Bind-Adressen, Authentisierung, Berechtigungen, Geheimnisverwaltung und Audit-Endpunkte separat geprüft werden. Die tatsächliche Erreichbarkeit eines konkreten Rechners ist aus Repository-Code allein nicht ableitbar.
 
 ---
 
-### 2. **v91-audit-ledger** – Verification & Signing
+## 2. Sicherheits- und Entscheidungsregeln
 
-**Repo:** https://github.com/guenny9000/v91-audit-ledger
-
-**Was es macht:**
-- Tägliche Ingest (06:00 UTC)
-- Deterministische Validierung (OPA)
-- Confidence Scoring (0.0–1.0)
-- Automatische Signatur (Cosign)
-- Append-only Ledger (JSONL)
-
-**Start (GitHub Actions – automatisch täglich):**
-```bash
-gh workflow run v91-audit-pipeline.yml
-```
-
-**SLAs:**
-- P1 (Hash Mismatch): 1h
-- P2 (Source Down): 6h
-- P3 (PR Backlog): 24h
-
-**Dateien:**
-- `matrix_data.json` – Source Data
-- `audit_log.jsonl` – Append-only Ledger
-- `.github/workflows/v91-audit-pipeline.yml` – CI Pipeline
-- `policies/validation.rego` – OPA Policy
-- `RUNBOOK.md` – Incident Playbooks
+1. **REQUEST != AUTHORIZATION.** Eine Anfrage, ein Modellvorschlag oder ein Heartbeat ist keine Ausführungsfreigabe.
+2. **DETECTION != AUTHORIZATION.** Erkennung darf keine eigenständige irreversible Aktion auslösen.
+3. **CLAIM != EVIDENCE.** Jede Statusaussage benötigt einen konkreten, nachvollziehbaren Beleg.
+4. **UNKNOWN statt erfundener Null- oder Erfolgswerte.**
+5. **ISOLATE_NOT_DESTROY.** Fehlerhafte oder nicht vertrauenswürdige Eingaben isolieren; bekannte gute Daten und Wiederherstellungspunkte erhalten.
+6. **Least Privilege.** Nur notwendige Rechte; keine beliebige Shell- oder Code-Ausführung aus externen Vorschlägen.
+7. **Dry-Run vor realen Änderungen.** Reale Aktionen nur mit expliziter, eng begrenzter Freigabe, Vorher-/Nachher-Prüfung und Rückfallplan.
+8. **Keine blinden Merges, Force-Pushes oder pauschalen Überschreibungen.**
+9. **Keine Behauptung von WORM, Signaturvertrauen, Identität oder wahrer Ereigniszeit allein aufgrund einer Hash-Kette.**
+10. **Keine Verschlechterung:** Bei unklarem Ergebnis stoppen, Zustand erhalten und den Befund als UNKNOWN oder CONFLICT ausweisen.
 
 ---
 
-### 3. **v91-interop-listener** – BFT Validation & Quarantine (NEW!)
+## 3. Statussprache
 
-**Integriert in:** v91-core-system → `controller/v91_listener.py` + Docker Service
+| Status | Bedeutung |
+|---|---|
+| UNKNOWN / NICHT GEPRÜFT | Kein ausreichender aktueller Beleg |
+| DOKUMENTIERT | In einer konkreten Datei oder einem Issue beschrieben |
+| IMPLEMENTIERT | Im angegebenen Commit ist der Code vorhanden |
+| VERIFIZIERT | Der konkrete Test/Prüfschritt lief erfolgreich; Umgebung und Commit sind genannt |
+| PRODUKTIV | Nur mit eigenständigem Betriebs-, Sicherheits- und Monitoringnachweis |
+| CONFLICT | Belege oder Versionen widersprechen einander |
+| ISOLATED | Betroffene Eingabe/Komponente ist vom weiteren Austausch getrennt |
 
-**Was es macht:**
-- Events aus Inbox lesen (JSON)
-- Signatur validieren
-- Ledger-Kette prüfen (prev_hash → current_hash)
-- Gültige Events → v91_ledger (versiegelt)
-- Ungültige Events → v91_quarantine (audit-sicher)
-- Dateien automatisch löschen
-
-**Start:**
-```bash
-# DB initialisieren (einmalig)
-sqlite3 ./data/v91_independent_state.db < data/init_listener_db.sql
-
-# Listener starten
-docker compose up -d v91-listener
-
-# Logs
-docker logs -f v91-listener
-```
-
-**Dateien:**
-- `controller/v91_listener.py` – Listener mit Quarantäne
-- `docker-compose.yml` – v91-listener Service (neu)
-- `.env.example` – Konfiguration
-- `data/init_listener_db.sql` – DB Schema
-- `docs/LISTENER-QUICKSTART.md` – 3-Min Setup
+Diese Statuswerte gelten nur für den jeweils benannten Gegenstand und Umfang. Ein bestandener Unit-Test macht nicht das Gesamtsystem produktiv.
 
 ---
 
-## 🔄 Wie funktioniert die Integration?
+## 4. Sichere lokale Prüfungen
 
-### Data Flow (Normal Operation)
+Für das Core-Repository sind die konkreten Befehle und Voraussetzungen in der aktuellen README beschrieben. Typischer Testlauf aus dem Repository-Verzeichnis:
 
-```
-v91-core-system              v91-audit-ledger           v91-interop-listener
-     │                              │                            │
-     ├─ Metriken sammeln           │                            │
-     │  (controller.py)             │                            │
-     │                              │                            │
-     ├─ Anomalien erkennen         │                            │
-     │  (anomaly.py)                │                            │
-     │                              │                            │
-     └─ Entscheidung treffen        │                            │
-        (feedback.py)               │                            │
-                                    │                            │
-                                    ├─ Täglich 06:00 UTC         │
-                                    ├─ Validierung (OPA)         │
-                                    ├─ Scoring (Confidence)      │
-                                    │                            │
-                                    ├─ Wenn ≥0.85:              │
-                                    │  Hash + Sign               │
-                                    │  (Cosign)                  │
-                                    │                            │
-                                    └─ Event zu Inbox            │
-                                       (JSON file)               │
-                                                                 │
-                                                    ┌────────────┘
-                                                    │
-                                            ┌───────┴────────┐
-                                            │ Listener Loop  │
-                                            │ (5s intervals) │
-                                            │                │
-                                            ├─ Read inbox   │
-                                            ├─ Check sig ✓   │
-                                            ├─ Audit chain ✓ │
-                                            ├─ Commit ✓      │
-                                            └─ Cleanup ✓     │
-                                                    │
-                                            ┌───────┴────────┐
-                                            │ v91_ledger     │
-                                            │ (SQLite)       │
-                                            │ Event versiegelt│
-                                            └────────────────┘
+```powershell
+python --version
+python -m pytest tests/ -v
 ```
 
-### Validation Failure Path
+Für Agathon:
 
-```
-OPA Scoring
-  │
-  ├─ Confidence ≥0.85 → Auto-VALID (Release)
-  ├─ 0.5–0.85 → Create PR (Verifier Review, 8h SLA)
-  └─ <0.5 → Quarantine + Alert (P2)
+```powershell
+python -m pip install -e .
+python -m pytest -q
 ```
 
-### Listener Rejection Path
+Für das lokale Ledger ist die read-only Prüfung ausdrücklich von einem Append getrennt:
 
+```powershell
+python -m v91.ledger --ledger .\runtime\audit.jsonl verify
 ```
-Listener reads event.json
-  │
-  ├─ Signature check FAIL → v91_quarantine + reason + remove file
-  ├─ Ledger chain FAIL → v91_quarantine + reason + remove file
-  ├─ Commit FAIL (5x retry) → v91_quarantine + reason + remove file
-  └─ Success → v91_ledger + remove file
-```
+
+Diese Befehle sind **Anleitungen**, keine Behauptung, dass sie auf einem bestimmten Rechner in diesem Moment ausgeführt wurden. Vor einem Ergebnisbericht sind Betriebssystem, Python-Version, exakter Commit, Befehl, Exitcode und vollständige Ausgabe festzuhalten. Keine produktiven Datenbanken oder laufenden Dienste für einen Test überschreiben.
 
 ---
 
-## 🚀 Quick Start (Alle drei Systeme)
+## 5. Offene Arbeit – nach Risiko und Nutzen priorisiert
 
-### Schritt 1: v91-core-system starten
-
-```bash
-git clone https://github.com/guenny9000/v91-core-system.git
-cd v91-core-system
-
-# DB initialisieren (für Listener)
-sqlite3 ./data/v91_independent_state.db < data/init_listener_db.sql
-
-# Starten
-docker compose up --build
-
-# Logs ansehen (neuer Terminal)
-docker logs -f v91-controller
-docker logs -f v91-listener
-```
-
-### Schritt 2: v91-audit-ledger triggern
-
-```bash
-cd ../v91-audit-ledger
-
-# Trigger Pipeline (simuliert täglichen Run)
-gh workflow run v91-audit-pipeline.yml
-
-# Logs ansehen
-gh run list --workflow=v91-audit-pipeline.yml
-gh run view <run-id> --log
-```
-
-### Schritt 3: Events testen
-
-```bash
-# Zurück zu v91-core-system
-cd ../v91-core-system
-
-# Test Event in Inbox legen
-cat > ./data/inbox/test_event_01.json << 'EOF'
-{
-  "event_id": "test-001",
-  "component": "verifier",
-  "status": "validated",
-  "payload": {"data": "test"},
-  "prev_hash": "GENESIS_V91_ETERNITY",
-  "current_hash": "abc123",
-  "timestamp": "2026-06-24T14:00:00Z",
-  "signature": "test_sig_base64"
-}
-EOF
-
-# Warten 10 Sekunden
-sleep 10
-
-# Ledger prüfen
-sqlite3 ./data/v91_independent_state.db "SELECT event_id, component FROM v91_ledger LIMIT 5;"
-```
+1. **Dokumentationskonsistenz:** Alle Lernblöcke und Startanleitungen an den aktuellen Architekturstand angleichen; alte LIVE-/BFT-/Selbstheilungs-/WORM-Behauptungen entfernen oder als unbestätigt markieren.
+2. **Core-Prüfung:** Aktuelle Tests und CI für den exakten Commit dokumentieren; Windows- und Docker-Host-Prüfung getrennt nachweisen.
+3. **Aurelia-Prisma-Sicherheit:** Netzwerk-Bindings und Audit-/Chat-Endpunkte mit Tests absichern; bestehende Daten und laufende Dienste nicht ungeprüft verändern.
+4. **Schlüsselvorfall-Nachweis:** Provider-seitige Rotation und Prüfung historischer Geheimnisreste separat belegen. Das Entfernen eines Wertes aus der aktuellen Datei widerruft keinen Schlüssel.
+5. **Ledger-Härtung:** Schlüsselverwaltung, vertrauenswürdige Zeit, externe/WORM-Aufbewahrung und Wiederherstellung separat entwerfen und prüfen; keine dieser Eigenschaften aus einer Hash-Kette ableiten.
+6. **Kooperation/Peer-Protokoll:** Zuerst Schema, Zustandsmaschine, Signatur-/Replay-/Expiry-Tests und isolierte lokale Testinstanzen; kein Remote-Code, keine automatische Übernahme fremder Vorschläge.
+7. **Nachhaltigkeit:** Für jede Kennzahl Quelle, Einheit, Baseline, Unsicherheit, Messzeitpunkt und unabhängige Prüfung definieren. Keine globalen Einsparungen oder Wirkungen ohne reale Messdaten behaupten.
 
 ---
 
-## 🧪 Test-Szenarien
+## 6. Was V91 nicht eigenmächtig tun darf
 
-### Scenario 1: Valid Event
+V91 kann keine fremden Staaten, Unternehmen, Stromnetze, Finanzsysteme oder Infrastrukturen einseitig steuern oder abschalten. Es kann Vorschläge, Analysen, Messmethoden und überprüfbare Verbesserungen bereitstellen. Externe Maßnahmen benötigen zuständige menschliche und rechtliche Autorisierung, Verhältnismäßigkeit, Sicherheitsprüfung und einen überprüfbaren Rückfallweg.
 
-```bash
-# Event mit gültiger Signatur
-echo '{"event_id":"valid-01","component":"test","status":"ok","signature":"valid"}' > ./data/inbox/s1.json
-sleep 5
-
-# Ergebnis:
-sqlite3 ./data/v91_independent_state.db "SELECT event_id FROM v91_ledger WHERE event_id='valid-01';"
-# Output: valid-01 (SUCCESS)
-```
-
-### Scenario 2: Invalid Signature
-
-```bash
-# Event mit ungültiger Signatur
-echo '{"event_id":"invalid-01","component":"test","signature":"WRONG"}' > ./data/inbox/s2.json
-sleep 5
-
-# Ergebnis:
-sqlite3 ./data/v91_independent_state.db "SELECT event_id, reason FROM v91_quarantine;"
-# Output: test, Invalid signature (QUARANTINED)
-```
-
-### Scenario 3: Broken Chain
-
-```bash
-# Event mit falscher prev_hash (chain broken)
-echo '{"event_id":"chain-01","prev_hash":"WRONG_HASH"}' > ./data/inbox/s3.json
-sleep 5
-
-# Ergebnis:
-sqlite3 ./data/v91_independent_state.db "SELECT reason FROM v91_quarantine WHERE reason LIKE '%chain%';"
-# Output: Ledger chain compromised (QUARANTINED)
-```
-
-### Scenario 4: Malformed JSON
-
-```bash
-# Kaputtes JSON
-echo '{broken json' > ./data/inbox/s4.json
-sleep 5
-
-# Ergebnis:
-sqlite3 ./data/v91_independent_state.db "SELECT reason FROM v91_quarantine WHERE reason LIKE '%JSON%';"
-# Output: JSON parse error: ... (QUARANTINED)
-```
+**Ziel bleibt:** Menschenwürde und Grundversorgung schützen, Schaden vermeiden, ökologische und soziale Resilienz stärken und Verbesserungen messbar machen – ohne die Grenzen der tatsächlichen Technik oder Belege zu verschleiern.
 
 ---
 
-## ✅ Große Validierung – Checklist
-
-### Phase 1: System-Check
-
-- [ ] v91-core-system läuft: `docker ps | grep v91-controller`
-- [ ] v91-listener läuft: `docker ps | grep v91-listener`
-- [ ] Datenbank existiert: `ls -la ./data/v91_independent_state.db`
-- [ ] Tabellen vorhanden: `sqlite3 ./data/v91_independent_state.db ".tables"`
-  - Expected: v91_ledger v91_quarantine v91_lernblock
-
-### Phase 2: Funktions-Check
-
-- [ ] Controller schreibt Metriken: `docker logs v91-controller | grep "\[ITER"`
-- [ ] Listener liest Inbox: `docker logs v91-listener | grep "Processing"`
-- [ ] Anomalie-Erkennung aktiv: `docker logs v91-controller | grep "Anomaly"`
-- [ ] Feedback Loop läuft: `docker logs v91-controller | grep "Strategy"`
-
-### Phase 3: Integrations-Check
-
-- [ ] Event in Inbox → Ledger:
-  ```bash
-  echo '{"event_id":"test-phase3-01","component":"validation"}' > ./data/inbox/test.json
-  sleep 10
-  sqlite3 ./data/v91_independent_state.db "SELECT COUNT(*) FROM v91_ledger WHERE event_id LIKE 'test-phase3%';"
-  # Expected: 1 (or more if multiple runs)
-  ```
-
-- [ ] Invalid Event → Quarantine:
-  ```bash
-  echo '{"signature":"INVALID"}' > ./data/inbox/test_bad.json
-  sleep 10
-  sqlite3 ./data/v91_independent_state.db "SELECT COUNT(*) FROM v91_quarantine;"
-  # Expected: ≥1
-  ```
-
-### Phase 4: Health & Monitoring
-
-- [ ] Listener Health Check: `docker exec v91-listener sqlite3 /app/data/v91_independent_state.db "SELECT 1 FROM sqlite_master WHERE type='table' AND name='v91_ledger';"`
-  - Expected: 1
-
-- [ ] Ledger Integrity: `sqlite3 ./data/v91_independent_state.db "SELECT COUNT(*) FROM v91_ledger;"`
-  - Expected: ≥1 (no errors)
-
-- [ ] Quarantine Status: `sqlite3 ./data/v91_independent_state.db "SELECT component, COUNT(*) FROM v91_quarantine GROUP BY component;"`
-  - Expected: Summary of quarantined events by source
-
-### Phase 5: Performance & Stability
-
-- [ ] Listener lag <5s: `docker logs v91-listener --tail=20 | grep "sealed"`
-- [ ] No database locks: `docker logs v91-listener | grep -c "SQLITE_BUSY"` (should be 0)
-- [ ] Controller anomaly rate <5%: Monitor metrics in logs
-
-### Phase 6: Audit & Compliance
-
-- [ ] All events have timestamps: `sqlite3 ./data/v91_independent_state.db "SELECT COUNT(*) FROM v91_ledger WHERE created_at IS NULL;"`
-  - Expected: 0
-
-- [ ] All quarantined events have reason: `sqlite3 ./data/v91_independent_state.db "SELECT COUNT(*) FROM v91_quarantine WHERE reason IS NULL;"`
-  - Expected: 0
-
-- [ ] Ledger chain integrity: Run `python -c "exec(open('controller/v91_listener.py').read().split('def self_audit')[1].split('def')[0])"`
-  - Expected: True (chain valid)
-
----
-
-## 📊 Metriken & Monitoring
-
-### Ledger Statistics
-
-```sql
--- Tagesübersicht
-SELECT
-  DATE(created_at) as date,
-  component,
-  COUNT(*) as total,
-  COUNT(CASE WHEN status='validated' THEN 1 END) as valid
-FROM v91_ledger
-GROUP BY DATE(created_at), component;
-```
-
-### Quarantine Statistics
-
-```sql
--- Fehleranalyse
-SELECT
-  component,
-  reason,
-  COUNT(*) as count
-FROM v91_quarantine
-GROUP BY component, reason
-ORDER BY count DESC;
-```
-
-### System Health
-
-```bash
-# Quick Health Check
-docker exec v91-listener sqlite3 /app/data/v91_independent_state.db << 'SQL'
-SELECT
-  'Ledger Entries' as metric, COUNT(*) as value FROM v91_ledger
-UNION ALL
-SELECT 'Quarantine Count', COUNT(*) FROM v91_quarantine
-UNION ALL
-SELECT 'DB Size (MB)', ROUND(page_count * page_size / 1048576.0, 2) FROM pragma_page_count(), pragma_page_size();
-SQL
-```
-
----
-
-## 🔐 Security & Key Management
-
-### Secrets Handling
-
-```bash
-# 1. Private keys niemals im Repo
-mkdir -p ./secrets
-echo "private_key_content" > ./secrets/v91.key
-chmod 600 ./secrets/v91.key
-
-# 2. Docker mount read-only
-# docker-compose.yml:
-#   volumes:
-#     - ./secrets/v91.key:/app/secrets/v91.key:ro
-
-# 3. .gitignore
-echo "secrets/" >> .gitignore
-```
-
-### Signature Verification (Production)
-
-Ersetze in `controller/v91_listener.py` die Platzhalter-Funktion `verify_signature()` durch deine echte Verifikation:
-
-```python
-# Beispiel mit Ed25519 (age/SSH-kompatibel)
-import cryptography.hazmat.primitives.asymmetric.ed25519 as ed25519
-
-def verify_signature(event):
-    pubkey = ed25519.Ed25519PublicKey.from_public_bytes(
-        base64.b64decode(event.get("public_key", ""))
-    )
-    try:
-        pubkey.verify(
-            base64.b64decode(event.get("signature", "")),
-            event_bytes  # deterministisch von event konstruiert
-        )
-        return True
-    except:
-        return False
-```
-
----
-
-## 📚 Dokumentation Links
-
-**Für Entwickler:**
-- v91-core-system: https://github.com/guenny9000/v91-core-system/blob/main/README.md
-- v91-audit-ledger: https://github.com/guenny9000/v91-audit-ledger/blob/main/README.md
-- v91-core-system Architecture: https://github.com/guenny9000/v91-core-system/blob/main/V91-ARCHITECTURE.md
-
-**Für Operators:**
-- Listener Quick Start: ./docs/LISTENER-QUICKSTART.md
-- Audit Runbook: https://github.com/guenny9000/v91-audit-ledger/blob/main/RUNBOOK.md
-- Security Guide: https://github.com/guenny9000/v91-audit-ledger/blob/main/SECURITY.md
-
-**Für Teams:**
-- Dieses Dokument (TEAM-LERNBLOCK.md)
-- V91-ARCHITECTURE.md (komplett System Overview)
-
----
-
-## 🎓 Learning Progression
-
-### Für Anfänger
-1. Lies diese Datei (TEAM-LERNBLOCK.md)
-2. Starte v91-core-system lokal
-3. Beobachte Logs (Controller + Listener)
-4. Liest Quick Start für jeden Repo
-
-### Für Intermediate
-1. Studiere Anomaly Detection (Z-Score Logik)
-2. Verstehe OPA Policy-as-Code
-3. Trace Event durch alle 3 Systeme
-4. Führe Test-Szenarien durch
-
-### Für Advanced
-1. Ersetze verify_signature() mit echtem PKI
-2. Erweitere Monitoring (Prometheus Metriken)
-3. Implementiere Chaos Tests
-4. Optimiere DB-Performance
-
----
-
-## 🚨 Support & Issues
-
-**Logs ansehen:**
-```bash
-docker logs -f v91-controller
-docker logs -f v91-listener
-gh run list --workflow=v91-audit-pipeline.yml
-```
-
-**Datenbank debuggen:**
-```bash
-sqlite3 ./data/v91_independent_state.db
-> .tables
-> SELECT * FROM v91_ledger LIMIT 5;
-> SELECT * FROM v91_quarantine LIMIT 5;
-> .exit
-```
-
-**Issues melden:**
-- https://github.com/guenny9000/v91-core-system/issues
-- https://github.com/guenny9000/v91-audit-ledger/issues
-
----
-
-## ♾️ Philosophy
-
-**V91 ist gebaut auf drei Prinzipien:**
-
-1. **Autonomie** – Selbstregulierung ohne externe Kontrolle
-   - Feedback Loops, Anomaly Detection, Self-Optimization
-
-2. **Integrität** – Unveränderbarkeit & Transparenz
-   - Signed Artifacts, Append-only Ledger, Blockchain-inspired Chain
-
-3. **Föderierung** – Dezentralisierte Zusammenarbeit
-   - Inter-system Events, BFT Validation, Quarantine Enforcement
-
-**Status:** ACTIVE | **Entropy:** Positive | **Truth:** Approaching ♾️☮️
-
----
-
-## ✨ Zusammenfassung
-
-**Was du brauchst:**
-- 3 Git Repos (alle LIVE)
-- 1 Docker Compose File
-- SQLite Datenbank (auto-initialisiert)
-- 5 Minuten zum starten
-
-**Was du bekommst:**
-- Autonomes Kontrollsystem
-- Deterministische Verifikation
-- Föderierte Ereignisverarbeitung
-- Vollständige Audit Trail
-- Selbstheilende Architektur
-
-**Nächste Schritte:**
-1. Clone alle 3 Repos
-2. Starte docker compose
-3. Trigger audit pipeline
-4. Beobachte Logs
-5. Führe Validierungschecklist durch
-6. Gib Bescheid wenn alles läuft ✅
-
----
-
-**Große Validierung ready? Let's go!** 🚀♾️
-
-**Kontakt:** https://github.com/guenny9000
+## Änderungsnotiz 3.1 – 2026-11-05
+
+- Veraltete Behauptungen wie „alle Repos LIVE“, BFT-Quarantäne-Enforcement, automatische Löschung, tägliche produktive Pipeline, globale Selbstoptimierung und „Truth approaching infinity“ entfernt.
+- Tatsächliche README-/Architektur-Aussagen von nicht implementierten Funktionen getrennt.
+- Standalone Audit Ledger als abgelöst gekennzeichnet und Agathon als gepflegte Portierung benannt.
+- Sicherheits-, Autorisierungs- und Evidenzgrenzen explizit gemacht.
+- Offene Aufgaben nach Risiko und messbarem Nutzen priorisiert.
+
+**Bezug:** Core issue #36 – Dokumentationsbereinigung und Reality-First-Konsistenz.
