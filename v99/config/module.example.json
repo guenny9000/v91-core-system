@@ -1,0 +1,16 @@
+{
+  "module_id": "aurelia-prisma",
+  "name": "Aurelia Prisma",
+  "version": "1.0.0",
+  "api_version": "1",
+  "enabled": true,
+  "platforms": ["windows", "linux", "macos"],
+  "capabilities": ["health_check", "audit", "recovery"],
+  "permissions": ["read_module_status"],
+  "healthcheck": { "enabled": true, "interval_seconds": 300 },
+  "update_policy": {
+    "automatic_check": true,
+    "automatic_install": false,
+    "rollback_required": true
+  }
+}
