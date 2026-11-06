@@ -1,0 +1,236 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://v91.invalid/schemas/node-capabilities.schema.json",
+  "title": "V91 Node Capability Manifest",
+  "description": "Signed capability advertisement. Signature verification and policy authorization are performed outside JSON Schema.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "node_id",
+    "key_id",
+    "software_version",
+    "issued_at",
+    "expires_at",
+    "resources",
+    "contributions",
+    "policy_version"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": 1
+    },
+    "node_id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128
+    },
+    "key_id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128
+    },
+    "software_version": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128
+    },
+    "issued_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "expires_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "policy_version": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128
+    },
+    "model_runners": {
+      "type": "array",
+      "maxItems": 64,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "runner_id",
+          "model_digest",
+          "determinism"
+        ],
+        "properties": {
+          "runner_id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128
+          },
+          "model_digest": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          },
+          "tokenizer_digest": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "pattern": "^[a-f0-9]{64}$"
+          },
+          "runtime_digest": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "pattern": "^[a-f0-9]{64}$"
+          },
+          "determinism": {
+            "enum": [
+              "EXACT_REPLAY_SUPPORTED",
+              "TOLERANCE_ONLY",
+              "NONDETERMINISTIC",
+              "UNKNOWN"
+            ]
+          },
+          "precision": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 64
+          },
+          "backend": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 128
+          }
+        }
+      }
+    },
+    "resources": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "cpu_cores_available",
+        "ram_mb_available",
+        "vram_mb_available",
+        "disk_mb_available"
+      ],
+      "properties": {
+        "cpu_cores_available": {
+          "type": "number",
+          "minimum": 0
+        },
+        "ram_mb_available": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "vram_mb_available": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "disk_mb_available": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "bandwidth_mbps_available": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "measured_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "measurement_source": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        }
+      }
+    },
+    "limits": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "max_task_bytes": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "max_concurrent_tasks": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "storage_quota_mb": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "retention_seconds": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "max_network_mbps": {
+          "type": "number",
+          "minimum": 0
+        }
+      }
+    },
+    "contributions": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "compute",
+        "verification",
+        "encrypted_storage",
+        "metadata_index"
+      ],
+      "properties": {
+        "compute": {
+          "type": "boolean"
+        },
+        "verification": {
+          "type": "boolean"
+        },
+        "encrypted_storage": {
+          "type": "boolean"
+        },
+        "metadata_index": {
+          "type": "boolean"
+        }
+      }
+    },
+    "data_classes": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "enum": [
+          "PUBLIC",
+          "INTERNAL",
+          "CONFIDENTIAL",
+          "PERSONAL"
+        ]
+      }
+    },
+    "signature": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "algorithm",
+        "value"
+      ],
+      "properties": {
+        "algorithm": {
+          "const": "Ed25519"
+        },
+        "value": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256
+        }
+      }
+    }
+  }
+}
