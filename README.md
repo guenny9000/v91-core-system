@@ -185,3 +185,10 @@ Automated repair should preserve the original, create a reviewable diff, run bou
 ### Installation and environment evidence
 
 Before calling an installation verified, record the operating system, Python version, dependency-install result, Compose validation result (if applicable), test result, commit SHA, and log/artifact reference. A README instruction is documentation, not proof that installation succeeded on a particular machine.
+
+
+## Capability-aware model autonomy
+
+V91's target is distributed local autonomy, not dependence on one powerful workstation. Each participating node may contribute only its explicitly enabled and currently available compute, verification, encrypted storage, or metadata capacity. Smaller devices remain valid participants; they may decline work or request an authorized peer when local capacity is insufficient.
+
+The design contract and staged acceptance criteria are documented in [V91 Capability-Aware Model Autonomy](docs/V91-CAPABILITY-AWARE-MODEL-AUTONOMY.md). The machine-readable capability manifest is [node-capabilities.schema.json](schemas/node-capabilities.schema.json). These additions are documentation and schema only: deterministic model execution, cooperative encrypted storage, distributed lease locks, and multi-node verification are not yet implemented or verified.
