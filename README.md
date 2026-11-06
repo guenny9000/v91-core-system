@@ -54,6 +54,10 @@ docker compose up --build
 
 Run tests in a development or isolated environment first. Do not assume that the container configuration, health endpoints, or service integrations have been validated merely because files exist.
 
+## Emergency response and self-defense
+
+The documented emergency pathway is in [`docs/V91-NOTFALL-NOTWEHR-PROTOKOLL.md`](docs/V91-NOTFALL-NOTWEHR-PROTOKOLL.md). It defines proportionate protection, isolation, narrowly authorized shutdown, evidence handling, and recovery. This is documentation only; it does not grant blanket authority to control third-party systems or implement automatic emergency actions.
+
 ## Evidence and security limitations
 
 - A passing unit test verifies only the behavior exercised by that test.
