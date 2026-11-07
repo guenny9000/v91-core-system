@@ -27,6 +27,7 @@ jobs:
 
       - name: Run Unit Tests
         run: |
+          set -o pipefail
           pytest tests/ -v | tee pytest.log
           echo "### Unit tests ($GITHUB_SHA)" >> "$GITHUB_STEP_SUMMARY"
           tail -n 1 pytest.log >> "$GITHUB_STEP_SUMMARY"
@@ -43,7 +44,8 @@ jobs:
           cleanup() { docker compose down --remove-orphans >/dev/null 2>&1 || true; }
           trap cleanup EXIT
           mkdir -p queue/pending queue/processing queue/done queue/failed runtime/results workspace
-          printf 'V91 container integration\n' > workspace/ci-example.txt
+          printf 'V91 container integration
+' > workspace/ci-example.txt
           cat > queue/pending/ci-hash.json <<'TASK'
           {
             "task_id": "ci-hash",
@@ -76,7 +78,8 @@ jobs:
 
           result = json.loads(Path("runtime/results/ci-hash.json").read_text(encoding="utf-8"))
           assert result["status"] == "COMPLETED", result
-          assert result["sha256"] == hashlib.sha256(b"V91 container integration\n").hexdigest(), result
+          assert result["sha256"] == hashlib.sha256(b"V91 container integration
+").hexdigest(), result
           events = [json.loads(line) for line in Path("runtime/v91-actions.jsonl").read_text(encoding="utf-8").splitlines()]
           assert [event["phase"] for event in events] == ["TASK_CLAIMED", "TASK_STARTED", "TASK_COMPLETED"], events
           assert events[1]["purpose"] == "Verify the container can process a real local file.", events
