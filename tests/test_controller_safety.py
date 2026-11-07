@@ -1,12 +1,7 @@
 #!/usr/bin/env python3
 """Safety regression tests for the V91 simulation-only controller."""
 
-import os
-import sys
-
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "controller"))
-
-from controller import ControlPlane
+from controller.controller import ControlPlane
 
 
 def test_controller_labels_metrics_as_simulation():
@@ -37,7 +32,6 @@ def test_unknown_action_is_rejected(capsys):
     assert controller.last_action is None
     assert controller.last_action_status == "REJECTED_UNKNOWN_ACTION"
     assert "rejected" in capsys.readouterr().out
-
 
 
 def test_invalid_metrics_are_rejected():
