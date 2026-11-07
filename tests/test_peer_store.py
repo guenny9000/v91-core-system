@@ -112,7 +112,7 @@ def test_identical_content_is_idempotent():
 
 def test_missing_object_is_reported_not_assumed():
     store = make_store()
-    receipt = {'object_digest': 'a' * 64, 'owner_id': 'x', 'store_id': 'node-alpha',
-               'algorithm': 'HMAC-SHA256', 'encryption': ENCRYPTION_STATUS, 'receipt_mac': 'b' * 64}
+    receipt = store.store(b'payload', owner_id='node-beta')
+    store._objects.pop(receipt['object_digest'])
     with pytest.raises(ReceiptValidationError, match='not available'):
         store.retrieve(receipt)
