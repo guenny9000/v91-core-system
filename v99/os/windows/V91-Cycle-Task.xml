@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-16"?>
+<!--
+  V91 bounded cycle task for Windows Task Scheduler.
+  Placeholder paths: adapt to the real host during conscious local
+  installation (schtasks /create /xml V91-Cycle-Task.xml /tn "V91-Cycle").
+-->
+<Task version="1.2" xmlns="http://schemas.microsoft.com/windows/2004/02/mit/task">
+  <Triggers>
+    <TimeTrigger>
+      <Repetition>
+        <Interval>PT15M</Interval>
+        <StopAtDurationEnd>false</StopAtDurationEnd>
+      </Repetition>
+      <StartBoundary>2026-01-01T00:00:00</StartBoundary>
+      <Enabled>true</Enabled>
+    </TimeTrigger>
+  </Triggers>
+  <Actions>
+    <Exec>
+      <Command>python</Command>
+      <Arguments>main.py --max-cycles 1 --config-dir v99/config</Arguments>
+      <WorkingDirectory>C:\v91\v91-core-system</WorkingDirectory>
+    </Exec>
+  </Actions>
+</Task>

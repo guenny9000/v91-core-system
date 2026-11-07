@@ -1,0 +1,12 @@
+[Unit]
+Description=V91 cycle timer (15-minute cycle, matching the project cadence)
+
+[Timer]
+# Every 15 minutes, aligned to the project cadence; Persistent catches up
+# after downtime instead of pretending the cycle never stopped.
+OnCalendar=*:0/15
+Persistent=true
+Unit=v91-cycle.service
+
+[Install]
+WantedBy=timers.target

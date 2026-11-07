@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+  <dict>
+    <key>Label</key>
+    <string>com.v91.cycle</string>
+    <key>ProgramArguments</key>
+    <array>
+      <!-- Placeholder paths: adapt to the real host during conscious local installation. -->
+      <string>/usr/bin/python3</string>
+      <string>/opt/v91/v91-core-system/main.py</string>
+      <string>--max-cycles</string>
+      <string>1</string>
+    </array>
+    <!-- 15-minute cycle, matching the project cadence -->
+    <key>StartInterval</key>
+    <integer>900</integer>
+    <key>RunAtLoad</key>
+    <false/>
+    <key>StandardErrorPath</key>
+    <string>/tmp/com.v91.cycle.err.log</string>
+  </dict>
+</plist>
