@@ -1,0 +1,16 @@
+{
+  "sources": {
+    "example-trusted-news.example": {
+      "trust": "TRUSTED",
+      "note": "Bewusst gepruefte Quelle; Beispiel-Platzhalter."
+    },
+    "example-unchecked-aggregator.example": {
+      "trust": "UNVERIFIED",
+      "note": "Noch nicht bewusst eingestuft; bleibt zur Pruefung."
+    },
+    "example-noise-source.example": {
+      "trust": "BLOCKED_LOCAL",
+      "note": "Lokale Konsum-Quarantaene (nur eigene Pipeline, kein Zugriff auf die Quelle)."
+    }
+  }
+}
