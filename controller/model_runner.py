@@ -104,6 +104,15 @@ class PinnedModelRunner:
             raise ModelRunnerError("not a run manifest") from exc
         return key in self._emitted
 
+    def shares_inference_with(self, other: "PinnedModelRunner") -> bool:
+        """True if both runners wrap the exact same injected inference callable.
+
+        Honest disclosure for replay sessions: sharing the callable means both
+        'nodes' compute identically by construction - it says nothing about
+        physical node separation.
+        """
+        return isinstance(other, PinnedModelRunner) and self._inference is other._inference
+
     def verify_independent_replay(self, reference: Mapping[str, Any], replay: Mapping[str, Any]) -> dict[str, str]:
         """Compare two run records, refusing comparisons where both sides came from this runner."""
         if self.produced_here(reference) and self.produced_here(replay):
