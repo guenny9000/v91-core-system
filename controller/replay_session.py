@@ -27,6 +27,8 @@ class ReplaySessionError(ValueError):
 
 INDEPENDENCE_CLAIM = "NODE_INDEPENDENCE_NOT_PROVABLE_BY_CODE"
 
+COMBINED_BYTE_MATCH = "VERIFIED_EXACT_BYTE_MATCH_INDEPENDENCE_UNPROVEN"
+
 
 class TwoNodeReplay:
     """Executes one reference run and one replay run on two distinct runner instances."""
@@ -48,19 +50,13 @@ class TwoNodeReplay:
         reference_manifest = self._reference.run(input_bytes)
         replay_manifest = self._replay.run(input_bytes)
         verdict = verify_exact_replay(reference_manifest, replay_manifest)
+        status = verdict["status"]
         return {
-            "status": verdict["status"],
+            "status": status,
             "reason": verdict.get("reason", ""),
+            "combined_status": COMBINED_BYTE_MATCH if status == "VERIFIED_EXACT" else status,
             "reference": reference_manifest,
             "replay": replay_manifest,
             "shared_inference_callable": self._reference.shares_inference_with(self._replay),
             "node_independence": INDEPENDENCE_CLAIM,
-            "combined_status": self._combined_status(verdict["status"]),
         }
-
-    @staticmethod
-    def _combined_status(verdict_status: str) -> str:
-        """Honest aggregate: byte equality exists, node independence is unproven."""
-        if verdict_status == "VERIFIED_EXACT":
-            return "VERIFIED_EXACT_BYTE_MATCH_INDEPENDENCE_UNPROVEN"
-        return verdict_status
