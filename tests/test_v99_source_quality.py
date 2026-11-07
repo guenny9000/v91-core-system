@@ -46,11 +46,24 @@ class TestSourceTrustRegistry(unittest.TestCase):
         verdict = reg.classify("gute-quelle.example")
         self.assertEqual(verdict.verdict, VERDICT_REVIEW)
         self.assertIn("CLAIM != EVIDENCE", verdict.reason)
+        self.assertFalse(verdict.evidence_reference_valid)
+        self.assertFalse(verdict.independently_corroborated)
 
-    def test_trusted_with_evidence_accepted_locally(self):
+    def test_trusted_with_arbitrary_string_is_not_validated(self):
         reg = SourceTrustRegistry(registry_dict())
         verdict = reg.classify("gute-quelle.example", evidence=["quellenangabe"])
-        self.assertEqual(verdict.verdict, VERDICT_ACCEPT)
+        self.assertEqual(verdict.verdict, VERDICT_REVIEW)
+        self.assertTrue(verdict.has_evidence)
+        self.assertFalse(verdict.evidence_reference_valid)
+        self.assertFalse(verdict.independently_corroborated)
+        self.assertIn("EVIDENCE_SUPPLIED_NOT_VALIDATED", verdict.reason)
+
+    def test_trusted_with_nonempty_object_is_not_validated(self):
+        reg = SourceTrustRegistry(registry_dict())
+        verdict = reg.classify("gute-quelle.example", evidence={"sha256": "not-a-digest"})
+        self.assertEqual(verdict.verdict, VERDICT_REVIEW)
+        self.assertTrue(verdict.to_dict()["evidence_supplied"])
+        self.assertFalse(verdict.to_dict()["evidence_reference_valid"])
 
     def test_unverified_source_never_accepted(self):
         reg = SourceTrustRegistry(registry_dict())
@@ -63,16 +76,16 @@ class TestSourceTrustRegistry(unittest.TestCase):
         self.assertFalse(verdict.has_evidence)
         self.assertEqual(verdict.verdict, VERDICT_REVIEW)
 
-    def test_filter_stream_sorts_into_three_buckets(self):
+    def test_filter_stream_never_promotes_unvalidated_evidence(self):
         reg = SourceTrustRegistry(registry_dict())
         result = reg.filter_stream([
             {"source": "gute-quelle.example", "evidence": ["b"]},
             {"source": "rausch-quelle.example"},
             {"source": "unbekannt.example"},
         ])
-        self.assertEqual(len(result["accepted_local"]), 1)
+        self.assertEqual(len(result["accepted_local"]), 0)
         self.assertEqual(len(result["quarantined_local"]), 1)
-        self.assertEqual(len(result["review_required"]), 1)
+        self.assertEqual(len(result["review_required"]), 2)
 
     def test_filter_stream_malformed_item_goes_to_review(self):
         reg = SourceTrustRegistry(registry_dict())
@@ -80,11 +93,11 @@ class TestSourceTrustRegistry(unittest.TestCase):
         self.assertEqual(len(result["review_required"]), 2)
 
     def test_no_external_side_effects(self):
-        # Der Filter bewertet nur Daten, die ihm übergeben werden;
-        # er hat keinerlei Methode für Netzwerk- oder Fremdzugriffe.
+        # Der Filter bewertet nur Daten, die ihm uebergeben werden;
+        # er hat keinerlei Methode fuer Netzwerk- oder Fremdzugriffe.
         methods = [m for m in dir(SourceTrustRegistry) if not m.startswith("_")]
         self.assertEqual(methods, ["classify", "filter_stream", "from_file",
-                                    "note_of", "trust_of"])
+                                   "note_of", "trust_of"])
 
 
 if __name__ == "__main__":
