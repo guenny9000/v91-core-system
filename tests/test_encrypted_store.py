@@ -75,7 +75,7 @@ def test_missing_signature_with_signing_store_is_refused(store, keypair):
     receipt = store.store(b'payload', owner_id='node-beta')
     receipt['_verification_key'] = public_key
     del receipt['receipt_signature']
-    with pytest.raises(IntegrityError, match="missing '"):
+    with pytest.raises(IntegrityError, match="missing 'receipt_signature'"):
         store.retrieve(receipt)
 
 
@@ -93,7 +93,8 @@ def test_tampered_ciphertext_digest_is_refused(store, keypair):
     receipt = store.store(b'payload', owner_id='node-beta')
     receipt['ciphertext_digest'] = '0' * 64
     receipt['_verification_key'] = public_key
-    with pytest.raises(IntegrityError, match='ciphertext digest mismatch'):
+    # The receipt itself is now tampered, so signature validation fails first.
+    with pytest.raises(IntegrityError, match='signature verification failed'):
         store.retrieve(receipt)
 
 

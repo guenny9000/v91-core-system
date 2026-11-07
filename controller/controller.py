@@ -15,10 +15,16 @@ import time
 from collections import deque
 from statistics import mean
 
-from anomaly import AnomalyDetector
-from feedback import FeedbackLoop
-from metrics import MetricsFeed
-from real_metrics import collect_host_metrics
+if __package__:
+    from .anomaly import AnomalyDetector
+    from .feedback import FeedbackLoop
+    from .metrics import MetricsFeed
+    from .real_metrics import collect_host_metrics
+else:  # Direct script execution: python controller/controller.py
+    from anomaly import AnomalyDetector
+    from feedback import FeedbackLoop
+    from metrics import MetricsFeed
+    from real_metrics import collect_host_metrics
 
 
 class ControlPlane:

@@ -106,7 +106,7 @@ class EncryptedObjectStore:
         return _sha256(plaintext) == object_digest
 
     def retrieve(self, receipt: dict[str, Any]) -> bytes:
-        """Verify signature and ciphertext, decrypt, rehash the plaintext (fail-closed)."""
+        """Verify signature and ciphertext, decrypt, and rehash the plaintext."""
         if not isinstance(receipt, dict):
             raise IntegrityError("receipt must be a dict")
         for key in ("object_digest", "owner_id", "store_id", "encryption", "nonce", "ciphertext_digest"):
@@ -116,8 +116,17 @@ class EncryptedObjectStore:
             raise IntegrityError("receipt was issued by a different store")
         if receipt["encryption"] != ENCRYPTION_STATUS:
             raise IntegrityError(f"unsupported encryption status: {receipt['encryption']!r}")
-        if SIGNATURE_FIELD in receipt and not verify_record_signature(receipt, _public_key_for(receipt)):
-            raise IntegrityError("receipt signature verification failed (fail-closed)")
+
+        if self._signing_key is not None and SIGNATURE_FIELD not in receipt:
+            raise IntegrityError(f"receipt is missing '{SIGNATURE_FIELD}'")
+        if SIGNATURE_FIELD in receipt:
+            verification_key = _public_key_for(receipt)
+            # The raw verification key is transport metadata, not part of the
+            # signed receipt. Remove it before canonical signature verification.
+            signed_receipt = {key: value for key, value in receipt.items() if key != "_verification_key"}
+            if not verify_record_signature(signed_receipt, verification_key):
+                raise IntegrityError("receipt signature verification failed (fail-closed)")
+
         digest = receipt["object_digest"]
         entry = self._entries.get(digest)
         if entry is None:
@@ -138,17 +147,19 @@ class EncryptedObjectStore:
 
 
 def _public_key_for(receipt: dict[str, Any]) -> bytes:
-    """Public verification key must be supplied alongside the receipt by the caller.
+    """Read the verifier's public key supplied alongside the receipt.
 
-    Embedded in the receipt namespace 'verification_key_hex' (hex) or passed
-    via receipt['_verification_key'] (raw bytes, stripped before checking).
-    This keeps the signing key with the owner and the verification key with
-    the verifier.
+    'verification_key_hex' is an explicit receipt field; '_verification_key'
+    is an out-of-band raw-byte value and is stripped before signature checking.
+    The private signing key remains with the owner.
     """
     key = receipt.get("_verification_key")
     if isinstance(key, bytes) and len(key) == 32:
         return key
     hex_key = receipt.get("verification_key_hex")
     if isinstance(hex_key, str) and len(hex_key) == 64:
-        return bytes.fromhex(hex_key)
+        try:
+            return bytes.fromhex(hex_key)
+        except ValueError as exc:
+            raise IntegrityError("invalid Ed25519 verification key encoding") from exc
     raise IntegrityError("no Ed25519 verification key supplied with the receipt")
