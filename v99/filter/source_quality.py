@@ -3,15 +3,18 @@
 Zweck: Signal von Rauschen trennen – NUR fuer eigene Datenpipelines.
 
 Explizite Grenzen:
-- Kein Zugriff auf externe Plattformen, keine Abschaltung, keine Uberwachung
+- Kein Zugriff auf externe Plattformen, keine Abschaltung, keine Ueberwachung
   Dritter. Ein BLOCKED_LOCAL-Status ist eine lokale Konsum-Entscheidung,
-  keine Wirkung gegen die Quelle.
+  keine Wirkung gegen die Quelle selbst.
 - DETECTION != AUTHORIZATION: Ein Status berechtigt zu nichts ausser
   zur Sortierung im eigenen Datenstrom.
 - CLAIM != EVIDENCE: Ohne Evidenz bleibt alles UNVERIFIED, egal wie
   vertrauenswuerdig die Quelle eingestuft ist.
-- Die Vertrauenseinstufung ist Sebastians persoenliche, bewusste
-  Konfiguration – kein objektiver Wahrheitsbeweis ueber Dritte.
+- Die Vertrauenseinstufung ist eine bewusste lokale Konfiguration – kein
+  objektiver Wahrheitsbeweis ueber Dritte.
+- EVIDENCE_SUPPLIED != EVIDENCE_VALIDATED: Ein nicht-leeres Objekt ist
+  nur ein eingereichter Hinweis. Bis ein Validator Referenz, Frische,
+  Abrufbarkeit und Unabhaengigkeit nachweist, bleibt die Bewertung offen.
 """
 from dataclasses import dataclass
 import json
@@ -30,6 +33,8 @@ class SourceVerdict:
     verdict: str
     reason: str
     has_evidence: bool
+    evidence_reference_valid: bool = False
+    independently_corroborated: bool = False
 
     def to_dict(self) -> dict:
         return {
@@ -37,7 +42,11 @@ class SourceVerdict:
             "trust": self.trust,
             "verdict": self.verdict,
             "reason": self.reason,
+            # Backward-compatible field: means supplied, not validated.
             "has_evidence": self.has_evidence,
+            "evidence_supplied": self.has_evidence,
+            "evidence_reference_valid": self.evidence_reference_valid,
+            "independently_corroborated": self.independently_corroborated,
         }
 
 
@@ -79,19 +88,28 @@ class SourceTrustRegistry:
         Regeln (fail-closed, ratlos bleibt ratlos):
         - BLOCKED_LOCAL: lokale Konsum-Quarantaene, egal was sonst kommt.
         - UNVERIFIED-Quelle: REVIEW_REQUIRED, nie still akzeptiert.
-        - TRUSTED-Quelle ohne Evidenz: trotzdem REVIEW_REQUIRED
-          (CLAIM != EVIDENCE).
-        - TRUSTED-Quelle MIT Evidenz: ACCEPT_LOCAL – akzeptiert heisst
-          hier nur 'in die eigene Pipeline aufnehmen', nicht 'wahr'.
+        - TRUSTED-Quelle ohne Evidenz: REVIEW_REQUIRED.
+        - TRUSTED-Quelle mit eingereichter Evidenz: ebenfalls REVIEW_REQUIRED,
+          bis ein separater Validator Referenz, Frische, Abrufbarkeit und
+          unabhaengige Bestaetigung tatsaechlich geprueft hat.
+        - ACCEPT_LOCAL bleibt als API-Konstante erhalten, wird hier aber
+          bewusst nicht vergeben: ein Validator ist noch nicht implementiert.
         """
         trust = self.trust_of(source)
-        has_evidence = evidence is not None and bool(evidence)
+        evidence_supplied = evidence is not None and bool(evidence)
+        evidence_reference_valid = False
+        independently_corroborated = False
+
         if trust == "BLOCKED_LOCAL":
             verdict = VERDICT_QUARANTINE
             reason = "Quelle ist bewusst lokal gesperrt (eigene Konsumentscheidung, kein Zugriff auf die Quelle selbst)."
-        elif trust == "TRUSTED" and has_evidence:
-            verdict = VERDICT_ACCEPT
-            reason = "Vertrauenswuerdige Quelle mit gelieferter Evidenz; lokale Aufnahme, kein Wahrheitsbeweis."
+        elif trust == "TRUSTED" and evidence_supplied:
+            verdict = VERDICT_REVIEW
+            reason = (
+                "EVIDENCE_SUPPLIED_NOT_VALIDATED: Evidenz wurde eingereicht, "
+                "aber Referenz, Frische, Abrufbarkeit und Unabhaengigkeit "
+                "wurden nicht geprueft."
+            )
         elif trust == "TRUSTED":
             verdict = VERDICT_REVIEW
             reason = "CLAIM != EVIDENCE: vertrauenswuerdige Quelle, aber keine Evidenz beigefuegt."
@@ -101,8 +119,16 @@ class SourceTrustRegistry:
         else:
             verdict = VERDICT_REVIEW
             reason = "UNKNOWN bleibt UNKNOWN."
-        return SourceVerdict(source=source, trust=trust, verdict=verdict,
-                              reason=reason, has_evidence=has_evidence)
+
+        return SourceVerdict(
+            source=source,
+            trust=trust,
+            verdict=verdict,
+            reason=reason,
+            has_evidence=evidence_supplied,
+            evidence_reference_valid=evidence_reference_valid,
+            independently_corroborated=independently_corroborated,
+        )
 
     def filter_stream(self, items) -> dict:
         """Sortiert einen Strom eigene Daten in akzeptiert/quarantaene/pruefung.
@@ -114,7 +140,7 @@ class SourceTrustRegistry:
         for item in items:
             if not isinstance(item, dict) or not isinstance(item.get("source"), str):
                 review.append({"item": item, "verdict": None,
-                              "reason": "Malformed item: benoetigt ein 'source'-Feld."})
+                               "reason": "Malformed item: benoetigt ein 'source'-Feld."})
                 continue
             verdict = self.classify(item["source"], item.get("evidence"))
             bucket = {VERDICT_ACCEPT: accepted,
