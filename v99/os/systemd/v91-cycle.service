@@ -1,0 +1,26 @@
+[Unit]
+Description=V91 bounded single cycle (one main.py run, no endless loop)
+Documentation=https://github.com/guenny9000/v91-core-system
+
+[Service]
+Type=oneshot
+# Placeholder paths: adapt python3 and WorkingDirectory to the real host
+# during a conscious local installation. The OS service provides the
+# repetition; main.py itself stays bounded (--max-cycles 1).
+WorkingDirectory=/opt/v91/v91-core-system
+ExecStart=/usr/bin/python3 main.py --max-cycles 1 --config-dir v99/config
+# Hardening (fail-closed against privilege escalation):
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=true
+PrivateTmp=true
+PrivateDevices=true
+ProtectKernelTunables=true
+ProtectControlGroups=true
+RestrictSUIDSGID=true
+# main.py only reads config and writes its bounded report; keep writes explicit:
+ReadWritePaths=/opt/v91/v91-core-system/runtime
+UMask=0077
+
+[Install]
+WantedBy=multi-user.target
