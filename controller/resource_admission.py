@@ -24,6 +24,7 @@ Honest limits:
 """
 from __future__ import annotations
 
+import math
 import os
 import shutil
 import time
@@ -32,6 +33,15 @@ from typing import Any, Callable, Optional
 
 VERDICT_ALLOWED = "ALLOWED_LOCAL"
 VERDICT_DENIED = "DENIED_LOCAL"
+
+
+def _is_finite_number(value: Any) -> bool:
+    """Accept finite int/float values, but never bool, NaN, or infinity."""
+    return (
+        not isinstance(value, bool)
+        and isinstance(value, (int, float))
+        and (not isinstance(value, float) or math.isfinite(value))
+    )
 
 
 @dataclass(frozen=True)
@@ -44,10 +54,17 @@ class ResourceMeasurements:
 
     def missing_fields(self) -> list[str]:
         missing = []
-        for name, value in (("cpu_cores", self.cpu_cores), ("ram_mb", self.ram_mb),
-                            ("disk_mb", self.disk_mb)):
-            if value is None or value <= 0:
+        if not _is_finite_number(self.cpu_cores) or self.cpu_cores <= 0:
+            missing.append("cpu_cores")
+        for name, value in (("ram_mb", self.ram_mb), ("disk_mb", self.disk_mb)):
+            if isinstance(value, bool) or not isinstance(value, int) or value <= 0:
                 missing.append(name)
+        if self.vram_mb is not None and (
+            isinstance(self.vram_mb, bool)
+            or not isinstance(self.vram_mb, int)
+            or self.vram_mb <= 0
+        ):
+            missing.append("vram_mb")
         return missing
 
 
@@ -60,13 +77,17 @@ class AdmissionRequest:
 
     def invalid_fields(self) -> list[str]:
         bad = []
-        if isinstance(self.cpu_cores, bool) or not isinstance(self.cpu_cores, (int, float)) or self.cpu_cores <= 0:
+        if not _is_finite_number(self.cpu_cores) or self.cpu_cores <= 0:
             bad.append("cpu_cores")
         if isinstance(self.ram_mb, bool) or not isinstance(self.ram_mb, int) or self.ram_mb <= 0:
             bad.append("ram_mb")
         if isinstance(self.disk_mb, bool) or not isinstance(self.disk_mb, int) or self.disk_mb < 0:
             bad.append("disk_mb")
-        if self.vram_mb is not None and (isinstance(self.vram_mb, bool) or not isinstance(self.vram_mb, int) or self.vram_mb <= 0):
+        if self.vram_mb is not None and (
+            isinstance(self.vram_mb, bool)
+            or not isinstance(self.vram_mb, int)
+            or self.vram_mb <= 0
+        ):
             bad.append("vram_mb")
         return bad
 
@@ -130,14 +151,23 @@ class ResourceAdmissionGate:
                  quota: Optional[dict[str, float]] = None) -> None:
         if not callable(clock):
             raise AdmissionError("clock must be callable")
-        if isinstance(freshness_seconds, bool) or not isinstance(freshness_seconds, (int, float)) or freshness_seconds <= 0:
-            raise AdmissionError("freshness_seconds must be positive")
+        if not _is_finite_number(freshness_seconds) or freshness_seconds <= 0:
+            raise AdmissionError("freshness_seconds must be finite and positive")
         if adapter is None or not callable(getattr(adapter, "measure", None)):
             raise AdmissionError("adapter must provide a callable measure()")
+        allowed_quota_keys = {"cpu_cores", "ram_mb", "disk_mb", "vram_mb"}
+        if quota is not None and not isinstance(quota, dict):
+            raise AdmissionError("quota must be a mapping of finite resource limits")
+        normalized_quota = dict(quota) if quota is not None else {}
+        for key, limit in normalized_quota.items():
+            if key not in allowed_quota_keys:
+                raise AdmissionError(f"unsupported quota resource: {key}")
+            if not _is_finite_number(limit) or limit < 0:
+                raise AdmissionError(f"quota for {key} must be finite and non-negative")
         self._adapter = adapter
         self._clock = clock
         self._freshness = float(freshness_seconds)
-        self._quota = dict(quota) if quota else {}
+        self._quota = normalized_quota
 
     def _quota_violations(self, m: ResourceMeasurements) -> list[str]:
         violations = []
@@ -160,13 +190,23 @@ class ResourceAdmissionGate:
         if missing:
             return AdmissionDecision(
                 VERDICT_DENIED,
-                f"UNKNOWN is never unlimited: unmeasured resource(s) {missing} -> NO_CAPACITY.",
+                f"UNKNOWN is never unlimited: unmeasured or invalid resource(s) {missing} -> NO_CAPACITY.",
                 measurements)
+        if not _is_finite_number(measurements.measured_at):
+            return AdmissionDecision(
+                VERDICT_DENIED, "Measurement timestamp is missing or non-finite.", measurements)
         now = self._clock()
-        if now - measurements.measured_at > self._freshness:
+        if not _is_finite_number(now):
+            return AdmissionDecision(
+                VERDICT_DENIED, "Admission clock returned a non-finite timestamp.", measurements)
+        age = now - measurements.measured_at
+        if age < 0:
+            return AdmissionDecision(
+                VERDICT_DENIED, "Measurement timestamp is in the future; refusing admission.", measurements)
+        if age > self._freshness:
             return AdmissionDecision(
                 VERDICT_DENIED,
-                f"Stale measurement (age {now - measurements.measured_at:.1f}s > {self._freshness:.1f}s).",
+                f"Stale measurement (age {age:.1f}s > {self._freshness:.1f}s).",
                 measurements)
         violations = self._quota_violations(measurements)
         if violations:
