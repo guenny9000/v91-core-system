@@ -30,8 +30,8 @@ def test_legacy_trusted_without_evidence_requires_review(registry):
 
 
 def test_legacy_blocked_still_quarantines(registry):
-    assert registry.classify("schlecht.example", evidence=["https://x.example"])
-           .verdict == "QUARANTINE_LOCAL"
+    assert (registry.classify("schlecht.example", evidence=["https://x.example"])
+            .verdict == "QUARANTINE_LOCAL")
 
 
 # --- Referenzstruktur-Pruefung ---
