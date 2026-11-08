@@ -15,7 +15,9 @@ VERDICT_DENIED = 'DENIED_LOCAL'
 class FakeAdapter:
     def __init__(self, clock, values):
         self._clock = clock
-        self._values = values
+        # Own copy: tests mutate _values (e.g. inject a stale measured_at);
+        # that must never leak into the shared module-level GOOD dict.
+        self._values = dict(values)
 
     def measure(self):
         values = dict(self._values)
