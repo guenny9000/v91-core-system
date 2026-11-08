@@ -62,8 +62,7 @@ class TestBuildMetrics(unittest.TestCase):
         self.assertIn("v91_gauge_bad_name_ 1", text)
 
     def test_empty_snapshot_yields_empty_exposition(self):
-        self.assertEqual(build_metrics({}), "
-")
+        self.assertEqual(build_metrics({}), "\n")
 
 
 class TestLiveServer(unittest.TestCase):
