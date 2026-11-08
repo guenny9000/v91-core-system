@@ -101,9 +101,7 @@ def build_metrics(snapshot: Snapshot) -> str:
             else:
                 state = -1  # UNKNOWN
             lines.append('v91_check{name="%s"} %d' % (_metric_name(name), state))
-    return "
-".join(lines) + "
-"
+    return "\n".join(lines) + "\n"
 
 
 def make_handler(snapshot_provider: Callable[[], Snapshot]) -> type:
@@ -121,8 +119,7 @@ def make_handler(snapshot_provider: Callable[[], Snapshot]) -> type:
                 self.send_response(200)
                 self.send_header("Content-Type", "text/plain; version=0.0.4; charset=utf-8")
             else:
-                body = b"not found
-"
+                body = b"not found\n"
                 self.send_response(404)
                 self.send_header("Content-Type", "text/plain; charset=utf-8")
             self.send_header("Content-Length", str(len(body)))
@@ -131,8 +128,7 @@ def make_handler(snapshot_provider: Callable[[], Snapshot]) -> type:
 
         def do_POST(self) -> None:  # noqa: N802 (http.server API)
             # Read-only server: writes are refused, not ignored.
-            body = b"read-only
-"
+            body = b"read-only\n"
             self.send_response(405)
             self.send_header("Content-Type", "text/plain; charset=utf-8")
             self.send_header("Content-Length", str(len(body)))
