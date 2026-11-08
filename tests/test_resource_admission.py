@@ -178,3 +178,11 @@ def test_future_measurement_timestamp_is_denied(clock):
     decision = gate.request_admission(AdmissionRequest(cpu_cores=1, ram_mb=100))
     assert decision.verdict == VERDICT_DENIED
     assert 'future' in decision.reason
+
+
+@pytest.mark.parametrize('bad_value', [float('nan'), float('inf'), float('-inf')])
+def test_non_finite_optional_vram_measurement_is_denied(clock, bad_value):
+    gate = make_gate(clock, {**GOOD, 'vram_mb': bad_value})
+    decision = gate.request_admission(AdmissionRequest(cpu_cores=1, ram_mb=100))
+    assert decision.verdict == VERDICT_DENIED
+    assert 'vram_mb' in decision.reason
