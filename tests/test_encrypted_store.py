@@ -71,6 +71,22 @@ def test_wrong_trusted_key_is_refused(store):
         store.retrieve(receipt, trusted_public_key=attacker_public_key)
 
 
+def test_untrusted_signature_is_rejected_before_object_lookup(keypair):
+    private_key, trusted_public_key = keypair
+    source = EncryptedObjectStore(
+        store_id="node-alpha", master_key=MASTER, opt_in=True, signing_key=private_key
+    )
+    receipt = source.store(b"payload", owner_id="node-beta")
+    attacker_private, _ = generate_signing_keypair()
+    _resign(receipt, attacker_private)
+
+    empty_store = EncryptedObjectStore(
+        store_id="node-alpha", master_key=MASTER, opt_in=True
+    )
+    with pytest.raises(IntegrityError, match="signature verification failed"):
+        empty_store.retrieve(receipt, trusted_public_key=trusted_public_key)
+
+
 def test_unexpected_transport_field_is_covered_by_signature(store, keypair):
     _, public_key = keypair
     receipt = store.store(b"payload", owner_id="node-beta")
