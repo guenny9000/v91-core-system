@@ -1,6 +1,6 @@
 # V91 Emergency Protection Protocol (EPP)
 
-**Status:** DOCUMENTED — policy proposal on a review branch. This document does not grant legal authority, credentials, access, or operational capability. It does not claim implementation or deployment.
+**Status:** DOCUMENTED — merged into the main branch as a policy proposal. This document does not grant legal authority, credentials, access, or operational capability. It does not claim runtime implementation or deployment.
 
 **Version:** 1.0  
 **Date:** 2026-11-08  
