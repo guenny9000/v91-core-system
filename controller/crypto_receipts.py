@@ -1,17 +1,9 @@
 """Ed25519-signed receipts (Issue #47, stage 5 completion).
 
-Requires the 'cryptography' dependency - explicitly approved by Sebastian
-('gruen', 2026-11-07) after it was deliberately withheld in PR #56.
-
-Design:
-- Receipts are signed with Ed25519 over the canonical JSON of the receipt
-  record (sorted keys, no whitespace), excluding the signature field itself.
-- Verification is fail-closed and constant-time via the library's own
-  verification; a missing, malformed or wrong-key signature is always a
-  refusal, never a warning.
-- Keys are handled as raw 32-byte values; callers are responsible for
-  storing private keys in the existing Secret Store (v99/security) - this
-  module never persists keys.
+Private keys remain caller-managed; this module never persists signing or
+verification keys. Receipts are signed over canonical JSON, excluding only
+the signature field. The expected verification key must come from an
+independently trusted context, never from the receipt being verified.
 """
 from __future__ import annotations
 
@@ -32,7 +24,7 @@ class CryptoReceiptError(ValueError):
 
 
 def canonical_record_bytes(record: dict[str, Any]) -> bytes:
-    """Canonical JSON: sorted keys, no whitespace. Signature field is excluded by the caller."""
+    """Canonical JSON: sorted keys, no whitespace."""
     return json.dumps(record, sort_keys=True, separators=(",", ":"), ensure_ascii=False).encode("utf-8")
 
 
@@ -40,10 +32,7 @@ def generate_signing_keypair() -> tuple[bytes, bytes]:
     """Generate a fresh Ed25519 keypair; returns (private_key_raw32, public_key_raw32)."""
     private = Ed25519PrivateKey.generate()
     public = private.public_key()
-    return (
-        private.private_bytes_raw(),
-        public.public_bytes_raw(),
-    )
+    return private.private_bytes_raw(), public.public_bytes_raw()
 
 
 def _load_private(private_key: bytes) -> Ed25519PrivateKey:
@@ -64,30 +53,20 @@ def sign_record(record: dict[str, Any], private_key: bytes) -> str:
         raise CryptoReceiptError("record must be a dict")
     if SIGNATURE_FIELD in record:
         raise CryptoReceiptError(f"record must not already contain '{SIGNATURE_FIELD}'")
-    signing_key = _load_private(private_key)
-    signature = signing_key.sign(canonical_record_bytes(record))
-    return signature.hex()
+    return _load_private(private_key).sign(canonical_record_bytes(record)).hex()
 
 
 def verify_record_signature(record: dict[str, Any], public_key: bytes) -> bool:
-    """Verify an embedded Ed25519 signature. Fail-closed: any anomaly is False."""
+    """Verify an embedded Ed25519 signature; every non-signature field is signed."""
     if not isinstance(record, dict):
         return False
     signature_hex = record.get(SIGNATURE_FIELD)
     if not isinstance(signature_hex, str) or len(signature_hex) != 128:
         return False
-    # Transport-only fields (underscore-prefixed, e.g. '_verification_key')
-    # are caller-side delivery metadata. They are NOT part of the signed
-    # record; including them changes the canonical bytes and breaks every
-    # verification of a receipt that carries an attached verification key.
-    unsigned = {
-        k: v for k, v in record.items()
-        if k != SIGNATURE_FIELD and not k.startswith("_")
-    }
+    unsigned = {key: value for key, value in record.items() if key != SIGNATURE_FIELD}
     try:
-        verification_key = _load_public(public_key)
         signature = bytes.fromhex(signature_hex)
-        verification_key.verify(signature, canonical_record_bytes(unsigned))
+        _load_public(public_key).verify(signature, canonical_record_bytes(unsigned))
     except Exception:
         return False
     return True
