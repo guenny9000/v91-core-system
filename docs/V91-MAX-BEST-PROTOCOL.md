@@ -71,4 +71,6 @@ Compare like with like over stated time windows and disclose incomplete or delay
 
 ## Safety boundary
 
-This protocol does not authorize unrestricted autonomy, self-granted permissions, external enforcement, destructive actions, or production changes. Authorization remains explicit; new privileges must not exceed existing privileges. If safety, evidence, or authorization is uncertain, fail closed and report the limitation.
+This protocol does not authorize unrestricted autonomy, self-granted permissions, external enforcement, destructive actions, or production changes. Authorization remains explicit; new privileges must not exceed existing privileges. If safety, evidence, or authorization is uncertain, fail closed for high-impact and cross-boundary actions while continuing safe, reversible notification, escalation, evidence preservation, and containment within verified authority.
+
+For urgent threats, apply the [V91 Emergency Protection Protocol](./V91-EMERGENCY-PROTECTION-PROTOCOL.md) and its [review and test matrix](./V91-EMERGENCY-PROTECTION-TEST-MATRIX.md). The emergency protocol enables prompt action under pre-approved, bounded authority; it does not create universal authority over third-party systems.
