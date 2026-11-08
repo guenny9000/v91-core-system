@@ -130,3 +130,51 @@ def test_allowed_decision_names_local_only_scope(clock):
     gate = make_gate(clock, GOOD)
     decision = gate.request_admission(AdmissionRequest(cpu_cores=4, ram_mb=8000))
     assert 'LOCAL' in decision.reason
+
+
+@pytest.mark.parametrize('bad_value', [float('nan'), float('inf'), float('-inf')])
+def test_non_finite_cpu_request_is_denied(clock, bad_value):
+    gate = make_gate(clock, GOOD)
+    decision = gate.request_admission(AdmissionRequest(cpu_cores=bad_value, ram_mb=100))
+    assert decision.verdict == VERDICT_DENIED
+    assert 'cpu_cores' in decision.reason
+
+
+@pytest.mark.parametrize('bad_value', [float('nan'), float('inf'), float('-inf')])
+def test_non_finite_measured_cpu_is_denied(clock, bad_value):
+    gate = make_gate(clock, {**GOOD, 'cpu_cores': bad_value})
+    decision = gate.request_admission(AdmissionRequest(cpu_cores=1, ram_mb=100))
+    assert decision.verdict == VERDICT_DENIED
+    assert 'cpu_cores' in decision.reason
+
+
+@pytest.mark.parametrize('bad_value', [float('nan'), float('inf'), float('-inf')])
+def test_non_finite_measurement_timestamp_is_denied(clock, bad_value):
+    gate = make_gate(clock, {**GOOD, 'measured_at': bad_value})
+    decision = gate.request_admission(AdmissionRequest(cpu_cores=1, ram_mb=100))
+    assert decision.verdict == VERDICT_DENIED
+    assert 'timestamp' in decision.reason
+
+
+@pytest.mark.parametrize('bad_value', [float('nan'), float('inf'), float('-inf')])
+def test_non_finite_freshness_window_is_rejected(clock, bad_value):
+    adapter = FakeAdapter(clock, GOOD)
+    with pytest.raises(AdmissionError, match='finite and positive'):
+        ResourceAdmissionGate(adapter=adapter, clock=clock, freshness_seconds=bad_value)
+
+
+@pytest.mark.parametrize('bad_value', [float('nan'), float('inf'), float('-inf')])
+def test_non_finite_quota_limit_is_rejected(clock, bad_value):
+    adapter = FakeAdapter(clock, GOOD)
+    with pytest.raises(AdmissionError, match='finite and non-negative'):
+        ResourceAdmissionGate(
+            adapter=adapter, clock=clock, freshness_seconds=30,
+            quota={'cpu_cores': bad_value},
+        )
+
+
+def test_future_measurement_timestamp_is_denied(clock):
+    gate = make_gate(clock, {**GOOD, 'measured_at': 1001.0})
+    decision = gate.request_admission(AdmissionRequest(cpu_cores=1, ram_mb=100))
+    assert decision.verdict == VERDICT_DENIED
+    assert 'future' in decision.reason
