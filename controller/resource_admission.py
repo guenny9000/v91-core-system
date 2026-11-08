@@ -59,6 +59,12 @@ class ResourceMeasurements:
         for name, value in (("ram_mb", self.ram_mb), ("disk_mb", self.disk_mb)):
             if isinstance(value, bool) or not isinstance(value, int) or value <= 0:
                 missing.append(name)
+        if self.vram_mb is not None and (
+            isinstance(self.vram_mb, bool)
+            or not isinstance(self.vram_mb, int)
+            or self.vram_mb <= 0
+        ):
+            missing.append("vram_mb")
         return missing
 
 
