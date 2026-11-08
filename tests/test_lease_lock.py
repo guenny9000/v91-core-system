@@ -5,13 +5,14 @@ from controller.lease_lock import Lease, LeaseLockError, LeaseLockManager
 
 @pytest.fixture
 def clock():
+    # Mutable time state: tests advance it directly (clock['now'] = ...).
     state = {'now': 100.0}
-    return lambda: state['now']
+    return state
 
 
 @pytest.fixture
 def manager(clock):
-    return LeaseLockManager(clock=clock)
+    return LeaseLockManager(clock=lambda: clock['now'])
 
 
 def test_acquire_returns_lease_with_first_token(manager):
@@ -34,7 +35,7 @@ def test_same_holder_cannot_double_acquire(manager):
 
 def test_expired_lock_is_free_again(clock, manager):
     manager.acquire('task-a', 'node-1', 10)
-    clock()['now'] = 111.0  # lease expired at 110
+    clock['now'] = 111.0  # lease expired at 110
     lease = manager.acquire('task-a', 'node-2', 10)
     assert lease is not None
     assert lease.holder_id == 'node-2'
@@ -42,7 +43,7 @@ def test_expired_lock_is_free_again(clock, manager):
 
 def test_fencing_token_strictly_increases_across_expiry(clock, manager):
     first = manager.acquire('task-a', 'node-1', 10)
-    clock()['now'] = 111.0
+    clock['now'] = 111.0
     second = manager.acquire('task-a', 'node-2', 10)
     assert first.fencing_token == 1
     assert second.fencing_token == 2
@@ -50,7 +51,7 @@ def test_fencing_token_strictly_increases_across_expiry(clock, manager):
 
 def test_stale_holder_is_fenced_after_takeover(clock, manager):
     old = manager.acquire('task-a', 'node-1', 10)
-    clock()['now'] = 111.0
+    clock['now'] = 111.0
     manager.acquire('task-a', 'node-2', 10)
     # node-1 wakes up late with its old token:
     assert manager.is_fenced('task-a', old.fencing_token) is True
@@ -71,7 +72,7 @@ def test_renew_extends_live_lease(clock, manager):
 
 def test_renew_of_expired_lease_is_refused(clock, manager):
     manager.acquire('task-a', 'node-1', 10)
-    clock()['now'] = 111.0
+    clock['now'] = 111.0
     with pytest.raises(LeaseLockError, match='expired'):
         manager.renew('task-a', 'node-1', 1, 10)
 
@@ -96,7 +97,7 @@ def test_release_requires_matching_holder_and_token(manager):
 
 def test_validate_action_after_expiry_is_false(clock, manager):
     manager.acquire('task-a', 'node-1', 10)
-    clock()['now'] = 111.0
+    clock['now'] = 111.0
     assert manager.validate_action('task-a', 'node-1', 1) is False
 
 
