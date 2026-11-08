@@ -76,7 +76,14 @@ def verify_record_signature(record: dict[str, Any], public_key: bytes) -> bool:
     signature_hex = record.get(SIGNATURE_FIELD)
     if not isinstance(signature_hex, str) or len(signature_hex) != 128:
         return False
-    unsigned = {k: v for k, v in record.items() if k != SIGNATURE_FIELD}
+    # Transport-only fields (underscore-prefixed, e.g. '_verification_key')
+    # are caller-side delivery metadata. They are NOT part of the signed
+    # record; including them changes the canonical bytes and breaks every
+    # verification of a receipt that carries an attached verification key.
+    unsigned = {
+        k: v for k, v in record.items()
+        if k != SIGNATURE_FIELD and not k.startswith("_")
+    }
     try:
         verification_key = _load_public(public_key)
         signature = bytes.fromhex(signature_hex)
