@@ -73,7 +73,11 @@ class PinnedModelRunner:
         self._parameters = params
         self._precision = precision
         self._backend = backend
-        self._emitted: set[tuple[str, str]] = set()
+        # Run records are tracked by object identity, not by (input, output)
+        # digest pairs: two different runner instances can legitimately
+        # produce identical digests (deterministic replay), and that must not
+        # count as "both records came from this runner".
+        self._emitted: list[dict[str, Any]] = []
 
     def run(self, input_bytes: bytes) -> dict[str, Any]:
         """Execute the pinned inference once and return a COMPLETED_UNVERIFIED run record."""
@@ -93,16 +97,22 @@ class PinnedModelRunner:
             precision=self._precision,
             backend=self._backend,
         )
-        self._emitted.add((manifest["input_digest"], manifest["output_digest"]))
+        self._emitted.append(manifest)
         return manifest
 
     def produced_here(self, manifest: Mapping[str, Any]) -> bool:
-        """Return True if this exact (input, output) pair was produced by this runner instance."""
+        """Return True if this exact record object was produced by this runner instance.
+
+        Identity-based on purpose: digest pairs collide across runner
+        instances for deterministic replay of the same input, and such a
+        collision must not make an independent record count as 'produced here'.
+        """
         try:
-            key = (manifest["input_digest"], manifest["output_digest"])
+            manifest["input_digest"]
+            manifest["output_digest"]
         except (KeyError, TypeError) as exc:
             raise ModelRunnerError("not a run manifest") from exc
-        return key in self._emitted
+        return any(emitted is manifest for emitted in self._emitted)
 
     def shares_inference_with(self, other: "PinnedModelRunner") -> bool:
         """True if both runners wrap the exact same injected inference callable.
