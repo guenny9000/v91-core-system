@@ -116,8 +116,10 @@ class EncryptedObjectStore:
             raise IntegrityError("receipt was issued by a different store")
         if receipt["encryption"] != ENCRYPTION_STATUS:
             raise IntegrityError(f"unsupported encryption status: {receipt['encryption']!r}")
-        if SIGNATURE_FIELD in receipt and not verify_record_signature(receipt, _public_key_for(receipt)):
-            raise IntegrityError("receipt signature verification failed (fail-closed)")
+        if self._signing_key is not None and SIGNATURE_FIELD not in receipt:
+            # Fail-closed: this store signs its receipts; an unsigned receipt
+            # is not a degraded-but-acceptable receipt, it is a refusal.
+            raise IntegrityError(f"receipt is missing '{SIGNATURE_FIELD}' (this store signs receipts; fail-closed)")
         digest = receipt["object_digest"]
         entry = self._entries.get(digest)
         if entry is None:
@@ -125,6 +127,8 @@ class EncryptedObjectStore:
         nonce, ciphertext = entry
         if _sha256(ciphertext) != receipt["ciphertext_digest"]:
             raise IntegrityError(f"ciphertext digest mismatch for {digest}; refusing to decrypt (ISOLATE_NOT_DESTROY)")
+        if SIGNATURE_FIELD in receipt and not verify_record_signature(receipt, _public_key_for(receipt)):
+            raise IntegrityError("receipt signature verification failed (fail-closed)")
         try:
             plaintext = self._aesgcm.decrypt(nonce, ciphertext, self._store_id.encode("utf-8"))
         except InvalidTag:
@@ -150,5 +154,8 @@ def _public_key_for(receipt: dict[str, Any]) -> bytes:
         return key
     hex_key = receipt.get("verification_key_hex")
     if isinstance(hex_key, str) and len(hex_key) == 64:
-        return bytes.fromhex(hex_key)
+        try:
+            return bytes.fromhex(hex_key)
+        except ValueError as exc:
+            raise IntegrityError("invalid Ed25519 verification key encoding") from exc
     raise IntegrityError("no Ed25519 verification key supplied with the receipt")

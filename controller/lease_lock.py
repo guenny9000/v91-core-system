@@ -88,8 +88,12 @@ class LeaseLockManager:
             raise LeaseLockError("only the current lease holder with the matching fencing token can renew")
         if lease.is_expired(now):
             raise LeaseLockError("lease already expired; renew refused (fail-closed)")
+        # Renewal extends the lease: duration is added to the later of the
+        # current expiry and 'now', so a holder never loses remaining time
+        # by renewing early (renewal is an extension, not a restart).
         renewed = Lease(lock_id=lock_id, holder_id=holder_id,
-                        fencing_token=fencing_token, expires_at=now + duration)
+                        fencing_token=fencing_token,
+                        expires_at=max(lease.expires_at, now) + duration)
         self._leases[lock_id] = renewed
         return renewed
 
@@ -115,5 +119,18 @@ class LeaseLockManager:
         return not lease.is_expired(now)
 
     def is_fenced(self, lock_id: str, fencing_token: int) -> bool:
-        """True if the token is stale (lower than the last issued token) - reject the action."""
-        return fencing_token < self._last_token.get(lock_id, 0)
+        """True if the token is stale - reject the action (fail-closed for late writers).
+
+        A token is stale when a strictly newer token was issued for this lock,
+        or when no live lease is held under this exact token (released lock,
+        takeover with a newer token). Only the current lease holder with the
+        matching token is not fenced.
+        """
+        last = self._last_token.get(lock_id, 0)
+        if fencing_token < last:
+            return True
+        if fencing_token == last:
+            lease = self._leases.get(lock_id)
+            if lease is None or lease.fencing_token != fencing_token:
+                return True
+        return False

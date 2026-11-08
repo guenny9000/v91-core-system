@@ -27,9 +27,19 @@ jobs:
 
       - name: Run Unit Tests
         run: |
+          set -o pipefail
           pytest tests/ -v | tee pytest.log
           echo "### Unit tests ($GITHUB_SHA)" >> "$GITHUB_STEP_SUMMARY"
           tail -n 1 pytest.log >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Surface pytest failures as annotations
+        if: failure()
+        run: |
+          if [ -f pytest.log ]; then
+            grep -E "^(ERROR|FAILED)" pytest.log | head -n 10 | while IFS= read -r line; do
+              echo "::error::${line}"
+            done
+          fi
 
       - name: Compile runtime modules
         run: python -m py_compile controller/*.py

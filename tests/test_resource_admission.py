@@ -15,11 +15,15 @@ VERDICT_DENIED = 'DENIED_LOCAL'
 class FakeAdapter:
     def __init__(self, clock, values):
         self._clock = clock
-        self._values = values
+        # Own copy: tests mutate _values (e.g. inject a stale measured_at);
+        # that must never leak into the shared module-level GOOD dict.
+        self._values = dict(values)
 
     def measure(self):
         values = dict(self._values)
-        values['measured_at'] = self._clock()
+        # Honor a pre-set measured_at so a stale snapshot stays stale;
+        # only stamp the clock when the fixture did not inject one.
+        values.setdefault('measured_at', self._clock())
         return ResourceMeasurements(**values)
 
 

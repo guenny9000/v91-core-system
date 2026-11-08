@@ -111,8 +111,11 @@ def test_identical_content_is_idempotent():
 
 
 def test_missing_object_is_reported_not_assumed():
+    # Valid receipt, object lost afterwards: retrieval must report the missing
+    # object explicitly. The receipt is NOT forged - the HMAC check must stay
+    # ahead of any store-content disclosure (no existence oracle for strangers).
     store = make_store()
-    receipt = {'object_digest': 'a' * 64, 'owner_id': 'x', 'store_id': 'node-alpha',
-               'algorithm': 'HMAC-SHA256', 'encryption': ENCRYPTION_STATUS, 'receipt_mac': 'b' * 64}
+    receipt = store.store(b'payload', owner_id='node-beta')
+    del store._objects[receipt['object_digest']]
     with pytest.raises(ReceiptValidationError, match='not available'):
         store.retrieve(receipt)

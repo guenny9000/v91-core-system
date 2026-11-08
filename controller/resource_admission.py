@@ -176,7 +176,7 @@ class ResourceAdmissionGate:
                 measurements)
         deficits = []
         if request.cpu_cores > measurements.cpu_cores:
-            deficits.append(f"cpu_cores {request.cpu_cores} > {measurements.cpu_cores}")
+            deficits.append(f"cpu_cores {float(request.cpu_cores)} > {measurements.cpu_cores}")
         if request.ram_mb > measurements.ram_mb:
             deficits.append(f"ram_mb {request.ram_mb} > {measurements.ram_mb}")
         if request.disk_mb > measurements.disk_mb:
