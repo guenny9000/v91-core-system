@@ -1,6 +1,6 @@
 import unittest
 
-from impact.metrics import evaluate_dataset, evaluate_measurement
+from v91_impact_metrics.metrics import evaluate_dataset, evaluate_measurement
 
 
 def measurement(**overrides):
