@@ -16,6 +16,8 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Mapping
 
+from controller.task_ingress_gate import canonical_payload_bytes
+
 logger = logging.getLogger("V91.DatabaseUnification")
 
 
@@ -210,6 +212,13 @@ class VerifiedTaskIngressConnector:
     ) -> dict:
         if not isinstance(raw_body, bytes):
             return {"decision": "GATE_CLOSED", "reason": "RAW_BODY_INVALID",
+                    "execution_authorized": False}
+        try:
+            if raw_body != canonical_payload_bytes(payload):
+                return {"decision": "GATE_CLOSED", "reason": "RAW_BODY_PAYLOAD_MISMATCH",
+                        "execution_authorized": False}
+        except (TypeError, ValueError, UnicodeError):
+            return {"decision": "GATE_CLOSED", "reason": "RAW_BODY_PAYLOAD_INVALID",
                     "execution_authorized": False}
         try:
             valid, reason = self.monotonicity_guard.verify_state_integrity(
