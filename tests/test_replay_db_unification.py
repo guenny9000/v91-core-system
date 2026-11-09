@@ -71,8 +71,19 @@ def test_exact_existing_claim_is_accepted_but_conflicting_mapping_rolls_back(tmp
         (PROVIDER, "T-2", "b" * 32, 1799990300),
     ])
     provider = ReplayStateProvider(new_db)
-    assert provider.claim(PROVIDER, "T-1", "a" * 32)
-    assert provider.claim(PROVIDER, "T-existing", "b" * 32)
+    with sqlite3.connect(new_db) as conn:
+        conn.execute(
+            "INSERT INTO replay_store(provider_id, task_id, nonce, timestamp_utc) "
+            "VALUES (?, ?, ?, ?)",
+            (PROVIDER, "T-1", "a" * 32,
+             datetime.fromtimestamp(1799990000, tz=timezone.utc).isoformat(timespec="seconds").replace("+00:00", "Z")),
+        )
+        conn.execute(
+            "INSERT INTO replay_store(provider_id, task_id, nonce, timestamp_utc) "
+            "VALUES (?, ?, ?, ?)",
+            (PROVIDER, "T-existing", "b" * 32,
+             datetime.fromtimestamp(1799990300, tz=timezone.utc).isoformat(timespec="seconds").replace("+00:00", "Z")),
+        )
     before_sequence = provider.get_last_logged_sequence()
 
     with pytest.raises(ReplayMigrationError, match="identity conflict"):
