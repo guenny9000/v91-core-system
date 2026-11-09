@@ -79,3 +79,51 @@ def test_invalid_checkpoint_sequence_is_rejected():
         pass
     else:
         raise AssertionError("boolean sequence must be rejected")
+
+
+def test_boolean_schema_version_is_rejected():
+    invalid = _checkpoint()
+    invalid["schema_version"] = True
+    try:
+        sign_checkpoint(
+            invalid,
+            key_id="test-key-1",
+            private_key=Ed25519PrivateKey.generate(),
+        )
+    except CheckpointError:
+        pass
+    else:
+        raise AssertionError("boolean schema version must be rejected")
+
+
+def test_checkpoint_timestamp_must_be_timezone_aware():
+    invalid = _checkpoint()
+    invalid["created_at_utc"] = "2026-11-09T07:00:00"
+    try:
+        sign_checkpoint(
+            invalid,
+            key_id="test-key-1",
+            private_key=Ed25519PrivateKey.generate(),
+        )
+    except CheckpointError:
+        pass
+    else:
+        raise AssertionError("naive checkpoint timestamp must be rejected")
+
+
+def test_non_object_envelope_is_rejected():
+    try:
+        verify_checkpoint([], trusted_keys={})
+    except CheckpointError:
+        pass
+    else:
+        raise AssertionError("non-object envelope must be rejected")
+
+
+def test_invalid_local_head_is_not_reported_as_match():
+    assert compare_local_head(
+        {"status": "SIGNATURE_VALID", "checkpoint": _checkpoint()},
+        ledger_id="ledger-main",
+        sequence=True,
+        head_hash="a" * 64,
+    ) == {"status": "LOCAL_HEAD_INVALID"}
