@@ -66,3 +66,27 @@ Limitations:
 - A task ID is consumed once HMAC and freshness pass, even if later policy
   classification blocks it or sends it to review. Submit corrected work with
   a new task ID.
+
+## State rollback protection (verification primitive)
+
+`controller/state_monotonicity.py` verifies a challenge-bound Ed25519 heartbeat
+from an independently operated witness. The signed payload binds the replay
+database ID, witness epoch, sequence, state-root hash, issue time, and a fresh
+256-bit challenge. The caller must generate a fresh challenge and obtain the
+witness response for that exact challenge; previously captured signed
+heartbeats therefore cannot be replayed as responses to a new challenge.
+
+The local sequence is compared in the correct direction: if the witness
+remembers a higher sequence than the restored local database, the result is
+`ROLLBACK_DETECTED_SEQUENCE`. Equal sequence with a different root is
+`STATE_ROOT_MISMATCH`. A local state ahead of the witness is also rejected
+until the witness is advanced. Unknown keys, invalid signatures, stale
+responses, challenge mismatch, and unavailable local state fail closed.
+
+**Critical limitation:** this is not a distributed database and does not itself
+contact or operate a witness. Security depends on an independently administered
+witness that durably preserves its latest state and signs only fresh,
+challenge-bound responses. If the witness can be rolled back, compromised, or
+controlled by the same administrator as the SQLite host, the guarantee fails.
+No automatic process isolation, database repair, or worker integration is
+performed. The caller must refuse ingress on any failed verification result.
