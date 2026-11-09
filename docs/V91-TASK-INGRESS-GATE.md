@@ -105,12 +105,25 @@ Timestamps are stored in UTC and read back as timezone-aware UTC values.
 The default path is project-relative under `ledger/replay_guard.db`; callers
 may inject a database path. Parent directories are created as needed.
 
-**Integration boundary:** this provider is not yet wired into
-`TaskIngressGate`, which currently accepts the separate `ReplayStore`
-protocol and its `SQLiteReplayStore`. Do not run two independent replay
-stores and assume their state is unified. A follow-up integration must make
-the provider implement the ingress replay-store interface and migrate existing
-replay rows transactionally before replacing the configured store.
+**Integration boundary:** `ReplayStateProvider.claim(provider_id, task_id,
+nonce)` implements the `ReplayStore` protocol structurally and can be
+injected into `TaskIngressGate`. The new
+`controller/replay_db_unification.py` provides an explicit migration from
+the actual legacy `ingress_replay(provider_id, task_id, nonce, claimed_at)`
+schema and a witness-first connector. These are integration primitives, not
+automatic runtime wiring: the application must initialize one provider at the
+chosen destination path, complete and verify migration before configuring the
+gate to use that provider, and supply a fresh challenge plus a signed witness
+response on each ingress attempt.
+
+The migration leaves the source database untouched, imports rows under one
+destination `BEGIN IMMEDIATE` transaction, preserves provider/task/nonce
+identity and converts Unix timestamps to UTC. Exact existing identity
+mappings are idempotently accepted; any conflicting task or nonce mapping
+aborts the complete migration. A source fingerprint is recorded in the
+destination to make retries of an unchanged source snapshot idempotent. A
+missing legacy table or incompatible schema fails closed. The migration does
+not automatically switch a running worker's configured database.
 
 The provider is local SQLite state, not distributed consensus, immutable
 storage, or a substitute for the external signed witness. A restored database
@@ -118,3 +131,19 @@ is detectable only when compared with a newer independently retained witness
 checkpoint. WAL and `synchronous=FULL` improve local durability semantics but
 do not prevent privileged filesystem rollback or guarantee hardware-level
 persistence.
+
+
+## Witness-first ingress connector (integration primitive)
+
+`VerifiedTaskIngressConnector` invokes
+`V91StateMonotonicityGuard.verify_state_integrity` before calling
+`TaskIngressGate.validate`. The caller must provide the expected fresh
+challenge and configured trusted key ID. The connector checks that supplied
+raw bytes exactly match the canonical serialization of the payload, then
+returns the gate decision with `execution_authorized=False`. Witness failure,
+payload mismatch, or unexpected validation errors return `GATE_CLOSED`.
+
+No witness transport, challenge generator, worker/API attachment, automatic
+queue blocking, or task execution is implemented here. The caller remains
+responsible for obtaining a fresh challenge from an independently operated
+witness and placing this connector at the actual task-ingress boundary.
