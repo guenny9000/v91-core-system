@@ -132,3 +132,13 @@ The branch now includes `controller/ledger_anchor.py` and focused tests. This is
 **Evidence boundary:** this code does not publish checkpoints, authenticate a timestamp, discover trusted keys, protect a private key, provide a distributed witness, or configure immutable retention. A signed checkpoint can detect rollback only if the verifier obtains the previously trusted checkpoint independently. The module does not change the existing JSONL ledger format and does not claim WORM status.
 
 The current serializer is intentionally limited to this fixed checkpoint schema; it is not a general RFC 8785/JCS implementation and must not be reused as a generic canonical JSON encoder.
+
+## 11. Strict input hardening follow-up
+
+The current branch adds fail-closed validation for:
+- integer-to-float overflow in resource quantities;
+- boolean values masquerading as schema version 1;
+- malformed or timezone-naive checkpoint timestamps;
+- malformed checkpoint envelopes and invalid local-head values.
+
+Regression tests cover these cases. These checks validate input shape and numeric/time handling; they do not authenticate the real-world truth of ledger events, provide trusted time, or establish WORM retention.
