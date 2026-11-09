@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import json
 import re
+from datetime import datetime
 from typing import Any, Mapping
 
 from cryptography.exceptions import InvalidSignature
@@ -47,9 +48,12 @@ def _canonical_bytes(value: Mapping[str, Any]) -> bytes:
 
 
 def _validate_checkpoint(checkpoint: Mapping[str, Any]) -> dict[str, Any]:
+    if not isinstance(checkpoint, Mapping):
+        raise CheckpointError("checkpoint must be an object")
     if set(checkpoint) != CHECKPOINT_FIELDS:
         raise CheckpointError("checkpoint fields do not match schema v1")
-    if checkpoint["schema_version"] != 1:
+    schema_version = checkpoint["schema_version"]
+    if isinstance(schema_version, bool) or not isinstance(schema_version, int) or schema_version != 1:
         raise CheckpointError("unsupported checkpoint schema version")
     ledger_id = checkpoint["ledger_id"]
     if not isinstance(ledger_id, str) or not ledger_id or len(ledger_id) > 128:
@@ -63,6 +67,12 @@ def _validate_checkpoint(checkpoint: Mapping[str, Any]) -> dict[str, Any]:
     created_at = checkpoint["created_at_utc"]
     if not isinstance(created_at, str) or not created_at or len(created_at) > 64:
         raise CheckpointError("invalid created_at_utc")
+    try:
+        parsed_created_at = datetime.fromisoformat(created_at.replace("Z", "+00:00"))
+    except ValueError as exc:
+        raise CheckpointError("created_at_utc must be a valid ISO-8601 timestamp") from exc
+    if parsed_created_at.tzinfo is None or parsed_created_at.utcoffset() is None:
+        raise CheckpointError("created_at_utc must include a timezone")
     # Copy only after exact-field validation; callers cannot mutate signed data later.
     return {
         "schema_version": 1,
@@ -104,6 +114,8 @@ def verify_checkpoint(
     trusted_keys: Mapping[str, Ed25519PublicKey],
 ) -> dict[str, Any]:
     """Verify signature and return an explicit result; never imply WORM status."""
+    if not isinstance(envelope, Mapping):
+        raise CheckpointError("checkpoint envelope must be an object")
     if set(envelope) != {"algorithm", "key_id", "checkpoint", "signature"}:
         raise CheckpointError("checkpoint envelope fields do not match schema")
     if envelope["algorithm"] != "Ed25519":
@@ -137,9 +149,18 @@ def compare_local_head(
     head_hash: str,
 ) -> dict[str, str]:
     """Compare a verified checkpoint with a local head; detects rollback/divergence."""
-    if verified_checkpoint.get("status") != "SIGNATURE_VALID":
+    if not isinstance(verified_checkpoint, Mapping) or verified_checkpoint.get("status") != "SIGNATURE_VALID":
         return {"status": "ANCHOR_NOT_VERIFIED"}
-    checkpoint = verified_checkpoint["checkpoint"]
+    if (
+        not isinstance(ledger_id, str) or not ledger_id
+        or isinstance(sequence, bool) or not isinstance(sequence, int) or sequence < 0
+        or not isinstance(head_hash, str) or not HASH_RE.fullmatch(head_hash)
+    ):
+        return {"status": "LOCAL_HEAD_INVALID"}
+    try:
+        checkpoint = _validate_checkpoint(verified_checkpoint["checkpoint"])
+    except (KeyError, CheckpointError, TypeError):
+        return {"status": "CHECKPOINT_INVALID"}
     if checkpoint["ledger_id"] != ledger_id:
         return {"status": "LEDGER_ID_MISMATCH"}
     if sequence < checkpoint["sequence"]:
