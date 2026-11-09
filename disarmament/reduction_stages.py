@@ -46,7 +46,10 @@ def _timestamp(value: Any, field: str) -> None:
 def _quantity(value: Any, field: str) -> float:
     if isinstance(value, bool) or not isinstance(value, (int, float)):
         raise ValueError(f"{field} must be a finite non-negative number")
-    number = float(value)
+    try:
+        number = float(value)
+    except (OverflowError, ValueError) as exc:
+        raise ValueError(f"{field} must be a finite non-negative number") from exc
     if not isfinite(number) or number < 0:
         raise ValueError(f"{field} must be a finite non-negative number")
     return number
@@ -86,10 +89,10 @@ def validate_reduction_record(record: Any) -> dict[str, Any]:
             raise ValueError("remaining_quantity cannot exceed baseline_quantity")
         reduction = baseline - remaining
     elif record["stage"] in {"DISMANTLED", "CERTIFIED_DESTROYED", "INDEPENDENTLY_VERIFIED"}:
-        raise ValueError("completed or verified stages require baseline_quantity and remaining_quantity for a comparable baseline")
+        raise ValueError("completed or verified stages require a comparable baseline_quantity and remaining_quantity")
 
     if record["stage"] == "CERTIFIED_DESTROYED" and (
-        not remaining_present or float(record["remaining_quantity"]) != 0.0
+        not remaining_present or _quantity(record["remaining_quantity"], "remaining_quantity") != 0.0
     ):
         raise ValueError("CERTIFIED_DESTROYED requires remaining_quantity equal to zero")
 
@@ -135,12 +138,15 @@ def validate_reduction_record(record: Any) -> dict[str, Any]:
         "record_id": record["record_id"],
         "category": record["category"],
         "jurisdiction": record["jurisdiction"],
+        "responsible_authority": record["responsible_authority"],
         "stage": record["stage"],
         "observed_at": record["observed_at"],
         "unit": record["unit"],
         "baseline_quantity": record.get("baseline_quantity"),
         "remaining_quantity": record.get("remaining_quantity"),
         "reduction_quantity": reduction,
+        # Preserve provenance for downstream audit; labels remain unauthenticated claims.
+        "sources": [dict(item) for item in sources],
         # The supplied stage and publisher labels are claims/provenance,
         # not independently authenticated evidence. Never promote them here.
         "evidence_status": "DOCUMENTED",
