@@ -1,0 +1,58 @@
+{
+  "schema_version": "1.0",
+  "status": "REFERENCE_CANDIDATES_ONLY",
+  "network_connected": false,
+  "sources": [
+    {
+      "name": "UN Office for Disarmament Affairs (UNODA)",
+      "url": "https://disarmament.unoda.org/",
+      "purpose": "Treaty and disarmament documentation"
+    },
+    {
+      "name": "United Nations Treaty Collection",
+      "url": "https://treaties.un.org/",
+      "purpose": "Depositary status and treaty texts"
+    },
+    {
+      "name": "UN Register of Conventional Arms",
+      "url": "https://www.un.org/disarmament/convarms/register/",
+      "purpose": "State-reported conventional arms transfers and holdings"
+    },
+    {
+      "name": "Stockholm International Peace Research Institute (SIPRI)",
+      "url": "https://www.sipri.org/",
+      "purpose": "Independent open-source research on armaments and arms control"
+    },
+    {
+      "name": "International Atomic Energy Agency (IAEA)",
+      "url": "https://www.iaea.org/",
+      "purpose": "Nuclear safeguards and verification information"
+    },
+    {
+      "name": "Organisation for the Prohibition of Chemical Weapons (OPCW)",
+      "url": "https://www.opcw.org/",
+      "purpose": "Chemical weapons convention implementation and verification"
+    },
+    {
+      "name": "Comprehensive Nuclear-Test-Ban Treaty Organization (CTBTO)",
+      "url": "https://www.ctbto.org/",
+      "purpose": "Nuclear-test monitoring and verification information"
+    },
+    {
+      "name": "UN Institute for Disarmament Research (UNIDIR)",
+      "url": "https://unidir.org/",
+      "purpose": "Research on disarmament, emerging technology, and space security"
+    },
+    {
+      "name": "Alva Myrdal Centre / AMC Data",
+      "url": "https://www.uu.se/en/centre/alva-myrdal",
+      "purpose": "Research data and analysis on arms-control verification"
+    }
+  ],
+  "caveats": [
+    "A source being listed does not mean it is connected or polled.",
+    "State-reported data is not equivalent to independent verification.",
+    "No single source provides a complete global inventory.",
+    "Use only lawful public records and published verification outputs."
+  ]
+}
