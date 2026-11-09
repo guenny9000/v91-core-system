@@ -141,11 +141,10 @@ def validate_reduction_record(record: Any) -> dict[str, Any]:
         "baseline_quantity": record.get("baseline_quantity"),
         "remaining_quantity": record.get("remaining_quantity"),
         "reduction_quantity": reduction,
-        "evidence_status": (
-            "INDEPENDENTLY_VERIFIED"
-            if record["stage"] == "INDEPENDENTLY_VERIFIED"
-            else "DOCUMENTED"
-        ),
+        # The supplied stage and publisher labels are claims/provenance,
+        # not independently authenticated evidence. Never promote them here.
+        "evidence_status": "DOCUMENTED",
+        "verification_claimed": record["stage"] == "INDEPENDENTLY_VERIFIED",
         "global_disarmament_claim_permitted": False,
         "operational_action": "NONE",
         "limitations": [
