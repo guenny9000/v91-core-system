@@ -34,6 +34,14 @@ class ReductionStageTests(unittest.TestCase):
         self.assertFalse(result["global_disarmament_claim_permitted"])
         self.assertEqual(result["operational_action"], "NONE")
 
+    def test_validated_record_preserves_authority_and_source_provenance(self):
+        original_sources = [source("Public authority")]
+        result = validate_reduction_record(record(sources=original_sources))
+        self.assertEqual(result["responsible_authority"], "Competent public authority")
+        self.assertEqual(result["sources"], original_sources)
+        self.assertIsNot(result["sources"], original_sources)
+        self.assertIsNot(result["sources"][0], original_sources[0])
+
     def test_funding_is_not_destruction(self):
         result = validate_reduction_record(record(stage="FUNDED"))
         self.assertEqual(result["stage"], "FUNDED")
@@ -103,6 +111,13 @@ class ReductionStageTests(unittest.TestCase):
                         baseline_quantity=value,
                         remaining_quantity=0,
                     ))
+
+    def test_unrepresentably_large_integer_quantity_is_rejected(self):
+        with self.assertRaisesRegex(ValueError, "finite non-negative number"):
+            validate_reduction_record(record(
+                baseline_quantity=10 ** 10000,
+                remaining_quantity=0,
+            ))
 
     def test_https_sources_are_required(self):
         with self.assertRaisesRegex(ValueError, "HTTPS"):
