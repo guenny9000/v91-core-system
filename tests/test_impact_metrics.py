@@ -64,7 +64,6 @@ class ImpactMetricsTests(unittest.TestCase):
         self.assertEqual(result["independent_publishers"], 2)
         self.assertTrue(result["verification_claim_received"])
 
-
     def test_multiple_publisher_labels_do_not_create_corroborated_status(self):
         sources = [
             {"publisher": "Registry A", "url": "https://example.org/a"},
@@ -79,6 +78,23 @@ class ImpactMetricsTests(unittest.TestCase):
             evaluate_measurement(measurement(measured_at="yesterday"))
         with self.assertRaises(ValueError):
             evaluate_measurement(measurement(measured=float("nan")))
+
+    def test_measurement_cannot_precede_baseline(self):
+        with self.assertRaisesRegex(ValueError, "must not precede"):
+            evaluate_measurement(measurement(
+                baseline_at="2026-11-10T00:00:00Z",
+                measured_at="2026-11-09T00:00:00Z",
+            ))
+
+    def test_integer_overflow_is_a_validation_error(self):
+        with self.assertRaisesRegex(ValueError, "finite number"):
+            evaluate_measurement(measurement(baseline=10**10000))
+
+    def test_percentage_overflow_is_rejected(self):
+        with self.assertRaisesRegex(ValueError, "finite range"):
+            evaluate_measurement(measurement(
+                baseline=1e-308, measured=1e308
+            ))
 
     def test_http_source_rejected(self):
         with self.assertRaises(ValueError):
