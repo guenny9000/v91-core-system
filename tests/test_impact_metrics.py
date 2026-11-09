@@ -60,8 +60,19 @@ class ImpactMetricsTests(unittest.TestCase):
             sources=sources, independently_verified=True,
             verification_method="independent_site_inspection"
         ))
-        self.assertEqual(result["evidence_status"], "CORROBORATED")
+        self.assertEqual(result["evidence_status"], "DOCUMENTED")
+        self.assertEqual(result["independent_publishers"], 2)
         self.assertTrue(result["verification_claim_received"])
+
+
+    def test_multiple_publisher_labels_do_not_create_corroborated_status(self):
+        sources = [
+            {"publisher": "Registry A", "url": "https://example.org/a"},
+            {"publisher": "Registry B", "url": "https://example.net/b"},
+        ]
+        result = evaluate_measurement(measurement(sources=sources))
+        self.assertEqual(result["evidence_status"], "DOCUMENTED")
+        self.assertEqual(result["independent_publishers"], 2)
 
     def test_invalid_timestamp_and_non_finite_values_rejected(self):
         with self.assertRaises(ValueError):

@@ -101,11 +101,10 @@ def evaluate_measurement(record: Any) -> dict[str, Any]:
     # Caller-provided flags and descriptions are claims, not independent proof.
     # This evaluator has no verifier identity, signature trust store, or review channel.
     verification_claim_received = record.get("independently_verified") is True
-    evidence_status = (
-        "CORROBORATED" if len(publishers) >= 2
-        else "DOCUMENTED" if sources
-        else "UNKNOWN"
-    )
+    # Distinct caller-supplied publisher labels are metadata, not proof of
+    # independent sources. Without source authentication or an external review,
+    # supplied references can be documented but cannot be marked corroborated.
+    evidence_status = "DOCUMENTED" if sources else "UNKNOWN"
 
     return {
         "metric_id": record["metric_id"],
@@ -126,7 +125,8 @@ def evaluate_measurement(record: Any) -> dict[str, Any]:
         "global_impact_claim_permitted": False,
         "limitations": [
             "A measurement is limited to its stated location, period, indicator, and unit.",
-            "A URL or publisher count does not establish source authenticity or truth.",
+            "A URL or publisher-label count does not establish source authenticity, publisher independence, or truth.",
+            "The independent_publishers field counts distinct caller-supplied labels only; it does not verify independent publisher identities.",
             "Independent verification is not performed by this evaluator; caller flags and method labels remain unverified claims.",
             "No intervention, funding, restoration, or operational action is performed by this evaluator.",
         ],
