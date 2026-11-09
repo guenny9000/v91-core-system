@@ -98,15 +98,11 @@ def evaluate_measurement(record: Any) -> dict[str, Any]:
         outcome = "NO_CHANGE"
 
     verification_method = record.get("verification_method")
-    independently_verified = (
-        record.get("independently_verified") is True
-        and len(publishers) >= 2
-        and isinstance(verification_method, str)
-        and bool(verification_method.strip())
-    )
+    # Caller-provided flags and descriptions are claims, not independent proof.
+    # This evaluator has no verifier identity, signature trust store, or review channel.
+    verification_claim_received = record.get("independently_verified") is True
     evidence_status = (
-        "INDEPENDENTLY_VERIFIED" if independently_verified
-        else "CORROBORATED" if len(publishers) >= 2
+        "CORROBORATED" if len(publishers) >= 2
         else "DOCUMENTED" if sources
         else "UNKNOWN"
     )
@@ -124,13 +120,14 @@ def evaluate_measurement(record: Any) -> dict[str, Any]:
         "outcome": outcome,
         "implementation_status": implementation,
         "evidence_status": evidence_status,
+        "verification_claim_received": verification_claim_received,
         "source_count": len(sources),
         "independent_publishers": len(publishers),
         "global_impact_claim_permitted": False,
         "limitations": [
             "A measurement is limited to its stated location, period, indicator, and unit.",
             "A URL or publisher count does not establish source authenticity or truth.",
-            "Independent verification requires external review; a caller flag alone is insufficient.",
+            "Independent verification is not performed by this evaluator; caller flags and method labels remain unverified claims.",
             "No intervention, funding, restoration, or operational action is performed by this evaluator.",
         ],
     }
@@ -147,7 +144,7 @@ def evaluate_dataset(payload: Any) -> dict[str, Any]:
         "measurement_count": len(results),
         "evidence_status_counts": {
             status: sum(item["evidence_status"] == status for item in results)
-            for status in ("INDEPENDENTLY_VERIFIED", "CORROBORATED", "DOCUMENTED", "UNKNOWN")
+            for status in ("CORROBORATED", "DOCUMENTED", "UNKNOWN")
         },
         "improved_count": sum(item["outcome"] == "IMPROVED" for item in results),
         "degraded_count": sum(item["outcome"] == "DEGRADED" for item in results),
