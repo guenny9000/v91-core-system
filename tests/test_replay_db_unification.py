@@ -64,6 +64,19 @@ def test_migration_is_idempotent_for_same_source_snapshot(tmp_path):
     assert provider.compute_current_state_hash() == first_hash
 
 
+def test_completed_migration_marker_does_not_hide_missing_destination_rows(tmp_path):
+    old_db, new_db = tmp_path / "old.sqlite3", tmp_path / "new.sqlite3"
+    legacy_db(old_db, [(PROVIDER, "T-1", "a" * 32, 1799990000)])
+    provider = ReplayStateProvider(new_db)
+    assert V91ReplayDatabaseUnifier.migrate_and_unify(old_db, new_db)
+    with sqlite3.connect(new_db) as conn:
+        conn.execute("DELETE FROM replay_store WHERE provider_id=? AND task_id=?",
+                     (PROVIDER, "T-1"))
+    with pytest.raises(ReplayMigrationError, match="no longer matches"):
+        V91ReplayDatabaseUnifier.migrate_and_unify(old_db, new_db)
+    assert provider.get_last_logged_sequence() == 0
+
+
 def test_exact_existing_claim_is_accepted_but_conflicting_mapping_rolls_back(tmp_path):
     old_db, new_db = tmp_path / "old.sqlite3", tmp_path / "new.sqlite3"
     legacy_db(old_db, [
