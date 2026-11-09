@@ -1,0 +1,39 @@
+# Task ingress gate – integration boundary
+
+The task ingress gate authenticates the exact canonical payload bytes with a
+provider-specific HMAC key and then applies the use-domain classifier from
+`controller/use_policy.py`.
+
+## Decision semantics
+
+- `REJECT_UNAUTHORIZED`: signature is malformed/invalid or no usable provider key exists.
+- `REJECT_INVALID`: payload shape or canonical serialization is invalid.
+- `BLOCK`: a signed declaration names a restricted use domain.
+- `REVIEW_REQUIRED`: unknown/missing domain, civilian domain, or critical-supply sector.
+- Every result has `execution_authorized=False`. This module does not execute,
+  enqueue, isolate, or persist tasks.
+
+## Security limits
+
+- HMAC authenticates possession of a shared secret for the exact bytes. It does
+  not establish legal identity, benign intent, or truth of the purpose claim.
+- Provider keys must be supplied by an external secret manager with rotation
+  and revocation. No production key provider is included.
+- The JSON profile is UTF-8 with sorted keys, compact separators, Unicode
+  preserved, and NaN rejected. It is a project-specific deterministic profile,
+  not a claim of RFC 8785/JCS conformance.
+- Keyword matching is deliberately not treated as a security boundary.
+- The current offline worker consumes locally written queue files and has no
+  authenticated network ingress. This primitive is therefore not yet wired
+  into that worker or any running API service.
+
+## Required work before runtime integration
+
+1. Define and authenticate the actual ingress transport and provider identity.
+2. Connect a managed key provider with rotation, revocation, and audit evidence.
+3. Define a separate human-review approval object, signer, expiry, and replay
+   protection. A review decision must not be inferred from a label.
+4. Persist decisions through the existing ledger interface and independently
+   anchor the head if stronger tamper evidence is required.
+5. Integrate at the real queue/API boundary and test that rejected or pending
+   tasks cannot reach execution.
