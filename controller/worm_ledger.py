@@ -158,7 +158,10 @@ class V91WormLedger:
             raise ValueError("resource_type must be a non-empty string")
         if isinstance(value, bool) or not isinstance(value, (int, float)):
             raise ValueError("resource value must be numeric")
-        numeric_value = float(value)
+        try:
+            numeric_value = float(value)
+        except (OverflowError, ValueError) as exc:
+            raise ValueError("resource value must be finite and non-negative") from exc
         if not math.isfinite(numeric_value) or numeric_value < 0:
             raise ValueError("resource value must be finite and non-negative")
         if not isinstance(purpose_classification, str):
