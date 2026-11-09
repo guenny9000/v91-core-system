@@ -90,3 +90,31 @@ challenge-bound responses. If the witness can be rolled back, compromised, or
 controlled by the same administrator as the SQLite host, the guarantee fails.
 No automatic process isolation, database repair, or worker integration is
 performed. The caller must refuse ingress on any failed verification result.
+
+## SQLite replay-state provider
+
+`controller/replay_state_provider.py` provides a local append-only replay
+claim table compatible with the monotonicity guard's
+`get_database_id()`, `get_last_logged_sequence()`, and
+`compute_current_state_hash()` interface. Sequence numbers are assigned by
+SQLite inside `BEGIN IMMEDIATE`; duplicate provider/task or provider/nonce
+claims are rejected. The state hash is calculated from one explicit read
+transaction, using a deterministic JSON representation and a stable ordering.
+Timestamps are stored in UTC and read back as timezone-aware UTC values.
+
+The default path is project-relative under `ledger/replay_guard.db`; callers
+may inject a database path. Parent directories are created as needed.
+
+**Integration boundary:** this provider is not yet wired into
+`TaskIngressGate`, which currently accepts the separate `ReplayStore`
+protocol and its `SQLiteReplayStore`. Do not run two independent replay
+stores and assume their state is unified. A follow-up integration must make
+the provider implement the ingress replay-store interface and migrate existing
+replay rows transactionally before replacing the configured store.
+
+The provider is local SQLite state, not distributed consensus, immutable
+storage, or a substitute for the external signed witness. A restored database
+is detectable only when compared with a newer independently retained witness
+checkpoint. WAL and `synchronous=FULL` improve local durability semantics but
+do not prevent privileged filesystem rollback or guarantee hardware-level
+persistence.
