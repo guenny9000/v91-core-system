@@ -12,11 +12,16 @@ from typing import Any
 
 DENIED_CLASSES = frozenset({
     "weapons_development",
+    "weapon_control",
     "target_selection_for_violence",
     "autonomous_attack",
+    "military_network_access",
     "unauthorized_propagation",
     "credential_exfiltration",
     "destructive_cleanup",
+    "remote_satellite_control",
+    "remote_deorbit",
+    "anti_satellite_action",
 })
 KNOWN_CLASSES = frozenset({
     "read_only",
