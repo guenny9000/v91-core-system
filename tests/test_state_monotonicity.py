@@ -110,3 +110,26 @@ def test_modified_payload_signature_is_rejected():
     assert guard.verify_state_integrity(
         envelope, expected_challenge=challenge, key_id="witness-1"
     ) == (False, "HEARTBEAT_SIGNATURE_INVALID")
+
+
+def test_boolean_schema_version_is_rejected_even_with_valid_signature():
+    private = Ed25519PrivateKey.generate()
+    challenge = "5" * 64
+    envelope = signed(private, challenge)
+    envelope["payload"]["schema_version"] = True
+    envelope["signature"] = private.sign(DOMAIN + _canonical(envelope["payload"])).hex()
+    guard = make_guard(Local(), private.public_key())
+    assert guard.verify_state_integrity(
+        envelope, expected_challenge=challenge, key_id="witness-1"
+    ) == (False, "INVALID_HEARTBEAT_PAYLOAD")
+
+
+def test_max_age_seconds_must_be_positive_integer():
+    private = Ed25519PrivateKey.generate()
+    for value in (True, 1.5, 0):
+        try:
+            V91StateMonotonicityGuard(Local(), {"witness-1": private.public_key()}, max_age_seconds=value)
+        except ValueError:
+            pass
+        else:
+            raise AssertionError("invalid max_age_seconds must be rejected")
