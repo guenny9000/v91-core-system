@@ -99,3 +99,8 @@ def test_missing_genesis_is_not_a_valid_chain(tmp_path):
         db.execute("DROP TRIGGER resource_blocks_no_delete")
         db.execute("DELETE FROM resource_blocks WHERE block_index=0")
     assert not ledger.verify_ledger_chain()
+
+
+def test_integer_overflow_is_rejected_as_validation_error(ledger):
+    with pytest.raises(ValueError, match="finite and non-negative"):
+        ledger.append_resource_flow("WATER", 10**10000, "HUMANITARIAN")
