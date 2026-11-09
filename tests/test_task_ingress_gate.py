@@ -4,7 +4,7 @@ import json
 
 import pytest
 
-from controller.task_ingress_gate import TaskIngressGate
+from controller.task_ingress_gate import SQLiteReplayStore, TaskIngressGate
 
 
 KEY = b"test-only-provider-secret-at-least-32-bytes"
@@ -17,8 +17,8 @@ class TestKeyProvider:
 
 
 @pytest.fixture
-def gate():
-    return TaskIngressGate(TestKeyProvider())
+def gate(tmp_path):
+    return TaskIngressGate(TestKeyProvider(), SQLiteReplayStore(str(tmp_path / 'replay.sqlite3')), clock=lambda: 1_800_000_000)
 
 
 def signed(payload):
@@ -32,6 +32,8 @@ def task(classification="HUMANITARIAN", sector="WATER", description="civilian su
     return {
         "task_id": "task-001",
         "provider_id": PROVIDER,
+        "timestamp": 1_800_000_000,
+        "nonce": "a" * 32,
         "purpose": {
             "classification": classification,
             "sector": sector,
@@ -96,3 +98,43 @@ def test_non_json_values_rejected(gate):
     payload["unexpected"] = float("nan")
     result = gate.validate(payload, "0" * 64)
     assert result.status == "REJECT_INVALID"
+
+def test_replayed_task_id_is_rejected(gate):
+    payload = task()
+    signature = signed(payload)
+    first = gate.validate(payload, signature)
+    second = gate.validate(payload, signature)
+    assert first.status == "REVIEW_REQUIRED"
+    assert second.status == "REJECT_REPLAY_OR_STORE_FAILURE"
+    assert second.execution_authorized is False
+
+
+def test_stale_signed_timestamp_is_rejected(gate):
+    payload = task()
+    payload["timestamp"] -= 301
+    result = gate.validate(payload, signed(payload))
+    assert result.status == "REJECT_STALE"
+
+
+def test_nonce_must_be_cryptographically_sized_hex(gate):
+    payload = task()
+    payload["nonce"] = "short"
+    result = gate.validate(payload, signed(payload))
+    assert result.status == "REJECT_INVALID"
+
+
+def test_replay_store_failure_fails_closed():
+    class BrokenStore:
+        def claim(self, provider_id, task_id, nonce):
+            raise OSError("storage unavailable")
+    gate = TaskIngressGate(TestKeyProvider(), BrokenStore(), clock=lambda: 1_800_000_000)
+    payload = task()
+    result = gate.validate(payload, signed(payload))
+    assert result.status == "REJECT_REPLAY_OR_STORE_FAILURE"
+    assert result.execution_authorized is False
+
+
+def test_distinct_task_ids_cannot_reuse_provider_nonce(tmp_path):
+    store = SQLiteReplayStore(str(tmp_path / "replay.sqlite3"))
+    assert store.claim(PROVIDER, "task-a", "b" * 32) is True
+    assert store.claim(PROVIDER, "task-b", "b" * 32) is False
