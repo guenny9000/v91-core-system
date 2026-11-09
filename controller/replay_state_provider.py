@@ -8,6 +8,7 @@ from __future__ import annotations
 import hashlib
 import json
 import sqlite3
+from contextlib import closing
 import uuid
 from datetime import datetime, timezone
 from pathlib import Path
@@ -36,7 +37,7 @@ class ReplayStateProvider:
 
     def _init_db(self) -> None:
         try:
-            with self._connect() as conn:
+            with closing(self._connect()) as conn:
                 conn.execute("PRAGMA journal_mode=WAL")
                 conn.execute("PRAGMA synchronous=FULL")
                 conn.execute(
@@ -61,7 +62,7 @@ class ReplayStateProvider:
 
     def get_database_id(self) -> str:
         try:
-            with self._connect() as conn:
+            with closing(self._connect()) as conn:
                 row = conn.execute(
                     "SELECT database_id FROM replay_state_meta WHERE singleton=1"
                 ).fetchone()
@@ -78,7 +79,7 @@ class ReplayStateProvider:
             raise ValueError("provider_id, task_id and nonce must be non-empty strings")
         timestamp = datetime.now(timezone.utc).isoformat(timespec="microseconds").replace("+00:00", "Z")
         try:
-            with self._connect() as conn:
+            with closing(self._connect()) as conn:
                 conn.execute("BEGIN IMMEDIATE")
                 conn.execute(
                     "INSERT INTO replay_store(provider_id, task_id, nonce, timestamp_utc) "
@@ -96,20 +97,40 @@ class ReplayStateProvider:
         self, task_id: str, nonce: str, sequence_id: int | None = None,
         provider_id: str = "default",
     ) -> int:
-        """Compatibility helper; sequence IDs are database-assigned, never caller-set."""
-        if sequence_id is not None:
-            if isinstance(sequence_id, bool) or not isinstance(sequence_id, int):
-                raise ValueError("sequence_id must be an integer when supplied")
-            current = self.get_last_logged_sequence()
-            if sequence_id != current + 1:
-                raise ValueError("sequence_id is informational only and must equal next sequence")
-        if not self.claim(provider_id, task_id, nonce):
-            raise RuntimeError("CRITICAL: duplicate replay claim rejected")
-        return self.get_last_logged_sequence()
+        """Append one claim and return its database-assigned sequence atomically."""
+        if not all(isinstance(value, str) and value.strip()
+                   for value in (provider_id, task_id, nonce)):
+            raise ValueError("provider_id, task_id and nonce must be non-empty strings")
+        if sequence_id is not None and (
+            isinstance(sequence_id, bool) or not isinstance(sequence_id, int)
+        ):
+            raise ValueError("sequence_id must be an integer when supplied")
+        timestamp = datetime.now(timezone.utc).isoformat(timespec="microseconds").replace("+00:00", "Z")
+        try:
+            with closing(self._connect()) as conn:
+                conn.execute("BEGIN IMMEDIATE")
+                next_sequence = int(conn.execute(
+                    "SELECT COALESCE(MAX(sequence_id), 0) + 1 AS next_sequence "
+                    "FROM replay_store"
+                ).fetchone()["next_sequence"])
+                if sequence_id is not None and sequence_id != next_sequence:
+                    raise ValueError("sequence_id does not match the next database sequence")
+                cursor = conn.execute(
+                    "INSERT INTO replay_store(provider_id, task_id, nonce, timestamp_utc) "
+                    "VALUES (?, ?, ?, ?)",
+                    (provider_id, task_id, nonce, timestamp),
+                )
+                actual_sequence = int(cursor.lastrowid)
+                conn.commit()
+                return actual_sequence
+        except sqlite3.IntegrityError as exc:
+            raise RuntimeError("CRITICAL: duplicate replay claim rejected") from exc
+        except sqlite3.Error as exc:
+            raise RuntimeError(f"CRITICAL: Replay-DB write failed: {exc}") from exc
 
     def get_last_logged_sequence(self) -> int:
         try:
-            with self._connect() as conn:
+            with closing(self._connect()) as conn:
                 row = conn.execute(
                     "SELECT COALESCE(MAX(sequence_id), 0) AS sequence "
                     "FROM replay_store"
@@ -120,7 +141,7 @@ class ReplayStateProvider:
 
     def get_last_logged_timestamp(self) -> datetime:
         try:
-            with self._connect() as conn:
+            with closing(self._connect()) as conn:
                 row = conn.execute(
                     "SELECT timestamp_utc FROM replay_store "
                     "ORDER BY sequence_id DESC LIMIT 1"
@@ -137,7 +158,7 @@ class ReplayStateProvider:
     def compute_current_state_hash(self) -> str:
         """Hash one SQLite read snapshot; WAL permits writers without mixing snapshots."""
         try:
-            with self._connect() as conn:
+            with closing(self._connect()) as conn:
                 conn.execute("BEGIN")
                 meta = conn.execute(
                     "SELECT database_id FROM replay_state_meta WHERE singleton=1"
