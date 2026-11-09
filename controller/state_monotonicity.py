@@ -49,9 +49,12 @@ def _canonical(value: Mapping[str, Any]) -> bytes:
 
 
 def _validated_payload(payload: Mapping[str, Any]) -> dict[str, Any]:
+    if not isinstance(payload, Mapping):
+        raise StateHeartbeatError("heartbeat payload must be an object")
     if set(payload) != _FIELDS:
         raise StateHeartbeatError("heartbeat fields do not match schema v1")
-    if payload["schema_version"] != 1:
+    schema_version = payload["schema_version"]
+    if isinstance(schema_version, bool) or not isinstance(schema_version, int) or schema_version != 1:
         raise StateHeartbeatError("unsupported heartbeat schema")
     database_id = payload["database_id"]
     if not isinstance(database_id, str) or not database_id or len(database_id) > 128:
@@ -97,8 +100,12 @@ class V91StateMonotonicityGuard:
         max_age_seconds: int = 300,
         clock=lambda: datetime.now(timezone.utc),
     ) -> None:
-        if isinstance(max_age_seconds, bool) or max_age_seconds < 1:
-            raise ValueError("max_age_seconds must be positive")
+        if (
+            isinstance(max_age_seconds, bool)
+            or not isinstance(max_age_seconds, int)
+            or max_age_seconds < 1
+        ):
+            raise ValueError("max_age_seconds must be a positive integer")
         self._local = local_state_provider
         self._trusted_keys = dict(trusted_keys)
         self._max_age = max_age_seconds
