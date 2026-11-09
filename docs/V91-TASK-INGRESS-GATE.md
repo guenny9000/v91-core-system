@@ -147,3 +147,15 @@ No witness transport, challenge generator, worker/API attachment, automatic
 queue blocking, or task execution is implemented here. The caller remains
 responsible for obtaining a fresh challenge from an independently operated
 witness and placing this connector at the actual task-ingress boundary.
+
+
+**Checkpoint cadence limitation:** the connector verifies the local database against
+the witness before ingress. A successful ingress claim then advances the local
+sequence and state hash. Consequently, the witness must durably acknowledge and
+sign that new head before the next ingress attempt; otherwise the next check
+correctly returns `LOCAL_STATE_AHEAD_OF_WITNESS` and closes the gate. The
+current connector does not implement this witness-update protocol. A production
+transport therefore needs a two-phase/acknowledged checkpoint design and a
+recovery procedure for the case where the local append succeeds but the
+external witness acknowledgement fails. No claim of continuous multi-task
+operation is made.
