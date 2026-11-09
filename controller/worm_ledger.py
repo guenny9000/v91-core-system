@@ -59,6 +59,39 @@ class V91WormLedger:
     def _hash(cls, block: dict[str, Any]) -> str:
         return hashlib.sha256(cls._canonical(block)).hexdigest()
 
+    @classmethod
+    def _verify_rows(cls, rows: list[tuple[Any, ...]]) -> bool:
+        """Verify a complete ordered snapshot before it is trusted or extended."""
+        if not rows:
+            return False
+        expected_previous = GENESIS_PREVIOUS_HASH
+        for expected_index, row in enumerate(rows):
+            try:
+                index, timestamp, flow, value, purpose, previous_hash, current_hash = row
+                block = {
+                    "block_index": index,
+                    "timestamp_utc": timestamp,
+                    "resource_flow": flow,
+                    "value": value,
+                    "purpose": purpose,
+                    "previous_hash": previous_hash,
+                }
+                if index != expected_index or previous_hash != expected_previous:
+                    return False
+                if not isinstance(current_hash, str) or current_hash != cls._hash(block):
+                    return False
+                if index == 0 and (
+                    timestamp != "1970-01-01T00:00:00Z"
+                    or flow != "GENESIS" or value != 0.0
+                    or purpose != GENESIS_PURPOSE
+                    or previous_hash != GENESIS_PREVIOUS_HASH
+                ):
+                    return False
+                expected_previous = current_hash
+            except (TypeError, ValueError, LedgerIntegrityError):
+                return False
+        return True
+
     def _connect(self) -> sqlite3.Connection:
         connection = sqlite3.connect(str(self.ledger_path), timeout=10, isolation_level=None)
         connection.execute("PRAGMA busy_timeout=10000")
@@ -129,15 +162,17 @@ class V91WormLedger:
             raise ValueError("unknown purpose classification; manual policy review required")
 
         with closing(self._connect()) as db:
+            # Hold the write lock while verifying and appending so no other
+            # writer can change the chain between the integrity check and insert.
             db.execute("BEGIN IMMEDIATE")
-            row = db.execute(
-                "SELECT block_index, current_hash FROM resource_blocks "
-                "ORDER BY block_index DESC LIMIT 1"
-            ).fetchone()
-            if row is None:
+            rows = db.execute(
+                "SELECT block_index, timestamp_utc, resource_flow, value, purpose, "
+                "previous_hash, current_hash FROM resource_blocks ORDER BY block_index"
+            ).fetchall()
+            if not self._verify_rows(rows):
                 db.rollback()
-                raise LedgerIntegrityError("genesis block missing")
-            index, previous_hash = row
+                raise LedgerIntegrityError("existing ledger chain is invalid; append refused")
+            index, previous_hash = rows[-1][0], rows[-1][6]
             block = {
                 "block_index": index + 1,
                 "timestamp_utc": datetime.now(timezone.utc).isoformat(
@@ -165,32 +200,7 @@ class V91WormLedger:
                     "SELECT block_index, timestamp_utc, resource_flow, value, purpose, "
                     "previous_hash, current_hash FROM resource_blocks ORDER BY block_index"
                 ).fetchall()
-                db.commit()
-            if not rows:
-                return False
-            expected_previous = GENESIS_PREVIOUS_HASH
-            for expected_index, row in enumerate(rows):
-                index, timestamp, flow, value, purpose, previous_hash, current_hash = row
-                block = {
-                    "block_index": index,
-                    "timestamp_utc": timestamp,
-                    "resource_flow": flow,
-                    "value": value,
-                    "purpose": purpose,
-                    "previous_hash": previous_hash,
-                }
-                if index != expected_index or previous_hash != expected_previous:
-                    return False
-                if not isinstance(current_hash, str) or current_hash != self._hash(block):
-                    return False
-                if index == 0 and (
-                    timestamp != "1970-01-01T00:00:00Z"
-                    or flow != "GENESIS" or value != 0.0
-                    or purpose != GENESIS_PURPOSE
-                    or previous_hash != GENESIS_PREVIOUS_HASH
-                ):
-                    return False
-                expected_previous = current_hash
-            return True
-        except (sqlite3.Error, LedgerIntegrityError, TypeError, ValueError):
+                db.rollback()
+            return self._verify_rows(rows)
+        except sqlite3.Error:
             return False

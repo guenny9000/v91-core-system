@@ -49,6 +49,28 @@ def test_tampering_is_detected_even_at_genesis(ledger):
     assert not ledger.verify_ledger_chain()
 
 
+
+def test_append_refuses_corrupted_chain_without_mutating_history(ledger):
+    ledger.append_resource_flow("WATER", 150.0, "CRITICAL_SUPPLY_PROTECTION")
+    with sqlite3.connect(ledger.ledger_path) as db:
+        db.execute("DROP TRIGGER resource_blocks_no_update")
+        db.execute("UPDATE resource_blocks SET value=999999.0 WHERE block_index=1")
+        before = db.execute(
+            "SELECT block_index, timestamp_utc, resource_flow, value, purpose, "
+            "previous_hash, current_hash FROM resource_blocks ORDER BY block_index"
+        ).fetchall()
+
+    with pytest.raises(LedgerIntegrityError, match="append refused"):
+        ledger.append_resource_flow("ENERGY", 12.0, "GENERAL_CIVILIAN")
+
+    with sqlite3.connect(ledger.ledger_path) as db:
+        after = db.execute(
+            "SELECT block_index, timestamp_utc, resource_flow, value, purpose, "
+            "previous_hash, current_hash FROM resource_blocks ORDER BY block_index"
+        ).fetchall()
+    assert after == before
+    assert not ledger.verify_ledger_chain()
+
 def test_genesis_tampering_is_detected(ledger):
     with sqlite3.connect(ledger.ledger_path) as db:
         db.execute("DROP TRIGGER resource_blocks_no_update")
