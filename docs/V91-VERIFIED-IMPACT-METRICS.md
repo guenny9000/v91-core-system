@@ -14,12 +14,16 @@ The evaluator calculates absolute change and percentage improvement where mathem
 
 ## Evidence grades
 
-- UNKNOWN: no source supplied, or no valid verification basis.
-- DOCUMENTED: one or more source records supplied.
-- CORROBORATED: at least two distinct publishers supplied.
-- INDEPENDENTLY_VERIFIED: caller supplies an explicit independent-verification assertion, at least two distinct publishers, and a named verification method. This is still a recorded assertion, not an independent verification performed by this code.
+The word "verified" in the project name does not mean this evaluator independently verifies source identity or truth. The module validates input structure and performs arithmetic on caller-supplied records only.
 
-A hash, URL, or source count alone does not prove truth. Global impact status always remains UNKNOWN because local records cannot establish a global result.
+- UNKNOWN: no source record supplied.
+- DOCUMENTED: one or more structurally valid source records supplied.
+- CORROBORATED: reserved for a future verifier; this evaluator does not emit it. Two distinct publisher labels are not proof of independent publishers.
+- INDEPENDENTLY_VERIFIED: not an output status. The boolean verification_claim_received only records that the caller asserted independent verification; the assertion is not checked by this code.
+
+The independent_publishers field counts distinct caller-supplied publisher labels only. It does not verify publisher identity, independence, URL ownership, or truth. The evidence_status_counts object retains a CORROBORATED key for schema compatibility, but its value remains zero until a separate verification mechanism exists.
+
+A hash, URL, source count, or caller flag alone does not prove truth. Global impact status always remains UNKNOWN because local records cannot establish a global result.
 
 ## Run tests
 
