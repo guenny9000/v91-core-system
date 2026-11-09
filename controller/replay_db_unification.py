@@ -124,6 +124,31 @@ class V91ReplayDatabaseUnifier:
                     (fingerprint,),
                 ).fetchone()
                 if prior is not None:
+                    # A completion marker is not proof that imported rows still exist.
+                    # Re-verify the full source snapshot before treating a retry as complete.
+                    for provider_id, task_id, nonce, claimed_at in rows:
+                        expected_timestamp = datetime.fromtimestamp(
+                            claimed_at, tz=timezone.utc
+                        ).isoformat(timespec="seconds").replace("+00:00", "Z")
+                        by_task = dest.execute(
+                            "SELECT nonce, timestamp_utc FROM replay_store "
+                            "WHERE provider_id=? AND task_id=?",
+                            (provider_id, task_id),
+                        ).fetchone()
+                        by_nonce = dest.execute(
+                            "SELECT task_id, timestamp_utc FROM replay_store "
+                            "WHERE provider_id=? AND nonce=?",
+                            (provider_id, nonce),
+                        ).fetchone()
+                        if not (
+                            by_task is not None and by_nonce is not None
+                            and by_task[0] == nonce and by_nonce[0] == task_id
+                            and by_task[1] == expected_timestamp
+                            and by_nonce[1] == expected_timestamp
+                        ):
+                            raise ReplayMigrationError(
+                                "previously migrated source snapshot no longer matches destination"
+                            )
                     dest.commit()
                     return True
 
