@@ -12,6 +12,8 @@ import hashlib
 import hmac
 import json
 import re
+import sqlite3
+import time
 from dataclasses import dataclass
 from typing import Protocol
 
@@ -19,11 +21,52 @@ from controller.use_policy import PolicyDecision, evaluate_use_domain
 
 _SIGNATURE_RE = re.compile(r"^[0-9a-fA-F]{64}$")
 _CRITICAL_SECTORS = {"WATER", "FOOD", "ENERGY", "MEDICINE", "COMMUNICATION"}
+_NONCE_RE = re.compile(r"^[0-9a-fA-F]{32,128}$")
 
 
 class KeyProvider(Protocol):
     def get_active_key(self, provider_id: str) -> bytes | None:
         """Return active provider secret bytes, or None when unavailable."""
+
+
+
+class ReplayStore(Protocol):
+    def claim(self, provider_id: str, task_id: str, nonce: str) -> bool:
+        """Atomically claim a provider-scoped task ID and nonce exactly once."""
+
+
+class SQLiteReplayStore:
+    """Durable replay tombstones with cross-process uniqueness.
+
+    Keep this database on a supported local filesystem. Rows are intentionally
+    retained: deleting them could reopen replay opportunities.
+    """
+
+    def __init__(self, database_path: str) -> None:
+        self._database_path = database_path
+        with sqlite3.connect(self._database_path, timeout=10) as connection:
+            connection.execute("PRAGMA journal_mode=WAL")
+            connection.execute(
+                "CREATE TABLE IF NOT EXISTS ingress_replay ("
+                "provider_id TEXT NOT NULL, task_id TEXT NOT NULL, nonce TEXT NOT NULL, "
+                "claimed_at INTEGER NOT NULL, PRIMARY KEY(provider_id, task_id), "
+                "UNIQUE(provider_id, nonce))"
+            )
+            connection.commit()
+
+    def claim(self, provider_id: str, task_id: str, nonce: str) -> bool:
+        try:
+            with sqlite3.connect(self._database_path, timeout=10, isolation_level=None) as connection:
+                connection.execute("BEGIN IMMEDIATE")
+                connection.execute(
+                    "INSERT INTO ingress_replay(provider_id, task_id, nonce, claimed_at) "
+                    "VALUES (?, ?, ?, ?)",
+                    (provider_id, task_id, nonce, int(time.time())),
+                )
+                connection.commit()
+                return True
+        except sqlite3.IntegrityError:
+            return False
 
 
 @dataclass(frozen=True)
@@ -55,8 +98,13 @@ def canonical_payload_bytes(payload: dict) -> bytes:
 class TaskIngressGate:
     """Authenticate and classify a task; never execute or automatically approve."""
 
-    def __init__(self, key_provider: KeyProvider) -> None:
+    def __init__(self, key_provider: KeyProvider, replay_store: ReplayStore, max_clock_skew_seconds: int = 300, clock=time.time) -> None:
+        if max_clock_skew_seconds < 1:
+            raise ValueError('max_clock_skew_seconds must be positive')
         self._key_provider = key_provider
+        self._replay_store = replay_store
+        self._max_clock_skew_seconds = max_clock_skew_seconds
+        self._clock = clock
 
     def _decision(
         self,
@@ -136,6 +184,36 @@ class TaskIngressGate:
             return self._decision(
                 "REJECT_UNAUTHORIZED", provider_id, task_id, use_domain, sector,
                 "HMAC verification failed.",
+            )
+
+
+        # Timestamp and nonce are part of the authenticated payload.
+        timestamp = payload.get("timestamp")
+        nonce = payload.get("nonce")
+        now = int(self._clock())
+        if isinstance(timestamp, bool) or not isinstance(timestamp, int):
+            return self._decision(
+                "REJECT_INVALID", provider_id, task_id, use_domain, sector,
+                "Signed timestamp must be an integer Unix timestamp.",
+            )
+        if abs(now - timestamp) > self._max_clock_skew_seconds:
+            return self._decision(
+                "REJECT_STALE", provider_id, task_id, use_domain, sector,
+                "Signed timestamp is outside the permitted clock-skew window.",
+            )
+        if not isinstance(nonce, str) or not _NONCE_RE.fullmatch(nonce):
+            return self._decision(
+                "REJECT_INVALID", provider_id, task_id, use_domain, sector,
+                "A cryptographically random hexadecimal nonce of at least 128 bits is required.",
+            )
+        try:
+            claimed = self._replay_store.claim(provider_id, task_id, nonce)
+        except Exception:
+            claimed = False
+        if not claimed:
+            return self._decision(
+                "REJECT_REPLAY_OR_STORE_FAILURE", provider_id, task_id, use_domain, sector,
+                "Task ID or nonce was already used, or replay storage is unavailable.",
             )
 
         policy = evaluate_use_domain(use_domain)
