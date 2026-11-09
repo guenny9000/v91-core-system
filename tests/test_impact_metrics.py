@@ -51,7 +51,7 @@ class ImpactMetricsTests(unittest.TestCase):
         result = evaluate_measurement(measurement(independently_verified=True))
         self.assertEqual(result["evidence_status"], "UNKNOWN")
 
-    def test_verified_requires_two_publishers_and_method(self):
+    def test_caller_cannot_self_attest_independent_verification(self):
         sources = [
             {"publisher": "Primary registry", "url": "https://example.org/a"},
             {"publisher": "Independent auditor", "url": "https://example.net/b"},
@@ -60,7 +60,8 @@ class ImpactMetricsTests(unittest.TestCase):
             sources=sources, independently_verified=True,
             verification_method="independent_site_inspection"
         ))
-        self.assertEqual(result["evidence_status"], "INDEPENDENTLY_VERIFIED")
+        self.assertEqual(result["evidence_status"], "CORROBORATED")
+        self.assertTrue(result["verification_claim_received"])
 
     def test_invalid_timestamp_and_non_finite_values_rejected(self):
         with self.assertRaises(ValueError):
