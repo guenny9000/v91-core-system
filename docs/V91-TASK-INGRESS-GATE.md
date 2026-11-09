@@ -118,11 +118,13 @@ response on each ingress attempt.
 
 The migration leaves the source database untouched, imports rows under one
 destination `BEGIN IMMEDIATE` transaction, preserves provider/task/nonce
-identity and converts Unix timestamps to UTC. Exact existing identity
-mappings are idempotently accepted; any conflicting task or nonce mapping
-aborts the complete migration. A source fingerprint is recorded in the
-destination to make retries of an unchanged source snapshot idempotent. A
-missing legacy table or incompatible schema fails closed. The migration does
+identity and converts Unix timestamps to UTC. Exact existing identity mappings are idempotently accepted only when the
+original UTC timestamp also matches; any conflicting task, nonce, or timestamp
+mapping aborts the complete migration. A source fingerprint is recorded in the
+destination. On retry, the module revalidates every imported row instead of
+trusting the marker alone, so a deleted or altered destination row cannot be
+reported as a successful migration. A missing legacy table or incompatible
+schema fails closed. The migration does
 not automatically switch a running worker's configured database.
 
 The provider is local SQLite state, not distributed consensus, immutable
