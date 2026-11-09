@@ -6,7 +6,6 @@ Private keys must be provisioned and protected outside this repository.
 """
 from __future__ import annotations
 
-import hashlib
 import json
 import re
 from typing import Any, Mapping
