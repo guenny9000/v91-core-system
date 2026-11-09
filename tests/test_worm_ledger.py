@@ -78,6 +78,20 @@ def test_genesis_tampering_is_detected(ledger):
     assert not ledger.verify_ledger_chain()
 
 
+
+def test_reopening_existing_empty_ledger_does_not_recreate_genesis(tmp_path):
+    path = tmp_path / "previously_initialized.sqlite3"
+    ledger = V91WormLedger(path)
+    with sqlite3.connect(path) as db:
+        db.execute("DROP TRIGGER resource_blocks_no_delete")
+        db.execute("DELETE FROM resource_blocks WHERE block_index=0")
+
+    with pytest.raises(LedgerIntegrityError, match="existing ledger table is empty"):
+        V91WormLedger(path)
+
+    with sqlite3.connect(path) as db:
+        assert db.execute("SELECT COUNT(*) FROM resource_blocks").fetchone()[0] == 0
+
 def test_missing_genesis_is_not_a_valid_chain(tmp_path):
     path = tmp_path / "empty.sqlite3"
     ledger = V91WormLedger(path)

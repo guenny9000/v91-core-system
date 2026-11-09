@@ -102,6 +102,9 @@ class V91WormLedger:
         with closing(self._connect()) as db:
             db.execute("PRAGMA journal_mode=WAL")
             db.execute("BEGIN IMMEDIATE")
+            table_existed = db.execute(
+                "SELECT 1 FROM sqlite_master WHERE type='table' AND name='resource_blocks'"
+            ).fetchone() is not None
             db.execute("""
                 CREATE TABLE IF NOT EXISTS resource_blocks (
                     block_index INTEGER PRIMARY KEY,
@@ -128,6 +131,11 @@ class V91WormLedger:
                 "previous_hash, current_hash FROM resource_blocks ORDER BY block_index LIMIT 1"
             ).fetchone()
             if row is None:
+                if table_existed:
+                    db.rollback()
+                    raise LedgerIntegrityError(
+                        "existing ledger table is empty; refusing to recreate genesis"
+                    )
                 genesis = {
                     "block_index": 0,
                     "timestamp_utc": "1970-01-01T00:00:00Z",
