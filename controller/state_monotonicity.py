@@ -136,7 +136,11 @@ class V91StateMonotonicityGuard:
 
         if payload["challenge"] != expected_challenge:
             return False, "HEARTBEAT_CHALLENGE_MISMATCH"
-        if payload["database_id"] != self._local.get_database_id():
+        try:
+            local_database_id = self._local.get_database_id()
+        except Exception:
+            return False, "LOCAL_STATE_UNAVAILABLE"
+        if payload["database_id"] != local_database_id:
             return False, "DATABASE_ID_MISMATCH"
 
         try:
