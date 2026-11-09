@@ -123,7 +123,9 @@ class ReductionStageTests(unittest.TestCase):
                 source("Independent inspector", "independent_verifier"),
             ],
         ))
-        self.assertEqual(result["evidence_status"], "INDEPENDENTLY_VERIFIED")
+        # Distinct publisher labels do not authenticate sources or evidence.
+        self.assertEqual(result["evidence_status"], "DOCUMENTED")
+        self.assertTrue(result["verification_claimed"])
         self.assertEqual(result["reduction_quantity"], 60)
         self.assertFalse(result["global_disarmament_claim_permitted"])
 
