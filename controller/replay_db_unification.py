@@ -132,21 +132,22 @@ class V91ReplayDatabaseUnifier:
                         claimed_at, tz=timezone.utc
                     ).isoformat(timespec="seconds").replace("+00:00", "Z")
                     by_task = dest.execute(
-                        "SELECT nonce FROM replay_store WHERE provider_id=? AND task_id=?",
+                        "SELECT nonce, timestamp_utc FROM replay_store WHERE provider_id=? AND task_id=?",
                         (provider_id, task_id),
                     ).fetchone()
                     by_nonce = dest.execute(
-                        "SELECT task_id FROM replay_store WHERE provider_id=? AND nonce=?",
+                        "SELECT task_id, timestamp_utc FROM replay_store WHERE provider_id=? AND nonce=?",
                         (provider_id, nonce),
                     ).fetchone()
                     if by_task is not None or by_nonce is not None:
                         if (by_task is not None and by_nonce is not None
-                                and by_task[0] == nonce and by_nonce[0] == task_id):
+                                and by_task[0] == nonce and by_nonce[0] == task_id
+                                and by_task[1] == timestamp and by_nonce[1] == timestamp):
                             exact_existing += 1
                             continue
                         raise ReplayMigrationError(
-                            "replay identity conflict: task ID or nonce is already mapped "
-                            "to a different claim"
+                            "replay identity conflict: task ID, nonce or original timestamp "
+                            "does not match the existing claim"
                         )
                     dest.execute(
                         "INSERT INTO replay_store "
