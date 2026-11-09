@@ -18,7 +18,7 @@ DIRECTIONS = frozenset({"lower_is_better", "higher_is_better"})
 IMPLEMENTATION_STATES = frozenset({"PLANNED", "IN_PROGRESS", "COMPLETED", "UNKNOWN"})
 
 
-def _timestamp(value: Any, field: str) -> None:
+def _timestamp(value: Any, field: str) -> datetime:
     if not isinstance(value, str) or not value.strip():
         raise ValueError(f"{field} must be a non-empty ISO-8601 timestamp")
     try:
@@ -27,12 +27,16 @@ def _timestamp(value: Any, field: str) -> None:
         raise ValueError(f"{field} must be a valid ISO-8601 timestamp") from exc
     if parsed.tzinfo is None:
         raise ValueError(f"{field} must include a timezone")
+    return parsed
 
 
 def _number(value: Any, field: str) -> float:
     if isinstance(value, bool) or not isinstance(value, (int, float)):
         raise ValueError(f"{field} must be a number")
-    result = float(value)
+    try:
+        result = float(value)
+    except (OverflowError, ValueError) as exc:
+        raise ValueError(f"{field} must be a finite number") from exc
     if not isfinite(result):
         raise ValueError(f"{field} must be finite")
     return result
@@ -54,8 +58,11 @@ def evaluate_measurement(record: Any) -> dict[str, Any]:
     if len(record["indicator"]) > 240 or len(record["location"]) > 240:
         raise ValueError("indicator or location exceeds the permitted length")
 
-    _timestamp(record["baseline_at"], "baseline_at")
-    _timestamp(record["measured_at"], "measured_at")
+    baseline_at = _timestamp(record["baseline_at"], "baseline_at")
+    measured_at = _timestamp(record["measured_at"], "measured_at")
+    if measured_at < baseline_at:
+        raise ValueError("measured_at must not precede baseline_at")
+
     baseline = _number(record.get("baseline"), "baseline")
     measured = _number(record.get("measured"), "measured")
     if baseline < 0 or measured < 0:
@@ -87,6 +94,8 @@ def evaluate_measurement(record: Any) -> dict[str, Any]:
         improvement_percent = (baseline - measured) / baseline * 100.0
     else:
         improvement_percent = (measured - baseline) / baseline * 100.0
+    if improvement_percent is not None and not isfinite(improvement_percent):
+        raise ValueError("improvement percentage exceeds the supported finite range")
 
     if improvement_percent is None:
         outcome = "UNKNOWN"
@@ -97,7 +106,6 @@ def evaluate_measurement(record: Any) -> dict[str, Any]:
     else:
         outcome = "NO_CHANGE"
 
-    verification_method = record.get("verification_method")
     # Caller-provided flags and descriptions are claims, not independent proof.
     # This evaluator has no verifier identity, signature trust store, or review channel.
     verification_claim_received = record.get("independently_verified") is True
