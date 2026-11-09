@@ -86,7 +86,7 @@ def validate_reduction_record(record: Any) -> dict[str, Any]:
             raise ValueError("remaining_quantity cannot exceed baseline_quantity")
         reduction = baseline - remaining
     elif record["stage"] in {"DISMANTLED", "CERTIFIED_DESTROYED", "INDEPENDENTLY_VERIFIED"}:
-        raise ValueError("completed or verified stages require a comparable baseline")
+        raise ValueError("completed or verified stages require baseline_quantity and remaining_quantity for a comparable baseline")
 
     if record["stage"] == "CERTIFIED_DESTROYED" and (
         not remaining_present or float(record["remaining_quantity"]) != 0.0
