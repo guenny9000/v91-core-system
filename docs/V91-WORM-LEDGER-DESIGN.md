@@ -118,3 +118,17 @@ Never return a generic `SECURE` or `WORM_VERIFIED` value based only on a local h
 6. Migrate no existing ledger automatically. Preserve old files and provide a separately reviewed, verifiable migration tool.
 
 **Exit criterion:** call the implementation tamper-evident only when local chain verification is tested; call it anchored only when independent signed checkpoints are checked; call it WORM only when the storage retention lock and administrative separation are independently evidenced.
+
+## 10. Implemented offline checkpoint primitive (PR #75)
+
+The branch now includes `controller/ledger_anchor.py` and focused tests. This is a deliberately provider-neutral first implementation:
+
+- Ed25519 signs a fixed, versioned checkpoint envelope with domain separation.
+- The checkpoint schema is strict: ledger ID, non-negative sequence, SHA-256 head hash, schema version, and writer-supplied UTC timestamp.
+- Verification uses an explicitly supplied trusted public-key map. Unknown keys return `UNKNOWN_KEY`; an invalid signature returns `SIGNATURE_INVALID`.
+- Local comparison returns distinct states for checkpoint match, rollback, head divergence, ledger-ID mismatch, and a local head ahead of the last checkpoint.
+- The private signing key is supplied by the caller and is not generated, stored, or loaded by this module.
+
+**Evidence boundary:** this code does not publish checkpoints, authenticate a timestamp, discover trusted keys, protect a private key, provide a distributed witness, or configure immutable retention. A signed checkpoint can detect rollback only if the verifier obtains the previously trusted checkpoint independently. The module does not change the existing JSONL ledger format and does not claim WORM status.
+
+The current serializer is intentionally limited to this fixed checkpoint schema; it is not a general RFC 8785/JCS implementation and must not be reused as a generic canonical JSON encoder.
