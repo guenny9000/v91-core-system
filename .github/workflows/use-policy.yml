@@ -1,16 +1,20 @@
-name: V91 Use Policy Gate
+name: V91 Use Policy and Task Ingress Gate
 
 on:
   push:
     branches: ["main"]
     paths:
       - "controller/use_policy.py"
+      - "controller/task_ingress_gate.py"
       - "tests/test_use_policy.py"
+      - "tests/test_task_ingress_gate.py"
       - ".github/workflows/use-policy.yml"
   pull_request:
     paths:
       - "controller/use_policy.py"
+      - "controller/task_ingress_gate.py"
       - "tests/test_use_policy.py"
+      - "tests/test_task_ingress_gate.py"
       - ".github/workflows/use-policy.yml"
 
 permissions:
@@ -26,7 +30,7 @@ jobs:
           python-version: "3.11"
       - name: Install test runner
         run: python -m pip install pytest
-      - name: Run policy gate tests
-        run: python -m pytest -q tests/test_use_policy.py
-      - name: Compile policy module
-        run: python -m py_compile controller/use_policy.py
+      - name: Run policy and ingress tests
+        run: python -m pytest -q tests/test_use_policy.py tests/test_task_ingress_gate.py
+      - name: Compile policy and ingress modules
+        run: python -m py_compile controller/use_policy.py controller/task_ingress_gate.py
