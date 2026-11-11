@@ -140,15 +140,7 @@ class LocalEmergencyStop:
 
     def is_stopped(self) -> tuple[bool, str]:
         """Fail-closed check: an unreadable or foreign-shaped flag counts as STOPPED."""
-        try:
-            if not self.flag_path.exists():
-                return False, "RUNNING_NO_FLAG"
-            content = self.flag_path.read_text(encoding="utf-8")
-        except OSError:
-            return True, "STOPPED_FLAG_UNREADABLE_FAIL_CLOSED"
-        if not isinstance(content, str):
-            return True, "STOPPED_FLAG_INVALID_FAIL_CLOSED"
-        return True, "STOPPED_FLAG_PRESENT"
+        return check_flag(self.flag_path)
 
     def reset(self, reason: str, confirmation: str) -> dict:
         """Remove the stop flag; only after the ledger chain verifies intact."""
@@ -166,3 +158,27 @@ class LocalEmergencyStop:
         except OSError as exc:
             raise EmergencyStopError(f"could not remove stop flag: {exc}") from exc
         return self._append_ledger("RESET", reason)
+
+
+def check_flag(flag_path: str | os.PathLike) -> tuple[bool, str]:
+    """Fail-closed flag check shared by writer and read-only reader."""
+    path = Path(flag_path)
+    try:
+        if not path.exists():
+            return False, "RUNNING_NO_FLAG"
+        content = path.read_text(encoding="utf-8")
+    except OSError:
+        return True, "STOPPED_FLAG_UNREADABLE_FAIL_CLOSED"
+    if not isinstance(content, str):
+        return True, "STOPPED_FLAG_INVALID_FAIL_CLOSED"
+    return True, "STOPPED_FLAG_PRESENT"
+
+
+class EmergencyStopFlagReader:
+    """Read-only stop-flag check; no key required, never writes anything."""
+
+    def __init__(self, flag_path: str | os.PathLike) -> None:
+        self.flag_path = Path(flag_path).expanduser().resolve()
+
+    def is_stopped(self) -> tuple[bool, str]:
+        return check_flag(self.flag_path)
