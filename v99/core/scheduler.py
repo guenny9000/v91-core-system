@@ -26,12 +26,16 @@ class CycleResult:
 
 class CycleScheduler:
     def __init__(self, agent, interval_seconds: int = 900,
-                 clock: Optional[Callable[[], datetime]] = None):
+                 clock: Optional[Callable[[], datetime]] = None,
+                 stop_check: Optional[Callable[[], tuple]] = None):
         if not isinstance(interval_seconds, int) or interval_seconds < 1:
             raise ValueError("interval_seconds muss eine positive Ganzzahl sein")
+        if stop_check is not None and not callable(stop_check):
+            raise TypeError("stop_check muss callable sein oder None")
         self.agent = agent
         self.interval_seconds = interval_seconds
         self._clock = clock or (lambda: datetime.now(timezone.utc))
+        self._stop_check = stop_check
         self.history: list = []
         self._last_run: Optional[datetime] = None
 
@@ -56,6 +60,23 @@ class CycleScheduler:
     def run_cycle(self) -> CycleResult:
         """Ein kontrollierter Zyklus: inspizieren -> vorschlagen -> nur sichere Reparaturen."""
         started = self.now().isoformat()
+        if self._stop_check is not None:
+            stopped, reason = self._stop_check()
+            if stopped:
+                # Notaus: kein inspect, kein Vorschlag, keine Ausfuehrung.
+                result = CycleResult(
+                    started_at=started,
+                    finished_at=self.now().isoformat(),
+                    aggregate="HALTED",
+                    module_statuses={},
+                    proposals=0,
+                    executed=(),
+                )
+                self.history.append(result)
+                if len(self.history) > MAX_HISTORY:
+                    self.history = self.history[-MAX_HISTORY:]
+                self._last_run = self.now()
+                return result
         reports = self.agent.inspect_all()
         proposals = self.agent.prepare_repairs()
         executed = ()
