@@ -7,12 +7,14 @@ Dieses Skript macht genau einen (oder --max-cycles) messbaren Zyklus und
 endet mit einem definierten Exit-Code:
   0 = Zyklus abgeschlossen, kein FAILED
   1 = FAILED oder Fehler
+  2 = EMERGENCY_STOPPED: Notaus-Flag gesetzt, kein Zyklus ausgefuehrt
 """
 import argparse
 import json
 import os
 import sys
 
+from controller.emergency_stop import EmergencyStopFlagReader
 from v99.agent_shim import build_registry_from_config, run_once
 
 
@@ -24,7 +26,15 @@ def main(argv=None) -> int:
                         help="Pruefintervall in Sekunden (nur fuer Konfiguration, kein Loop)")
     parser.add_argument("--max-cycles", type=int, default=1,
                         help="Anzahl der Zyklen pro Aufruf (Standard: 1)")
+    parser.add_argument("--stop-flag", default="ledger/v91_stop.flag",
+                        help="Pfad des Notaus-Flags (Issue #70); fehlt es, laeuft der Zyklus")
     args = parser.parse_args(argv)
+
+    stopped, stop_reason = EmergencyStopFlagReader(args.stop_flag).is_stopped()
+    if stopped:
+        print(json.dumps({"status": "EMERGENCY_STOPPED", "reason": stop_reason,
+                          "stop_flag": args.stop_flag}))
+        return 2
 
     if not os.path.isdir(args.config_dir):
         print(json.dumps({"error": f"Konfigurationsverzeichnis fehlt: {args.config_dir}",

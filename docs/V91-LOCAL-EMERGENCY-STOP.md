@@ -1,6 +1,6 @@
 # V91 Local Emergency Stop (Issue #70)
 
-**Status: IMPLEMENTED AS A TESTED LOCAL PRIMITIVE; NOT WIRED INTO ANY RUNTIME ENTRY POINT (SCRIPTED != INSTALLED).**
+**Status: IMPLEMENTED AND WIRED INTO THE LOCAL ENTRY POINTS (main.py CLI + CycleScheduler). INSTALLED != VERIFIED ON A DEPLOYED HOST: runtime state on any real machine remains UNKNOWN until locally checked.**
 
 ## What it does
 
@@ -16,7 +16,7 @@
 - Affects ONLY the local V91 instance via its flag file. No network calls, no external processes, no third-party systems, no platform effects.
 - The key holder (the operator) can always confirm or refuse an activation; the module never decides on its own.
 - The ledger is local HMAC state, not a distributed WORM store; privileged filesystem rollback is out of scope and detectable only via the chain.
-- Runtime wiring (checking the flag at the real entry point, e.g. the cycle scheduler) is the explicitly separate next step.
+- **Wiring (this change):** `main.py` checks the flag via the key-less `EmergencyStopFlagReader` before any work and exits with code 2 (`EMERGENCY_STOPPED`) when it is set; `CycleScheduler` accepts an injected `stop_check` and returns a HALTED cycle with no inspection, proposals, or execution. Fail-closed: an unreadable flag counts as STOPPED.
 
 ## Tests
 
