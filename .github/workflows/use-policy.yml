@@ -9,7 +9,9 @@ on:
       - "controller/replay_state_provider.py"
       - "controller/replay_db_unification.py"
       - "controller/state_monotonicity.py"
+      - "controller/witness_client.py"
       - "tests/test_use_policy.py"
+      - "tests/test_witness_client.py"
       - "tests/test_task_ingress_gate.py"
       - "tests/test_replay_state_provider.py"
       - "tests/test_replay_db_unification.py"
@@ -50,6 +52,7 @@ jobs:
           tests/test_replay_state_provider.py
           tests/test_replay_db_unification.py
           tests/test_state_monotonicity.py
+          tests/test_witness_client.py
       - name: Compile policy, replay and ingress modules
         run: >-
           python -m py_compile
@@ -58,3 +61,4 @@ jobs:
           controller/replay_state_provider.py
           controller/replay_db_unification.py
           controller/state_monotonicity.py
+          controller/witness_client.py
