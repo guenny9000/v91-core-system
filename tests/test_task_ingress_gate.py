@@ -138,3 +138,10 @@ def test_distinct_task_ids_cannot_reuse_provider_nonce(tmp_path):
     store = SQLiteReplayStore(str(tmp_path / "replay.sqlite3"))
     assert store.claim(PROVIDER, "task-a", "b" * 32) is True
     assert store.claim(PROVIDER, "task-b", "b" * 32) is False
+
+
+def test_max_clock_skew_seconds_must_be_positive_integer(tmp_path):
+    store = SQLiteReplayStore(str(tmp_path / "replay.sqlite3"))
+    for value in (True, 1.5, 0):
+        with pytest.raises(ValueError):
+            TaskIngressGate(TestKeyProvider(), store, max_clock_skew_seconds=value)
