@@ -3,6 +3,8 @@ import json
 
 from controller.emergency_stop import EmergencyStopFlagReader
 from main import main as cli_main
+from v99.agent_shim import run_once
+from v99.core.registry import ModuleRegistry
 from v99.core.scheduler import CycleScheduler
 
 
@@ -73,3 +75,20 @@ def test_cli_runs_when_no_flag(tmp_path, capsys):
     assert code in (0, 1)  # leere Config: kein Notaus, normaler Lauf
     payload = json.loads(capsys.readouterr().out)
     assert payload.get("status") != "EMERGENCY_STOPPED"
+
+
+def test_run_once_wires_stop_flag_into_scheduler(tmp_path):
+    flag = tmp_path / "stop.flag"
+    flag.write_text("incident", encoding="utf-8")
+    result = run_once(ModuleRegistry(), stop_flag_path=str(flag))
+    assert result["aggregate"] == "HALTED"
+    assert result["proposals"] == 0
+    assert result["executed"] == []
+
+
+def test_run_once_without_flag_keeps_empty_registry_unknown(tmp_path):
+    result = run_once(
+        ModuleRegistry(),
+        stop_flag_path=str(tmp_path / "missing.flag"),
+    )
+    assert result["aggregate"] == "UNKNOWN"
