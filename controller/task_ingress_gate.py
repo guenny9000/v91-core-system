@@ -14,6 +14,7 @@ import json
 import re
 import sqlite3
 import time
+from contextlib import closing
 from dataclasses import dataclass
 from typing import Protocol
 
@@ -44,7 +45,7 @@ class SQLiteReplayStore:
 
     def __init__(self, database_path: str) -> None:
         self._database_path = database_path
-        with sqlite3.connect(self._database_path, timeout=10) as connection:
+        with closing(sqlite3.connect(self._database_path, timeout=10)) as connection:
             connection.execute("PRAGMA journal_mode=WAL")
             connection.execute(
                 "CREATE TABLE IF NOT EXISTS ingress_replay ("
@@ -56,7 +57,9 @@ class SQLiteReplayStore:
 
     def claim(self, provider_id: str, task_id: str, nonce: str) -> bool:
         try:
-            with sqlite3.connect(self._database_path, timeout=10, isolation_level=None) as connection:
+            with closing(sqlite3.connect(
+                self._database_path, timeout=10, isolation_level=None
+            )) as connection:
                 connection.execute("BEGIN IMMEDIATE")
                 connection.execute(
                     "INSERT INTO ingress_replay(provider_id, task_id, nonce, claimed_at) "
@@ -99,8 +102,12 @@ class TaskIngressGate:
     """Authenticate and classify a task; never execute or automatically approve."""
 
     def __init__(self, key_provider: KeyProvider, replay_store: ReplayStore, max_clock_skew_seconds: int = 300, clock=time.time) -> None:
-        if max_clock_skew_seconds < 1:
-            raise ValueError('max_clock_skew_seconds must be positive')
+        if (
+            isinstance(max_clock_skew_seconds, bool)
+            or not isinstance(max_clock_skew_seconds, int)
+            or max_clock_skew_seconds < 1
+        ):
+            raise ValueError('max_clock_skew_seconds must be a positive integer')
         self._key_provider = key_provider
         self._replay_store = replay_store
         self._max_clock_skew_seconds = max_clock_skew_seconds
