@@ -189,7 +189,7 @@ class EmergencyStopFlagReader:
     """Read-only stop-flag check; no key required, never writes anything."""
 
     def __init__(self, flag_path: str | os.PathLike) -> None:
-        self.flag_path = Path(flag_path).expanduser().resolve()
+        self.flag_path = Path(os.path.abspath(Path(flag_path).expanduser()))
 
     def is_stopped(self) -> tuple[bool, str]:
         return check_flag(self.flag_path)
