@@ -8,6 +8,7 @@ from controller.emergency_stop import (
     ACTIVATE_DOMAIN,
     RESET_DOMAIN,
     EmergencyStopError,
+    EmergencyStopFlagReader,
     LocalEmergencyStop,
     _confirmation,
 )
@@ -104,3 +105,19 @@ def test_env_key_is_used_when_provided(tmp_path, monkeypatch):
     env_key = "env-provided-emergency-key-32-bytes!".encode()
     stop.activate(reason, hmac.new(env_key, ACTIVATE_DOMAIN + reason.encode(), hashlib.sha256).hexdigest())
     assert stop.is_stopped()[0] is True
+
+
+
+def test_broken_symlink_flag_fails_closed(tmp_path):
+    flag = tmp_path / "stop.flag"
+    target = tmp_path / "missing-target"
+    try:
+        flag.symlink_to(target)
+    except (OSError, NotImplementedError):
+        pytest.skip("symlink creation is unavailable in this environment")
+
+    stop = LocalEmergencyStop(flag, tmp_path / "stop_ledger.jsonl", key=KEY)
+    reader = EmergencyStopFlagReader(flag)
+    expected = (True, "STOPPED_FLAG_INVALID_FAIL_CLOSED")
+    assert stop.is_stopped() == expected
+    assert reader.is_stopped() == expected
