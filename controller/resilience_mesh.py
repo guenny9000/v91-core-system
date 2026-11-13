@@ -128,7 +128,7 @@ class RestartVerifier:
         # systemctl is-active uses exit code 3 for an inactive/failed unit.
         # Other nonzero codes can mean missing units, permission problems, or
         # command/runtime errors and must not be reported as NOT_ACTIVE.
-        systemd_state = stdout.strip().lower()
+        systemd_state = (stdout or stderr).strip().lower()
         if self._platform == "linux" and returncode == 3 and systemd_state in {"inactive", "failed"}:
             return {
                 "unit": unit,
