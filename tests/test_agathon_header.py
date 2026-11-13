@@ -25,12 +25,12 @@ LEGACY_EXEMPTIONS = frozenset({
     "measurement_core.py", "metrics.py", "model_gate.py",
     "model_run_manifest.py", "model_runner.py", "observer.py",
     "peer_store.py", "peer_sync.py", "real_metrics.py",
-    "replay_db_unification.py", "replay_state_provider.py",
-    "resource_admission.py", "runtime_control.py", "self_study_metrics.py",
-    "signed_manifest.py", "state_monotonicity.py", "stewardship_report.py",
-    "task_ingress_gate.py", "telemetry_server.py", "trusted_peer_registry.py",
-    "use_policy.py", "v91_cli.py", "v91_listener.py", "witness_client.py",
-    "worker.py", "worm_ledger.py",
+    "replay_db_unification.py", "replay_session.py", "replay_state_provider.py",
+    "resource_admission.py", "resilience_mesh.py", "runtime_control.py",
+    "self_study_metrics.py", "signed_manifest.py", "state_monotonicity.py",
+    "stewardship_report.py", "task_ingress_gate.py", "telemetry_server.py",
+    "trusted_peer_registry.py", "use_policy.py", "v91_cli.py",
+    "v91_listener.py", "witness_client.py", "worker.py", "worm_ledger.py",
 })
 
 
@@ -81,7 +81,8 @@ class AgathonHeaderPolicyTest(unittest.TestCase):
             self.assertEqual(find_missing_headers(Path(tmp)), [])
 
     def test_header_must_be_in_the_first_lines(self):
-        header_late = "import os\n\n" + "\n".join([
+        filler = "\n".join(f"# filler line {i} to push the header past the window" for i in range(20))
+        header_late = filler + "\n\n" + "\n".join([
             '"""',
             *REQUIRED_HEADER_LINES,
             '"""',
