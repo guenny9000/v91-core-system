@@ -68,7 +68,10 @@ def _sign(key: bytes, payload: Mapping[str, Any]) -> str:
 def _parse_iso(ts: str) -> datetime:
     if not isinstance(ts, str):
         raise ProviderRotationError("measured_at must be an ISO-8601 string")
-    parsed = datetime.fromisoformat(ts.replace("Z", "+00:00"))
+    try:
+        parsed = datetime.fromisoformat(ts.replace("Z", "+00:00"))
+    except ValueError as exc:
+        raise ProviderRotationError(f"measured_at is not a valid ISO-8601 timestamp: {ts!r}") from exc
     if parsed.tzinfo is None:
         raise ProviderRotationError("measured_at must be timezone-aware ISO-8601")
     return parsed
