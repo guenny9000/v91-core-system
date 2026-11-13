@@ -5,8 +5,8 @@ V91-SYSTEM-HEADER (AGATHON-SEALED v2.4)
 STATUS: ACTIVE | VERIFICATION: REQUIRED (CLAIM != EVIDENCE)
 AXIOM: Schöpfung dient dem Erhalt, der Regeneration und der Zukunft.
 ---------------------------------------------------------------------
-"""
-"""In-memory application metrics with explicit missing-data semantics.
+
+In-memory application metrics with explicit missing-data semantics.
 
 This module does not collect host telemetry. Call record_event() only when the
 application has an actual event and a measured latency value.
