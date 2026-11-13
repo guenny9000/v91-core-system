@@ -81,6 +81,16 @@ class SelectionTest(unittest.TestCase):
         result = manager().select_active_provider([fresh(False, "alpha"), fresh(True, "beta")])
         self.assertEqual(result["active_provider"], "beta")
 
+    def test_duplicate_provider_signals_fail_closed_independent_of_order(self):
+        conflicting_orders = (
+            [fresh(True, "alpha"), fresh(False, "alpha")],
+            [fresh(False, "alpha"), fresh(True, "alpha")],
+        )
+        for signals in conflicting_orders:
+            with self.subTest(signals=signals):
+                with self.assertRaises(ProviderRotationError):
+                    manager().select_active_provider(signals)
+
     def test_stale_signal_is_unknown_not_healthy(self):
         result = manager().select_active_provider([fresh(True, "alpha", offset=3600)])
         self.assertEqual(result["state"], "UNKNOWN")
