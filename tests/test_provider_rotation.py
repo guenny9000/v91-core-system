@@ -7,6 +7,7 @@ AXIOM: Schöpfung dient dem Erhalt, der Regeneration und der Zukunft.
 Tests: deterministic fail-closed provider selection (Issue #239 prep).
 """
 import json
+import os
 import sys
 import tempfile
 import unittest
@@ -19,7 +20,6 @@ from controller.provider_rotation import (
     HealthSignal,
     ProviderRotationError,
     ProviderRotationManager,
-    VerificationState,
     main,
     resolve_key,
     signals_from_records,
@@ -29,10 +29,12 @@ KEY = "k" * 32
 FIXED_NOW = datetime(2026, 11, 13, 12, 0, 0, tzinfo=timezone.utc)
 
 
+def iso(dt: datetime) -> str:
+    return dt.isoformat().replace("+00:00", "Z")
+
+
 def fresh(healthy=True, provider="alpha", offset=0.0):
-    return HealthSignal(provider, healthy,
-                        (FIXED_NOW - timedelta(seconds=offset)).isoformat().replace("+00:00", "Z"),
-                        "test_probe")
+    return HealthSignal(provider, healthy, iso(FIXED_NOW - timedelta(seconds=offset)), "test_probe")
 
 
 def manager(providers=("alpha", "beta")):
@@ -86,9 +88,7 @@ class SelectionTest(unittest.TestCase):
         self.assertEqual(result["health"]["alpha"], "UNKNOWN")
 
     def test_future_signal_is_unknown(self):
-        future = HealthSignal("alpha", True,
-                              (FIXED_NOW + timedelta(seconds=60)).isoformat().replace("+00:00", "Z"),
-                              "test_probe")
+        future = HealthSignal("alpha", True, iso(FIXED_NOW + timedelta(seconds=60)), "test_probe")
         result = manager().select_active_provider([future])
         self.assertEqual(result["state"], "UNKNOWN")
 
@@ -131,41 +131,43 @@ class CliTest(unittest.TestCase):
     def setUp(self):
         self.tmp = tempfile.TemporaryDirectory()
         self.health = Path(self.tmp.name) / "health.json"
-        self.health.write_text(json.dumps([{
-            "provider": "alpha", "healthy": True,
-            "measured_at": "2026-11-13T11:55:00Z", "source": "probe",
-        }]), encoding="utf-8")
 
     def tearDown(self):
         self.tmp.cleanup()
 
+    def write_health(self, healthy: bool) -> None:
+        # Relative to the real current time so the freshness window cannot flake.
+        measured = datetime.now(timezone.utc) - timedelta(seconds=10)
+        self.health.write_text(json.dumps([{
+            "provider": "alpha", "healthy": healthy,
+            "measured_at": iso(measured), "source": "probe",
+        }]), encoding="utf-8")
+
     def test_cli_verified_exit_zero(self):
-        import os
         os.environ["V91_MESH_KEY"] = KEY
         try:
-            # FIXED_NOW is 12:00Z; signal at 11:55Z is fresh (<=900s)
+            self.write_health(True)
             code = main(["--providers", "alpha", "beta", "--health-json", str(self.health)])
         finally:
-            pass
+            os.environ.pop("V91_MESH_KEY", None)
         self.assertEqual(code, 0)
 
     def test_cli_without_key_fails_closed(self):
-        import os
         saved = os.environ.pop("V91_MESH_KEY", None)
         try:
+            self.write_health(True)
             self.assertEqual(main(["--providers", "alpha", "beta", "--health-json", str(self.health)]), 2)
         finally:
             if saved is not None:
                 os.environ["V91_MESH_KEY"] = saved
 
     def test_cli_unhealthy_exit_one(self):
-        import os
         os.environ["V91_MESH_KEY"] = KEY
-        self.health.write_text(json.dumps([{
-            "provider": "alpha", "healthy": False,
-            "measured_at": "2026-11-13T11:55:00Z", "source": "probe",
-        }]), encoding="utf-8")
-        self.assertEqual(main(["--providers", "alpha", "--health-json", str(self.health)]), 1)
+        try:
+            self.write_health(False)
+            self.assertEqual(main(["--providers", "alpha", "--health-json", str(self.health)]), 1)
+        finally:
+            os.environ.pop("V91_MESH_KEY", None)
 
 
 if __name__ == "__main__":
