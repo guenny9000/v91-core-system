@@ -123,11 +123,24 @@ class RestartVerifier:
             return {"unit": unit, "status": "UNKNOWN", "reason": "runner returned non-integer returncode"}
         if returncode == 0:
             return {"unit": unit, "status": "VERIFIED_ACTIVE", "command": command}
+
+        reason = (stderr or stdout or "").strip()[:200] or f"returncode {returncode}"
+        # systemctl is-active uses exit code 3 for an inactive/failed unit.
+        # Other nonzero codes can mean missing units, permission problems, or
+        # command/runtime errors and must not be reported as NOT_ACTIVE.
+        systemd_state = stdout.strip().lower()
+        if self._platform == "linux" and returncode == 3 and systemd_state in {"inactive", "failed"}:
+            return {
+                "unit": unit,
+                "status": "NOT_ACTIVE",
+                "command": command,
+                "reason": reason,
+            }
         return {
             "unit": unit,
-            "status": "NOT_ACTIVE",
+            "status": "UNKNOWN",
             "command": command,
-            "reason": (stderr or stdout or "").strip()[:200] or f"returncode {returncode}",
+            "reason": reason,
         }
 
 
