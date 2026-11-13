@@ -18,11 +18,11 @@ REQUIRED_HEADER_LINES = (
 
 LEGACY_EXEMPTIONS = frozenset({
     "__init__.py",
-    "anomaly.py", "autarky_metrics.py", "autarky_report.py", "chaos.py",
-    "collector.py", "controller.py", "crypto_receipts.py", "emergency_stop.py",
-    "encrypted_store.py", "enforcement.py", "feedback.py", "impact.py",
+    "autarky_metrics.py", "autarky_report.py",
+    "controller.py", "crypto_receipts.py", "emergency_stop.py",
+    "encrypted_store.py", "enforcement.py", "impact.py",
     "lease_lock.py", "ledger.py", "ledger_anchor.py", "legacy_gate.py",
-    "measurement_core.py", "metrics.py", "model_gate.py",
+    "measurement_core.py", "model_gate.py",
     "model_run_manifest.py", "model_runner.py", "observer.py",
     "peer_store.py", "peer_sync.py", "real_metrics.py",
     "replay_db_unification.py", "replay_session.py", "replay_state_provider.py",
