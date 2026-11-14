@@ -140,9 +140,15 @@ class ProviderRotationManager:
         """
         now = self._now()
         health: dict[str, str] = {}
+        seen_providers: set[str] = set()
         for signal in signals:
             if signal.provider not in self._providers:
                 raise ProviderRotationError(f"health signal for unknown provider {signal.provider!r}")
+            if signal.provider in seen_providers:
+                raise ProviderRotationError(
+                    f"duplicate health signals for provider {signal.provider!r}; refusing ambiguous selection"
+                )
+            seen_providers.add(signal.provider)
             try:
                 measured = _parse_iso(signal.measured_at)
             except ProviderRotationError:
