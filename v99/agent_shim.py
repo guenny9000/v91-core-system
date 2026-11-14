@@ -7,6 +7,7 @@ import glob
 import json
 import os
 
+from controller.emergency_stop import EmergencyStopFlagReader
 from v99.core.agent import V99Agent
 from v99.core.module_standard import load_module_spec
 from v99.core.registry import ModuleRegistry
@@ -26,11 +27,18 @@ def build_registry_from_config(config_dir: str) -> ModuleRegistry:
 
 
 def run_once(registry: ModuleRegistry, max_cycles: int = 1,
-             interval_seconds: int = 900) -> dict:
+             interval_seconds: int = 900,
+             stop_flag_path: str = "ledger/v91_stop.flag") -> dict:
+    """Run bounded cycles; every call path checks the local emergency stop."""
     if not isinstance(max_cycles, int) or max_cycles < 1:
         raise ValueError("max_cycles muss >= 1 sein")
     agent = V99Agent(registry)
-    scheduler = CycleScheduler(agent, interval_seconds=interval_seconds)
+    stop_reader = EmergencyStopFlagReader(stop_flag_path)
+    scheduler = CycleScheduler(
+        agent,
+        interval_seconds=interval_seconds,
+        stop_check=stop_reader.is_stopped,
+    )
     last = None
     for _ in range(max_cycles):
         last = scheduler.run_cycle()

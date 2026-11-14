@@ -13,6 +13,7 @@ import hashlib
 import hmac
 import json
 import os
+import stat
 import tempfile
 from contextlib import closing
 from datetime import datetime, timezone
@@ -49,9 +50,9 @@ class LocalEmergencyStop:
         key: Optional[bytes] = None,
         clock: Callable[[], datetime] = lambda: datetime.now(timezone.utc),
     ) -> None:
-        self.flag_path = Path(flag_path).expanduser().resolve()
+        self.flag_path = Path(os.path.abspath(Path(flag_path).expanduser()))
         self.ledger_path = Path(ledger_path).expanduser().resolve()
-        if self.flag_path == self.ledger_path:
+        if self.flag_path.resolve() == self.ledger_path.resolve():
             raise EmergencyStopError("flag and ledger paths must differ")
         resolved_key = key if key is not None else self._env_key()
         if not isinstance(resolved_key, bytes) or len(resolved_key) < 32:
@@ -164,8 +165,18 @@ def check_flag(flag_path: str | os.PathLike) -> tuple[bool, str]:
     """Fail-closed flag check shared by writer and read-only reader."""
     path = Path(flag_path)
     try:
-        if not path.exists():
-            return False, "RUNNING_NO_FLAG"
+        metadata = path.lstat()
+    except FileNotFoundError:
+        return False, "RUNNING_NO_FLAG"
+    except OSError:
+        return True, "STOPPED_FLAG_UNREADABLE_FAIL_CLOSED"
+
+    # A dangling symlink makes Path.exists() return False. Treat links and
+    # non-regular filesystem objects as invalid stop state, never as RUNNING.
+    if stat.S_ISLNK(metadata.st_mode) or not stat.S_ISREG(metadata.st_mode):
+        return True, "STOPPED_FLAG_INVALID_FAIL_CLOSED"
+
+    try:
         content = path.read_text(encoding="utf-8")
     except OSError:
         return True, "STOPPED_FLAG_UNREADABLE_FAIL_CLOSED"
@@ -178,7 +189,7 @@ class EmergencyStopFlagReader:
     """Read-only stop-flag check; no key required, never writes anything."""
 
     def __init__(self, flag_path: str | os.PathLike) -> None:
-        self.flag_path = Path(flag_path).expanduser().resolve()
+        self.flag_path = Path(os.path.abspath(Path(flag_path).expanduser()))
 
     def is_stopped(self) -> tuple[bool, str]:
         return check_flag(self.flag_path)
