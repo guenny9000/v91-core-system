@@ -5,8 +5,7 @@ V91-SYSTEM-HEADER (AGATHON-SEALED v2.4)
 STATUS: ACTIVE | VERIFICATION: REQUIRED (CLAIM != EVIDENCE)
 AXIOM: Schöpfung dient dem Erhalt, der Regeneration und der Zukunft.
 ---------------------------------------------------------------------
-"""
-"""
+
 Chaos Mode – Controlled Fault Injection for Resilience Testing
 """
 
@@ -45,7 +44,6 @@ class ChaosSimulator:
         self.recoveries += 1
 
     def get_stats(self):
-        """Get chaos statistics."""
         return {
             "failures_injected": self.failures_injected,
             "recoveries": self.recoveries,

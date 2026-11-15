@@ -5,8 +5,7 @@ V91-SYSTEM-HEADER (AGATHON-SEALED v2.4)
 STATUS: ACTIVE | VERIFICATION: REQUIRED (CLAIM != EVIDENCE)
 AXIOM: Schöpfung dient dem Erhalt, der Regeneration und der Zukunft.
 ---------------------------------------------------------------------
-"""
-"""
+
 Anomaly Detector – sliding-window z-score detection.
 
 A candidate is compared with the prior baseline, then added to the window.

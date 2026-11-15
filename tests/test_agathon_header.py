@@ -88,9 +88,17 @@ class AgathonHeaderPolicyTest(unittest.TestCase):
             '"""',
         ])
         with tempfile.TemporaryDirectory() as tmp:
-            late = Path(tmp) / "late_header.py"
+            late = Path(tmp) / "late_module.py"
             late.write_text(header_late + "\n", encoding="utf-8")
-            self.assertEqual(find_missing_headers(Path(tmp)), ["late_header.py"])
+            self.assertEqual(find_missing_headers(Path(tmp)), ["late_module.py"])
+
+    def test_migrated_modules_keep_their_original_module_docstrings(self):
+        from controller import anomaly, chaos, collector, feedback
+
+        self.assertIn("Anomaly Detector", anomaly.__doc__ or "")
+        self.assertIn("Chaos Mode", chaos.__doc__ or "")
+        self.assertIn("Real local measurements", collector.__doc__ or "")
+        self.assertIn("Feedback Loop", feedback.__doc__ or "")
 
 
 if __name__ == "__main__":
