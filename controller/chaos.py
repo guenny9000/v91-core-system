@@ -44,6 +44,7 @@ class ChaosSimulator:
         self.recoveries += 1
 
     def get_stats(self):
+        """Get chaos statistics."""
         return {
             "failures_injected": self.failures_injected,
             "recoveries": self.recoveries,
