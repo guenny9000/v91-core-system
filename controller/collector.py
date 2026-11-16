@@ -1,5 +1,13 @@
 #!/usr/bin/env python3
-"""Real local measurements (stdlib only): memory in use (MB) of this machine."""
+"""
+V91-SYSTEM-HEADER (AGATHON-SEALED v2.4)
+---------------------------------------------------------------------
+STATUS: ACTIVE | VERIFICATION: REQUIRED (CLAIM != EVIDENCE)
+AXIOM: Schöpfung dient dem Erhalt, der Regeneration und der Zukunft.
+---------------------------------------------------------------------
+
+Real local measurements (stdlib only): memory in use (MB) of this machine.
+"""
 
 import csv
 import ctypes

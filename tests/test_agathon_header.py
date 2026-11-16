@@ -18,11 +18,11 @@ REQUIRED_HEADER_LINES = (
 
 LEGACY_EXEMPTIONS = frozenset({
     "__init__.py",
-    "anomaly.py", "autarky_metrics.py", "autarky_report.py", "chaos.py",
-    "collector.py", "controller.py", "crypto_receipts.py", "emergency_stop.py",
-    "encrypted_store.py", "enforcement.py", "feedback.py", "impact.py",
+    "autarky_metrics.py", "autarky_report.py",
+    "controller.py", "crypto_receipts.py", "emergency_stop.py",
+    "encrypted_store.py", "enforcement.py", "impact.py",
     "lease_lock.py", "ledger.py", "ledger_anchor.py", "legacy_gate.py",
-    "measurement_core.py", "metrics.py", "model_gate.py",
+    "measurement_core.py", "model_gate.py",
     "model_run_manifest.py", "model_runner.py", "observer.py",
     "peer_store.py", "peer_sync.py", "real_metrics.py",
     "replay_db_unification.py", "replay_session.py", "replay_state_provider.py",
@@ -91,6 +91,14 @@ class AgathonHeaderPolicyTest(unittest.TestCase):
             late = Path(tmp) / "late_header.py"
             late.write_text(header_late + "\n", encoding="utf-8")
             self.assertEqual(find_missing_headers(Path(tmp)), ["late_header.py"])
+
+    def test_migrated_modules_keep_their_original_module_docstrings(self):
+        from controller import anomaly, chaos, collector, feedback
+
+        self.assertIn("Anomaly Detector", anomaly.__doc__ or "")
+        self.assertIn("Chaos Mode", chaos.__doc__ or "")
+        self.assertIn("Real local measurements", collector.__doc__ or "")
+        self.assertIn("Feedback Loop", feedback.__doc__ or "")
 
 
 if __name__ == "__main__":
