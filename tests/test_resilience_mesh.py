@@ -81,6 +81,20 @@ class RestartVerifierTest(unittest.TestCase):
         result = RestartVerifier(inactive_runner, "linux").verify("v91-cycle.timer")
         self.assertEqual(result["status"], "NOT_ACTIVE")
 
+    def test_systemd_error_exit_is_unknown(self):
+        runner = lambda command: (1, "", "systemctl failed")
+        result = RestartVerifier(runner, "linux").verify("v91-cycle.service")
+        self.assertEqual(result["status"], "UNKNOWN")
+
+    def test_missing_systemd_unit_is_unknown(self):
+        runner = lambda command: (4, "unknown", "Unit not found")
+        result = RestartVerifier(runner, "linux").verify("v91-cycle.service")
+        self.assertEqual(result["status"], "UNKNOWN")
+
+    def test_non_linux_nonzero_exit_is_unknown(self):
+        result = RestartVerifier(inactive_runner, "darwin").verify("com.v91.cycle")
+        self.assertEqual(result["status"], "UNKNOWN")
+
     def test_runner_failure_is_unknown(self):
         result = RestartVerifier(broken_runner, "linux").verify("v91-cycle.service")
         self.assertEqual(result["status"], "UNKNOWN")
