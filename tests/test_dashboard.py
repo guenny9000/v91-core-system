@@ -10,6 +10,7 @@ SPEC.loader.exec_module(DASHBOARD)
 build_report = DASHBOARD.build_report
 read_observer = DASHBOARD.read_observer
 render_text = DASHBOARD.render_text
+render_html = DASHBOARD.render_html
 
 
 def write_observer(runtime: Path, *, status="OBSERVED", parse_errors=0):
@@ -84,3 +85,37 @@ def test_invalid_queue_count_is_unknown(tmp_path):
     report = read_observer(runtime)
 
     assert report["status"] == "UNKNOWN"
+
+
+def test_html_report_is_self_contained_and_preserves_unknown(tmp_path):
+    runtime = tmp_path / "runtime"
+    queue = tmp_path / "queue"
+    write_observer(runtime)
+    report = build_report(runtime, queue, tmp_path)
+
+    rendered = render_html(report)
+
+    assert rendered.startswith("<!doctype html>")
+    assert "UNKNOWN" in rendered
+    assert "does not prove production deployment" in rendered
+    assert "<script" not in rendered.lower()
+    assert "https://" not in rendered
+    assert "NONE_READ_ONLY" in rendered
+
+
+def test_html_report_escapes_untrusted_observer_values(tmp_path):
+    runtime = tmp_path / "runtime"
+    write_observer(runtime)
+    path = runtime / "v91-observer.json"
+    payload = json.loads(path.read_text(encoding="utf-8"))
+    payload["timestamp_utc"] = "<script>alert(1)</script>"
+    payload["source"] = "<img src=x onerror=alert(1)>"
+    path.write_text(json.dumps(payload), encoding="utf-8")
+
+    report = build_report(runtime, tmp_path / "queue", tmp_path)
+    rendered = render_html(report)
+
+    assert "&lt;script&gt;" in rendered
+    assert "&lt;img" in rendered
+    assert "<script>alert(1)</script>" not in rendered
+    assert "<img src=x" not in rendered
