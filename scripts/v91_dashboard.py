@@ -7,6 +7,7 @@ stop, scale, repair, or deploy services. Missing evidence stays UNKNOWN.
 from __future__ import annotations
 
 import argparse
+import html
 import json
 import shutil
 from datetime import UTC, datetime
@@ -133,15 +134,49 @@ def render_text(report: dict[str, Any]) -> str:
     return "\n".join(lines)
 
 
+def render_html(report: dict[str, Any]) -> str:
+    """Render a self-contained, escaped HTML view; no scripts or network assets."""
+    status = html.escape(str(report.get("overall_status", "UNKNOWN")))
+    generated = html.escape(str(report.get("generated_at_utc", "UNKNOWN")))
+    payload = html.escape(json.dumps(report, indent=2, sort_keys=True, ensure_ascii=False))
+    observer = html.escape(str(report.get("observer", {}).get("status", "UNKNOWN")))
+    return (
+        "<!doctype html>\n"
+        '<html lang="en"><head><meta charset="utf-8">'
+        '<meta name="viewport" content="width=device-width, initial-scale=1">'
+        "<title>V91 Local Audit Report</title>"
+        "<style>body{font:16px system-ui,sans-serif;max-width:960px;margin:2rem auto;padding:0 1rem;"
+        "color:#202124;background:#fff}main{border:1px solid #bbb;border-radius:8px;padding:1rem}"
+        "pre{white-space:pre-wrap;overflow-wrap:anywhere;background:#f4f4f4;padding:1rem}"
+        "dt{font-weight:700}dd{margin:0 0 1rem}</style></head><body><main>"
+        "<h1>V91 Local Audit Report</h1>"
+        f"<dl><dt>Overall status</dt><dd>{status}</dd>"
+        f"<dt>Observer status</dt><dd>{observer}</dd>"
+        f"<dt>Generated (UTC)</dt><dd>{generated}</dd></dl>"
+        "<p>Read-only snapshot. Unknown or unchecked properties are not passes. "
+        "This report does not prove production deployment or WORM retention.</p>"
+        f"<h2>Evidence snapshot</h2><pre>{payload}</pre>"
+        "</main></body></html>\n"
+    )
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--runtime-dir", type=Path, default=DEFAULT_RUNTIME)
     parser.add_argument("--queue-dir", type=Path, default=DEFAULT_QUEUE)
     parser.add_argument("--disk-path", type=Path, default=ROOT)
-    parser.add_argument("--json", action="store_true", help="print machine-readable JSON")
+    output = parser.add_mutually_exclusive_group()
+    output.add_argument("--json", action="store_true", help="print machine-readable JSON")
+    output.add_argument("--html", action="store_true", help="print a self-contained HTML report")
     args = parser.parse_args(argv)
     report = build_report(args.runtime_dir, args.queue_dir, args.disk_path)
-    print(json.dumps(report, indent=2, sort_keys=True) if args.json else render_text(report))
+    if args.json:
+        rendered = json.dumps(report, indent=2, sort_keys=True)
+    elif args.html:
+        rendered = render_html(report)
+    else:
+        rendered = render_text(report)
+    print(rendered)
     return 0 if report["overall_status"] == "OBSERVED" else 2
 
 
