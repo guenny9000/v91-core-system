@@ -80,6 +80,20 @@ def test_biodiversity_log_detects_tampering(tmp_path):
     path.write_text(json.dumps(entry) + "\n", encoding="utf-8")
     assert log.verify_chain() is False
 
+def test_biodiversity_log_refuses_append_after_tampering(tmp_path):
+    path = tmp_path / "bio.jsonl"
+    log = BiodiversityLog(path)
+    log.add_observation("Feldlerche", 3)
+    entry = json.loads(path.read_text(encoding="utf-8"))
+    entry["count"] = 99
+    path.write_text(json.dumps(entry) + "\n", encoding="utf-8")
+
+    with pytest.raises(AutarkyMetricError, match="chain is invalid"):
+        log.add_observation("Igel", 1)
+
+    assert len(path.read_text(encoding="utf-8").splitlines()) == 1
+    assert log.verify_chain() is False
+
 
 def test_biodiversity_log_validates_input(tmp_path):
     log = BiodiversityLog(tmp_path / "bio.jsonl")

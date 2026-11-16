@@ -136,9 +136,12 @@ class BiodiversityLog:
                 if not line:
                     continue
                 try:
-                    entries.append(json.loads(line))
+                    entry = json.loads(line)
                 except json.JSONDecodeError as exc:
                     raise AutarkyMetricError(f"corrupt biodiversity log line: {exc}") from exc
+                if not isinstance(entry, dict):
+                    raise AutarkyMetricError("biodiversity log entry must be a JSON object")
+                entries.append(entry)
         return entries
 
     def add_observation(self, species: str, count: int, note: str = "") -> dict:
@@ -147,6 +150,8 @@ class BiodiversityLog:
         if isinstance(count, bool) or not isinstance(count, int) or count < 0:
             raise AutarkyMetricError("count must be a non-negative integer")
         entries = self._read_entries()
+        if entries and not self.verify_chain():
+            raise AutarkyMetricError("existing biodiversity log chain is invalid; append refused")
         prev = entries[-1]["entry_hash"] if entries else "0" * 64
         record = {
             "seq": len(entries) + 1,
@@ -168,15 +173,20 @@ class BiodiversityLog:
     def verify_chain(self) -> bool:
         prev = "0" * 64
         for index, entry in enumerate(self._read_entries(), start=1):
+            if not isinstance(entry, dict):
+                return False
             if entry.get("seq") != index or entry.get("prev_hash") != prev:
+                return False
+            entry_hash = entry.get("entry_hash")
+            if not isinstance(entry_hash, str) or len(entry_hash) != 64:
                 return False
             expected = {k: v for k, v in entry.items() if k != "entry_hash"}
             digest = hashlib.sha256(
                 json.dumps(expected, sort_keys=True, separators=(",", ":"), ensure_ascii=False).encode("utf-8")
             ).hexdigest()
-            if digest != entry.get("entry_hash"):
+            if digest != entry_hash:
                 return False
-            prev = entry["entry_hash"]
+            prev = entry_hash
         return True
 
     def totals(self) -> dict:
