@@ -117,3 +117,32 @@ def test_invalid_vote_envelope_is_counted_as_invalid():
 def test_invalid_quorum_rejected():
     with pytest.raises(ValueError):
         evaluate([vote("node-a")], quorum=4)
+
+
+
+def test_invalid_vote_does_not_block_later_valid_vote_from_same_agent():
+    valid = vote("node-a")
+    tampered = type(valid)(**{**valid.__dict__, "approve": False})
+    result = evaluate([tampered, valid, vote("node-b")])
+    assert result.decision is Decision.ACCEPT
+    assert result.valid_approvals == 2
+
+
+def test_multiple_valid_votes_from_one_agent_are_excluded_independent_of_order():
+    approval = vote("node-a", True, sequence=1)
+    rejection = vote("node-a", False, sequence=2)
+    for ordered in ([approval, rejection, vote("node-b")],
+                    [rejection, approval, vote("node-b")]):
+        result = evaluate(ordered)
+        assert result.valid_approvals == 0
+        assert result.valid_rejections == 0
+        assert result.decision is Decision.NO_QUORUM
+        assert any("duplicate valid votes" in item for item in result.invalid_votes)
+
+
+def test_negative_issued_at_is_rejected():
+    original = vote("node-a")
+    malformed = type(original)(**{**original.__dict__, "issued_at": -1})
+    result = evaluate([malformed], now=0, allowed_clock_skew_seconds=2000)
+    assert result.decision is Decision.NO_QUORUM
+    assert any("timestamp outside allowed window" in item for item in result.invalid_votes)
