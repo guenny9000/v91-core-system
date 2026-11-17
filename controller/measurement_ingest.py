@@ -41,13 +41,10 @@ class SensorSpec:
             ("max_change_per_hour", self.max_change_per_hour),
             ("max_gap_seconds", self.max_gap_seconds),
         ):
-            if value is not None and (
-                isinstance(value, bool)
-                or not isinstance(value, (int, float))
-                or not math.isfinite(value)
-                or value <= 0
-            ):
-                raise ValueError(f"{name} must be finite and positive when set")
+            if value is not None:
+                finite_value = _as_finite_float(value)
+                if finite_value is None or finite_value <= 0:
+                    raise ValueError(f"{name} must be finite and positive when set")
 
 
 @dataclass(frozen=True)
@@ -122,7 +119,7 @@ def validate_measurement(
     if not isinstance(measurement.metric, str) or not measurement.metric.strip():
         errors.append("metric missing or invalid")
 
-    spec = specs.get(measurement.metric)
+    spec = specs.get(measurement.metric) if isinstance(measurement.metric, str) else None
     if spec is None:
         errors.append(f"no sensor specification for metric {measurement.metric!r}")
 
