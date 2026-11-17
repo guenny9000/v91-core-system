@@ -1,4 +1,9 @@
-"""Transport-neutral fail-closed vote validation. No network, ledger, or execution."""
+"""V91-SYSTEM-HEADER (AGATHON-SEALED v2.4)
+STATUS: ACTIVE | VERIFICATION: REQUIRED (CLAIM != EVIDENCE)
+AXIOM: Schöpfung dient dem Erhalt, der Regeneration und der Zukunft.
+---------------------------------------------------------------------
+Transport-neutral fail-closed vote validation. No network, ledger, or execution.
+"""
 from __future__ import annotations
 
 from dataclasses import dataclass
@@ -46,16 +51,17 @@ def _payload(vote: Vote) -> bytes:
         "epoch": vote.epoch, "sequence": vote.sequence,
         "issued_at": vote.issued_at, "approve": vote.approve,
     }
-    return json.dumps(fields, sort_keys=True, separators=(",", ":")).encode("ascii")
+    return json.dumps(fields, sort_keys=True, separators=(",", ":")).encode("utf-8")
 
 
 def sign_vote(*, agent_id: str, proposal_digest: str, epoch: int,
               sequence: int, issued_at: int, approve: bool,
               agent_key: bytes) -> Vote:
     """Sign one vote with that agent's independent secret (>=32 bytes)."""
-    if len(agent_key) < 32:
+    if not isinstance(agent_key, bytes) or len(agent_key) < 32:
         raise ValueError("agent_key must contain at least 32 bytes")
-    if not agent_id or not agent_id.strip() or not _HEX.fullmatch(proposal_digest):
+    if (not isinstance(agent_id, str) or not agent_id.strip()
+            or not isinstance(proposal_digest, str) or not _HEX.fullmatch(proposal_digest)):
         raise ValueError("invalid agent_id or proposal_digest")
     if any(type(v) is not int or v < 0 for v in (epoch, sequence, issued_at)):
         raise ValueError("epoch, sequence and issued_at must be non-negative integers")
@@ -73,10 +79,18 @@ def evaluate_consensus(votes: list[Vote] | tuple[Vote, ...], *,
                        quorum: int | None = None,
                        allowed_clock_skew_seconds: int = 60) -> ConsensusResult:
     """Validate unique votes. Replay floors must come from durable trusted state."""
+    if not isinstance(member_keys, Mapping) or not isinstance(min_sequence_by_agent, Mapping):
+        raise ValueError("member_keys and min_sequence_by_agent must be mappings")
+    if not isinstance(votes, (list, tuple)):
+        raise ValueError("votes must be a list or tuple")
     members = dict(member_keys)
-    if not members or any(not name.strip() or len(key) < 32 for name, key in members.items()):
+    if not members or any(
+        not isinstance(name, str) or not name.strip()
+        or not isinstance(key, bytes) or len(key) < 32
+        for name, key in members.items()
+    ):
         raise ValueError("each configured member needs a name and key of >=32 bytes")
-    if not _HEX.fullmatch(proposal_digest):
+    if not isinstance(proposal_digest, str) or not _HEX.fullmatch(proposal_digest):
         raise ValueError("proposal_digest must be a lowercase SHA-256 hex digest")
     if type(epoch) is not int or type(now) is not int or min(epoch, now) < 0:
         raise ValueError("epoch and now must be non-negative integers")
@@ -91,7 +105,8 @@ def evaluate_consensus(votes: list[Vote] | tuple[Vote, ...], *,
     no: list[str] = []
     invalid: list[str] = []
     for vote in votes:
-        if not isinstance(vote, Vote) or not isinstance(vote.agent_id, str) or not vote.agent_id.strip():
+        if (not isinstance(vote, Vote) or not isinstance(vote.agent_id, str)
+                or not vote.agent_id.strip()):
             invalid.append("malformed vote envelope")
             continue
         agent = vote.agent_id
@@ -103,7 +118,9 @@ def evaluate_consensus(votes: list[Vote] | tuple[Vote, ...], *,
         if key is None:
             invalid.append(f"{agent}: unknown member")
             continue
-        if vote.proposal_digest != proposal_digest or vote.epoch != epoch:
+        if (not isinstance(vote.proposal_digest, str)
+                or type(vote.epoch) is not int
+                or vote.proposal_digest != proposal_digest or vote.epoch != epoch):
             invalid.append(f"{agent}: proposal or epoch mismatch")
             continue
         floor = min_sequence_by_agent.get(agent)
