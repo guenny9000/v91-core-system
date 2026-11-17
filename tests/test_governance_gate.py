@@ -94,7 +94,7 @@ class GovernanceLedgerTest(unittest.TestCase):
             ledger = GovernanceLedger(path, key=KEY.encode())
             ledger.append_decision(GOOD)
             entry = json.loads(path.read_text(encoding="utf-8"))
-            entry["decision"] = "APPROVED"
+            entry["decision"] = "FORGED"
             path.write_text(json.dumps(entry) + "\n", encoding="utf-8")
             self.assertFalse(ledger.verify_chain())
             with self.assertRaises(GovernanceGateError):
