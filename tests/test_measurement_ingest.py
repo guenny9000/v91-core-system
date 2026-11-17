@@ -1,5 +1,3 @@
-from datetime import datetime, timezone
-
 import pytest
 
 from controller.measurement_ingest import (
