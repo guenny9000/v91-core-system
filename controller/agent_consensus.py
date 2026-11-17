@@ -100,9 +100,7 @@ def evaluate_consensus(votes: list[Vote] | tuple[Vote, ...], *,
     if type(required) is not int or not 1 <= required <= len(members):
         raise ValueError("quorum must be between 1 and the member count")
 
-    seen: set[str] = set()
-    yes: list[str] = []
-    no: list[str] = []
+    valid_by_agent: dict[str, list[Vote]] = {}
     invalid: list[str] = []
     for vote in votes:
         if (not isinstance(vote, Vote) or not isinstance(vote.agent_id, str)
@@ -110,10 +108,6 @@ def evaluate_consensus(votes: list[Vote] | tuple[Vote, ...], *,
             invalid.append("malformed vote envelope")
             continue
         agent = vote.agent_id
-        if agent in seen:
-            invalid.append(f"{agent}: duplicate vote")
-            continue
-        seen.add(agent)
         key = members.get(agent)
         if key is None:
             invalid.append(f"{agent}: unknown member")
@@ -128,7 +122,8 @@ def evaluate_consensus(votes: list[Vote] | tuple[Vote, ...], *,
                 or floor < 0 or vote.sequence <= floor):
             invalid.append(f"{agent}: stale or untracked sequence")
             continue
-        if type(vote.issued_at) is not int or abs(now - vote.issued_at) > allowed_clock_skew_seconds:
+        if (type(vote.issued_at) is not int or vote.issued_at < 0
+                or abs(now - vote.issued_at) > allowed_clock_skew_seconds):
             invalid.append(f"{agent}: timestamp outside allowed window")
             continue
         if (type(vote.approve) is not bool or not isinstance(vote.signature, str)
@@ -139,9 +134,19 @@ def evaluate_consensus(votes: list[Vote] | tuple[Vote, ...], *,
         if not hmac.compare_digest(expected, vote.signature):
             invalid.append(f"{agent}: signature verification failed")
             continue
-        (yes if vote.approve else no).append(agent)
+        valid_by_agent.setdefault(agent, []).append(vote)
+
+    # Count only a single valid vote per member. Multiple valid votes invalidate
+    # that member's contribution, independent of input order.
+    yes: list[str] = []
+    no: list[str] = []
+    for agent, agent_votes in valid_by_agent.items():
+        if len(agent_votes) != 1:
+            invalid.append(f"{agent}: duplicate valid votes")
+            continue
+        (yes if agent_votes[0].approve else no).append(agent)
 
     decision = (Decision.ACCEPT if len(yes) >= required else
                 Decision.REJECT if len(no) >= required else Decision.NO_QUORUM)
     return ConsensusResult(decision, required, len(yes), len(no),
-                           tuple(sorted(yes)), tuple(sorted(no)), tuple(invalid))
+                           tuple(sorted(yes)), tuple(sorted(no)), tuple(sorted(invalid)))
