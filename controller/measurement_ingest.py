@@ -1,4 +1,8 @@
-"""Fail-closed validation for externally sourced measurements.
+"""V91-SYSTEM-HEADER (AGATHON-SEALED v2.4)
+STATUS: ACTIVE | VERIFICATION: REQUIRED (CLAIM != EVIDENCE)
+AXIOM: Schöpfung dient dem Erhalt, der Regeneration und der Zukunft.
+---------------------------------------------------------------------
+Fail-closed validation for externally sourced measurements.
 
 This module validates one measurement at a time. It does not connect sensors,
 write a ledger, infer missing values, or claim that a source is live.
