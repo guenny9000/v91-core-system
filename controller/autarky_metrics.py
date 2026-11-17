@@ -78,23 +78,32 @@ class EnergyAutarky:
             else:
                 unmeasured += 1
         total = valid_solar + valid_grid
-        if measured == 0 or total <= 0:
+        solar_wh = valid_solar * self._interval_hours
+        grid_wh = valid_grid * self._interval_hours
+        measured_duration = measured * self._interval_hours
+        if (
+            measured == 0
+            or total <= 0
+            or not all(math.isfinite(value) for value in (
+                valid_solar, valid_grid, total, solar_wh, grid_wh, measured_duration
+            ))
+        ):
             return {
                 "status": "UNKNOWN",
                 "self_sufficiency_share": None,
                 "measured_intervals": measured,
                 "unmeasured_intervals": unmeasured,
-                "reason": "no usable measurement; UNKNOWN is never HEALTHY",
+                "reason": "no usable finite measurement or aggregate overflow; UNKNOWN is never HEALTHY",
             }
         return {
             "status": "MEASURED",
             "self_sufficiency_share": round(valid_solar / total, 6),
             "measured_intervals": measured,
             "unmeasured_intervals": unmeasured,
-            "solar_wh": round(valid_solar * self._interval_hours, 6),
-            "grid_wh": round(valid_grid * self._interval_hours, 6),
+            "solar_wh": round(solar_wh, 6),
+            "grid_wh": round(grid_wh, 6),
             "sampling_interval_hours": self._interval_hours,
-            "measured_duration_hours": round(measured * self._interval_hours, 6),
+            "measured_duration_hours": round(measured_duration, 6),
         }
 
 
