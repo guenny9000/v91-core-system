@@ -79,7 +79,7 @@ def test_out_of_order_timestamp_is_quarantined(specs):
 
 def test_gap_and_rate_are_warnings_not_silent_corrections(specs):
     previous = PreviousMeasurement(10.0, "2026-11-17T06:00:00Z")
-    result = validate_measurement(reading(40.0), specs, previous)
+    result = validate_measurement(reading(42.0), specs, previous)
     assert result.status is MeasurementStatus.VALID
     assert any("gap" in warning for warning in result.warnings)
     assert any("change rate" in warning for warning in result.warnings)
