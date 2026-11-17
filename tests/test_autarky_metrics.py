@@ -39,6 +39,60 @@ def test_energy_autarky_no_data_is_unknown_not_healthy():
     assert result["self_sufficiency_share"] is None
 
 
+
+@pytest.mark.parametrize("value", [float("inf"), float("-inf"), float("nan")])
+def test_energy_autarky_rejects_non_finite_power_values(value):
+    result = EnergyAutarky([{"solar_w": value, "grid_w": 100}]).compute()
+    assert result["status"] == "UNKNOWN"
+    assert result["measured_intervals"] == 0
+    assert result["unmeasured_intervals"] == 1
+
+
+def test_energy_autarky_converts_15_minute_average_power_to_wh():
+    records = [
+        {"solar_w": 300, "grid_w": 100},
+        {"solar_w": 100, "grid_w": 300},
+    ]
+    result = EnergyAutarky(records).compute()
+    assert result["solar_wh"] == 100.0
+    assert result["grid_wh"] == 100.0
+    assert result["sampling_interval_hours"] == 0.25
+    assert result["measured_duration_hours"] == 0.5
+
+
+def test_energy_autarky_supports_explicit_sampling_interval():
+    result = EnergyAutarky([{"solar_w": 300, "grid_w": 100}], interval_hours=1).compute()
+    assert result["solar_wh"] == 300.0
+    assert result["grid_wh"] == 100.0
+    assert result["sampling_interval_hours"] == 1.0
+
+
+@pytest.mark.parametrize("interval", [0, -1, float("inf"), float("nan"), True])
+def test_energy_autarky_rejects_invalid_sampling_interval(interval):
+    with pytest.raises(AutarkyMetricError, match="interval_hours"):
+        EnergyAutarky([], interval_hours=interval)
+
+
+def test_energy_autarky_returns_unknown_on_aggregate_overflow():
+    records = [
+        {"solar_w": 1e308, "grid_w": 0},
+        {"solar_w": 1e308, "grid_w": 0},
+    ]
+    result = EnergyAutarky(records).compute()
+    assert result["status"] == "UNKNOWN"
+    assert result["self_sufficiency_share"] is None
+    assert "overflow" in result["reason"]
+
+
+def test_energy_autarky_returns_unknown_on_energy_conversion_overflow():
+    result = EnergyAutarky(
+        [{"solar_w": 1e308, "grid_w": 0}],
+        interval_hours=1e308,
+    ).compute()
+    assert result["status"] == "UNKNOWN"
+    assert result["self_sufficiency_share"] is None
+    assert "overflow" in result["reason"]
+
 def test_energy_autarky_rejects_non_sequence():
     with pytest.raises(AutarkyMetricError):
         EnergyAutarky("not-a-list")
