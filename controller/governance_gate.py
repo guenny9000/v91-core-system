@@ -60,20 +60,22 @@ def evaluate_checks(metrics: dict[str, Any]) -> dict[str, Any]:
         raise GovernanceGateError("metrics must be a dict")
     missing: list[str] = []
     rejected: list[str] = []
+    failed: list[str] = []
     for key in CHECK_KEYS:
         if key not in metrics:
             missing.append(key)
             continue
         value = metrics[key]
-        if isinstance(value, bool) and value is True:
-            continue
         if not isinstance(value, bool):
             rejected.append(key)
-    if missing or rejected:
+        elif value is False:
+            failed.append(key)
+    if missing or rejected or failed:
         return {
             "decision": "BLOCKED",
             "reasons": [f"missing check: {k}" for k in missing]
-            + [f"non-boolean check: {k}" for k in rejected],
+            + [f"non-boolean check: {k}" for k in rejected]
+            + [f"check failed: {k}" for k in failed],
         }
     return {"decision": "APPROVED", "reasons": []}
 
