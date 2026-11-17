@@ -144,7 +144,17 @@ def test_result_is_independent_of_vote_order():
 
 
 def test_duplicate_still_detected_after_valid_vote():
-    result = evaluate([vote("node-a"), _tampered("node-a"), vote("node-b")])
+    # A tampered vote fails on its own merits (signature first) and therefore
+    # never reaches the duplicate check; duplicate detection is proven with a
+    # second fully valid vote from the same agent.
+    result = evaluate([vote("node-a"), vote("node-a", sequence=2), vote("node-b")])
     assert result.decision is Decision.ACCEPT
     assert result.valid_approvals == 2
     assert any("duplicate vote" in item for item in result.invalid_votes)
+
+
+def test_tampered_vote_after_valid_vote_fails_on_signature_merits():
+    result = evaluate([vote("node-a"), _tampered("node-a"), vote("node-b")])
+    assert result.decision is Decision.ACCEPT
+    assert result.valid_approvals == 2
+    assert any("signature verification failed" in item for item in result.invalid_votes)
