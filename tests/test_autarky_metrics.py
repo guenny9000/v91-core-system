@@ -72,6 +72,27 @@ def test_energy_autarky_rejects_invalid_sampling_interval(interval):
     with pytest.raises(AutarkyMetricError, match="interval_hours"):
         EnergyAutarky([], interval_hours=interval)
 
+
+def test_energy_autarky_returns_unknown_on_aggregate_overflow():
+    records = [
+        {"solar_w": 1e308, "grid_w": 0},
+        {"solar_w": 1e308, "grid_w": 0},
+    ]
+    result = EnergyAutarky(records).compute()
+    assert result["status"] == "UNKNOWN"
+    assert result["self_sufficiency_share"] is None
+    assert "overflow" in result["reason"]
+
+
+def test_energy_autarky_returns_unknown_on_energy_conversion_overflow():
+    result = EnergyAutarky(
+        [{"solar_w": 1e308, "grid_w": 0}],
+        interval_hours=1e308,
+    ).compute()
+    assert result["status"] == "UNKNOWN"
+    assert result["self_sufficiency_share"] is None
+    assert "overflow" in result["reason"]
+
 def test_energy_autarky_rejects_non_sequence():
     with pytest.raises(AutarkyMetricError):
         EnergyAutarky("not-a-list")
