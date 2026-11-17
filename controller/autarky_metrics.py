@@ -7,6 +7,7 @@ ueber den eigenen Rechner hinaus. SCRIPTED != INSTALLED.
 from __future__ import annotations
 
 import hashlib
+import math
 import json
 import os
 from contextlib import closing
@@ -20,7 +21,12 @@ class AutarkyMetricError(RuntimeError):
 
 
 def _is_number(value: object) -> bool:
-    return isinstance(value, (int, float)) and not isinstance(value, bool) and value >= 0
+    if isinstance(value, bool) or not isinstance(value, (int, float)):
+        return False
+    try:
+        return math.isfinite(float(value)) and value >= 0
+    except (OverflowError, TypeError, ValueError):
+        return False
 
 
 def _parse_utc(value: object) -> Optional[datetime]:
@@ -38,15 +44,21 @@ def _parse_utc(value: object) -> Optional[datetime]:
 class EnergyAutarky:
     """Self-sufficiency share from measured solar/grid/load intervals.
 
-    A record counts only when solar_w AND grid_w are both measured non-negative
-    numbers. Intervals with missing values are UNKNOWN and excluded, never
-    interpolated. The result is UNKNOWN when no interval is measurable.
+    A record counts only when solar_w AND grid_w are both measured finite,
+    non-negative average-power values. All records must represent equal-duration
+    intervals. The default interval is 15 minutes (Issue #83); pass interval_hours
+    explicitly when the source uses a different cadence. Missing values are
+    UNKNOWN and excluded, never interpolated.
     """
 
-    def __init__(self, records: Sequence[Mapping[str, object]]) -> None:
+    def __init__(self, records: Sequence[Mapping[str, object]],
+                 interval_hours: float = 0.25) -> None:
         if not isinstance(records, (list, tuple)):
             raise AutarkyMetricError("records must be a sequence of measurement dicts")
+        if not _is_number(interval_hours) or float(interval_hours) <= 0:
+            raise AutarkyMetricError("interval_hours must be a finite positive number")
         self._records = list(records)
+        self._interval_hours = float(interval_hours)
 
     def compute(self) -> dict:
         valid_solar = 0.0
@@ -79,8 +91,10 @@ class EnergyAutarky:
             "self_sufficiency_share": round(valid_solar / total, 6),
             "measured_intervals": measured,
             "unmeasured_intervals": unmeasured,
-            "solar_wh": round(valid_solar, 6),
-            "grid_wh": round(valid_grid, 6),
+            "solar_wh": round(valid_solar * self._interval_hours, 6),
+            "grid_wh": round(valid_grid * self._interval_hours, 6),
+            "sampling_interval_hours": self._interval_hours,
+            "measured_duration_hours": round(measured * self._interval_hours, 6),
         }
 
 
