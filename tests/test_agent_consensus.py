@@ -45,10 +45,11 @@ def test_tampered_vote_does_not_count():
     assert any("signature verification failed" in item for item in result.invalid_votes)
 
 
-def test_duplicate_voter_counts_once():
+def test_duplicate_valid_votes_exclude_that_voter():
     result = evaluate([vote("node-a"), vote("node-a", sequence=2)])
-    assert result.valid_approvals == 1
-    assert any("duplicate vote" in item for item in result.invalid_votes)
+    assert result.valid_approvals == 0
+    assert result.accepted_agents == ()
+    assert any("duplicate valid votes" in item for item in result.invalid_votes)
 
 
 def test_stale_sequence_rejected():
@@ -134,8 +135,9 @@ def test_multiple_valid_votes_from_one_agent_are_excluded_independent_of_order()
     for ordered in ([approval, rejection, vote("node-b")],
                     [rejection, approval, vote("node-b")]):
         result = evaluate(ordered)
-        assert result.valid_approvals == 0
+        assert result.valid_approvals == 1
         assert result.valid_rejections == 0
+        assert result.accepted_agents == ("node-b",)
         assert result.decision is Decision.NO_QUORUM
         assert any("duplicate valid votes" in item for item in result.invalid_votes)
 
