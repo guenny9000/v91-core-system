@@ -14,10 +14,15 @@ def vote(agent, approve=True, sequence=1):
 
 
 def evaluate(votes, **kwargs):
-    return evaluate_consensus(
-        votes, member_keys=KEYS, proposal_digest=DIGEST, epoch=7, now=1000,
-        min_sequence_by_agent={"node-a": 0, "node-b": 0, "node-c": 0}, **kwargs
-    )
+    options = {
+        "member_keys": KEYS,
+        "proposal_digest": DIGEST,
+        "epoch": 7,
+        "now": 1000,
+        "min_sequence_by_agent": {"node-a": 0, "node-b": 0, "node-c": 0},
+    }
+    options.update(kwargs)
+    return evaluate_consensus(votes, **options)
 
 
 def test_majority_approval():
@@ -59,6 +64,14 @@ def test_wrong_epoch_rejected():
     assert evaluate([wrong]).decision is Decision.NO_QUORUM
 
 
+def test_boolean_epoch_is_rejected_even_when_equal_to_integer():
+    original = sign_vote(agent_id="node-a", proposal_digest=DIGEST, epoch=1,
+                         sequence=1, issued_at=1000, approve=True, agent_key=KEYS["node-a"])
+    malformed = type(original)(**{**original.__dict__, "epoch": True})
+    result = evaluate([malformed], epoch=1)
+    assert result.decision is Decision.NO_QUORUM
+
+
 def test_expired_vote_rejected():
     result = evaluate_consensus(
         [vote("node-a")], member_keys=KEYS, proposal_digest=DIGEST, epoch=7,
@@ -72,6 +85,33 @@ def test_short_key_rejected():
     with pytest.raises(ValueError):
         sign_vote(agent_id="node-a", proposal_digest=DIGEST, epoch=1,
                   sequence=1, issued_at=1, approve=True, agent_key=b"short")
+
+
+@pytest.mark.parametrize("bad_keys", [
+    {"node-a": None},
+    {1: b"x" * 32},
+    {"node-a": "x" * 32},
+])
+def test_malformed_member_configuration_rejected(bad_keys):
+    with pytest.raises(ValueError):
+        evaluate_consensus(
+            [], member_keys=bad_keys, proposal_digest=DIGEST, epoch=1, now=1000,
+            min_sequence_by_agent={}
+        )
+
+
+def test_non_mapping_sequence_floors_rejected():
+    with pytest.raises(ValueError):
+        evaluate_consensus(
+            [], member_keys=KEYS, proposal_digest=DIGEST, epoch=1, now=1000,
+            min_sequence_by_agent=None
+        )
+
+
+def test_invalid_vote_envelope_is_counted_as_invalid():
+    result = evaluate([object()])
+    assert result.decision is Decision.NO_QUORUM
+    assert result.invalid_votes == ("malformed vote envelope",)
 
 
 def test_invalid_quorum_rejected():
