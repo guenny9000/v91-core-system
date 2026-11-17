@@ -32,10 +32,13 @@ class SensorSpec:
             raise ValueError("metric must be a non-empty string")
         if not isinstance(self.unit, str) or not self.unit.strip():
             raise ValueError("unit must be a non-empty string")
-        for name, value in (("minimum", self.minimum), ("maximum", self.maximum)):
-            if _as_finite_float(value) is None:
-                raise ValueError(f"{name} must be finite")
-        if self.minimum > self.maximum:
+        minimum = _as_finite_float(self.minimum)
+        maximum = _as_finite_float(self.maximum)
+        if minimum is None:
+            raise ValueError("minimum must be finite")
+        if maximum is None:
+            raise ValueError("maximum must be finite")
+        if minimum > maximum:
             raise ValueError("minimum must not exceed maximum")
         for name, value in (
             ("max_change_per_hour", self.max_change_per_hour),
@@ -120,8 +123,11 @@ def validate_measurement(
         errors.append("metric missing or invalid")
 
     spec = specs.get(measurement.metric) if isinstance(measurement.metric, str) else None
-    if spec is None:
-        errors.append(f"no sensor specification for metric {measurement.metric!r}")
+    if not isinstance(spec, SensorSpec):
+        spec = None
+        errors.append(f"no valid sensor specification for metric {measurement.metric!r}")
+    if previous is not None and not isinstance(previous, PreviousMeasurement):
+        raise TypeError("previous must be PreviousMeasurement or None")
 
     timestamp = _parse_timestamp(measurement.timestamp)
     if timestamp is None:
