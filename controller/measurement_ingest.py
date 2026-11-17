@@ -28,10 +28,12 @@ class SensorSpec:
     max_gap_seconds: float | None = None
 
     def __post_init__(self) -> None:
-        if not self.metric or not self.unit:
-            raise ValueError("metric and unit must be non-empty")
+        if not isinstance(self.metric, str) or not self.metric.strip():
+            raise ValueError("metric must be a non-empty string")
+        if not isinstance(self.unit, str) or not self.unit.strip():
+            raise ValueError("unit must be a non-empty string")
         for name, value in (("minimum", self.minimum), ("maximum", self.maximum)):
-            if isinstance(value, bool) or not isinstance(value, (int, float)) or not math.isfinite(value):
+            if _as_finite_float(value) is None:
                 raise ValueError(f"{name} must be finite")
         if self.minimum > self.maximum:
             raise ValueError("minimum must not exceed maximum")
@@ -79,6 +81,16 @@ class ValidationResult:
 KNOWN_ERROR_VALUES = frozenset({-999, -9999, 9999, 99999, 999.9})
 
 
+def _as_finite_float(value: object) -> float | None:
+    if isinstance(value, bool) or not isinstance(value, (int, float)):
+        return None
+    try:
+        result = float(value)
+    except (OverflowError, TypeError, ValueError):
+        return None
+    return result if math.isfinite(result) else None
+
+
 def _parse_timestamp(value: object) -> datetime | None:
     if not isinstance(value, str) or not value:
         return None
@@ -105,10 +117,10 @@ def validate_measurement(
     if not isinstance(specs, Mapping):
         raise TypeError("specs must be a mapping")
 
-    if not measurement.sensor_id.strip():
-        errors.append("sensor_id missing")
-    if not measurement.metric.strip():
-        errors.append("metric missing")
+    if not isinstance(measurement.sensor_id, str) or not measurement.sensor_id.strip():
+        errors.append("sensor_id missing or invalid")
+    if not isinstance(measurement.metric, str) or not measurement.metric.strip():
+        errors.append("metric missing or invalid")
 
     spec = specs.get(measurement.metric)
     if spec is None:
@@ -119,6 +131,7 @@ def validate_measurement(
         errors.append("timestamp missing, malformed, or timezone-naive")
 
     value = measurement.value
+    numeric = _as_finite_float(value)
     if value is None:
         errors.append("value is None; source failure or missing reading")
     elif isinstance(value, bool) or not isinstance(value, (int, float)):
@@ -127,22 +140,21 @@ def validate_measurement(
             measurement,
             errors=errors + ["value must be a numeric int or float; booleans and strings are rejected"],
         )
-    else:
-        try:
-            numeric = float(value)
-        except (OverflowError, TypeError, ValueError):
-            numeric = math.nan
-        if not math.isfinite(numeric):
-            errors.append("value is not finite")
-        elif numeric in KNOWN_ERROR_VALUES:
-            errors.append(f"known sensor error sentinel: {numeric}")
-        elif spec is not None:
-            if measurement.unit != spec.unit:
-                errors.append(f"unit mismatch: received {measurement.unit!r}, expected {spec.unit!r}")
-            if numeric < spec.minimum or numeric > spec.maximum:
-                errors.append(
-                    f"value {numeric} outside [{spec.minimum}, {spec.maximum}] {spec.unit}"
-                )
+    elif numeric is None:
+        errors.append("value is not finite or cannot be represented safely")
+    elif numeric in KNOWN_ERROR_VALUES:
+        errors.append(f"known sensor error sentinel: {numeric}")
+    elif spec is not None:
+        if measurement.unit != spec.unit:
+            errors.append(f"unit mismatch: received {measurement.unit!r}, expected {spec.unit!r}")
+        minimum = _as_finite_float(spec.minimum)
+        maximum = _as_finite_float(spec.maximum)
+        if minimum is None or maximum is None:
+            errors.append("sensor specification limits are invalid")
+        elif numeric < minimum or numeric > maximum:
+            errors.append(
+                f"value {numeric} outside [{minimum}, {maximum}] {spec.unit}"
+            )
 
     if previous is not None and timestamp is not None and spec is not None:
         previous_time = _parse_timestamp(previous.timestamp)
@@ -157,11 +169,10 @@ def validate_measurement(
                     warnings.append(f"measurement gap: {elapsed:.1f} seconds")
                 if (
                     spec.max_change_per_hour is not None
-                    and isinstance(value, (int, float))
-                    and not isinstance(value, bool)
-                    and math.isfinite(float(value))
+                    and numeric is not None
+                    and _as_finite_float(previous.value) is not None
                 ):
-                    rate = abs(float(value) - previous.value) / (elapsed / 3600)
+                    rate = abs(numeric - float(previous.value)) / (elapsed / 3600)
                     if rate > spec.max_change_per_hour:
                         warnings.append(
                             f"unusual change rate: {rate:.3f} per hour "
@@ -174,6 +185,6 @@ def validate_measurement(
         MeasurementStatus.VALID,
         measurement,
         warnings=warnings,
-        normalized_value=float(value),
+        normalized_value=numeric,
         timestamp_utc=timestamp.isoformat().replace("+00:00", "Z") if timestamp else None,
     )
