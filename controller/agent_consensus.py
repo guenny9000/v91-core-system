@@ -91,6 +91,9 @@ def evaluate_consensus(votes: list[Vote] | tuple[Vote, ...], *,
     no: list[str] = []
     invalid: list[str] = []
     for vote in votes:
+        if not isinstance(vote, Vote) or not isinstance(vote.agent_id, str) or not vote.agent_id.strip():
+            invalid.append("malformed vote envelope")
+            continue
         agent = vote.agent_id
         if agent in seen:
             invalid.append(f"{agent}: duplicate vote")
@@ -104,13 +107,15 @@ def evaluate_consensus(votes: list[Vote] | tuple[Vote, ...], *,
             invalid.append(f"{agent}: proposal or epoch mismatch")
             continue
         floor = min_sequence_by_agent.get(agent)
-        if type(vote.sequence) is not int or floor is None or vote.sequence <= floor:
+        if (type(vote.sequence) is not int or type(floor) is not int
+                or floor < 0 or vote.sequence <= floor):
             invalid.append(f"{agent}: stale or untracked sequence")
             continue
         if type(vote.issued_at) is not int or abs(now - vote.issued_at) > allowed_clock_skew_seconds:
             invalid.append(f"{agent}: timestamp outside allowed window")
             continue
-        if type(vote.approve) is not bool or not _HEX.fullmatch(vote.signature):
+        if (type(vote.approve) is not bool or not isinstance(vote.signature, str)
+                or not _HEX.fullmatch(vote.signature)):
             invalid.append(f"{agent}: malformed vote or signature")
             continue
         expected = hmac.new(key, _payload(vote), hashlib.sha256).hexdigest()
