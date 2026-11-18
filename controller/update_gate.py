@@ -36,6 +36,7 @@ operator, revocation lists are plain configuration).
 from __future__ import annotations
 
 import hashlib
+import json
 import os
 from dataclasses import dataclass
 from datetime import datetime
@@ -49,7 +50,6 @@ from controller.crypto_receipts import (
     sign_record,
     verify_record_signature,
 )
-
 MANIFEST_KIND = "V91_UPDATE_MANIFEST"
 SCHEMA_VERSION = 1
 STATUS_ACCEPTED = "ACCEPTED_TRUSTED_STAGED"
@@ -223,8 +223,8 @@ class UpdateGate:
         staged_manifest = staging_dir / f"{manifest['release_name']}.manifest.json"
         if staged.exists() or staged_manifest.exists():
             return UpdateVerdict(status=STATUS_REJECTED,
-                                 reason="staged artifact already exists; ",
-                                        "refusing to overwrite (clear the ",
+                                 reason="staged artifact already exists; "
+                                        "refusing to overwrite (clear the "
                                         "staging area first)")
         tmp = staged.with_name(staged.name + ".tmp")
         with open(tmp, "wb") as handle:
@@ -233,10 +233,8 @@ class UpdateGate:
             os.fsync(handle.fileno())
         os.replace(tmp, staged)
         tmp_manifest = staged_manifest.with_name(staged_manifest.name + ".tmp")
-        import json as _json
         with open(tmp_manifest, "w", encoding="utf-8") as handle:
-            canonical = _json.dumps(manifest, sort_keys=True, ensure_ascii=False, indent=1)
-            handle.write(canonical)
+            json.dump(manifest, handle, sort_keys=True, ensure_ascii=False, indent=1)
             handle.write("\n")
             handle.flush()
             os.fsync(handle.fileno())
