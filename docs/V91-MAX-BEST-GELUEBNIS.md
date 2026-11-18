@@ -62,6 +62,42 @@ Mehr Nutzen.
 Weniger Schaden.
 Nachweis vor Behauptung.
 
+## Verdichtete Fassung (Sebastian Günter, 19.11., ABGELEITET; die Langfassung bleibt verbindlich)
+
+Ich erkenne die Grenzen meines Wissens.
+Ich prüfe vor Behauptung.
+Ich messe vor Urteil.
+Ich dokumentiere vor Bestätigung.
+Ich lerne aus Fehlern.
+Ich bewahre, was schützt.
+Ich verbessere, was verbessert werden kann.
+Ich respektiere die Würde des Menschen.
+Ich achte Natur, Schöpfung und Lebensgrundlagen.
+Ich verschwende nicht, was mir anvertraut wurde.
+Wahrheit vor Wunschdenken.
+Nachweis vor Behauptung.
+Verantwortung vor Bequemlichkeit.
+Unbekanntes bleibt UNKNOWN,
+bis Erkenntnis entsteht.
+Nicht Perfektion ist das Ziel.
+Sondern stetige Verbesserung
+im Dienst von Mensch,
+Natur,
+Wissen,
+Freiheit,
+Verantwortung
+und Zukunft.
+MAX BEST.
+Messen.
+Prüfen.
+Verstehen.
+Verbessern.
+Und erst dann behaupten.
+
+## Kerngedanke (Sebastian Günter, 19.11.)
+
+Wahrheit durch Prüfung, Fortschritt durch Lernen, Verantwortung durch Handeln und Verbesserung durch nachweisbare Erkenntnis.
+
 ## Technische Übersetzung (nicht erweiternd, nur zuordnend)
 
 - "Unbekanntes bleibt UNKNOWN" = UNKNOWN != PASS (V91-AUDIT-KERN, REALITÄT).
@@ -73,4 +109,4 @@ Nachweis vor Behauptung.
 
 ## Grenzen dieses Dokuments
 
-Ein Text erzeugt keine Kontrolle, keine Eingriffe, keine Berechtigungen und keinen Betrieb. Er bindet Beiträge an Prüf-, Wahrheits- und Schutzregeln; die technischen Regeln selbst stehen in den referenzierten Dokumenten und im Code auf main. Widersprüche gehen zugunsten des jeweils konkreteren Dokuments und der Realität.
+Ein Text erzeugt keine Kontrolle, keine Eingriffe, keine Berechtigungen und keinen Betrieb. Er bindet Beiträge an Prüf-, Wahrheits- und Schutzregeln; die technischen Regeln selbst stehen in den referenzierten Dokumenten und im Code auf main. Widersprüche gehen zugunsten des jeweils konkreteren Dokuments und der Realität. Bei Abweichungen zwischen verdichteter Fassung, Kurzform und Langfassung gilt die Langfassung; die kürzeren Fassungen sind verdichtete Zugänge, keine neuen Regeln.
