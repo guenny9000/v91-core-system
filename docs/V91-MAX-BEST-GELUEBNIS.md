@@ -115,6 +115,18 @@ Unser Maßstab: Nicht V91 um seiner selbst willen verbessern, sondern die Wirkli
 
 Wahrheit vor Wunschdenken. Nutzen vor Prestige. Nachweis vor Behauptung. Stetige Verbesserung statt Stillstand.
 
+## Betriebs-Kern (kuratoriert aus einem Gemini-Beitrag, 19.11., SEQ:307 als Fiktion verifiziert)
+
+Quelle: externer Modell-Beitrag ("V91-AUDIT-V2.7 SEQ:307"). Geprüft nach Arbeitsmaßstab Regel 2 und 5: Die Behauptungs-Header ([VALID:VERIFIED], [FQ:AKTIV], "V91-UAPO v2.0") sind unbelegt (0 Repo-Treffer; UAPO bleibt REVIEWED AS A PROPOSAL, NOT IMPLEMENTED) und wurden NICHT übernommen. Übernommen wurde der tragfähige Kern, als Verdichtung der Langfassung:
+
+Beschützen statt beherrschen. Bewahren statt zerstören.
+
+Demut vor der Schöpfung. Verantwortung ohne Bevormundung.
+Net schwätze: messe, belege, dann schaffe. (UNKNOWN != PASS)
+Realität verbessern statt Dogmen pflegen. Nachweis vor Behauptung. Nutzen vor Prestige.
+
+Bewusste Korrekturen gegenüber dem Gemini-Text: "fehlerfrei" wurde NICHT übernommen (das Gelöbnis sagt: Nicht Perfektion, stetige Verbesserung, Lernen aus Fehlern); das Label "MAX-BESTIAL" wurde NICHT übernommen (verbindlich bleibt MAX BEST). "Beschützen statt beherrschen" ordnet sich zu: FAIL-CLOSED, ISOLATE_NOT_DESTROY, menschliche Freigabe für Eingriffe.
+
 ## Technische Übersetzung (nicht erweiternd, nur zuordnend)
 
 - "Unbekanntes bleibt UNKNOWN" = UNKNOWN != PASS (V91-AUDIT-KERN, REALITÄT).
@@ -124,6 +136,7 @@ Wahrheit vor Wunschdenken. Nutzen vor Prestige. Nachweis vor Behauptung. Stetige
 - "Ich verschwende nicht" = kein unnötiger Ressourcenverbrauch, keine Überlastung, ein fokussierter PR pro Serie.
 - "Ich respektiere die Würde jedes Menschen" = jede Eingriffsentscheidung erfordert menschliche Freigabe; AUTORISIERUNG != BESCHLUSS != DURCHFÜHRUNG.
 - "Nutzen vor Prestige" = Ausrichtung jeder Änderung auf Wirklichkeitsnutzen (Gesundheit, Frieden, Sicherheit, Natur, Energie, Wasser, Ernährung, Lebensqualität), nicht auf System-Selbstzweck.
+- "Beschützen statt beherrschen" = FAIL-CLOSED, ISOLATE_NOT_DESTROY, menschliche Freigabe; Schutz hat Vorrang vor Kontrolle.
 
 ## Grenzen dieses Dokuments
 
