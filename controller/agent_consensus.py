@@ -3,9 +3,9 @@ STATUS: ACTIVE | VERIFICATION: REQUIRED (CLAIM != EVIDENCE)
 AXIOM: Schöpfung dient dem Erhalt, der Regeneration und der Zukunft.
 ---------------------------------------------------------------------
 Transport-neutral fail-closed vote validation. No network, ledger, or execution.
-Order-independence: an invalid vote never reserves an agent's slot; only a
-fully verified vote marks the agent as seen, so the result does not depend on
-the order in which votes arrive.
+Order-independence: an invalid vote never reserves an agent's slot, so the
+result does not depend on the order in which votes arrive. Conflicting valid
+votes from the same agent invalidate that agent's contribution entirely.
 """
 from __future__ import annotations
 
@@ -83,9 +83,10 @@ def evaluate_consensus(votes: list[Vote] | tuple[Vote, ...], *,
                        allowed_clock_skew_seconds: int = 60) -> ConsensusResult:
     """Validate unique votes. Replay floors must come from durable trusted state.
 
-    Duplicate detection covers only fully verified votes: an invalid vote is
-    rejected on its own merits and never blocks a later valid vote from the
-    same agent, regardless of input order.
+    Order-independence: an invalid vote is rejected on its own merits and
+    never blocks a later valid vote from the same agent. Conflicting valid
+    votes (an agent submitting more than one fully verified vote) invalidate
+    that agent's contribution entirely, independent of input order.
     """
     if not isinstance(member_keys, Mapping) or not isinstance(min_sequence_by_agent, Mapping):
         raise ValueError("member_keys and min_sequence_by_agent must be mappings")
@@ -108,9 +109,7 @@ def evaluate_consensus(votes: list[Vote] | tuple[Vote, ...], *,
     if type(required) is not int or not 1 <= required <= len(members):
         raise ValueError("quorum must be between 1 and the member count")
 
-    seen: set[str] = set()
-    yes: list[str] = []
-    no: list[str] = []
+    valid_by_agent: dict[str, list[Vote]] = {}
     invalid: list[str] = []
     for vote in votes:
         if (not isinstance(vote, Vote) or not isinstance(vote.agent_id, str)
@@ -132,7 +131,8 @@ def evaluate_consensus(votes: list[Vote] | tuple[Vote, ...], *,
                 or floor < 0 or vote.sequence <= floor):
             invalid.append(f"{agent}: stale or untracked sequence")
             continue
-        if type(vote.issued_at) is not int or abs(now - vote.issued_at) > allowed_clock_skew_seconds:
+        if (type(vote.issued_at) is not int or vote.issued_at < 0
+                or abs(now - vote.issued_at) > allowed_clock_skew_seconds):
             invalid.append(f"{agent}: timestamp outside allowed window")
             continue
         if (type(vote.approve) is not bool or not isinstance(vote.signature, str)
@@ -143,11 +143,17 @@ def evaluate_consensus(votes: list[Vote] | tuple[Vote, ...], *,
         if not hmac.compare_digest(expected, vote.signature):
             invalid.append(f"{agent}: signature verification failed")
             continue
-        if agent in seen:
-            invalid.append(f"{agent}: duplicate vote")
+        valid_by_agent.setdefault(agent, []).append(vote)
+
+    # Count only a single valid vote per member. Multiple valid votes from one
+    # agent invalidate that member's contribution, independent of input order.
+    yes: list[str] = []
+    no: list[str] = []
+    for agent, agent_votes in valid_by_agent.items():
+        if len(agent_votes) != 1:
+            invalid.append(f"{agent}: duplicate valid votes")
             continue
-        seen.add(agent)
-        (yes if vote.approve else no).append(agent)
+        (yes if agent_votes[0].approve else no).append(agent)
 
     decision = (Decision.ACCEPT if len(yes) >= required else
                 Decision.REJECT if len(no) >= required else Decision.NO_QUORUM)
