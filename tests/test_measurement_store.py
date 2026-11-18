@@ -114,6 +114,22 @@ class StoreTest(unittest.TestCase):
         with self.assertRaises(MeasurementStoreError):
             MeasurementStore(Path("x.jsonl"), key=b"short")
 
+    def test_lock_is_acquired_before_reading_chain(self):
+        with TemporaryDirectory() as d:
+            path = Path(d) / "store.jsonl"
+            lock_path = path.with_suffix(".jsonl.lock")
+            store = MeasurementStore(path, key=KEY)
+            original_read = store._read_entries
+
+            def read_only_while_locked():
+                self.assertTrue(lock_path.exists())
+                return original_read()
+
+            store._read_entries = read_only_while_locked
+            store.record_valid(sensor_id="s1", metric="m", normalized_value=1.0, unit="u",
+                               timestamp_utc="2026-11-17T08:00:00Z")
+            self.assertFalse(lock_path.exists())
+
     def test_lock_released_after_append(self):
         with TemporaryDirectory() as d:
             path = Path(d) / "store.jsonl"
