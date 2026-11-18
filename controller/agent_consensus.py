@@ -3,6 +3,9 @@ STATUS: ACTIVE | VERIFICATION: REQUIRED (CLAIM != EVIDENCE)
 AXIOM: Schöpfung dient dem Erhalt, der Regeneration und der Zukunft.
 ---------------------------------------------------------------------
 Transport-neutral fail-closed vote validation. No network, ledger, or execution.
+Order-independence: an invalid vote never reserves an agent's slot; only a
+fully verified vote marks the agent as seen, so the result does not depend on
+the order in which votes arrive.
 """
 from __future__ import annotations
 
@@ -78,7 +81,12 @@ def evaluate_consensus(votes: list[Vote] | tuple[Vote, ...], *,
                        min_sequence_by_agent: Mapping[str, int],
                        quorum: int | None = None,
                        allowed_clock_skew_seconds: int = 60) -> ConsensusResult:
-    """Validate unique votes. Replay floors must come from durable trusted state."""
+    """Validate unique votes. Replay floors must come from durable trusted state.
+
+    Duplicate detection covers only fully verified votes: an invalid vote is
+    rejected on its own merits and never blocks a later valid vote from the
+    same agent, regardless of input order.
+    """
     if not isinstance(member_keys, Mapping) or not isinstance(min_sequence_by_agent, Mapping):
         raise ValueError("member_keys and min_sequence_by_agent must be mappings")
     if not isinstance(votes, (list, tuple)):
@@ -110,10 +118,6 @@ def evaluate_consensus(votes: list[Vote] | tuple[Vote, ...], *,
             invalid.append("malformed vote envelope")
             continue
         agent = vote.agent_id
-        if agent in seen:
-            invalid.append(f"{agent}: duplicate vote")
-            continue
-        seen.add(agent)
         key = members.get(agent)
         if key is None:
             invalid.append(f"{agent}: unknown member")
@@ -139,6 +143,10 @@ def evaluate_consensus(votes: list[Vote] | tuple[Vote, ...], *,
         if not hmac.compare_digest(expected, vote.signature):
             invalid.append(f"{agent}: signature verification failed")
             continue
+        if agent in seen:
+            invalid.append(f"{agent}: duplicate vote")
+            continue
+        seen.add(agent)
         (yes if vote.approve else no).append(agent)
 
     decision = (Decision.ACCEPT if len(yes) >= required else
