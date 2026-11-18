@@ -69,7 +69,9 @@ class UdpTransportTest(unittest.TestCase):
                 outcomes = listener.outcomes()
                 self.assertEqual(outcomes[0].status, "ACCEPTED")
                 self.assertEqual(outcomes[1].status, "REJECTED")
-                self.assertTrue(outcomes[1].reason.startswith("malformed env    def test_large_non_json_datagram_is_receiver_rejected(self):
+                self.assertTrue(outcomes[1].reason.startswith("malformed envelope"))
+
+    def test_large_non_json_datagram_is_receiver_rejected(self):
         # UDP datagrams cap at 65507 bytes, below the receiver's 64 KiB
         # envelope bound: the size check is defense in depth for other
         # transports. What CAN arrive is a large non-JSON payload.
