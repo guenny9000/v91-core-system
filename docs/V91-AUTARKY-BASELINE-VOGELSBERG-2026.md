@@ -62,10 +62,21 @@ NICHT GEPRÜFT (bewusst kein Prozentwert ausgegeben):
 
 ## 3. Nahrungsautarkie (Säule 2)
 
-- Landwirtschaftliche Struktur (Betriebe, LF, Viehbesatz) im Kreis:
-  NICHT GEPRÜFT. Die Agrarstrukturerhebung liefert Kreisdaten
-  ([Agraratlas], [GovData]); Zahlen werden erst nach Öffnen der
-  konkreten Kreis-Tabelle übernommen, nicht geschätzt.
+- Landwirtschaftliche Struktur im Kreis - BELEGT (Landwirtschaftszahlung
+  2020, Kreisergebnisse, [HSL-LZ2020], Stichtag 01.03.2020,
+  Regional-Summenprobe in Reg.-Bez. Giessen konsistent:
+  562+539+546+1.106+1.079 = 3.832):
+  - Landwirtschaftliche Betriebe: 1.079.
+  - Landwirtschaftlich genutzte Flaeche (LF): 64.264 ha, davon
+    Ackerland 31.195 ha, Dauergruenland 33.019 ha (Kontrolle:
+    31.195 + 33.019 = 64.214 gegenueber LF 64.264, Rest sonstige
+    Flaechen; identische LF/Ackerland-Werte in zwei unabhaengig
+    extrahierten Tabellen des Berichts).
+  - LF-Anteil an der Kreisflaeche = 64.264 ha / 145.891 ha =
+    44,0 % (Rechenregel angegeben: LF / Gesamtflaeche).
+  - Unsichere Spaltendeutungen des Berichts (z. B. Zuordnung
+    der Spalten 2 und 5 der Uebersichtstabelle) werden NICHT
+    als Fakt veroeffentlicht (UNKNOWN != PASS).
 - Pressebefund (regionaler Kontext, keine Messung): Ertragsrückgang
   rund 10 % bei Landwirten im Kreis gemeldet ([OZ-Artikel]) - BELEGT
   als Meldung, NICHT als Messwert; Ursachenkontext siehe Säule 3.
@@ -156,7 +167,11 @@ Nicht übernommen, weil bereits besser auf main vorhanden
 1. Wasserbilanz 2024 (RP Gießen, PDF) auswerten -> Kreis-Zahlen belegen:
    ERLEDIGT BEI DIESEM UPDATE (Säule 3: Eigenförderungsdeckung 99,4 %,
    Rohrnetzverluste, Pro-Kopf-Verbrauch; Rechenregel angegeben).
-2. Agrarstruktur-Tabelle Kreis öffnen -> Säule 2 belegen.
+2. Agrarstruktur-Tabelle Kreis öffnen -> Säule 2 belegen:
+   ERLEDIGT BEI DIESEM UPDATE (Betriebe 1.079, LF 64.264 ha,
+   Ackerland/Dauergruenland; aus der Landwirtschaftszahlung 2020
+   Kreisergebnissen des HSL; unsichere Spaltendeutungen NICHT
+   uebernommen).
 3. Jahresstromerzeugung/-verbrauch (Netzbetreiber/Kreis) anfordern ->
    Autarkie-Definition nachziehen, DANN Prozentwert ausgeben.
 4. Operator-Vor-Ort-Messungen (Alsfeld) über v91_cli record in den
@@ -183,6 +198,10 @@ Namen, Stand und Quellenpfad trägt.
   https://rp-giessen.hessen.de/sites/rp-giessen.hessen.de/files/2025-10/auswertung_wasserbilanz_2024_bf.pdf
 - [Agraratlas]: Atlas Agrarstatistik -
   https://agraratlas.statistikportal.de/
+- [HSL-LZ2020]: Landwirtschaftszahlung 2020, Kreisergebnisse
+  (Kennziffer C IV 10-1b/20, Hessisches Statistische Landesamt,
+  Juni 2021) -
+  https://statistik.hessen.de/sites/statistik.hessen.de/files/2022-06/CIV10_1b_20.pdf
 - [GovData]: Landwirtschaftliche Betriebe und LF nach Größenklassen,
   Kreis-Tiefe -
   https://www.govdata.de/suche/daten/landwirtschaftliche-betriebe-und-deren-landwirtschaftlichgenutzte-flache-lf-nach-grossenklassen-1
