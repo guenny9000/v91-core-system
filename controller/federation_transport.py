@@ -154,4 +154,3 @@ class UdpEnvelopeListener:
 # integration, or outbound federation (sending envelopes). Sending is
 # a separate capability with its own review; receiving is the risky
 # surface and stays minimal, loopback, and allowlisted.
-UNUSED: Callable[[], None] | None = None  # placeholder removed below
