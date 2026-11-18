@@ -7,18 +7,30 @@ Metrics are generated locally with random values; they are not live telemetry.
 Actions are proposals for observation and are never applied to Docker or the host.
 A real metrics adapter and a separately reviewed actuator are required before
 real-world control actions can be enabled.
+
+Issue #70 runtime wiring: the simulation loop checks the local emergency-stop
+flag fail-closed on every iteration and ends in a controlled shutdown when the
+flag is present (or unreadable/invalid, which also counts as STOPPED).
 """
 
 import math
+import os
 import random
 import time
 from collections import deque
+from pathlib import Path
 from statistics import mean
 
 from anomaly import AnomalyDetector
+from emergency_stop import EmergencyStopFlagReader
 from feedback import FeedbackLoop
 from metrics import MetricsFeed
 from real_metrics import collect_host_metrics
+
+ROOT = Path(__file__).resolve().parents[1]
+DEFAULT_STOP_FLAG = Path(
+    os.getenv("V91_EMERGENCY_STOP_FLAG", str(ROOT / "runtime" / "emergency_stop.flag"))
+).expanduser()
 
 
 class ControlPlane:
@@ -31,7 +43,7 @@ class ControlPlane:
         "conserve_resources",
     }
 
-    def __init__(self):
+    def __init__(self, stop_reader=None):
         self.anomaly_detector = AnomalyDetector()
         self.metrics_feed = MetricsFeed()
         self.feedback_loop = FeedbackLoop()
@@ -40,6 +52,7 @@ class ControlPlane:
         self.last_action_status = "NO_ACTION"
         self.metrics_mode = "SIMULATION"
         self.last_host_metrics = {"status": "NO_DATA_AVAILABLE", "reason": "not_sampled_yet"}
+        self.stop_reader = stop_reader if stop_reader is not None else EmergencyStopFlagReader(DEFAULT_STOP_FLAG)
 
     def ingest_metric(self, latency, errors, events):
         """Record a valid synthetic metric snapshot; never treat it as live telemetry."""
@@ -107,15 +120,29 @@ class ControlPlane:
         self.last_host_metrics = collect_host_metrics()
         return self.last_host_metrics.copy()
 
-    def run(self):
-        """Run the simulation loop; no host or Docker actions are performed."""
+    def run(self, max_iterations=None):
+        """Run the simulation loop; no host or Docker actions are performed.
+
+        Ends in a controlled shutdown when the emergency-stop flag is active
+        (fail-closed: an unreadable or invalid flag also counts as STOPPED),
+        or after max_iterations when a bound is given (testing only).
+        """
         print(
             "[CONTROLLER] V91 simulation started. "
-            "Metrics source: RANDOM/SIMULATION; control actions disabled."
+            "Metrics source: RANDOM/SIMULATION; control actions disabled. "
+            f"Emergency stop flag: {self.stop_reader.flag_path}"
         )
         iteration = 0
 
-        while True:
+        while max_iterations is None or iteration < max_iterations:
+            stopped, stop_reason = self.stop_reader.is_stopped()
+            if stopped:
+                print(
+                    f"[EMERGENCY STOP] Control plane ends in a controlled shutdown; "
+                    f"reason: {stop_reason}"
+                )
+                return "EMERGENCY_STOP"
+
             iteration += 1
             latency = random.uniform(50, 300)
             errors = random.randint(0, 10)
@@ -141,6 +168,7 @@ class ControlPlane:
                 )
 
             time.sleep(5)
+        return "MAX_ITERATIONS"
 
 
 if __name__ == "__main__":
