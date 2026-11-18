@@ -105,6 +105,11 @@ class StoreTest(unittest.TestCase):
             with self.assertRaises(MeasurementStoreError):
                 store.record_valid(sensor_id="s", metric="m", normalized_value=True, unit="u",
                                    timestamp_utc="2026-11-17T08:00:00Z")
+            for non_finite in (float("nan"), float("inf"), float("-inf"), 10**400):
+                with self.subTest(value=str(non_finite)):
+                    with self.assertRaises(MeasurementStoreError):
+                        store.record_valid(sensor_id="s", metric="m", normalized_value=non_finite, unit="u",
+                                           timestamp_utc="2026-11-17T08:00:00Z")
             with self.assertRaises(MeasurementStoreError):
                 store.quarantine(["not", "a", "dict"], reason="x")
             with self.assertRaises(MeasurementStoreError):
