@@ -190,17 +190,12 @@ def render_prometheus(kpis: dict[str, dict[str, Any]]) -> str:
     unknown_total = 0
     for name in sorted(kpis):
         kpi = kpis[name]
-        safe_name = name.replace(".", "_").replace(" ", "_")
-        if kpi.get("status") != "MEASURED":
+        label = html.escape(name, quote=True)
+        if kpi.get("status") != "MEASURED" or not _usable_value(kpi.get("value")):
             unknown_total += 1
-            lines.append(f'v91_kpi_unknown{{kpi="{html.escape(name, quote=True)}"}} 1')
+            lines.append(f'v91_kpi_unknown{{kpi="{label}"}} 1')
             continue
-        value = kpi.get("value")
-        if not _usable_value(value):
-            unknown_total += 1
-            lines.append(f'v91_kpi_unknown{{kpi="{html.escape(name, quote=True)}"}} 1')
-            continue
-        lines.append(f"v91_kpi_value_{{{safe_name}}} {value!r}" if False else f"v91_kpi_value{{kpi=\"{html.escape(name, quote=True)}\"}} {float(value)!r}")
+        lines.append(f'v91_kpi_value{{kpi="{label}"}} {float(kpi["value"])!r}')
     lines.append(f"v91_kpi_unknown_total {unknown_total}")
     return "\n".join(lines) + "\n"
 
@@ -237,12 +232,10 @@ def render_html_report(
         f"<p>Erzeugt (UTC): {html.escape(generated_at_utc or 'UNKNOWN')}</p>",
         f"<p>{html.escape(chain_line)}</p>",
         f"<p>Ledger-Einträge (lesbar): {int(entries) if isinstance(entries, int) else 'UNKNOWN'}</p>",
-        f"<p>Unlesbare Zeilen: {skipped}"
-        + (" (werden gezählt und angezeigt, nie still übersprungen)" if skipped else "</p>"),
+        "<p>Unlesbare Zeilen: " + str(skipped)
+        + (" (werden gezählt und angezeigt, nie still übersprungen)" if skipped else "") + "</p>",
+        "<h2>KPIs</h2><table border=\"1\"><tr><th>KPI</th><th>Status</th><th>Wert</th><th>Einheit</th><th>Begründung</th></tr>",
     ]
-    if skipped:
-        parts.append("</p>")
-    parts.append("<h2>KPIs</h2><table border=\"1\"><tr><th>KPI</th><th>Status</th><th>Wert</th><th>Einheit</th><th>Begründung</th></tr>")
     if not kpis:
         parts.append("<tr><td colspan=\"5\">UNKNOWN: keine KPIs auflösbar (NO_DATA, nicht 0)</td></tr>")
     for name in sorted(kpis):
