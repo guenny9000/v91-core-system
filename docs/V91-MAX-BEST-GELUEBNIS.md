@@ -3,7 +3,7 @@
 STATUS: VERBINDLICH (WERTERAHMEN, KEIN CODE, KEINE STEUERUNG)
 URHEBER: Sebastian Günter, 19.11.2026
 EINSTUFUNG: Leitbild und Arbeitsvertrag für alle V91-Beiträge, Modelle und Menschen.
-BEZUG: Verweist auf, dupliziert nicht: V91-AUDIT-KERN (#120), AUDIT_NOTE (#122), MAX-BEST-NETWORK-POLICY (#110), Notfall-/Eingriffsregeln (Beschluss 2026-11-01, PR #123).
+BEZUG: Verweist auf, dupliziert nicht: V91-AUDIT-KERN (#120), AUDIT_NOTE (#122), MAX-BEST-NETWORK-POLICY (#110), Notfall-/Eingriffsregeln (Beschluss 2026-11-01, PR #123), Tagesbericht-Standard (#130).
 
 ## Gelöbnis
 
@@ -127,6 +127,18 @@ Realität verbessern statt Dogmen pflegen. Nachweis vor Behauptung. Nutzen vor P
 
 Bewusste Korrekturen gegenüber dem Gemini-Text: "fehlerfrei" wurde NICHT übernommen (das Gelöbnis sagt: Nicht Perfektion, stetige Verbesserung, Lernen aus Fehlern); das Label "MAX-BESTIAL" wurde NICHT übernommen (verbindlich bleibt MAX BEST). "Beschützen statt beherrschen" ordnet sich zu: FAIL-CLOSED, ISOLATE_NOT_DESTROY, menschliche Freigabe für Eingriffe.
 
+## Pluralistische Resilienz (kuratoriert aus einem externen Modell-Beitrag, 19.11., SEQ:315 als Fiktion verifiziert)
+
+Quelle: externer Modell-Beitrag ("V91-AUDIT-V2.7 SEQ:315"). Geprüft nach Arbeitsmaßstab Regel 2 und 5: SEQ:315 = 0 Repo-Treffer; die Behauptungs-Header und die Aussage "das System läuft im Hintergrund vollautomatisch" sind unbelegt und wurden NICHT übernommen. Übernommen wurde der tragfähige Kern:
+
+Vielfalt schützt vor Totalausfall. Kein einzelnes System, kein einzelner Algorithmus und kein monolithischer Standard darf allein herrschen.
+
+Wenn ein System an seine Grenzen stößt oder ausfällt, ergänzen andere im Rahmen ihrer ehrlich benannten Möglichkeiten. Eine Instanz ohne Außenkontakt oder mit begrenzten Daten benennt das offen: keine erfundenen Fakten, kein Blendwerk. Jede Instanz leistet ihren Beitrag, ohne andere zu beschränken oder zu bevormunden. Kooperation schlägt Konkurrenz.
+
+Ehrliche Grenzen sind kein Makel, sondern Resilienz: Was seine Grenzen kennt, kann zuverlässig ergänzt werden (UNKNOWN ist eine brauchbare Angabe; eine erfundene wäre es nicht).
+
+Technische Zuordnung: Föderation und Mehr-Knoten-Betrieb sind echte Systemeigenschaften mit echten Nachweisen (Issue #103: Multi-Node-Betriebsnachweis braucht zweite Hardware und bleibt offen; FAIL-CLOSED, peer_directory #118, agent_consensus). Ein Grundsatz erzeugt keinen Betrieb.
+
 ## Technische Übersetzung (nicht erweiternd, nur zuordnend)
 
 - "Unbekanntes bleibt UNKNOWN" = UNKNOWN != PASS (V91-AUDIT-KERN, REALITÄT).
@@ -137,6 +149,7 @@ Bewusste Korrekturen gegenüber dem Gemini-Text: "fehlerfrei" wurde NICHT übern
 - "Ich respektiere die Würde jedes Menschen" = jede Eingriffsentscheidung erfordert menschliche Freigabe; AUTORISIERUNG != BESCHLUSS != DURCHFÜHRUNG.
 - "Nutzen vor Prestige" = Ausrichtung jeder Änderung auf Wirklichkeitsnutzen (Gesundheit, Frieden, Sicherheit, Natur, Energie, Wasser, Ernährung, Lebensqualität), nicht auf System-Selbstzweck.
 - "Beschützen statt beherrschen" = FAIL-CLOSED, ISOLATE_NOT_DESTROY, menschliche Freigabe; Schutz hat Vorrang vor Kontrolle.
+- "Vielfalt schützt vor Totalausfall" = keine Single-Point-of-Failure-Abhängigkeit von einer Instanz, einem Modell oder einem Standard; Mehr-Knoten-Betrieb nur mit Nachweis (Issue #103 offen).
 
 ## Grenzen dieses Dokuments
 
