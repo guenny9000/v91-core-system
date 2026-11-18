@@ -105,9 +105,9 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--regional-config", default=None,
                         help="Optionale JSON-Konfiguration fuer den Regionalkreislauf-Indikator")
     parser.add_argument("--biodiversity-log", default=None,
+                        help="Optionales Biodiversitaets-JSONL (nur lokale Sicht)")
     parser.add_argument("--trend-baseline-ledger", default=None,
                         help="Optionales Basis-Mess-Ledger fuer den ehrlichen Autarkie-Trend (beide Fenster muessen gemessen sein, sonst UNKNOWN)")
-                        help="Optionales Biodiversitaets-JSONL (nur lokale Sicht)")
     args = parser.parse_args(argv)
     try:
         report = build_report(args.ledger, args.regional_config, args.biodiversity_log, args.trend_baseline_ledger)
