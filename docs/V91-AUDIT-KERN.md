@@ -1,8 +1,16 @@
+
 # V91 MAX BEST – Audit-Kern
 
 > STATUS: DOKUMENTIERT – NICHT DEPLOYED
 > Dieses Dokument ist ein verbindlicher Prüfrahmen, kein Betriebsnachweis.
 > Es verdichtet bestehende Regeln; es ersetzt sie nicht (siehe Verweise).
+
+> AUDIT_NOTE:
+> Dieses Dokument beschreibt Ziele, Prinzipien und Betriebsannahmen.
+> Es erzeugt keine automatische Kontrolle über fremde Systeme,
+> keine autonomen Eingriffe und keine realen Berechtigungen.
+> Alle technischen Maßnahmen erfordern separate autorisierte Umsetzung.
+> Ein Dokument erteilt keine Handlungsbefugnis: AUTORISIERUNG != BESCHLUSS != DURCHFÜHRUNG.
 
 ## 1. Trennung der Ebenen
 
