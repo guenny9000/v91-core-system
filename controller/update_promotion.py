@@ -49,7 +49,7 @@ from typing import Any
 from controller.update_gate import (
     STATUS_REJECTED,
     UpdateGate,
-")
+)
 
 ACTIVE_POINTER = "ACTIVE.json"
 VERSIONS_DIR = "versions"
