@@ -7,14 +7,23 @@ from __future__ import annotations
 
 import json
 import os
+import sys
 import tempfile
 import unittest
 from pathlib import Path
 from unittest import mock
 
-import controller
-import worker
-from emergency_stop import EmergencyStopFlagReader
+# Flat imports follow the repo convention (see tests/test_worker_observer.py):
+# controller/ is put on sys.path so 'worker' and 'emergency_stop' resolve.
+# The 'controller' package itself stays the repository package pre-imported
+# by conftest.py; it must never be shadowed by controller/controller.py.
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "controller"))
+
+import controller  # noqa: F401,E402
+import controller.controller as controller_module  # noqa: E402
+import worker  # noqa: E402
+from controller.controller import ControlPlane  # noqa: E402
+from emergency_stop import EmergencyStopFlagReader  # noqa: E402
 
 
 class FakeStopReader:
@@ -31,25 +40,21 @@ class FakeStopReader:
 
 class ControlPlaneWiringTests(unittest.TestCase):
     def test_stopped_flag_ends_loop_controlled(self) -> None:
-        plane = controller.ControlPlane(
-            stop_reader=FakeStopReader(True, "STOPPED_FLAG_PRESENT")
-        )
+        plane = ControlPlane(stop_reader=FakeStopReader(True, "STOPPED_FLAG_PRESENT"))
         result = plane.run(max_iterations=5)
         self.assertEqual(result, "EMERGENCY_STOP")
         # The loop must end BEFORE any further iteration, not after max_iterations.
         self.assertEqual(len(plane.metrics_history), 0)
 
     def test_running_flag_keeps_loop_until_bound(self) -> None:
-        plane = controller.ControlPlane(
-            stop_reader=FakeStopReader(False, "RUNNING_NO_FLAG")
-        )
-        with mock.patch.object(controller.time, "sleep", lambda _s: None):
+        plane = ControlPlane(stop_reader=FakeStopReader(False, "RUNNING_NO_FLAG"))
+        with mock.patch.object(controller_module.time, "sleep", lambda _s: None):
             result = plane.run(max_iterations=6)
         self.assertEqual(result, "MAX_ITERATIONS")
         self.assertEqual(len(plane.metrics_history), 6)
 
     def test_unreadable_flag_counts_as_stopped(self) -> None:
-        plane = controller.ControlPlane(
+        plane = ControlPlane(
             stop_reader=FakeStopReader(True, "STOPPED_FLAG_UNREADABLE_FAIL_CLOSED")
         )
         result = plane.run(max_iterations=5)
@@ -59,7 +64,7 @@ class ControlPlaneWiringTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             flag = Path(tmp) / "stop.flag"
             with mock.patch.dict(os.environ, {"V91_EMERGENCY_STOP_FLAG": str(flag)}):
-                plane = controller.ControlPlane()
+                plane = ControlPlane()
             self.assertEqual(plane.stop_reader.flag_path, flag.resolve())
 
 
@@ -100,7 +105,11 @@ class WorkerWiringTests(unittest.TestCase):
             self.assertEqual(code, 0)
             audit_path = root / "runtime" / "v91-actions.jsonl"
             self.assertTrue(audit_path.exists())
-            entries = [json.loads(line) for line in audit_path.read_text(encoding="utf-8").splitlines() if line.strip()]
+            entries = [
+                json.loads(line)
+                for line in audit_path.read_text(encoding="utf-8").splitlines()
+                if line.strip()
+            ]
             stop_entries = [e for e in entries if e.get("phase") == "EMERGENCY_STOP"]
             self.assertEqual(len(stop_entries), 1)
             self.assertEqual(stop_entries[0]["status"], "CONTROLLED_SHUTDOWN")
