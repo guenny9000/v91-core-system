@@ -67,10 +67,10 @@ class MonitorReport:
     now_utc: str
     staleness_seconds: int
     expected_interval_seconds: int
+    chain_verified: str  # "VERIFIED" | "FAILED" | "UNKNOWN" (no key provided)
     sensors: dict[str, SensorStatus] = field(default_factory=dict)
     total_records: int = 0
     unparseable_lines: int = 0
-    chain_verified: str  # "VERIFIED" | "FAILED" | "UNKNOWN" (no key provided)
     integrity_alerts: tuple[str, ...] = ()
 
 
