@@ -73,7 +73,7 @@ Phasen (jeweils nur mit abgeschlossener vorheriger Phase):
 
 Der entscheidende Hebel ist nicht die Software: Menschen vor Ort, handwerkliches Können, Vertrauen, langfristige Pflege und messbare Ergebnisse. Technische Werkzeuge (Ledger, Gates, Audits) unterstützen das, ersetzen es nicht. V91 behauptet keine hergestellte heile Welt; es hilft, nachweislich bessere Lebensbedingungen Schritt für Schritt aufzubauen.
 
-## 7 Wirkungs-Datensaetze (V91-WIRK-Nummern) - Vertrag fuer reale Vorhaben
+## 7. Wirkungs-Datensaetze (V91-WIRK-Nummern) - Vertrag fuer reale Vorhaben
 
 Ein reales Vorhaben (Flaeche, Energie, Saatgut, Reparatur, Kooperation) erhaelt
 eine Wirkungs-ID genau dann, wenn eine Ausgangserhebung (Baseline) existiert.
@@ -98,7 +98,8 @@ Nachweis-Fortschritt ueber zwei Pruefpunkte wird zurueck auf UNKNOWN gesetzt.
 Reale Vorhaben koennen erst mit Daten aus #101 (Alsfeld) und #103
 (2. Knoten/Hardware) entstehen; bis dahin ist dieser Abschnitt ein Vertrag,
 kein Betrieb (DOCUMENTED != OPERATING). Phasenplanung fuer konkrete
-Kreise bleibt Abschnitt 5 (Regionale Modellzelle); dieser Abschnitt definiert nur das Datenformat.
+Kreise bleibt Abschnitt 5 (Regionale Modellzelle); dieser Abschnitt
+definiert nur das Datenformat.
 
 Verifiziertes Muster (kein reales Vorhaben, mit gueltiger Pruefsumme,
 Nachpruefbar mit python -m controller.evidence_report verify):
@@ -127,7 +128,7 @@ Nachpruefbar mit python -m controller.evidence_report verify):
     "subject": "V91-WIRK-0001 Muster: heimische Bluehflaeche (BEISPIEL, kein reales Vorhaben)"
   }
 
-## 8 Pruefbefund: ChatGPT-Beitrag "V91 FIELD IMPACT" (18.11.2026)
+## 8. Pruefbefund: ChatGPT-Beitrag "V91 FIELD IMPACT" (18.11.2026)
 
 Uebernommen (tragfaehiger Kern):
 - Relativierungen der Unabhaengigkeits-Claims: regionale Landwirtschaft bleibt
@@ -135,7 +136,7 @@ Uebernommen (tragfaehiger Kern):
   Netzschutz; WORM sichert Nachvollziehbarkeit, nicht Wahrheit - deckt sich mit
   den Wahrheitsregeln in Abschnitt 1 (HASH != MANIPULATIONSSCHUTZ).
 - Wirkungs-Datensatz-Vertrag mit unbekannter Ausgangslage = kein aktiver
-  Datensatz (Abschnitt 5, oben).
+  Datensatz (Abschnitt 7, oben).
 - Unterstuetzen vor Duplizieren: existiert bereits eine funktionierende
   Initiative, ein Verein oder Betrieb, unterstuetzt oder dokumentiert V91 deren
   Arbeit, statt eine Parallelstruktur aufzubauen (KEINE_PARALLELSTRUKTUREN).
