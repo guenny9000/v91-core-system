@@ -69,9 +69,10 @@ class UdpTransportTest(unittest.TestCase):
                 outcomes = listener.outcomes()
                 self.assertEqual(outcomes[0].status, "ACCEPTED")
                 self.assertEqual(outcomes[1].status, "REJECTED")
-                self.assertEqual(outcomes[1].reason, "malformed envelope")
-
-    def test_oversized_datagram_is_receiver_rejected(self):
+                self.assertTrue(outcomes[1].reason.startswith("malformed env    def test_large_non_json_datagram_is_receiver_rejected(self):
+        # UDP datagrams cap at 65507 bytes, below the receiver's 64 KiB
+        # envelope bound: the size check is defense in depth for other
+        # transports. What CAN arrive is a large non-JSON payload.
         import tempfile
         private_key = Ed25519PrivateKey.generate()
         with tempfile.TemporaryDirectory() as td:
@@ -80,12 +81,13 @@ class UdpTransportTest(unittest.TestCase):
                 port = listener.bound_address()[1]
                 sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
                 try:
-                    # 65 KB of zeros: valid UDP, exceeds the 64 KB envelope bound.
                     sock.sendto(b"\x00" * 65_000, ("127.0.0.1", port))
                     wait_for(lambda: listener.counts()["rejected"] == 1)
                 finally:
                     sock.close()
-                self.assertIn("oversized", listener.outcomes()[0].reason)
+                outcome = listener.outcomes()[0]
+                self.assertEqual(outcome.size, 65_000)
+                self.assertTrue(outcome.reason.startswith("malformed envelope"))
 
     def test_non_allowlisted_bind_host_refused(self):
         import tempfile
