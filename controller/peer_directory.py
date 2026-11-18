@@ -115,7 +115,7 @@ class PeerDirectory:
                              (peer_id,)).fetchone()
             if row is None:
                 raise PeerDirectoryError(f"cannot revoke unknown peer {peer_id!r}")
-            if row[0] == "revoked":
+            if row[1] == "revoked":
                 raise PeerDirectoryError(f"peer {peer_id!r} is already revoked")
             db.execute("UPDATE peers SET status = 'revoked' WHERE peer_id = ?", (peer_id,))
             db.execute("INSERT INTO revocation_log (peer_id, reason, at) VALUES (?, ?, ?)",
