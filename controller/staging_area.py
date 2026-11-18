@@ -51,7 +51,7 @@ REVIEW_REJECTED = "REJECTED"
 STATUS_OK = "OK"
 STATUS_CHANGED = "CHANGED"
 STATUS_MISSING = "MISSING"
-_FORBIDDEN_IN_NAME = frozenset({"/", "\"})
+_FORBIDDEN_IN_NAME = frozenset({"/", chr(92)})
 
 
 class StagingError(RuntimeError):
