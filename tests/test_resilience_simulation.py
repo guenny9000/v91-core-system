@@ -32,10 +32,19 @@ class DeterminismTest(unittest.TestCase):
         b = simulate_weeks(*base_inputs(), weeks=52)
         self.assertEqual(a, b)
 
-    def test_long_run_stays_consistent(self):
+    def test_long_run_tracks_deterministic_depletion(self):
         reports = simulate_weeks(*base_inputs(), weeks=52)
         self.assertEqual(len(reports), 52)
-        self.assertTrue(all(r.ok for r in reports))
+        # Deterministic depletion points of the base scenario:
+        # 12 spare parts at 1/week -> first deficit in week 13.
+        self.assertTrue(all(r.ok for r in reports[:12]))
+        self.assertIn("spare_parts", reports[12].deficits)
+        # Grain: 100 kg at 2.5 kg/week -> first grain deficit in week 41.
+        self.assertNotIn("grain", reports[39].deficits)
+        self.assertIn("grain", reports[40].deficits)
+        # Stocks floor at zero, never negative, and stay deterministic.
+        self.assertEqual(reports[-1].state["spare_parts"], 0)
+        self.assertEqual(reports[-1].state["grain_kg"], 0.0)
 
 
 class DeficitPathTest(unittest.TestCase):
