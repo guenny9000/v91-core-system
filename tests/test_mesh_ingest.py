@@ -1,9 +1,11 @@
-"""`Tests for the strict M-frame measurement wire contract (mesh ingest adapter).
+"""
+Tests for the strict M-frame measurement wire contract (mesh ingest adapter).
 
 Proves the full chain encode -> decode -> measurement_from_frame ->
-MeasurementPipeline.process = VALID, and that every contract violation
+validate_measurement = VALID, and that every contract violation
 (V-frames, missing/extra payload keys, bad types, MAC tampering)
 fails closed instead of being silently reinterpreted.
+
 """
 from __future__ import annotations
 
@@ -16,6 +18,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "controller"))
 
 import controller  # noqa: F401,E402
+import mesh_frame_codec  # noqa: E402
 from mesh_frame_codec import DecodeResult, FrameError, MeshFrame, decode_frame  # noqa: E402
 from mesh_ingest import MEASUREMENT_FRAME, MEASUREMENT_PAYLOAD_KEYS, measurement_from_frame  # noqa: E402
 from measurement_ingest import (  # noqa: E402
@@ -56,7 +59,7 @@ def make_m_frame(seq: int = 1, payload: dict | None = None) -> MeshFrame:
 class MeasurementFromFrameTests(unittest.TestCase):
     def test_accepted_m_frame_roundtrip_to_valid_measurement(self) -> None:
         frame = make_m_frame()
-        wire = __import__("mesh_frame_codec").encode_frame(frame, SECRET)
+        wire = mesh_frame_codec.encode_frame(frame, SECRET)
         result = decode_frame(wire, SECRET)
         self.assertEqual(result.status, "ACCEPTED")
         raw = measurement_from_frame(result.accepted_frame())
@@ -140,8 +143,7 @@ class MeasurementFromFrameTests(unittest.TestCase):
 
     def test_tampered_mac_stays_rejected_before_adapter(self) -> None:
         frame = make_m_frame()
-        codec = __import__("mesh_frame_codec")
-        wire = bytearray(codec.encode_frame(frame, SECRET))
+        wire = bytearray(mesh_frame_codec.encode_frame(frame, SECRET))
         wire[-1] = wire[-1] ^ 0x01
         result = decode_frame(bytes(wire), SECRET)
         self.assertIsInstance(result, DecodeResult)
@@ -181,5 +183,5 @@ class MeasurementFromFrameTests(unittest.TestCase):
         self.assertTrue(any("no valid sensor specification" in e for e in validation.errors))
 
 
-if __name__ == ``__main__``:
+if __name__ == "__main__":  # pragma: no cover
     unittest.main()
