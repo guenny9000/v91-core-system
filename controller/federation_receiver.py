@@ -147,7 +147,7 @@ class QuarantineLedger:
             "kind": "FEDERATION_QUARANTINE",
             "peer_id": peer_id,
             "reason": reason,
-            "raw_b64": __import__("base64").b64encode(raw).decode("ascii"),
+            "raw_b64": base64.b64encode(raw).decode("ascii"),
             "raw_sha256": hashlib.sha256(raw).hexdigest(),
             "received_at_unix": time.time(),
         }
@@ -156,7 +156,7 @@ class QuarantineLedger:
         with open(self._path, "a", encoding="utf-8") as handle:
             handle.write(json.dumps(record, sort_keys=True) + "\n")
             handle.flush()
-            __import__("os").fsync(handle.fileno())
+            os.fsync(handle.fileno())
         self._prev = record["entry_hash"]
 
 
