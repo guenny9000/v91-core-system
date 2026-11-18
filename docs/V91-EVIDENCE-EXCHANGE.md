@@ -1,9 +1,8 @@
 # V91 – Evidence Exchange (Stufe B des universellen Lernblocks)
 
-Status: DOKUMENTIERT + CODE AUF MAIN (controller/evidence_report.py,
-CI-geprüft) – NICHT DEPLOYED. Dieses Format erzeugt keine
-Synchronisation, keinen Transport und keinen Netzwerkbetrieb:
-FORMAT != SYNCHRONISATION.
+Status: DOKUMENTIERT + CODE (controller/evidence_report.py, CI-geprüft) –
+NICHT DEPLOYED. Dieses Format erzeugt keine Synchronisation, keinen
+Transport und keinen Netzwerkbetrieb: FORMAT != SYNCHRONISATION.
 
 ## Zweck
 
@@ -16,14 +15,12 @@ separat autorisierte Schnittstellen.
 
 Kanonisches JSON mit SHA-256-Prüfsumme über den sortierten Inhalt:
 
-- \`schema_version\`, \`report_id\` (Inhalts-Fingerprint, 16 Hex),
-  \`checksum\` (64 Hex), zeitzonen-bewusstes \`created_at\`
-- \`producer\` (z. B. Modellname), \`subject\` (Prüfgegenstand)
-- \`items\`: Liste aus \`claim\`, \`status\`, optional \`evidence\`
-  und \`note\`
-- \`previous_checksum\`: optionaler Link auf den Vorgänger-Bericht
-  (Versionskette; nichts wird verdrängt oder gelöscht,
-  ISOLATE_NOT_DESTROY)
+- `schema_version`, `report_id` (Inhalts-Fingerprint, 16 Hex),
+  `checksum` (64 Hex), zeitzonen-bewusstes `created_at`
+- `producer` (z. B. Modellname), `subject` (Prüfgegenstand)
+- `items`: Liste aus `claim`, `status`, optional `evidence` und `note`
+- `previous_checksum`: optionaler Link auf den Vorgänger-Bericht (Versionskette;
+  nichts wird verdrängt oder gelöscht, ISOLATE_NOT_DESTROY)
 
 Statusmeldungen sind die des Universalen Lernblocks v1.0 (PR #134):
 BELEGT, IN ARBEIT, VORSCHLAG, NICHT GEPRÜFT, UNKNOWN (vereinfachte
@@ -45,12 +42,12 @@ Zugangsfassung von UNKNOWN / BLOCKED / REVIEW_REQUIRED, PR #120, #98).
 
 ## Nutzung (CLI)
 
-Bericht erzeugen (Items als JSON-Liste aus {claim, status, evidence?}):
+Bericht erzeugen (Items als JSON-Liste aus claim/status/evidence):
 
     python controller/evidence_report.py build --producer "modell-x" \
         --subject "V91-Kern" --items-file items.json --out report.json
 
-Bericht prüfen (Ear der Empfänger, egal welches Modell):
+Bericht prüfen (beim Empfänger, egal welches Modell):
 
     python controller/evidence_report.py verify --file report.json
 
