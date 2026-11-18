@@ -24,6 +24,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import re
 import sys
 from dataclasses import dataclass
@@ -116,12 +117,12 @@ def load_allowlist(path: str | Path) -> list[str]:
 
 
 def _iter_files(root: Path):
-    for current, dirnames, filenames in root.walk():
+    for current, dirnames, filenames in os.walk(root):
         dirnames[:] = sorted(d for d in dirnames if d not in EXCLUDED_DIRS)
         for name in sorted(filenames):
             if name == ALLOWLIST_FILENAME:
                 continue
-            candidate = current / name
+            candidate = Path(current) / name
             try:
                 size = candidate.stat().st_size
             except OSError as exc:
