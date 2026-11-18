@@ -1,0 +1,254 @@
+#!/usr/bin/env python3
+"""V91 no-hardware model drill: every model can verify V91 locally.
+
+Purpose: any model (or human) can run this drill on ANY machine with a
+plain Python 3 interpreter - no sensors, no Docker, no network, no
+special hardware, no secrets from Sebastian. It exercises the real,
+merged V91 core modules in a temporary directory and reports PASS/FAIL
+per drill with evidence.
+
+Honest limits (printed by the drill itself):
+- DRILL != DEPLOYED: passing drills prove the mechanics work in this
+  process on this machine, nothing more.
+- SAME_PROCESS != MULTI_NODE: everything runs in one process; Issue #103
+  (real multi-node evidence) needs a second physical machine.
+- SCRIPTED != INSTALLED: no daemon, service or host change is started.
+- Optional imports (cryptography-dependent modules) are reported as
+  SKIP_DEPENDENCY_MISSING when the package is absent - honestly skipped,
+  never silently passed.
+"""
+from __future__ import annotations
+
+import hashlib
+import hmac
+import secrets
+import sys
+import tempfile
+from datetime import datetime, timezone
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[1]
+
+# Import order matters: the 'controller' namespace package must be
+# imported from the repository root BEFORE the controller/ directory is
+# put on sys.path for the modules' flat imports (same convention as
+# tests/conftest.py and tests/test_worker_observer.py).
+sys.path.insert(0, str(ROOT))
+import controller  # noqa: E402,F401  (namespace package; never shadow it)
+
+sys.path.insert(0, str(ROOT / "controller"))
+from controller.controller import ControlPlane  # noqa: E402
+from controller.ledger_recovery import LedgerRecovery  # noqa: E402
+from controller.measurement_ingest import (  # noqa: E402
+    RawMeasurement,
+    SensorSpec,
+)
+from controller.measurement_pipeline import MeasurementPipeline  # noqa: E402
+from controller.measurement_store import MeasurementStore  # noqa: E402
+from emergency_stop import (  # noqa: E402
+    ACTIVATE_DOMAIN,
+    RESET_DOMAIN,
+    LocalEmergencyStop,
+)
+import worker  # noqa: E402
+
+
+RESULTS: list[tuple[str, str, str]] = []
+
+
+def record(name: str, status: str, evidence: str) -> None:
+    RESULTS.append((name, status, evidence))
+    print(f"DRILL {name}: {status} - {evidence}")
+
+
+def drill_import_selfcheck() -> None:
+    import importlib
+
+    modules = [
+        "controller.controller",
+        "controller.measurement_pipeline",
+        "controller.measurement_store",
+        "controller.ledger_recovery",
+        "controller.emergency_stop",
+        "controller.emergency_protocol",
+    ]
+    for name in modules:
+        importlib.import_module(name)
+    record("import_selfcheck", "PASS", f"{len(modules)} core modules import cleanly")
+
+
+def drill_optional_imports() -> None:
+    import importlib
+
+    optional = [
+        "controller.federation_receiver",
+        "controller.federation_sender",
+        "controller.crypto_receipts",
+    ]
+    try:
+        for name in optional:
+            importlib.import_module(name)
+        record("optional_crypto_imports", "PASS", f"{len(optional)} cryptography-based modules available")
+    except ImportError as exc:
+        record(
+            "optional_crypto_imports",
+            "SKIP_DEPENDENCY_MISSING",
+            f"cryptography package not installed here ({exc.__class__.__name__}); honestly skipped",
+        )
+
+
+def drill_emergency_stop() -> None:
+    with tempfile.TemporaryDirectory(prefix="v91-drill-stop-") as tmp:
+        root = Path(tmp)
+        key = secrets.token_bytes(32)
+        stop = LocalEmergencyStop(root / "stop.flag", root / "stop-ledger.jsonl", key=key)
+        reason = "model drill: verify the kill-switch mechanics"
+        confirmation = hmac.new(
+            key, ACTIVATE_DOMAIN + reason.encode("utf-8"), hashlib.sha256
+        ).hexdigest()
+        stop.activate(reason, confirmation)
+        stopped, stop_reason = stop.is_stopped()
+        if not stopped or stop_reason != "STOPPED_FLAG_PRESENT":
+            raise AssertionError("stop flag was set but the fail-closed check did not report STOPPED")
+        if not stop.verify_ledger():
+            raise AssertionError("emergency-stop ledger chain does not verify after ACTIVATE")
+        reset_confirmation = hmac.new(
+            key, RESET_DOMAIN + reason.encode("utf-8"), hashlib.sha256
+        ).hexdigest()
+        stop.reset(reason, reset_confirmation)
+        stopped_after, _ = stop.is_stopped()
+        if stopped_after:
+            raise AssertionError("stop flag still present after verified reset")
+        record("emergency_stop", "PASS", "activate -> is_stopped -> ledger verified -> reset")
+
+
+def drill_control_plane_wiring() -> None:
+    class FakeStopReader:
+        def __init__(self) -> None:
+            self.flag_path = Path("drill-fake-flag")
+
+        def is_stopped(self):
+            return True, "STOPPED_FLAG_PRESENT"
+
+    plane = ControlPlane(stop_reader=FakeStopReader())
+    outcome = plane.run(max_iterations=5)
+    if outcome != "EMERGENCY_STOP":
+        raise AssertionError(f"control plane did not end in EMERGENCY_STOP, got {outcome!r}")
+    record("control_plane_wiring", "PASS", "run() returns EMERGENCY_STOP before any iteration")
+
+
+def drill_worker_wiring() -> None:
+    with tempfile.TemporaryDirectory(prefix="v91-drill-worker-") as tmp:
+        flag = Path(tmp) / "stop.flag"
+        if worker.emergency_stop_reason(flag) is not None:
+            raise AssertionError("worker reported a stop with no flag present")
+        flag.write_text("model drill stop", encoding="utf-8")
+        reason = worker.emergency_stop_reason(flag)
+        if reason != "STOPPED_FLAG_PRESENT":
+            raise AssertionError(f"worker did not honor the stop flag, got {reason!r}")
+        record("worker_wiring", "PASS", "emergency_stop_reason: None -> STOPPED_FLAG_PRESENT")
+
+
+def drill_measurement_chain() -> None:
+    with tempfile.TemporaryDirectory(prefix="v91-drill-ledger-") as tmp:
+        root = Path(tmp)
+        key = secrets.token_bytes(32)
+        store = MeasurementStore(root / "ledger.jsonl", key=key)
+        pipeline = MeasurementPipeline(store)
+        specs = {
+            "grid_power_w": SensorSpec(metric="grid_power_w", unit="W", minimum=0, maximum=10000),
+        }
+        now = datetime.now(timezone.utc).isoformat()
+        valid = RawMeasurement(
+            sensor_id="drill-sim-01",
+            metric="grid_power_w",
+            value=230.5,
+            unit="W",
+            timestamp=now,
+            source="MODEL_DRILL_SIMULATED",
+        )
+        rejected = RawMeasurement(
+            sensor_id="drill-sim-01",
+            metric="grid_power_w",
+            value="not-a-number",
+            unit="W",
+            timestamp=now,
+            source="MODEL_DRILL_SIMULATED",
+        )
+        result_valid = pipeline.process(valid, specs)
+        result_rejected = pipeline.process(rejected, specs)
+        if result_valid.status.value != "VALID":
+            raise AssertionError(f"valid sample was not accepted: {result_valid.status}")
+        if result_rejected.status.value != "REJECTED":
+            raise AssertionError(f"string value was not rejected: {result_rejected.status}")
+        if store.count() != 2:
+            raise AssertionError(f"expected exactly 2 ledger records, got {store.count()}")
+        if not pipeline.verify_ledger():
+            raise AssertionError("measurement ledger chain does not verify")
+        record("measurement_chain", "PASS", "VALID + REJECTED persisted, HMAC chain verifies, 2 records")
+
+
+def drill_ledger_recovery() -> None:
+    with tempfile.TemporaryDirectory(prefix="v91-drill-recovery-") as tmp:
+        root = Path(tmp)
+        key = secrets.token_bytes(32)
+        store = MeasurementStore(root / "ledger.jsonl", key=key)
+        pipeline = MeasurementPipeline(store)
+        specs = {
+            "grid_power_w": SensorSpec(metric="grid_power_w", unit="W", minimum=0, maximum=10000),
+        }
+        now = datetime.now(timezone.utc).isoformat()
+        pipeline.process(
+            RawMeasurement(
+                sensor_id="drill-sim-01", metric="grid_power_w", value=120.0,
+                unit="W", timestamp=now, source="MODEL_DRILL_SIMULATED",
+            ),
+            specs,
+        )
+        recovery = LedgerRecovery(key=key)
+        report = recovery.create_backup(root / "ledger.jsonl", root / "backup.jsonl")
+        if not report.source_chain_verified:
+            raise AssertionError("backup was taken from an unverified chain")
+        if not recovery.verify_backup(root / "backup.jsonl"):
+            raise AssertionError("backup chain does not verify")
+        restored = recovery.restore(root / "ledger.jsonl", root / "backup.jsonl", root / "quarantine")
+        if restored.records_restored != 1 or not restored.post_restore_verified:
+            raise AssertionError(f"restore did not re-verify cleanly: {restored}")
+        if not Path(restored.quarantined_previous).exists():
+            raise AssertionError("previous ledger was not preserved in quarantine")
+        record("ledger_recovery", "PASS", "backup verified -> restore -> previous file quarantined, not deleted")
+
+
+def main() -> int:
+    print("V91 NO-HARDWARE MODEL DRILL")
+    print(f"repository root: {ROOT}")
+    print("mode: local, offline, single process; no sensors, no network, no host changes")
+    drills = [
+        drill_import_selfcheck,
+        drill_optional_imports,
+        drill_emergency_stop,
+        drill_control_plane_wiring,
+        drill_worker_wiring,
+        drill_measurement_chain,
+        drill_ledger_recovery,
+    ]
+    for drill in drills:
+        try:
+            drill()
+        except Exception as exc:  # fail closed: any drill error fails the run
+            record(drill.__name__, "FAIL", f"{type(exc).__name__}: {exc}")
+    passed = sum(1 for _, status, _ in RESULTS if status == "PASS")
+    skipped = sum(1 for _, status, _ in RESULTS if status.startswith("SKIP"))
+    failed = sum(1 for _, status, _ in RESULTS if status == "FAIL")
+    print()
+    print(f"SUMMARY: {passed} PASS, {skipped} SKIP, {failed} FAIL of {len(RESULTS)} drills")
+    print("HONEST_LIMITS: DRILL != DEPLOYED; SAME_PROCESS != MULTI_NODE; SCRIPTED != INSTALLED")
+    if failed:
+        print("RESULT: DRILLS_FAILED")
+        return 1
+    print("RESULT: ALL_DRILLS_PASS")
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
