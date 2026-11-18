@@ -9,7 +9,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from controller.mesh_frame_codec import (  # noqa: E402
-    DecodeResult, FrameError, MAX_FRAME_BYTES, MeshFrame, decode_frame, encode_frame,
+    FrameError, MAX_FRAME_BYTES, MeshFrame, decode_frame, encode_frame,
 )
 
 SECRET = b"0123456789abcdef0123456789abcdef"  # 32 bytes
