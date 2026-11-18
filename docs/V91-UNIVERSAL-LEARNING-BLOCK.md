@@ -141,7 +141,7 @@ Dynamische Verbesserung ohne Zwang.
 - Die Statusmeldungen des Blocks (BELEGT / IN ARBEIT / VORSCHLAG /
   NICHT GEPRÜFT / UNKNOWN) sind eine vereinfachte Zugangsfassung der
   bestehenden Status-Taxonomie (UNKNOWN / BLOCKED / REVIEW_REQUIRED,
-  PR #120, #98).UNKNOWN bleibt in beiden Fassungen UNKNOWN.
+  PR #120, #98). UNKNOWN bleibt in beiden Fassungen UNKNOWN.
 - „Beschützen statt beherrschen" stammt aus dem Betriebs-Kern (PR #129)
   und wird hier unverändert zitiert.
 - „Keine fremden Systeme übernehmen" und „Nur innerhalb vorhandener
