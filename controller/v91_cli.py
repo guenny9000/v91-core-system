@@ -17,6 +17,7 @@ from enforcement import StewardshipGate
 from ledger import verify_chain
 
 DEFAULT_LEDGER = "v91_stewardship_ledger.jsonl"
+DEFAULT_MEASUREMENT_STORE = "v91_measurements.jsonl"
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -55,6 +56,26 @@ def main(argv: list[str] | None = None) -> int:
 
     lg = sub.add_parser("legacy-gate", help="evaluate legacy transformation evidence record")
     lg.add_argument("--record", required=True, help="JSON record file")
+
+    rec = sub.add_parser("record", help="record one real measurement (zero-code operator entry)")
+    rec.add_argument("sensor_id", help="e.g. VB-Alsfeld-01")
+    rec.add_argument("--metric", required=True, help="e.g. grundlast")
+    rec.add_argument("--value", required=True, help="numeric value; German decimal comma accepted (142,5)")
+    rec.add_argument("--unit", required=True, help="e.g. watt, kwh, liter")
+    rec.add_argument("--min", type=float, required=True, help="plausibility lower bound of this measurement")
+    rec.add_argument("--max", type=float, required=True, help="plausibility upper bound of this measurement")
+    rec.add_argument("--timestamp", default=None, help="tz-aware source time ISO format (default: now UTC, never backdated)")
+    rec.add_argument("--source", default=None, help="provenance label, e.g. zaehlerfoto-20261118.jpg")
+    rec.add_argument("--store", default=DEFAULT_MEASUREMENT_STORE)
+
+    ij = sub.add_parser("import-json", help="import another node's measurement JSON list through the same gate")
+    ij.add_argument("file")
+    ij.add_argument("--metric", required=True)
+    ij.add_argument("--unit", required=True)
+    ij.add_argument("--min", type=float, required=True)
+    ij.add_argument("--max", type=float, required=True)
+    ij.add_argument("--tag", required=True, help="import provenance tag, e.g. lauterbach-2026-11-18")
+    ij.add_argument("--store", default=DEFAULT_MEASUREMENT_STORE)
 
     args = parser.parse_args(argv)
 
@@ -110,6 +131,56 @@ def main(argv: list[str] | None = None) -> int:
             return 1
         print(json.dumps(result, indent=2))
         return 0 if result["decision"] == "READY" else 3
+
+    if args.cmd == "record":
+        from operator_entry import record_measurement
+        from measurement_store import MeasurementStore, MeasurementStoreError
+
+        try:
+            value = float(args.value.replace(",", "."))
+        except ValueError:
+            print("error: --value must be numeric (142.5 or 142,5)", file=sys.stderr)
+            return 1
+        try:
+            result = record_measurement(
+                store=MeasurementStore(args.store),
+                sensor_id=args.sensor_id,
+                metric=args.metric,
+                value=value,
+                unit=args.unit,
+                minimum=args.min,
+                maximum=args.max,
+                timestamp=args.timestamp,
+                source=args.source or "operator-manual",
+            )
+        except (MeasurementStoreError, ValueError) as exc:
+            print(f"error: {exc}", file=sys.stderr)
+            return 1
+        if result["status"] == "RECORDED":
+            print(json.dumps(result, indent=2))
+            return 0
+        print(json.dumps(result, indent=2), file=sys.stderr)
+        return 3
+
+    if args.cmd == "import-json":
+        from operator_entry import import_foreign_file
+        from measurement_store import MeasurementStore, MeasurementStoreError
+
+        try:
+            summary = import_foreign_file(
+                store=MeasurementStore(args.store),
+                path=args.file,
+                metric=args.metric,
+                unit=args.unit,
+                minimum=args.min,
+                maximum=args.max,
+                source_tag=args.tag,
+            )
+        except (MeasurementStoreError, ValueError) as exc:
+            print(f"error: {exc}", file=sys.stderr)
+            return 1
+        print(json.dumps(summary, indent=2))
+        return 0 if summary["quarantined"] == 0 else 3
 
     if args.cmd == "verify":
         report = verify_chain(args.ledger)
