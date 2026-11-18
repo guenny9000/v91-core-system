@@ -24,6 +24,7 @@ from typing import Any
 from controller.autarky_metrics import (
     AutarkyMetricError,
     BiodiversityLog,
+    AutarkyTrend,
     EnergyAutarky,
     RegionalLoopIndicator,
 )
@@ -67,7 +68,8 @@ def load_measurement_records(ledger_path: str | Path) -> tuple[list[dict[str, An
 
 def build_report(ledger_path: str | Path,
                  regional_config_path: str | Path | None = None,
-                 biodiversity_log_path: str | Path | None = None) -> dict[str, Any]:
+                 biodiversity_log_path: str | Path | None = None,
+                 trend_baseline_ledger: str | Path | None = None) -> dict[str, Any]:
     records, ledger_state = load_measurement_records(ledger_path)
     report: dict[str, Any] = {
         "ledger": {
@@ -77,6 +79,13 @@ def build_report(ledger_path: str | Path,
         },
         "energy_autarky": EnergyAutarky(records).compute(),
     }
+    if trend_baseline_ledger is not None:
+        baseline_records, baseline_state = load_measurement_records(trend_baseline_ledger)
+        report["autarky_trend"] = {
+            **AutarkyTrend(baseline_records, records).compute(),
+            "baseline_ledger_status": baseline_state["status"],
+            "baseline_ledger": str(Path(trend_baseline_ledger).expanduser().resolve()),
+        }
     if regional_config_path is not None:
         config_path = Path(regional_config_path).expanduser().resolve()
         config = json.loads(config_path.read_text(encoding="utf-8"))
@@ -97,9 +106,11 @@ def main(argv: list[str] | None = None) -> int:
                         help="Optionale JSON-Konfiguration fuer den Regionalkreislauf-Indikator")
     parser.add_argument("--biodiversity-log", default=None,
                         help="Optionales Biodiversitaets-JSONL (nur lokale Sicht)")
+    parser.add_argument("--trend-baseline-ledger", default=None,
+                        help="Optionales Basis-Mess-Ledger fuer den ehrlichen Autarkie-Trend (beide Fenster muessen gemessen sein, sonst UNKNOWN)")
     args = parser.parse_args(argv)
     try:
-        report = build_report(args.ledger, args.regional_config, args.biodiversity_log)
+        report = build_report(args.ledger, args.regional_config, args.biodiversity_log, args.trend_baseline_ledger)
     except (MeasurementError, AutarkyMetricError, OSError, ValueError) as exc:
         print(json.dumps({"status": "FAILED_CLOSED", "error": str(exc)}, ensure_ascii=False), file=sys.stderr)
         return 2

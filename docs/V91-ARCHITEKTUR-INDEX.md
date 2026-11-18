@@ -24,6 +24,7 @@ Stand: 18. November 2026, main-Head 101ee651 (nach PR #137).
 
 - Messpfad: measurement_ingest, measurement_core, measurement_pipeline, measurement_quarantine, measurement_store, measurement_monitor.
 - Saatgut: seed_inventory (#116) mit dokumentierter Keimprobe und gezaehlter Evidenz, Rate muss zur Zaehlung passen (#136).
+- Autarkie: autarky_metrics/autarky_report (#83 Phase 1/2) + AutarkyTrend ehrlicher Zwei-Fenster-Vergleich (#139, Phase 3): Trend nur bei beiden Fenstern MEASURED, sonst UNKNOWN.
 - Mesh: mesh_frame_codec (#117) + mesh_ingest (#137): strikter M-Frame-Wire-Contract zum Messpfad. Kapazitaetsbefund aus #137: LoRa-Body-Budget 157 Bytes (222 - 1 - 64 MAC-Hex), deshalb source optional, kompakte Identifikatoren Pflicht.
 - Evidenz/Integritaet: evidence_report (#135), crypto_receipts, worm_ledger, ledger_anchor, ledger_recovery (Design: docs/V91-WORM-LEDGER-DESIGN.md).
 - Foederation: federation_receiver, federation_sender, federation_transport, peer_directory, peer_store, peer_sync, trusted_peer_registry.
@@ -68,3 +69,8 @@ Dieser Index wird bei jedem gemergten PR aktualisiert (eine Zeile je
 Aenderung), aendert selbst nie Verhalten und kann keine Zustandssprueche
 (STATUS:ACTIVE, SYNCHRON, DRIFT:0/3, VALID:VERIFIED) ersetzen: solche
 Attribute entstehen ausschliesslich aus gepruefter Evidenz, nicht aus Text.
+
+## 6. Aenderungslog (eine Zeile je gemergtem PR)
+
+- 18.11.2026 #138 Architektur-Index angelegt (verweisend, keine Zustandssprueche).
+- 18.11.2026 #139 Autarkie Phase 3: AutarkyTrend (ehrlicher Zwei-Fenster-Vergleich) in autarky_metrics, Verkabelung per --trend-baseline-ledger.

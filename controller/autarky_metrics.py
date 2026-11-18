@@ -221,3 +221,64 @@ class BiodiversityLog:
             if isinstance(count, int) and not isinstance(count, bool) and count >= 0:
                 totals[species] = totals.get(species, 0) + count
         return {"observations": len(entries), "totals": totals}
+
+class AutarkyTrend:
+    """Honest trend comparison of two measured windows (Issue #83 Phase 3).
+
+    Improvement is COMPUTED from measurements, never claimed: baseline and
+    comparison window each go through EnergyAutarky; a trend exists only when
+    BOTH windows are MEASURED. Anything unmeasured stays UNKNOWN - no trend
+    without measurement, no interpolation between windows, STABLE within the
+    tolerance is honest uncertainty, not proof that nothing changed.
+    """
+
+    def __init__(self, baseline_records: Sequence[Mapping[str, object]],
+                 comparison_records: Sequence[Mapping[str, object]],
+                 interval_hours: float = 0.25,
+                 tolerance: float = 0.01) -> None:
+        if not isinstance(baseline_records, (list, tuple)):
+            raise AutarkyMetricError("baseline_records must be a sequence of measurement dicts")
+        if not isinstance(comparison_records, (list, tuple)):
+            raise AutarkyMetricError("comparison_records must be a sequence of measurement dicts")
+        if not _is_number(interval_hours) or float(interval_hours) <= 0:
+            raise AutarkyMetricError("interval_hours must be a finite positive number")
+        if not _is_number(tolerance):
+            raise AutarkyMetricError("tolerance must be a finite non-negative number")
+        self._baseline = list(baseline_records)
+        self._comparison = list(comparison_records)
+        self._interval_hours = float(interval_hours)
+        self._tolerance = float(tolerance)
+
+    def compute(self) -> dict:
+        baseline = EnergyAutarky(self._baseline, self._interval_hours).compute()
+        comparison = EnergyAutarky(self._comparison, self._interval_hours).compute()
+        if baseline["status"] != "MEASURED" or comparison["status"] != "MEASURED":
+            return {
+                "status": "UNKNOWN",
+                "trend": None,
+                "reason": (
+                    "trend needs BOTH windows MEASURED; a trend without "
+                    "measurement is a guess, not evidence"
+                ),
+            }
+        base_share = baseline["self_sufficiency_share"]
+        comp_share = comparison["self_sufficiency_share"]
+        delta = comp_share - base_share
+        if abs(delta) <= self._tolerance:
+            trend = "STABLE"
+        elif delta > 0:
+            trend = "IMPROVED"
+        else:
+            trend = "DEGRADED"
+        return {
+            "status": "MEASURED",
+            "trend": trend,
+            "baseline_share": base_share,
+            "comparison_share": comp_share,
+            "delta_share": round(delta, 6),
+            "tolerance": self._tolerance,
+            "baseline_measured_intervals": baseline["measured_intervals"],
+            "comparison_measured_intervals": comparison["measured_intervals"],
+            "baseline_measured_duration_hours": baseline["measured_duration_hours"],
+            "comparison_measured_duration_hours": comparison["measured_duration_hours"],
+        }
