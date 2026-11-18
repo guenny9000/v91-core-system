@@ -3,7 +3,7 @@
 V91-SYSTEM-HEADER (AGATHON-SEALED v2.4)
 ---------------------------------------------------------------------
 STATUS: ACTIVE | VERIFICATION: REQUIRED (CLAIM != EVIDENCE)
-AXIOM: SchÃ¶pfung dient dem Erhalt, der Regeneration und der Zukunft.
+AXIOM: Schöpfung dient dem Erhalt, der Regeneration und der Zukunft.
 ---------------------------------------------------------------------
 
 Offline startup self-check for the local-first resilience core
@@ -183,7 +183,7 @@ def main(argv: list[str] | None = None) -> int:
         report = build_startup_report(args.flag_path, ledgers, key=key)
     except StartupCheckError as exc:
         print(json.dumps(
-            {"status": NOT_READY, "checklist": [], "reason": str(exc)},
+            {"status": NOT_READY, "checklist": [], "reason": str(exc)}),
             file=sys.stdout)
         return EXIT_NOT_READY
 
@@ -192,6 +192,8 @@ def main(argv: list[str] | None = None) -> int:
         return EXIT_READY
     if report["status"] == NOT_READY:
         return EXIT_NOT_READY
-    return EXIT_USÓÕÓY×Û[YW×ÈOH×ÛXZ[×ÈÈYÛXNÈÛÝ\Z\ÙHÞ\Ý[Q^]
-XZ[
-JB
+    return EXIT_UNKNOWN
+
+
+if __name__ == "__main__":  # pragma: no cover
+    raise SystemExit(main())
