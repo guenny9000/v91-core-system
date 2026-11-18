@@ -94,13 +94,13 @@ class MeasurementPipeline:
             return result
 
         # QUARANTINE and REJECTED both preserve the raw payload verbatim.
-        raw: dict[str, Any] = dataclasses.asdict(measurement.original)
+        raw: dict[str, Any] = dataclasses.asdict(result.original)
         reasons = "; ".join(result.errors) if result.errors else f"verdict {result.status.value}"
         self._store.quarantine(
             raw,
             reason=f"{result.status.value}: {reasons}",
-            claimed_source_time=measurement.original.timestamp
-            if isinstance(measurement.original.timestamp, str) else None,
+            claimed_source_time=result.original.timestamp
+            if isinstance(result.original.timestamp, str) else None,
         )
         return result
 
