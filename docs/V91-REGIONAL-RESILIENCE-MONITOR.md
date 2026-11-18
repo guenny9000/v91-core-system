@@ -152,3 +152,26 @@ Nicht uebernommen:
 - "LoRa-Mesh ist vorbereitet" / "Workstations sind autark": beide bleiben
   NICHT UNABHAENGIG GEPRUEFT; echte Hardware bleibt Issue #103, echte
   Messwerte bleiben Issue #101.
+
+Zweite Bewertung desselben Beitrags (18.11., ChatGPT ueber den eigenen Text):
+
+Uebernommen:
+- Experimentier-Regel: erst mutig experimentieren, dann ehrlich messen, danach
+  skalieren, was funktioniert. Passt zur Status-Taxonomie: Experimente sind
+  VORSCHLAG oder IN ARBEIT und duerfen scheitern; SKALIEREN setzt BELEGT
+  voraus (CLAIM != EVIDENCE gilt in beide Richtungen - Kontrolle allein
+  erzeugt Verwaltung, Pruefung allein erzeugt keinen Fortschritt).
+- Erweiterter Leitsatz als Arbeitsmassstab: Global zusammenarbeiten. Lokal
+  handlungsfaehig bleiben. Wissen offen teilen. Natur und Ressourcen schuetzen.
+  Friedliche Kooperation staerken. Behauptungen messen. Fehler korrigieren.
+  Funktionierende Loesungen langfristig erhalten.
+
+Nicht uebernommen:
+- Die Bewertungsziffern (Vision 9/10, Messbarkeit 10/10 usw.): Zahlen ohne
+  Messmethode sind Buchhaltung, keine Nachweise - dieselbe Regel, die fuer
+  SEQ-Labels gilt (Abschnitt 2). Eine Bewertung darf sie gern als MEINUNG
+  aussprechen, der Monitor nimmt sie nicht als Messwert auf.
+
+Schlussregel gegen Bulk: Kuenftige Modell-Bewertungen von Beitraegen aendern
+dieses Dokument nur, wenn sie einen NEUEN tragfaehigen Kern bringen; bloesse
+Zustimmung oder Zensuren erzeugen KEINE neue Zeile (Wirksamkeit vor Aktivitaet).
