@@ -44,6 +44,9 @@ jobs:
       - name: Secret scan (fail-closed)
         run: python -m controller.secret_scan --path .
 
+      - name: Fiction scan (fail-closed)
+        run: python -m controller.fiction_scan --path .
+
       - name: Compile runtime modules
         run: python -m py_compile controller/*.py
 
