@@ -73,4 +73,5 @@ Attribute entstehen ausschliesslich aus gepruefter Evidenz, nicht aus Text.
 ## 6. Aenderungslog (eine Zeile je gemergtem PR)
 
 - 18.11.2026 #138 Architektur-Index angelegt (verweisend, keine Zustandssprueche).
-- 18.11.2026 #139 Autarkie Phase 3: AutarkyTrend (ehrlicher Zwei-Fenster-Vergleich) in autarky_metrics, Verkabelung per --trend-baseline-ledger.
+- 18.11.2026 #139 Autarkie Phase 3: AutarkyTrend (ehrlicher Zwei-Fenster-Vergleich) in autarky_metrics, Verkabelung per --trend-baseline-ledger
+- 18.11.2026 #140 Secret-Scan: fail-closed CI-Schritt (controller/secret_scan.py + audit.yml)..
