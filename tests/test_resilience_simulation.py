@@ -40,9 +40,10 @@ class DeterminismTest(unittest.TestCase):
 
 class DeficitPathTest(unittest.TestCase):
     def test_feed_depletion_flags_deficit_in_order(self):
-        nutrients, energy, spares, social = base_inputs()
-        # 10 animals x 0.25 kg grain/week -> grain runs out in week 41.
-        depleted = replace_nutrients(grain_kg=10.0)
+        _, energy, spares, social = base_inputs()
+        # 10 animals x 0.25 kg grain/week = 2.5 kg/week; 10 kg last 4 weeks.
+        depleted = NutrientVector(grain_kg=10.0, hay_kg=200.0, protein_feed_kg=50.0,
+                                  animals=10)
         reports = simulate_weeks(depleted, energy, spares, social, weeks=52)
         first_bad = next(r for r in reports if not r.ok)
         self.assertEqual(first_bad.week, 5)
