@@ -41,7 +41,7 @@ es handelt sich um DOCUMENTED, nicht um VERIFIED.
 
 - Workstation: 12-Kern-CPU, 64 GB DDR5, RTX 5080 (16 GB VRAM), 2-TB-NVMe, Windows mit WSL und Docker Desktop.
 - Netzwerk-Guard-Appliance: dediziertes System (32 GB RAM) zwischen Internet-Router und Workstation zur Flusskontrolle und Filterung.
-- LoRa-Anbindung: geplant, ISM-Band 868 MHz;Frequenz/Netz-Grundlagen in docs/V91-MANUELLER-LERNBLOCK-SYSTEM-NETZ-FREQUENZEN.md. Kein Funk, kein SDR, keine echte LoRa-Hardware im Repository (Issue #103 benoetigt zweite Hardware).
+- LoRa-Anbindung: geplant, ISM-Band 868 MHz; Frequenz-/Netz-Grundlagen in docs/V91-MANUELLER-LERNBLOCK-SYSTEM-NETZ-FREQUENZEN.md. Kein Funk, kein SDR, keine echte LoRa-Hardware im Repository (Issue #103 benoetigt zweite Hardware).
 
 ## 4. Ehrliche Zuordnung: Behauptete Komponenten vs. Repository-Tatbestand (18.11.2026)
 
