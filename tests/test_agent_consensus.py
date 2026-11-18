@@ -45,10 +45,11 @@ def test_tampered_vote_does_not_count():
     assert any("signature verification failed" in item for item in result.invalid_votes)
 
 
-def test_duplicate_voter_counts_once():
+def test_duplicate_valid_votes_exclude_that_voter():
     result = evaluate([vote("node-a"), vote("node-a", sequence=2)])
-    assert result.valid_approvals == 1
-    assert any("duplicate vote" in item for item in result.invalid_votes)
+    assert result.valid_approvals == 0
+    assert result.accepted_agents == ()
+    assert any("duplicate valid votes" in item for item in result.invalid_votes)
 
 
 def test_stale_sequence_rejected():
@@ -79,6 +80,26 @@ def test_expired_vote_rejected():
         allowed_clock_skew_seconds=30
     )
     assert result.decision is Decision.NO_QUORUM
+
+
+def test_negative_issued_at_is_rejected():
+    original = vote("node-a")
+    key = KEYS["node-a"]
+    fields = {**original.__dict__, "issued_at": -1}
+    unsigned = type(original)(**{**fields, "signature": ""})
+    import hmac as hmac_mod
+    payload_fields = {
+        "agent_id": unsigned.agent_id, "proposal_digest": unsigned.proposal_digest,
+        "epoch": unsigned.epoch, "sequence": unsigned.sequence,
+        "issued_at": unsigned.issued_at, "approve": unsigned.approve,
+    }
+    import json as json_mod
+    payload = json_mod.dumps(payload_fields, sort_keys=True, separators=(",", ":")).encode("utf-8")
+    signature = hmac_mod.new(key, payload, __import__("hashlib").sha256).hexdigest()
+    malformed = type(original)(**{**fields, "signature": signature})
+    result = evaluate([malformed], now=0, allowed_clock_skew_seconds=2000)
+    assert result.decision is Decision.NO_QUORUM
+    assert any("timestamp outside allowed window" in item for item in result.invalid_votes)
 
 
 def test_short_key_rejected():
@@ -143,14 +164,17 @@ def test_result_is_independent_of_vote_order():
     assert forward.invalid_votes == backward.invalid_votes
 
 
-def test_duplicate_still_detected_after_valid_vote():
-    # A tampered vote fails on its own merits (signature first) and therefore
-    # never reaches the duplicate check; duplicate detection is proven with a
-    # second fully valid vote from the same agent.
-    result = evaluate([vote("node-a"), vote("node-a", sequence=2), vote("node-b")])
-    assert result.decision is Decision.ACCEPT
-    assert result.valid_approvals == 2
-    assert any("duplicate vote" in item for item in result.invalid_votes)
+def test_conflicting_valid_votes_exclude_agent_independent_of_order():
+    approval = vote("node-a", True, sequence=1)
+    rejection = vote("node-a", False, sequence=2)
+    for ordered in ([approval, rejection, vote("node-b")],
+                    [rejection, approval, vote("node-b")]):
+        result = evaluate(ordered)
+        assert result.valid_approvals == 1
+        assert result.valid_rejections == 0
+        assert result.accepted_agents == ("node-b",)
+        assert result.decision is Decision.NO_QUORUM
+        assert any("duplicate valid votes" in item for item in result.invalid_votes)
 
 
 def test_tampered_vote_after_valid_vote_fails_on_signature_merits():
