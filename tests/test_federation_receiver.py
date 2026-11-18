@@ -170,9 +170,8 @@ def test_duplicate_sequence_rejected(tmp_path, peer):
     private_key, public_key = peer
     receiver = make_receiver(tmp_path, public_key)
     assert receiver.receive(envelope_bytes(private_key, sequence=1)).status == "ACCEPTED"
-    receipt = receiver.receive(envelope_bytes(private_key, sequence=2, sign_payload=None)
-                               if False else envelope_bytes(private_key, sequence=1,
-                                                            issued_at=NOW))
+    # Exact retransmission of an already accepted sequence must be refused.
+    receipt = receiver.receive(envelope_bytes(private_key, sequence=1, issued_at=NOW))
     assert receipt.status == "REJECTED"
     assert "duplicate" in receipt.reason
 
@@ -239,8 +238,6 @@ def test_tampered_quarantine_ledger_refuses_appends(tmp_path, peer):
 
 def test_rate_limit_rejects_flood(tmp_path, peer):
     private_key, public_key = peer
-    receiver = make_receiver(tmp_path, public_key, max_messages_per_minute=2)
-    assert receiver.receive(envelope_bytes(private_key, sequence=1)).status != "ACCEPTED" or True
     receiver2 = make_receiver(tmp_path, public_key, max_messages_per_minute=2)
     receiver2.receive(b"junk-one")
     receiver2.receive(b"junk-two")
