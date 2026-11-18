@@ -96,18 +96,7 @@ class MeasurementStore:
         return True
 
     def _append(self, record: dict[str, Any]) -> dict[str, Any]:
-        """Single-writer append: exclusive lock, fsync, chain verified first."""
-        entries = self._read_entries()
-        if entries and not self.verify_chain():
-            raise MeasurementStoreError("existing store chain is invalid; append refused")
-        prev = entries[-1]["entry_hash"] if entries else GENESIS
-        record["seq"] = len(entries) + 1
-        record["prev_hash"] = prev
-        record["received_at_utc"] = datetime.now(UTC).isoformat()
-        record["entry_hash"] = hashlib.sha256(
-            json.dumps(record, sort_keys=True, separators=(",", ":"), ensure_ascii=False).encode("utf-8")
-        ).hexdigest()
-        record["entry_hmac"] = self._sign(record)
+        """Single-writer append: lock before reading, verify, append, then unlock."""
         lock_path = self._path.with_suffix(self._path.suffix + ".lock")
         try:
             lock_fd = os.open(lock_path, os.O_CREAT | os.O_EXCL | os.O_WRONLY)
@@ -118,6 +107,22 @@ class MeasurementStore:
                 lock.write(str(os.getpid()))
                 lock.flush()
                 os.fsync(lock.fileno())
+
+            # Read and verify only after acquiring the lock. Otherwise two
+            # writers can both read the same sequence before either locks,
+            # then append duplicate sequence numbers after taking turns.
+            entries = self._read_entries()
+            if entries and not self.verify_chain():
+                raise MeasurementStoreError("existing store chain is invalid; append refused")
+            prev = entries[-1]["entry_hash"] if entries else GENESIS
+            record["seq"] = len(entries) + 1
+            record["prev_hash"] = prev
+            record["received_at_utc"] = datetime.now(UTC).isoformat()
+            record["entry_hash"] = hashlib.sha256(
+                json.dumps(record, sort_keys=True, separators=(",", ":"), ensure_ascii=False).encode("utf-8")
+            ).hexdigest()
+            record["entry_hmac"] = self._sign(record)
+
             with open(self._path, "a", encoding="utf-8") as handle:
                 handle.write(json.dumps(record, sort_keys=True, ensure_ascii=False) + "\n")
                 handle.flush()
