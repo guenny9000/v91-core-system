@@ -1,5 +1,11 @@
 #!/usr/bin/env python3
-"""Offline V91 task worker: bounded file-verification tasks, no shell or network."""
+"""Offline V91 task worker: bounded file-verification tasks, no shell or network.
+
+Issue #70 runtime wiring: the worker honors the local emergency-stop flag
+fail-closed. When the flag is present (or unreadable/invalid, which also
+counts as STOPPED), the worker ends its loop in a CONTROLLED_SHUTDOWN
+with an audit entry - never a crash, never a silent exit.
+"""
 from __future__ import annotations
 
 import hashlib
@@ -16,12 +22,16 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
+from emergency_stop import EmergencyStopFlagReader
 from runtime_control import ControlError, append_audit
 
 ROOT = Path(__file__).resolve().parents[1]
 QUEUE_ROOT = Path(os.getenv("V91_QUEUE_DIR", str(ROOT / "queue"))).resolve()
 RUNTIME_ROOT = Path(os.getenv("V91_RUNTIME_DIR", str(ROOT / "runtime"))).resolve()
 WORKSPACE_ROOT = Path(os.getenv("V91_WORKSPACE_DIR", str(ROOT / "workspace"))).resolve()
+EMERGENCY_STOP_FLAG = Path(
+    os.getenv("V91_EMERGENCY_STOP_FLAG", str(ROOT / "runtime" / "emergency_stop.flag"))
+).expanduser()
 POLL_SECONDS = float(os.getenv("V91_WORKER_POLL_SECONDS", "1"))
 TASK_ID_RE = re.compile(r"^[A-Za-z0-9_-]{1,80}$")
 SHA256_RE = re.compile(r"^[a-fA-F0-9]{64}$")
@@ -34,6 +44,17 @@ STOP = False
 
 def utc_now() -> str:
     return datetime.now(UTC).isoformat(timespec="milliseconds").replace("+00:00", "Z")
+
+
+def emergency_stop_reason(flag_path: Any = None) -> str | None:
+    """Fail-closed stop-flag check; returns the stop reason or None.
+
+    UNKNOWN never passes as RUNNING: an unreadable or invalid flag counts
+    as STOPPED (see emergency_stop.check_flag).
+    """
+    path = Path(flag_path) if flag_path is not None else EMERGENCY_STOP_FLAG
+    stopped, reason = EmergencyStopFlagReader(path).is_stopped()
+    return reason if stopped else None
 
 
 def ensure_layout() -> None:
@@ -252,8 +273,22 @@ def main() -> int:
         "timestamp_utc": utc_now(), "status": "WORKER_READY",
         "mode": "OFFLINE_TASK_QUEUE", "allowed_actions": sorted(ALLOWED_ACTIONS),
         "network_calls": "NONE", "shell_execution": "NONE",
+        "emergency_stop_flag": str(EMERGENCY_STOP_FLAG),
     }, sort_keys=True), flush=True)
     while not STOP:
+        stop_reason = emergency_stop_reason()
+        if stop_reason is not None:
+            append_audit(RUNTIME_ROOT / "v91-actions.jsonl", {
+                "timestamp_utc": utc_now(), "phase": "EMERGENCY_STOP",
+                "worker_id": f"{socket.gethostname()}:{os.getpid()}",
+                "source": "LOCAL_EMERGENCY_STOP_FLAG", "status": "CONTROLLED_SHUTDOWN",
+                "stop_reason": stop_reason,
+            })
+            print(json.dumps({
+                "timestamp_utc": utc_now(), "status": "EMERGENCY_STOP",
+                "reason": stop_reason, "exit": "CONTROLLED_SHUTDOWN",
+            }, sort_keys=True), flush=True)
+            return 0
         try:
             worked = process_one()
         except Exception as exc:
