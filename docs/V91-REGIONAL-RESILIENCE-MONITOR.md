@@ -72,3 +72,81 @@ Phasen (jeweils nur mit abgeschlossener vorheriger Phase):
 ## 6. Ehrlicher Realitäts-Check
 
 Der entscheidende Hebel ist nicht die Software: Menschen vor Ort, handwerkliches Können, Vertrauen, langfristige Pflege und messbare Ergebnisse. Technische Werkzeuge (Ledger, Gates, Audits) unterstützen das, ersetzen es nicht. V91 behauptet keine hergestellte heile Welt; es hilft, nachweislich bessere Lebensbedingungen Schritt für Schritt aufzubauen.
+
+## 5. Wirkungs-Datensaetze (V91-WIRK-Nummern) - Vertrag fuer reale Vorhaben
+
+Ein reales Vorhaben (Flaeche, Energie, Saatgut, Reparatur, Kooperation) erhaelt
+eine Wirkungs-ID genau dann, wenn eine Ausgangserhebung (Baseline) existiert.
+Ohne Baseline gibt es KEINEN Datensatz - sonst verwandelt sich der Monitor in
+eine UNKNOWN-Registratur (UNKNOWN != PASS). Der Datensatz ist ein EvidenceReport
+nach docs/V91-EVIDENCE-EXCHANGE.md und controller/evidence_report.py
+(schema_version 1, Status BELEGT / IN ARBEIT / VORSCHLAG / NICHT GEPRUEFT /
+UNKNOWN); keine zweite Datenstruktur, keine Zweitregister (NO_DUPLICATE_SYSTEMS).
+
+Pflichtangaben je Datensatz:
+- subject: V91-WIRK-NNNN + Titel + Ort(e)
+- Ausgangslage: Baseline mit Messwert, Methode, Datum, verantwortlicher Stelle
+- Ziel: messbar mit Einheit und Richtung (KPI-Katalog Abschnitt 4)
+- Massnahme: was konkret passiert (Operator- oder Partneraufgabe)
+- Zeitraum: mehrere Jahreszeiten bzw. Jahre fuer Natur-Vorhaben, keine
+  Kurzzeit-Statistik als Erfolg
+- Status/Ergebnis: aus items abgeleitet, nie behauptet (CLAIM != EVIDENCE)
+- Naechster Nachweis: konkreter Pruefschritt mit Datum
+
+Disziplin: maximal 3-5 AKTIVE Datensaetze gleichzeitig; ein Datensatz ohne
+Nachweis-Fortschritt ueber zwei Pruefpunkte wird zurueck auf UNKNOWN gesetzt.
+Reale Vorhaben koennen erst mit Daten aus #101 (Alsfeld) und #103
+(2. Knoten/Hardware) entstehen; bis dahin ist dieser Abschnitt ein Vertrag,
+kein Betrieb (DOCUMENTED != OPERATING).
+
+Verifiziertes Muster (kein reales Vorhaben, mit gueltiger Pruefsumme,
+Nachpruefbar mit python -m controller.evidence_report verify):
+
+  {
+    "checksum": "52d646e71d9be6ba52c69be3c161d598cf7f520bdf1ce03079b3a447eaea0388",
+    "created_at": "2026-11-18T15:54:08.812978+00:00",
+    "items": [
+      {
+        "claim": "Ausgangslage erfasst (Flaeche, Artenzahl, Methode)",
+        "evidence": [],
+        "note": "Keine Ausgangserhebung vorhanden: Datensatz nicht aktiv",
+        "status": "UNKNOWN"
+      },
+      {
+        "claim": "Ziel gesetzt: heimische Bienen- und Schwebfliegenarten foerdern",
+        "evidence": [],
+        "note": "Ziel braucht Flaeche und Betreiber (Operator-Aufgabe)",
+        "status": "VORSCHLAG"
+      }
+    ],
+    "previous_checksum": null,
+    "producer": "V91 Feld-Impakt Probe",
+    "report_id": "24ee3a5b167de5db",
+    "schema_version": 1,
+    "subject": "V91-WIRK-0001 Muster: heimische Bluehflaeche (BEISPIEL, kein reales Vorhaben)"
+  }
+
+## 6. Pruefbefund: ChatGPT-Beitrag "V91 FIELD IMPACT" (18.11.2026)
+
+Uebernommen (tragfaehiger Kern):
+- Relativierungen der Unabhaengigkeits-Claims: regionale Landwirtschaft bleibt
+  abhaengig von Wasser, Saatgut, Energie; lokale Energie braucht Speicher und
+  Netzschutz; WORM sichert Nachvollziehbarkeit, nicht Wahrheit - deckt sich mit
+  den Wahrheitsregeln in Abschnitt 1 (HASH != MANIPULATIONSSCHUTZ).
+- Wirkungs-Datensatz-Vertrag mit unbekannter Ausgangslage = kein aktiver
+  Datensatz (Abschnitt 5, oben).
+- Unterstuetzen vor Duplizieren: existiert bereits eine funktionierende
+  Initiative, ein Verein oder Betrieb, unterstuetzt oder dokumentiert V91 deren
+  Arbeit, statt eine Parallelstruktur aufzubauen (KEINE_PARALLELSTRUKTUREN).
+- Ablehnung unbelegter_SEQ-Header (VALID:VERIFIED, DRIFT:0/3, SEQ:9021 ohne
+  Ledger/Signatur/Messdaten) - besthaetigt den Index-Befund von #138.
+
+Nicht uebernommen:
+- Vier neue Pilotbereiche als eigene Stufe oder eigenes Register: die vier
+  Bereiche dieses Monitors (Abschnitt 3) und der KPI-Katalog (Abschnitt 4)
+  decken Natur, Energie, Nahrung/Wissen und Gemeinschaft bereits ab; ein
+  FIELD-IMPACT-Zweitsystem waere NO_DUPLICATE_SYSTEMS. Der Beitrag ist hier
+  als Vertragsergaenzung eingeordnet, nicht als neue Organisation.
+- "LoRa-Mesh ist vorbereitet" / "Workstations sind autark": beide bleiben
+  NICHT UNABHAENGIG GEPRUEFT; echte Hardware bleibt Issue #103, echte
+  Messwerte bleiben Issue #101.
