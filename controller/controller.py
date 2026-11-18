@@ -33,6 +33,17 @@ DEFAULT_STOP_FLAG = Path(
 ).expanduser()
 
 
+def default_stop_flag_path() -> Path:
+    """Resolve the stop-flag path at call time.
+
+    The V91_EMERGENCY_STOP_FLAG environment variable must be honored when a
+    ControlPlane is constructed, not only when this module was first imported.
+    """
+    return Path(
+        os.getenv("V91_EMERGENCY_STOP_FLAG", str(ROOT / "runtime" / "emergency_stop.flag"))
+    ).expanduser()
+
+
 class ControlPlane:
     """Observe synthetic metrics and report proposed actions without side effects."""
 
@@ -52,7 +63,11 @@ class ControlPlane:
         self.last_action_status = "NO_ACTION"
         self.metrics_mode = "SIMULATION"
         self.last_host_metrics = {"status": "NO_DATA_AVAILABLE", "reason": "not_sampled_yet"}
-        self.stop_reader = stop_reader if stop_reader is not None else EmergencyStopFlagReader(DEFAULT_STOP_FLAG)
+        self.stop_reader = (
+            stop_reader
+            if stop_reader is not None
+            else EmergencyStopFlagReader(default_stop_flag_path().resolve())
+        )
 
     def ingest_metric(self, latency, errors, events):
         """Record a valid synthetic metric snapshot; never treat it as live telemetry."""
