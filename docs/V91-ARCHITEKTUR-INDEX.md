@@ -74,4 +74,5 @@ Attribute entstehen ausschliesslich aus gepruefter Evidenz, nicht aus Text.
 
 - 18.11.2026 #138 Architektur-Index angelegt (verweisend, keine Zustandssprueche).
 - 18.11.2026 #139 Autarkie Phase 3: AutarkyTrend (ehrlicher Zwei-Fenster-Vergleich) in autarky_metrics, Verkabelung per --trend-baseline-ledger
-- 18.11.2026 #140 Secret-Scan: fail-closed CI-Schritt (controller/secret_scan.py + audit.yml)..
+- 18.11.2026 #140 Secret-Scan: fail-closed CI-Schritt (controller/secret_scan.py + audit.yml).
+- 19.11.2026 #141 Startup-Check: offline Selbstpruefung als Komposition (controller/startup_check.py + tests)..
