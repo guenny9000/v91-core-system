@@ -80,10 +80,30 @@ NICHT GEPRÜFT (bewusst kein Prozentwert ausgegeben):
 
 - Trinkwasserherkunft Mittelhessen: rund 60 % aus kommunalen Brunnen
   und Quellen - BELEGT ([RP Gießen]-Pressemitteilung).
-- Wasserbilanz Mittelhessen 2024 veröffentlicht (Grundwasserstände,
-  Entnahmen, Niederschlag; PDF des Regierungspräsidiums): BELEGT als
-  Dokumentexistenz; Detailwerte für den Vogelsbergkreis: NICHT
-  GEPRÜFT (PDF-Auswertung steht aus, siehe Zählblatt Abschnitt 7).
+- Wasserbilanz Mittelhessen 2024 ([RP Gießen], PDF, Stand 06.10.2025):
+  Detailwerte für den Vogelsbergkreis - BELEGT:
+  - Einwohner (Stichtag 30.09.2024, Zensus 2022 korrigiert): 101.244.
+  - Eigenförderung: 6.046.951 m3/a; Netzeinspeisung zur
+    Eigenversorgung (EF+FB-FA): 6.080.532 m3/a. Regionale
+    Eigenförderungsdeckung = EF / Netzeinspeisung = 99,4 %
+    (Rechenregel angegeben: 6.046.951 / 6.080.532 = 0,9945;
+    FQ: Definition zuerst, dann der Wert).
+  - Verkaufte Menge gesamt: 4.800.715 m3/a, davon Haushalte/
+    Kleingewerbe 4.328.431 m3/a, Gewerbe/Industrie 472.284 m3/a.
+  - Sonstiger Wasserverbrauch gesamt 1.279.817 m3/a, davon
+    Rohrnetzverluste 686.331 m3/a; spezifischer Rohrnetzverlust
+    0,056 m3/(km*h) (zweitniedrigster Wert im Regierungsbezirk
+    Gießen nach dem LK Limburg-Weilburg mit 0,052).
+  - Täglicher Verbrauch ohne Gewerbe/Industrie: 117 l/(EW*Tag).
+  - Vergleich Regierungsbezirk: 1.040.266 EW, EF 36.021.740 m3/a,
+    114 l/(EW*Tag), 0,068 m3/(km*h).
+  - HINWEIS (vom RP Gießen selbst genannt): Kleingewerbe und
+    öffentliche Einrichtungen sind nicht separat erfasst und
+    erhöhen den Pro-Kopf-Wert rechnerisch; Quellüberläufe und
+    Eigenbedarf sind teils nicht angegeben und erhöhen die
+    ausgewiesenen Rohrnetzverluste rechnerisch. Deshalb wird hier
+    KEINE Versorgungsautarkie in Prozent daraus abgeleitet,
+    sondern nur die oben definierte Eigenförderungsdeckung.
 - Wasserqualität/Messstellen im Kreis, Quellenschutzgebiete,
   Bodenfruchtbarkeit, Artenvielfalt: NICHT VERFÜGBAR (keine belegten
   Kreis-Zahlen; keine unbelegte Zahlengenerierung).
@@ -133,7 +153,9 @@ Nicht übernommen, weil bereits besser auf main vorhanden
 
 ## 7. Zählblatt für die nächsten Mess-PRs (Reihenfolge empfohlen)
 
-1. Wasserbilanz 2024 (RP Gießen, PDF) auswerten -> Kreis-Zahlen belegen.
+1. Wasserbilanz 2024 (RP Gießen, PDF) auswerten -> Kreis-Zahlen belegen:
+   ERLEDIGT BEI DIESEM UPDATE (Säule 3: Eigenförderungsdeckung 99,4 %,
+   Rohrnetzverluste, Pro-Kopf-Verbrauch; Rechenregel angegeben).
 2. Agrarstruktur-Tabelle Kreis öffnen -> Säule 2 belegen.
 3. Jahresstromerzeugung/-verbrauch (Netzbetreiber/Kreis) anfordern ->
    Autarkie-Definition nachziehen, DANN Prozentwert ausgeben.
