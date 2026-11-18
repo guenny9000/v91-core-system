@@ -88,6 +88,9 @@ Pflichtangaben je Datensatz:
 - Ausgangslage: Baseline mit Messwert, Methode, Datum, verantwortlicher Stelle
 - Ziel: messbar mit Einheit und Richtung (KPI-Katalog Abschnitt 4)
 - Massnahme: was konkret passiert (Operator- oder Partneraufgabe)
+- Abgebauter Ballast: welche Verschwendung, Abhaengigkeit oder
+  unnoetige Struktur die Massnahme KONKRET reduziert; keine Massnahme ohne
+  benannten Ballast-Abbau (Wirkung vor Aktivitaet; aus Beitrag SEQ:9032)
 - Zeitraum: mehrere Jahreszeiten bzw. Jahre fuer Natur-Vorhaben, keine
   Kurzzeit-Statistik als Erfolg
 - Status/Ergebnis: aus items abgeleitet, nie behauptet (CLAIM != EVIDENCE)
@@ -175,3 +178,33 @@ Nicht uebernommen:
 Schlussregel gegen Bulk: Kuenftige Modell-Bewertungen von Beitraegen aendern
 dieses Dokument nur, wenn sie einen NEUEN tragfaehigen Kern bringen; bloesse
 Zustimmung oder Zensuren erzeugen KEINE neue Zeile (Wirksamkeit vor Aktivitaet).
+
+Pruefbefund SEQ:9032/9033 (18.11., FIELD-IMPACT-Register-Code-Vorschlag):
+
+Uebernommen (dauerhaft neuer Kern):
+- Ballast-Pflichtangabe: jede Massnahme muss benennen, welchen Ballast sie
+  abbaut (jetzt Pflichtangabe in Abschnitt 7). Kein Vorgehen ohne benannten
+  Ballast-Abbau verhindert gut klingende Beschaeftigungsprojekte.
+
+Abgelehnt:
+- field_impact_register.py + v91_field_impact.json als Code und Datenstruktur:
+  Zweitregister, das Abschnitt 7 direkt widerspricht. Wirkungs-Datensaetze
+  SIND EvidenceReports (controller/evidence_report.py), keine zweite
+  Datenstruktur (NO_DUPLICATE_SYSTEMS, so beschlossen in #142).
+- Seeding von V91-WIRK-0001/0003/0004 ohne Baseline: verstoesst gegen die
+  Kernregel von Abschnitt 7 (kein Datensatz ohne Ausgangserhebung); waere
+  genau die UNKNOWN-Registratur, die #142 ausgeschlossen hat.
+- Der Code selbst: def _init_ und _name_ statt __init__ und __name__ - das
+  Skript wurde nie ausgefuehrt und ein Register ohne funktionsfaehigen
+  Konstruktor wuerde craschen (VALID:UNVERIFIED_TEXT_CLAIM, vom Beitrag
+  selbst so deklariert; SCRIPTED != RUNNING).
+- v91_energy_log.py und apply_nidhoggr_update.py existieren nicht im Repo
+  (0 Treffer am main-Head); die Anleitung verweist auf Phantomdateien.
+  Kein Fremd-Skript committet ungeprueft in ein Repository hinein.
+- ist_physisch_belegt als Bool ist selbst-setzbar und damit schwaecher als
+  die BELEGT-Mechanik des EvidenceReports (Evidenz-Referenz Pflicht,
+  Pruefsumme, Manipulation erkennbar).
+
+Der echte naechste Schritt bleibt physisch und liegt beim Operator:
+Messgeraet an der Workstation (#101) und Flaeche vor Ort abmessen - dann
+entsteht der erste ECHTE Datensatz, ohne Seeding.
