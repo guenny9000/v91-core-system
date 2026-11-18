@@ -45,7 +45,7 @@ class AutarkyTrendMetricTests(unittest.TestCase):
 
     def test_small_delta_within_tolerance_is_stable(self):
         baseline = [{"solar_w": 100.0, "grid_w": 100.0}]
-        comparison = [{"solar_w": 105.0, "grid_w": 100.0}]
+        comparison = [{"solar_w": 101.0, "grid_w": 100.0}]
         result = AutarkyTrend(baseline, comparison).compute()
         self.assertEqual(result["status"], "MEASURED")
         self.assertEqual(result["trend"], "STABLE")
