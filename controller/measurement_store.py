@@ -24,6 +24,7 @@ from __future__ import annotations
 import hashlib
 import hmac
 import json
+import math
 import os
 from datetime import UTC, datetime
 from pathlib import Path
@@ -142,6 +143,12 @@ class MeasurementStore:
                 raise MeasurementStoreError(f"{name} must be a non-empty string")
         if isinstance(normalized_value, bool) or not isinstance(normalized_value, (int, float)):
             raise MeasurementStoreError("normalized_value must be numeric")
+        try:
+            finite_value = math.isfinite(normalized_value)
+        except OverflowError:
+            finite_value = False
+        if not finite_value:
+            raise MeasurementStoreError("normalized_value must be finite")
         record: dict[str, Any] = {
             "record_type": "MEASUREMENT_VALID",
             "sensor_id": sensor_id,
