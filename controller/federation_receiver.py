@@ -33,6 +33,7 @@ import base64
 import hashlib
 import json
 import os
+import re
 import sqlite3
 import time
 from pathlib import Path
@@ -45,6 +46,7 @@ ENVELOPE_VERSION = 1
 MAX_ENVELOPE_BYTES = 64 * 1024
 MAX_PAYLOAD_BYTES = 8 * 1024
 GENESIS = "0" * 64
+_HEX_SIGNATURE = re.compile(r"^[0-9a-f]{128}$")
 _ALLOWED_KEYS = {
     "schema_version", "peer_id", "epoch", "sequence", "issued_at",
     "payload", "signature",
@@ -239,11 +241,11 @@ class FederationReceiver:
         if not isinstance(payload, dict) or len(json.dumps(payload)) > MAX_PAYLOAD_BYTES:
             return reject("payload must be a bounded object", peer_id)
         signature = envelope["signature"]
-        if not isinstance(signature, (bytes, bytearray)):
-            return reject("signature must be bytes", peer_id)
+        if not isinstance(signature, str) or not _HEX_SIGNATURE.fullmatch(signature):
+            return reject("signature must be a lowercase hex string", peer_id)
         signed_payload = {k: v for k, v in envelope.items() if k != "signature"}
         try:
-            key.verify(bytes(signature),
+            key.verify(bytes.fromhex(signature),
                        json.dumps(signed_payload, sort_keys=True,
                                   separators=(",", ":")).encode("utf-8"))
         except InvalidSignature:
