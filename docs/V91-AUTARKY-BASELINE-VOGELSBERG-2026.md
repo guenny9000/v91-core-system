@@ -27,16 +27,19 @@ Berechnung wird NICHT übernommen).
 Referenzbevölkerung: 100.723 Einwohner (31.12.2025, [Wikipedia/HLZ]),
 Fläche 1.458,91 km² - BELEGT.
 
-Alle Anlagenzahlen stammen aus dem Marktstammdatenregister (MaStR) der
-Bundesnetzagentur, Auswertung Stand 18.11.2026 ([Ohmnify]) - BELEGT:
+Sekundärauswertung von MaStR-Daten durch Ohmnify, Stand 18.11.2026 -
+BELEGT als veröffentlichte Sekundärauswertung; ein unabhängig gezogener
+Rohdatenexport der Bundesnetzagentur ist hier NICHT GEPRÜFT:
 
 - Wind: 260 Anlagen, 556,7 MW - BELEGT (MaStR-Auswertung).
 - Solar: 12.890 Anlagen, 263 MWp, davon 177,4 MWp Dachanlagen (80 % des
   Solarbestands auf Hausdächern), 82,8 MWp Freifläche (40 Solarparks),
   größte Anlage 34,7 MWp (Lauterbach) - BELEGT (MaStR-Auswertung).
-  Zweitquelle bestätigt den Bestand: 12.766 Anlagen / 260,4 MW, 2,57 kW
-  pro Kopf, Rang 1 von 26 in Hessen, 65 % über Bundesschnitt, Stand
-  27.10.2026 ([Solarzubau]) - BELEGT.
+  Zweitquelle nennt zum anderen Stichtag 27.10.2026: 12.766 Anlagen /
+  260,4 MW, 2,57 kW pro Kopf, Rang 1 von 26 in Hessen, 65 % über
+  Bundesschnitt ([Solarzubau]) - BELEGT als separate Sekundärangabe.
+  Die Werte 263 MWp und 260,4 MW werden wegen Stichtag und Einheit
+  nicht als identische Messgröße behandelt.
 - Speicher: 5.327 Batteriespeicher, 33,1 MW - BELEGT (MaStR-Auswertung).
 - Biomasse: 30 Anlagen, 16,2 MW; Wasser: 34 Anlagen, 1,2 MW (älteste
   Wasseranlage seit 1902 in Betrieb) - BELEGT (MaStR-Auswertung).
@@ -80,6 +83,17 @@ NICHT GEPRÜFT (bewusst kein Prozentwert ausgegeben):
 - Pressebefund (regionaler Kontext, keine Messung): Ertragsrückgang
   rund 10 % bei Landwirten im Kreis gemeldet ([OZ-Artikel]) - BELEGT
   als Meldung, NICHT als Messwert; Ursachenkontext siehe Säule 3.
+- Agrarstruktur-Registerauswertung 2023 (zusaetzlicher Datenstand,
+  siehe oben; [Agrarstatistik Hessen 2023], Stichtag 1. Januar 2023):
+  1.108 aktive Betriebe (davon 245 mit oekologischem Landbau),
+  64.276 ha LF (16.099 ha Oeko-LF); ausgewaehlte Ackerflaechen 2023:
+  Winterweizen 8.648 ha, Wintergerste 4.683 ha, Winterraps 3.086 ha,
+  Triticale 2.058 ha, Kartoffeln 25 ha - BELEGT als Flaechenangaben,
+  KEINE Erntemengen. Erfassungsgrenzen der Registerauswertung
+  (u. a. 5 ha LF oder Mindest-Viehbestaende) werden genannt:
+  keine Vollzaehlung aller kleinsten Erzeuger. Die Werte unterscheiden
+  sich von der Landwirtschaftszahlung 2020 durch Stichtag und
+  Erhebungsdesign; beide Stands werden getrennt ausgewiesen.
 - Versorgungsgrad mit regionalen Lebensmitteln, Lagerfähigkeit,
   samenfeste Sorten, Erzeugernetzwerke: NICHT VERFÜGBAR.
 - KEIN "Nenner 1000 = Testdatensatz"-Fehlschluss: ohne belegte
@@ -167,11 +181,14 @@ Nicht übernommen, weil bereits besser auf main vorhanden
 1. Wasserbilanz 2024 (RP Gießen, PDF) auswerten -> Kreis-Zahlen belegen:
    ERLEDIGT BEI DIESEM UPDATE (Säule 3: Eigenförderungsdeckung 99,4 %,
    Rohrnetzverluste, Pro-Kopf-Verbrauch; Rechenregel angegeben).
-2. Agrarstruktur-Tabelle Kreis öffnen -> Säule 2 belegen:
-   ERLEDIGT BEI DIESEM UPDATE (Betriebe 1.079, LF 64.264 ha,
-   Ackerland/Dauergruenland; aus der Landwirtschaftszahlung 2020
-   Kreisergebnissen des HSL; unsichere Spaltendeutungen NICHT
-   uebernommen).
+2. Agrarstruktur belegen - ERLEDIGT BEI DIESEM UPDATE (Landwirtschafts-
+   zahlung 2020: Betriebe 1.079, LF 64.264 ha; zusaetzliche Register-
+   auswertung Hessen 2023: 1.108 Betriebe, 64.276 ha LF, Acker- und
+   Oeko-Flaechen; beide Staende getrennt ausgewiesen, unsichere
+   Spaltendeutungen NICHT uebernommen). Nächster Schritt: Erntemengen,
+   Verarbeitung, Lagerung, Direktvermarktung und regionale Nachfrage
+   erfassen; keine Selbstversorgungsquote ohne vergleichbare Mengen-
+   und Bedarfsdaten.
 3. Jahresstromerzeugung/-verbrauch (Netzbetreiber/Kreis) anfordern ->
    Autarkie-Definition nachziehen, DANN Prozentwert ausgeben.
 4. Operator-Vor-Ort-Messungen (Alsfeld) über v91_cli record in den
@@ -196,6 +213,10 @@ Namen, Stand und Quellenpfad trägt.
   https://rp-giessen.hessen.de/presse/in-mittelhessen-stammen-circa-60-prozent-des-trinkwassers-aus-kommunalen-brunnen-und-quellen
   und Wasserbilanz Mittelhessen 2024 (PDF):
   https://rp-giessen.hessen.de/sites/rp-giessen.hessen.de/files/2025-10/auswertung_wasserbilanz_2024_bf.pdf
+- [Agrarstatistik Hessen 2023]: Hessisches Statistisches Landesamt,
+  Landwirtschaftlich genutzte Fläche mit Viehhaltung und Haltungsplätze
+  in Hessen 2023 (C I 11 - j/23), Tabellen 1 und Kulturarten -
+  https://statistik.hessen.de/sites/statistik.hessen.de/files/2024-03/CI11_j23.pdf
 - [Agraratlas]: Atlas Agrarstatistik -
   https://agraratlas.statistikportal.de/
 - [HSL-LZ2020]: Landwirtschaftszahlung 2020, Kreisergebnisse
