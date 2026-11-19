@@ -1,0 +1,50 @@
+{
+ "structure_id": "de_lobbyregister_bundestag_2026",
+ "assessor": "v91_session_2026-11-20_quellenreview_max_best",
+ "assessed_at_structure": "2026-11-20T00:45:00Z",
+ "note": "Struktur-Datensatz der Bund-Reihe (Thema Transparenz von Einflussnahme / Lobbyismus). Bewertet wird das Lobbyregister beim Deutschen Bundestag per 18./19.11.2026 auf Basis der amtlichen Register-Statistikseiten (Taetigkeitskategorien, Interessenbereiche) und zwei im Register selbst dokumentierter Regelungsvorhaben-Detailansichten zur Novellierung (BT-Drs. 20/7346; ADRA Deutschland e.V., abgefragt 01.07.2026; Parlamentwatch e.V., abgefragt 21.07.2026). Ersetzt KEINE Messung; REVIEW != ENTSCHEIDUNG; der Datensatz bewertet die Registerstruktur, nicht einzelne eingetragene Organisationen.",
+ "criteria": {
+  "gesellschaftlicher_nutzen": {
+   "status": "BELEGT",
+   "evidence": "Das Lobbyregister ist ein verpflichtendes Register fuer Interessenvertretung gegenueber Bundestag und Bundesregierung (in Kraft seit Januar 2022, 2024 reformiert). Amtliche Statistik (Datenstand 18.11.2026): insgesamt 6.374 aktive Interessenvertreterinnen und Interessenvertreter eingetragen, groesste Kategorien: Unternehmen 1.863 (29,23%), gemeinnuetzige privatrechtliche Organisationen 1.401 (21,98%), Wirtschafts-/Gewerbeverbaende 728 (11,42%), Berufsverbaende 588 (9,22%). Interessenbereiche (Datenstand 19.11.2026): 32.520 ausgewaehlte Oberbereiche, davon Wirtschaft 47,63%.",
+   "source": "https://www.lobbyregister.bundestag.de/startseite/tatigkeitskategorien-statistik",
+   "assessed_at": "2026-11-20T00:45:00Z"
+  },
+  "menschenrechtsvertraeglichkeit": {
+   "status": "PROBLEM_BELEGT",
+   "evidence": "Buergerrechtsproblematik ist im Register selbst dokumentiert: ADRA Deutschland e.V. (Registernummer R001570) begruendet am 27.06.2024 im Regelungsvorhaben RV0006800 zur Novellierung (BT-Drs. 20/7346), dass die Mehrheit seiner Spender aus Datenschutzgruenden einer Nennung ihrer Namen im Register nicht zustimmen wuerde; die Organisation entschied sich 2022 gegen Eintragung der Spenderdaten zugunsten des Vertrauenschutzes und setzt sich mit VENRO fuer eine Anpassung des Gesetzes ein. Das Register erzeugt somit einen belegten Zielkonflikt zwischen Transparenz und Spendenvertrauen.",
+   "source": "https://www.lobbyregister.bundestag.de/media/dd/0e/798501/Lobbyregister-Regelungsvorhaben-Detailansicht-RV0006800-2026-07-01_10-36-26.pdf",
+   "assessed_at": "2026-11-20T00:45:00Z"
+  },
+  "kosten_und_ressourcenverbrauch": {
+   "status": "NICHT_GEPRUEFT",
+   "evidence": "",
+   "source": "",
+   "assessed_at": ""
+  },
+  "transparenz": {
+   "status": "BELEGT",
+   "evidence": "Die Registerstruktur legt sich selbst offen: Registerstatistiken mit genanntem Datenstand (18./19.11.2026), Kategorienauswahl je Eintrag, Detailansichten je Registereintrag einschliesslich der vom Register erfassten Regelungsvorhaben mit Bundestags-Drucksachennummern (z.B. BT-Drs. 20/7346) sind oeffentlich abrufbar; die Prozentverteilung der Kategorien wird im Verhaeltnis zum Gesamtdatenbestand angegeben.",
+   "source": "https://www.lobbyregister.bundestag.de/startseite/interessen-und-vorhabenbereiche-statistik",
+   "assessed_at": "2011-20T00:45:00Z"
+  },
+  "nachhaltigkeit": {
+   "status": "NICHT_GEPRUEFT",
+   "evidence": "",
+   "source": "",
+   "assessed_at": ""
+  },
+  "missbrauchsrisiken": {
+   "status": "PROBLEM_BELEGT",
+   "evidence": "Im Register selbst ist dokumentiert (Parlamentwatch e.V., R000199, Regelungsvorhaben RV0013242, abgefragt 21.07.2026): das Register 'verfehlt sein Ziel, es legt nicht offen wer mit wem ueber welches Thema spricht und wer Einfluss auf politische Entscheidungen nimmt'; gefordert werden Kontakttransparenz (Offenlegung aller Lobbykontakte), umfassende Informationen (Auftraggeber, Anliegen, Lobby-Budget), deutlich erhoehte Bussgelder und weitgehende Streichung der Ausnahmen inklusive Kirchen, Gewerkschaften und Arbeitgeberverbaende. Belegte Schutzluecken gegen verdeckte Einflussnahme bleiben bis zur Novellierung bestehen.",
+   "source": "https://www.lobbyregister.bundestag.de/media/e4/60/817003/Lobbyregister-Regelungsvorhaben-Detailansicht-RV0013242-2026-07-21_10-33-59.pdf",
+   "assessed_at": "2026-11-20T00:45:00Z"
+  },
+  "alternativen_und_verbesserbarkeit": {
+   "status": "BELEGT",
+   "evidence": "Die Struktur ist im Verbesserungsprozess: Entwurf eines Gesetzes zur Aenderung des Lobbyregistergesetzes (BT-Drs. 20/7346) als Novellierung im Gang; Verbesserungsvorschlaege sind im Register selbst als Regelungsvorhaben mit Datum oeffentlich dokumentiert (ADRA 27.06.2024 zu Spenderdatenschutz; Parlamentwatch 15.11.2024 zu Kontakttransparenz, Bussgeldern, Ausnahmen). Das Kriterium bewertet dokumentierte Verbesserbarkeit, nicht den Ausgang des Gesetzgebungsverfahrens.",
+   "source": "https://www.lobbyregister.bundestag.de/media/e4/60/817003/Lobbyregister-Regelungsvorhaben-Detailansicht-RV0013242-2026-07-21_00-33-59.pdf",
+   "assessed_at": "2026-11-20T00:45:00Z"
+  }
+ }
+}
