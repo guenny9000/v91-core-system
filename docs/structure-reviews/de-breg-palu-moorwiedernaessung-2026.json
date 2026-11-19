@@ -1,0 +1,74 @@
+{
+  "structure_id": "de_bundesregierung_palu_moorwiedernaessung_2026",
+  "assessor": "v91_session_2026-11-19_offentliches_quellenreview",
+  "assessed_at_structure": "2026-11-19T12:54:10Z",
+  "note": "Struktur-Einschaetzung des Palu-Foerderprogramms zur Moorwiedvernaessung (Bundesregierung/EU, oeffentliche Quellen Apr.-Jul. 2026). Eingangsdaten: amtliche Pressemeldungen und Bundestags-Dokumentation. REVIEW != ENTSCHEIDUNG.",
+  "criteria": {
+    "gesellschaftlicher_nutzen": {
+      "status": "BELEGT",
+      "evidence": "Foerderprogramm soll Wiedervernaessung von 90.000 Hektar Land ermoeglichen; damit verbundene Ziele laut Bundesumweltminister Schneider: steigende Grundwasserspiegel statt trocknender Waelder, deutlich reduzierte Treibhausgasemissionen entwaesserter Moorboden; Paludikultur ('nasse Landwirtschaft') ermoeglicht Betrieben eine Zukunftsperspektive. EU-Kommission (Ribera): wichtiger Schritt zu den Klimazielen und Entwicklung nachhaltiger Wertschoepfungsketten.",
+      "source": "https://www.bundesumweltministerium.de/pressemitteilung/neues-foerderprogramm-leitet-trendwende-ein-im-umgang-mit-mooren-in-deutschland ; https://germany.representation.ec.europa.eu/nachrichten-und-veranstaltungen/pressemitteilungen/palu-forderrichtlinie-kommission-gibt-grunes-licht-fur-deutsche-regelung-im-umfang-von-13-milliarden-2026-04-14_de",
+      "assessed_at": "2026-11-19T12:54:10Z"
+    },
+    "menschenrechtsvertraeglichkeit": {
+      "status": "BELEGT",
+      "evidence": "Das Programm beruht laut Bundesumweltministerium ausdruecklich auf Freiwilligkeit; gefoerdert werden Eigentuemmer und Bewirtschafter, die sich zur Wiedervernaessung verpflichten (EU). Enteignungen sind nicht Teil der Regelung; die Bewirtschaftung des Landes wird fortgesetzt.",
+      "source": "https://www.bundesumweltministerium.de/pressemitteilung/neues-foerderprogramm-leitet-trendwende-ein-im-umgang-mit-mooren-in-deutschland ; https://germany.representation.ec.europa.eu/nachrichten-und-veranstaltungen/pressemitteilungen/palu-forderrichtlinie-kommission-gibt-grunes-licht-fur-deutsche-regelung-im-umfang-von-13-milliarden-2026-04-14_de",
+      "assessed_at": "2026-11-19T12:54:10Z"
+    },
+    "kosten_und_ressourcenverbrauch": {
+      "status": "BELEGT",
+      "evidence": "Rund 1,75 Mrd. EUR bis Ende 2029 aus dem Klima- und Transformationsfonds ausgewiesen (BMUKN, 17.04.2026); EU-Kommission genehmigte die deutsche Regelung am 14.04.2026 mit 1,3 Mrd. EUR Beihilfevolumen. Mittelherkunft und Befristung sind dokumentiert; keine offene Restfinanzierung innerhalb des Programmzeitraums erkennbar.",
+      "source": "https://www.bundesumweltministerium.de/pressemitteilung/neues-foerderprogramm-leitet-trendwende-ein-im-umgang-mit-mooren-in-deutschland ; https://germany.representation.ec.europa.eu/nachrichten-und-veranstaltungen/pressemitteilungen/palu-forderrichtlinie-kommission-gibt-grunes-licht-fur-deutsche-regelung-im-umfang-von-13-milliarden-2026-04-14_de",
+      "assessed_at": "2026-11-19T12:54:10Z"
+    },
+    "transparenz": {
+      "status": "BELEGT",
+      "evidence": "Flaechenziel (90.000 ha bis 2030), Foerdervolumen (1,75 Mrd. EUR bis Ende 2029; EU-Beihilfe 1,3 Mrd. EUR) und Zeitraeume sind oeffentlich beziffert. Die Bundestags-Drucksache-Antwort 21/6708 dokumentiert Ziel und Grenzen der Strategie nachvollziehbar (hib 540/2026, 01.07.2026).",
+      "source": "https://www.bundestag.de/presse/hib/kurzmeldungen-1193186 ; https://www.bundesumweltministerium.de/programm/palu-wiedervernaessung-und-bewirtschaftung-von-moorboeden",
+      "assessed_at": "2026-11-19T12:54:10Z"
+    },
+    "nachhaltigkeit": {
+      "status": "PROBLEM_BELEGT",
+      "evidence": "Belegtes Strukturproblem: Fuer die ueber das 90.000-ha-Ziel hinausgehenden rund 160.000 Hektar ist laut Antwort der Bundesregierung kein verbindlicher Zeitpunkt festgelegt (01.07.2026). Die Foerdermittel sind nur bis Ende 2029 (KTF) ausgewiesen; eine Dauerfinanzierung der Transformation darueber hinaus ist in den einsehbaren Dokumenten nicht belegt. Ein Klimaziel-Relevanzverlust durch verschlossene Restflaechen droht.",
+      "source": "https://www.bundestag.de/presse/hib/kurzmeldungen-1193186",
+      "assessed_at": "2026-11-19T12:54:10Z"
+    },
+    "missbrauchsrisiken": {
+      "status": "NICHT_GEPRUEFT",
+      "evidence": "",
+      "source": "",
+      "assessed_at": "2026-11-19T12:54:10Z"
+    },
+    "alternativen_und_verbesserbarkeit": {
+      "status": "BELEGT",
+      "evidence": "Das Programm ist als Alternative zur Stilllegung angelegt: Wiedervernaessung bei fortgesetzter Land- und Forstwirtschaft (Paludikultur), bewusst anpassungsfaehig und an Freiwilligkeit gebunden. Die Bundestags-Antwort erwaehnt Vermeidungskosten der Wiedervernaessung; Anpassungen sind ueber die Foerderrichtlinie steuerbar.",
+      "source": "https://www.bundesumweltministerium.de/pressemitteilung/neues-foerderprogramm-leitet-trendwende-ein-im-umgang-mit-mooren-in-deutschland ; https://www.bundestag.de/presse/hib/kurzmeldungen-1193186",
+      "assessed_at": "2026-11-19T12:54:10Z"
+    }
+  },
+  "review_result": {
+    "schema_version": 1,
+    "structure_id": "de_bundesregierung_palu_moorwiedernaessung_2026",
+    "assessor": "v91_session_2026-11-19_offentliches_quellenreview",
+    "criteria_total": 7,
+    "criteria_belegt": 5,
+    "criteria_problem_belegt": 1,
+    "criteria_ungeprueft": 1,
+    "problems": [
+      "nachhaltigkeit"
+    ],
+    "ungeprueft": [
+      "missbrauchsrisiken"
+    ],
+    "verdict": "NEGATIVE_FINDING_PROBLEMS_BELEGT",
+    "honest_limits": [
+      "REVIEW != ENTSCHEIDUNG; DETECTION != AUTHORIZATION.",
+      "BELEGT ist eine belegte Einschätzung, keine unabhängige Bestätigung.",
+      "Veränderungen erfolgen friedlich, demokratisch, rechtsstaatlich (Direktive Abschnitt 6)."
+    ],
+    "tool": "controller/structure_review.py @ PR #170",
+    "run_at": "2026-11-19T12:54:10Z",
+    "reproduce": "python3 controller/structure_review.py --report-json docs/structure-reviews/de-breg-palu-moorwiedernaessung-2026.json"
+  }
+}
