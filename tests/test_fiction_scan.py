@@ -16,6 +16,7 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from controller.fiction_scan import (
     ALLOWLIST_FILENAME,
     FICTION_PATTERNS,
+    MAX_SCAN_BYTES,
     FictionScanError,
     find_fiction,
     load_allowlist,
@@ -150,13 +151,27 @@ class ScanBehaviorTests(unittest.TestCase):
         self.assertEqual(1, report["suppressed_findings"])
         self.assertEqual(0, main(["--path", str(self.root)]))
 
-    def test_binary_and_oversize_skipped(self) -> None:
+    def test_non_code_binary_is_out_of_scope(self) -> None:
         (self.root / "controller").mkdir(parents=True)
         (self.root / "controller/blob.bin").write_bytes(
             b"SEQ:" + b"9130" + b"\x00\x01")
         report = find_fiction(self.root)
         self.assertEqual("CLEAN", report["status"])
         self.assertEqual(0, report["scanned_files"])
+
+    def test_oversize_code_file_fails_closed(self) -> None:
+        path = self.root / "controller/oversize.py"
+        path.parent.mkdir(parents=True)
+        path.write_bytes(b"A" * (MAX_SCAN_BYTES + 1))
+        with self.assertRaisesRegex(FictionScanError, "exceeds MAX_SCAN_BYTES"):
+            find_fiction(self.root)
+
+    def test_nul_byte_in_code_file_fails_closed(self) -> None:
+        path = self.root / "controller/binary.py"
+        path.parent.mkdir(parents=True)
+        path.write_bytes(b"VALUE = 1\\n\\x00")
+        with self.assertRaisesRegex(FictionScanError, "contains a NUL byte"):
+            find_fiction(self.root)
 
     def test_missing_path_fails_closed(self) -> None:
         with self.assertRaises(FictionScanError):
