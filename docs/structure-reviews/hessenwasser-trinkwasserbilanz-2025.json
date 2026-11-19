@@ -1,0 +1,50 @@
+{
+ "structure_id": "hessenwasser_trinkwasserbilanz_2025_rhein_main",
+ "assessor": "v91_session_2026-11-19_quellenreview_max_best",
+ "assessed_at_structure": "2026-11-19T20:22:00Z",
+ "note": "Struktur-Datensatz der Hessen-Reihe (Saeule Wasser, Lernblock #209). Bewertet wird die regionale Trinkwasserversorgung der Hessenwasser (Bilanz 2025 zum Weltwassertag 22.03.2026). Quellenlage ehrlich: Fachmedium zitiert die Unternehmensbilanz (Sekundaerzitat); die untersuchte Quelle liefert KEINE Vogelsberg-Zahlen - dort bleibt die bestehende Baseline (#152/#176) massgeblich. Ersetzt KEINE Messung; REVIEW != ENTSCHEIDUNG.",
+ "criteria": {
+  "gesellschaftlicher_nutzen": {
+   "status": "BELEGT",
+   "evidence": "Hessenwasser lieferte 2025 rund 110,6 Millionen Kubikmeter Trinkwasser an kommunale Versorger und Direktkunden und traegt damit zur Versorgung von etwa 2,4 Millionen Menschen in der Metropolregion Rhein-Main bei; Gewinnung ueber ein weit verzweigtes System aus 21 Wasserwerken und zahlreichen Foerderanlagen, ergaenzt durch ein rund 350 Kilometer langes Leitungsnetz.",
+   "source": "https://wassermeister.net/aus-der-praxis/trinkwasserversorgung-2025-hessenwasser-sichert-versorgung-fuer-24-millionen-menschen/",
+   "assessed_at": "2026-11-19T20:22:00Z"
+  },
+  "menschenrechtsvertraeglichkeit": {
+   "status": "NICHT_GEPRUEFT",
+   "evidence": "",
+   "source": "",
+   "assessed_at": "2026-11-19T20:22:00Z"
+  },
+  "kosten_und_ressourcenverbrauch": {
+   "status": "NICHT_GEPRUEFT",
+   "evidence": "",
+   "source": "",
+   "assessed_at": "2026-11-19T20:22:00Z"
+  },
+  "transparenz": {
+   "status": "BELEGT",
+   "evidence": "Die Bilanz beziffert Foerdermengen, versorgte Bevoelkerung, Wasserwerkszahl (21) und Netzlaenge (ca. 350 km) und ist zum Weltwassertag oeffentlich; Ehrlichkeits-Hinweis: Zugriff ueber ein Fachmedium als Sekundaerzitat der Unternehmensbilanz, nicht durch die Session am Original geprueft.",
+   "source": "https://wassermeister.net/aus-der-praxis/trinkwasserversorgung-2025-hessenwasser-sichert-versorgung-fuer-24-millionen-menschen/",
+   "assessed_at": "2026-11-19T20:22:00Z"
+  },
+  "nachhaltigkeit": {
+   "status": "NICHT_GEPRUEFT",
+   "evidence": "",
+   "source": "",
+   "assessed_at": "2026-11-19T20:22:00Z"
+  },
+  "missbrauchsrisiken": {
+   "status": "NICHT_GEPRUEFT",
+   "evidence": "",
+   "source": "",
+   "assessed_at": "2026-11-19T20:22:00Z"
+  },
+  "alternativen_und_verbesserbarkeit": {
+   "status": "BELEGT",
+   "evidence": "Redundanz statt Einzeldependenz: Gewinnung aus Grund- und Quellwasser UNTERSCHIEDLICHER Regionen plus Verbund mit kommunalen Versorgern; klimatischer Stress (hohe Temperaturen, wechselhafte Niederschlaege 2025) wurde laut Bilanz durch Infrastruktur und Ressourcenmanagement abgefedert.",
+   "source": "https://wassermeister.net/aus-der-praxis/trinkwasserversorgung-2025-hessenwasser-sichert-versorgung-fuer-24-millionen-menschen/",
+   "assessed_at": "2026-11-19T20:22:00Z"
+  }
+ }
+}
