@@ -7,7 +7,7 @@ Kollisionsregel aus docs/V91-UNIVERSAL-LEARNING-BLOCK.md: verbindliche
 Dokumente haben Vorrang vor Zusammenfassungen, messbare lokale Evidenz
 hat Vorrang vor beiden.
 
-Stand: 18. November 2026, main-Head 101ee651 (nach PR #137).
+Stand: 19. November 2026, main-Head 1ed67aaa (nach PR #168).
 
 ## 1. Verbindliche Dokumente (Vorrang vor diesem Index)
 
@@ -29,6 +29,7 @@ Stand: 18. November 2026, main-Head 101ee651 (nach PR #137).
 - Evidenz/Integritaet: evidence_report (#135), crypto_receipts, worm_ledger, ledger_anchor, ledger_recovery (Design: docs/V91-WORM-LEDGER-DESIGN.md).
 - Foederation: federation_receiver, federation_sender, federation_transport, peer_directory, peer_store, peer_sync, trusted_peer_registry.
 - Runtime/Notfall: worker, controller, emergency_stop (Notaus-Verkabelung #132, Issue #70 geschlossen), emergency_protocol.
+- Wächter-Registry (#168): 11 Rollen, dateibasierte Existenzprüfung, [VISION] bleibt UNKNOWN; Registry prüft keine Installation oder Laufzeit und ersetzt keine Fähigkeitstests.
 - Drill ohne Hardware: scripts/v91_model_drill.py (#133), scripts/v91_dashboard.py.
 - OS-Integration: v99/os/systemd/ (v91-cycle.service, v91-cycle.timer), v99/os/launchd/, v99/os/windows/ - Repository-Dateien; INSTALLATION am Standort ist Betreibersache (SCRIPTED != INSTALLED).
 
@@ -78,4 +79,5 @@ Attribute entstehen ausschliesslich aus gepruefter Evidenz, nicht aus Text.
 - 19.11.2026 #141 Startup-Check: offline Selbstpruefung als Komposition (controller/startup_check.py + tests).
 - 18.11.2026 #142 Wirkungs-Datensatz-Vertrag (V91-WIRK als EvidenceReport) + PRUEFBFUND ChatGPT FIELD IMPACT in docs/V91-REGIONAL-RESILIENCE-MONITOR.md.
 - 18.11.2026 #143 zweite FIELD-IMPACT-Bewertung: Experimentier-Regel + erweiterter Leitsatz im Resilience-Monitor (Abschnitt 8), Zensuren abgelehnt.
-- 18.11.2026 #144 Ballast-Pflichtangabe in Wirkungs-Datensaetzen (SEQ:9032-Kern) + PRUEFBFUND: Zweitregister/Code abgelehnt (0 Repo-Treffer, defekter Konstruktor, Phantomdateien, Seeding ohne Baseline)..
+- 18.11.2026 #144 Ballast-Pflichtangabe in Wirkungs-Datensaetzen (SEQ:9032-Kern) + PRUEFBFUND: Zweitregister/Code abgelehnt (0 Repo-Treffer, defekter Konstruktor, Phantomdateien, Seeding ohne Baseline).
+- 19.11.2026 #168 Wächter-Registry: 11 Direktivrollen mit dateibasierter Existenzprüfung; zwei Rollen bleiben [VISION]/UNKNOWN; keine Laufzeit- oder Installationsbehauptung.
