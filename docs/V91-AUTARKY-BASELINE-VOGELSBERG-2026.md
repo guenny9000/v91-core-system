@@ -65,22 +65,38 @@ NICHT GEPRÜFT (bewusst kein Prozentwert ausgegeben):
 
 ## 3. Nahrungsautarkie (Säule 2)
 
-- Landwirtschaftliche Struktur - BELEGT als Registerauswertung des
-  Hessischen Statistischen Landesamts für 2023 (Stichtag 1. Januar):
-  1.108 aktive Betriebe, 64.276 ha landwirtschaftlich genutzte Fläche;
-  darunter 245 Betriebe mit ökologischem Landbau und 16.099 ha Öko-LF.
-  Das entspricht rechnerisch rund 22,1 % der erfassten Betriebe und
-  25,0 % der erfassten LF. Die Registerauswertung hat Erfassungsgrenzen
-  (u. a. 5 ha LF oder bestimmte Mindest-Viehbestände); sie ist daher
-  keine Vollzählung aller kleinsten Erzeuger.
-- Ausgewählte Ackerflächen 2023: Winterweizen 8.648 ha, Wintergerste
-  4.683 ha, Winterraps 3.086 ha, Triticale 2.058 ha, Kartoffeln 25 ha.
-  Das sind Flächenangaben, keine Erntemengen oder lokal verfügbare
-  Lebensmittelmengen. Quelle: Hessisches Statistisches Landesamt,
-  C I 11 - j/23, Tabelle 1 und Kulturarten-Tabelle.
+- Landwirtschaftliche Struktur im Kreis - BELEGT (Landwirtschaftszahlung
+  2020, Kreisergebnisse, [HSL-LZ2020], Stichtag 01.03.2020,
+  Regional-Summenprobe in Reg.-Bez. Giessen konsistent:
+  562+539+546+1.106+1.079 = 3.832):
+  - Landwirtschaftliche Betriebe: 1.079.
+  - Landwirtschaftlich genutzte Flaeche (LF): 64.264 ha, davon
+    Ackerland 31.195 ha, Dauergruenland 33.019 ha (Kontrolle:
+    31.195 + 33.019 = 64.214 gegenueber LF 64.264, Rest sonstige
+    Flaechen; identische LF/Ackerland-Werte in zwei unabhaengig
+    extrahierten Tabellen des Berichts).
+  - LF-Anteil an der Kreisflaeche = 64.264 ha / 145.891 ha =
+    44,0 % (Rechenregel angegeben: LF / Gesamtflaeche).
+  - Unsichere Spaltendeutungen des Berichts (z. B. Zuordnung
+    der Spalten 2 und 5 der Uebersichtstabelle) werden NICHT
+    als Fakt veroeffentlicht (UNKNOWN != PASS).
 - Pressebefund (regionaler Kontext, keine Messung): Ertragsrückgang
   rund 10 % bei Landwirten im Kreis gemeldet ([OZ-Artikel]) - BELEGT
   als Meldung, NICHT als Messwert; Ursachenkontext siehe Säule 3.
+- Agrarstruktur-Registerauswertung 2023 (zusaetzlicher Datenstand,
+  siehe oben; [Agrarstatistik Hessen 2023], Stichtag 1. Januar 2023):
+  1.108 aktive Betriebe (davon 245 mit oekologischem Landbau),
+  64.276 ha LF (16.099 ha Oeko-LF); ausgewaehlte Ackerflaechen 2023:
+  Winterweizen 8.648 ha, Wintergerste 4.683 ha, Winterraps 3.086 ha,
+  Triticale 2.058 ha, Kartoffeln 25 ha - BELEGT als Flaechenangaben,
+  KEINE Erntemengen. Erfassungsgrenzen der Registerauswertung
+  (u. a. 5 ha LF oder Mindest-Viehbestaende) werden genannt:
+  keine Vollzaehlung aller kleinsten Erzeuger. Die Werte unterscheiden
+  sich von der Landwirtschaftszahlung 2020 durch Stichtag und
+  Erhebungsdesign; beide Stands werden getrennt ausgewiesen.
+- Aus dem LZ2020-Bericht: Landwirtschaftliche Betriebe 1.079, LF
+  64.264 ha, Ackerland 31.195 ha, Dauergruenland 33.019 ha - BELEGT
+  (Rechenregel LF-Anteil: 64.264 / 145.891 = 44,0 %).
 - Versorgungsgrad mit regionalen Lebensmitteln, Lagerfähigkeit,
   samenfeste Sorten, Erzeugernetzwerke: NICHT VERFÜGBAR.
 - KEIN "Nenner 1000 = Testdatensatz"-Fehlschluss: ohne belegte
@@ -91,21 +107,31 @@ NICHT GEPRÜFT (bewusst kein Prozentwert ausgegeben):
 ## 4. Wasser und Natur (Säule 3)
 
 - Trinkwasserherkunft Mittelhessen: rund 60 % aus kommunalen Brunnen
-  und Quellen - BELEGT als Mittelhessen-Wert, ausdrücklich KEINE
-  Autarkiequote des Vogelsbergkreises ([RP Gießen]).
-- Wasserbilanz Vogelsbergkreis 2024 - BELEGT (RP Gießen, Kreisübersicht):
-  101.244 Einwohner als damalige Berechnungsbasis; Eigenförderung
-  6.046.951 m³; Netzeinspeisung zur Eigenversorgung 6.080.532 m³;
-  verkaufte Menge gesamt 4.800.715 m³ (davon Haushalte/Kleingewerbe
-  4.328.431 m³ und Gewerbe/Industrie 472.284 m³); sonstiger
-  Wasserverbrauch 1.279.817 m³; davon ausgewiesene Rohrnetzverluste
-  686.331 m³; spezifischer Rohrnetzverlust 0,056 m³/(km*h);
-  täglicher Verbrauch ohne Gewerbe/Industrie 117 l/(EW*Tag).
-  Die Eigenförderung ist nicht mit lokaler Versorgungssicherheit oder
-  Autarkie gleichzusetzen: Fremdbezüge, Fremdabgaben, Verbundsysteme,
-  Wasserqualität, saisonale Verfügbarkeit und ökologische Grenzen sind
-  zusätzlich zu bewerten. Die Wasserbilanz weist außerdem auf mögliche
-  Schätzwerte und Erfassungsunterschiede bei einzelnen Positionen hin.
+  und Quellen - BELEGT ([RP Gießen]-Pressemitteilung).
+- Wasserbilanz Mittelhessen 2024 ([RP Gießen], PDF, Stand 06.10.2025):
+  Detailwerte für den Vogelsbergkreis - BELEGT:
+  - Einwohner (Stichtag 30.09.2024, Zensus 2022 korrigiert): 101.244.
+  - Eigenförderung: 6.046.951 m3/a; Netzeinspeisung zur
+    Eigenversorgung (EF+FB-FA): 6.080.532 m3/a. Regionale
+    Eigenförderungsdeckung = EF / Netzeinspeisung = 99,4 %
+    (Rechenregel angegeben: 6.046.951 / 6.080.532 = 0,9945;
+    FQ: Definition zuerst, dann der Wert).
+  - Verkaufte Menge gesamt: 4.800.715 m3/a, davon Haushalte/
+    Kleingewerbe 4.328.431 m3/a, Gewerbe/Industrie 472.284 m3/a.
+  - Sonstiger Wasserverbrauch gesamt 1.279.817 m3/a, davon
+    Rohrnetzverluste 686.331 m3/a; spezifischer Rohrnetzverlust
+    0,056 m3/(km*h) (zweitniedrigster Wert im Regierungsbezirk
+    Gießen nach dem LK Limburg-Weilburg mit 0,052).
+  - Täglicher Verbrauch ohne Gewerbe/Industrie: 117 l/(EW*Tag).
+  - Vergleich Regierungsbezirk: 1.040.266 EW, EF 36.021.740 m3/a,
+    114 l/(EW*Tag), 0,068 m3/(km*h).
+  - HINWEIS (vom RP Gießen selbst genannt): Kleingewerbe und
+    öffentliche Einrichtungen sind nicht separat erfasst und
+    erhöhen den Pro-Kopf-Wert rechnerisch; Quellüberläufe und
+    Eigenbedarf sind teils nicht angegeben und erhöhen die
+    ausgewiesenen Rohrnetzverluste rechnerisch. Deshalb wird hier
+    KEINE Versorgungsautarkie in Prozent daraus abgeleitet,
+    sondern nur die oben definierte Eigenförderungsdeckung.
 - Wasserqualität/Messstellen im Kreis, Quellenschutzgebiete,
   Bodenfruchtbarkeit, Artenvielfalt: NICHT VERFÜGBAR (keine belegten
   Kreis-Zahlen; keine unbelegte Zahlengenerierung).
@@ -155,17 +181,22 @@ Nicht übernommen, weil bereits besser auf main vorhanden
 
 ## 7. Zählblatt für die nächsten Mess-PRs (Reihenfolge empfohlen)
 
-1. Wasserdaten auf kommunaler Ebene auswerten und mit Wasserrechten,
-   Qualitätsdaten, Grundwasserständen und saisonaler Verfügbarkeit
-   verknüpfen; Kreisaggregat allein reicht nicht für lokale Resilienz.
-2. Agrarstruktur 2023 ist jetzt als Struktur-Baseline belegt. Nächster
-   Schritt: Erntemengen, Verarbeitung, Lagerung, Direktvermarktung und
-   regionale Nachfrage erfassen; keine Selbstversorgungsquote ohne
-   vergleichbare Mengen- und Bedarfsdaten.
+1. Wasserbilanz 2024 (RP Gießen, PDF) auswerten -> Kreis-Zahlen belegen:
+   ERLEDIGT BEI DIESEM UPDATE (Säule 3: Eigenförderungsdeckung 99,4 %,
+   Rohrnetzverluste, Pro-Kopf-Verbrauch; Rechenregel angegeben).
+2. Agrarstruktur belegen - ERLEDIGT BEI DIESEM UPDATE (Landwirtschafts-
+   zahlung 2020: Betriebe 1.079, LF 64.264 ha; zusaetzliche Register-
+   auswertung Hessen 2023: 1.108 Betriebe, 64.276 ha LF, Acker- und
+   Oeko-Flaechen; beide Staende getrennt ausgewiesen, unsichere
+   Spaltendeutungen NICHT uebernommen). Nächster Schritt: Erntemengen,
+   Verarbeitung, Lagerung, Direktvermarktung und regionale Nachfrage
+   erfassen; keine Selbstversorgungsquote ohne vergleichbare Mengen-
+   und Bedarfsdaten.
 3. Jahresstromerzeugung/-verbrauch (Netzbetreiber/Kreis) anfordern ->
    Autarkie-Definition nachziehen, DANN Prozentwert ausgeben.
 4. Operator-Vor-Ort-Messungen (Alsfeld) über v91_cli record in den
-   Messstore (PR #147) -> Herkunft und Messquelle getrennt verifizieren.
+   Messstore (PR #147) -> von IMPORTED nach VERIFIED_ORIGIN über die
+   signierte Heartbeat-Kette (PR #149/#150).
 
 Jede offene Zeile verschwindet erst, wenn ihr Status BELEGT oder
 FEHLGESCHLAGEN ist. Keine Zahl wird veröffentlicht, die nicht mindestens
@@ -191,6 +222,10 @@ Namen, Stand und Quellenpfad trägt.
   https://statistik.hessen.de/sites/statistik.hessen.de/files/2024-03/CI11_j23.pdf
 - [Agraratlas]: Atlas Agrarstatistik -
   https://agraratlas.statistikportal.de/
+- [HSL-LZ2020]: Landwirtschaftszahlung 2020, Kreisergebnisse
+  (Kennziffer C IV 10-1b/20, Hessisches Statistische Landesamt,
+  Juni 2021) -
+  https://statistik.hessen.de/sites/statistik.hessen.de/files/2022-06/CIV10_1b_20.pdf
 - [GovData]: Landwirtschaftliche Betriebe und LF nach Größenklassen,
   Kreis-Tiefe -
   https://www.govdata.de/suche/daten/landwirtschaftliche-betriebe-und-deren-landwirtschaftlichgenutzte-flache-lf-nach-grossenklassen-1
