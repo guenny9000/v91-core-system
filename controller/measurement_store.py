@@ -69,9 +69,11 @@ class MeasurementStore:
         if not self._path.exists():
             return []
         entries: list[dict[str, Any]] = []
-        for line in self._path.read_text(encoding="utf-8").splitlines():
+        for line_number, line in enumerate(
+            self._path.read_text(encoding="utf-8").splitlines(), start=1
+        ):
             if not line:
-                continue
+                raise MeasurementStoreError(f"blank store line: {line_number}")
             try:
                 entry = json.loads(line)
             except json.JSONDecodeError as exc:
@@ -86,12 +88,17 @@ class MeasurementStore:
         for index, entry in enumerate(self._read_entries(), start=1):
             if entry.get("seq") != index or entry.get("prev_hash") != prev:
                 return False
+            entry_hash = entry.get("entry_hash")
+            if not isinstance(entry_hash, str) or len(entry_hash) != 64:
+                return False
+            if not hmac.compare_digest(entry_hash, self._hash_record(entry)):
+                return False
             mac = entry.get("entry_hmac")
             if not isinstance(mac, str) or len(mac) != 64:
                 return False
             if not hmac.compare_digest(mac, self._sign(entry)):
                 return False
-            prev = entry.get("entry_hash", "")
+            prev = entry_hash
             if not isinstance(prev, str) or len(prev) != 64:
                 return False
         return True
@@ -119,9 +126,7 @@ class MeasurementStore:
             record["seq"] = len(entries) + 1
             record["prev_hash"] = prev
             record["received_at_utc"] = datetime.now(UTC).isoformat()
-            record["entry_hash"] = hashlib.sha256(
-                json.dumps(record, sort_keys=True, separators=(",", ":"), ensure_ascii=False).encode("utf-8")
-            ).hexdigest()
+            record["entry_hash"] = self._hash_record(record)
             record["entry_hmac"] = self._sign(record)
 
             with open(self._path, "a", encoding="utf-8") as handle:
@@ -178,8 +183,24 @@ class MeasurementStore:
         }
         return self._append(record)
 
+    @staticmethod
+    def _hash_record(record: dict[str, Any]) -> str:
+        payload = {
+            key: value for key, value in record.items()
+            if key not in {"entry_hash", "entry_hmac"}
+        }
+        encoded = json.dumps(
+            payload, sort_keys=True, separators=(",", ":"), ensure_ascii=False
+        ).encode("utf-8")
+        return hashlib.sha256(encoded).hexdigest()
+
     def verify_record(self, record: dict[str, Any]) -> bool:
+        entry_hash = record.get("entry_hash")
         mac = record.get("entry_hmac")
+        if not isinstance(entry_hash, str) or len(entry_hash) != 64:
+            return False
+        if not hmac.compare_digest(entry_hash, self._hash_record(record)):
+            return False
         return isinstance(mac, str) and hmac.compare_digest(mac, self._sign(record))
 
     def count(self) -> int:
