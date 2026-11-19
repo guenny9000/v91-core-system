@@ -19,16 +19,16 @@ REQUIRED_HEADER_LINES = (
 LEGACY_EXEMPTIONS = frozenset({
     "__init__.py",
     "autarky_metrics.py", "autarky_report.py",
-    "controller.py", "crypto_receipts.py", "emergency_stop.py",
+    "crypto_receipts.py", "emergency_stop.py",
     "encrypted_store.py", "impact.py",
-    "lease_lock.py", "ledger.py", "ledger_anchor.py", "legacy_gate.py",
+    "lease_lock.py", "ledger_anchor.py", "legacy_gate.py",
     "measurement_core.py", "model_gate.py",
     "model_run_manifest.py", "model_runner.py",
     "peer_store.py", "peer_sync.py", "real_metrics.py",
     "replay_db_unification.py", "replay_session.py", "replay_state_provider.py",
     "resource_admission.py", "resilience_mesh.py", "runtime_control.py",
     "self_study_metrics.py", "signed_manifest.py", "state_monotonicity.py",
-    "stewardship_report.py", "task_ingress_gate.py", "telemetry_server.py",
+    "stewardship_report.py", "task_ingress_gate.py",
     "trusted_peer_registry.py", "use_policy.py", "v91_cli.py",
     "v91_listener.py", "witness_client.py", "worm_ledger.py",
 })
@@ -112,6 +112,23 @@ class AgathonHeaderPolicyTest(unittest.TestCase):
         self.assertIn("Stewardship Gate", enforcement.__doc__ or "")
         self.assertIn("Real local observer", observer.__doc__ or "")
         self.assertIn("Offline V91 task worker", worker.__doc__ or "")
+
+        # Batch 3: ledger, controller, telemetry_server
+        import importlib.util  # noqa: E402
+
+        import ledger  # noqa: E402
+        import telemetry_server  # noqa: E402
+        # controller.py cannot be imported flat under the name "controller"
+        # because the package is already in sys.modules (conftest preload);
+        # load the file explicitly instead (flat convention, no shadowing).
+        spec = importlib.util.spec_from_file_location(
+            "v91_flat_controller_under_test", controller_dir / "controller.py")
+        flat_controller = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(flat_controller)
+
+        self.assertIn("hash-chain ledger", ledger.__doc__ or "")
+        self.assertIn("V91 Control Plane", flat_controller.__doc__ or "")
+        self.assertIn("Read-only telemetry endpoint", telemetry_server.__doc__ or "")
 
 
 if __name__ == "__main__":
