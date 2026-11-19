@@ -141,7 +141,7 @@ def _validate_structure(manifest: dict[str, Any]) -> None:
             for field in ("tokenizer_digest", "runtime_digest"):
                 if field in runner:
                     _validate_digest(runner[field], f"model_runners[{index}].{field}", nullable=True)
-            if runner["determinism"] not in _DETERMINISM:
+            if not isinstance(runner["determinism"], str) or runner["determinism"] not in _DETERMINISM:
                 raise ManifestError(f"model_runners[{index}].determinism is invalid")
             for field, limit in (("precision", 64), ("backend", 128)):
                 if field in runner and runner[field] is not None and (not isinstance(runner[field], str) or len(runner[field]) > limit):
@@ -160,8 +160,9 @@ def _validate_structure(manifest: dict[str, Any]) -> None:
 
     if "data_classes" in manifest:
         classes = manifest["data_classes"]
-        if (not isinstance(classes, list) or len(classes) != len(set(classes))
-                or any(not isinstance(item, str) or item not in _DATA_CLASSES for item in classes)):
+        if (not isinstance(classes, list)
+                or any(not isinstance(item, str) or item not in _DATA_CLASSES for item in classes)
+                or len(classes) != len(set(classes))):
             raise ManifestError("data_classes must contain unique supported data-class strings")
 
 
