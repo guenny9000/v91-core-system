@@ -111,8 +111,14 @@ class LedgerTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             path = Path(tmp) / "quorum_ledger.jsonl"
             ledger = QuorumLedger(path, PUBLIC)
+            other_key = KEYS["agent-a"][0]
+            stranger = build_signed_vote(
+                agent_id="agent-x", proposal_digest="a" * 64, epoch=1,
+                sequence=1, approve=True, issued_at=1000,
+                policy_version="v1", private_key=other_key,
+            )
             with self.assertRaises(QuorumLedgerError):
-                ledger.append_vote(vote("agent-x", 1))
+                ledger.append_vote(stranger)
 
     def test_tampered_ledger_file_fails_closed(self):
         with tempfile.TemporaryDirectory() as tmp:
