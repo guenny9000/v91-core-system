@@ -1,0 +1,72 @@
+{
+  "structure_id": "eu_wo_2024_1991_nationaler_wiederherstellungsplan_2026",
+  "assessor": "v91_session_2026-11-20_offentliches_quellenreview",
+  "assessed_at_structure": "2026-11-20T04:00:00Z",
+  "note": "Struktur-Einschaetzung der EU-Wiederherstellungsverordnung (Vo) 2024/1991 und des deutschen Nationalen Wiederherstellungsplans im Stand November 2026. Eingangsdaten: bc-legal-Rechtsanalyse (22.06.2026), BMUKN-NWP-Seite und FAQ, Bundestag hib 88/2026, Ecologic-Institut 04.11.2026, WWF 26.10.2026. REVIEW != ENTSCHEIDUNG.",
+  "criteria": {
+    "gesellschaftlicher_nutzen": {
+      "status": "BELEGT",
+      "evidence": "Erstmals verbindliche, flaechenbezogene Renaturierungspflichten in der EU: bis 2030 Wiederherstellungsmassnahmen auf mind. 20 Prozent der Land- und Meeresflaechen (Art. 1 Abs. 2), Unterziele u.a. 30/60/90 Prozent der geschaedigten Land-Lebensraumtypen bis 2030/2040/2050 (Art. 4), 25.000 km frei fliessende Fluesse (Art. 9), kein Nettoverlust staedtischer Gruenflaechen (Art. 8). WWF: 81 Prozent der geschuetzten Lebensraeume Europas in schlechtem Zustand.",
+      "source": "https://bc-legal.de/eu-wiederherstellungsverordnung-pflichten-streitfragen-und-der-deutsche-wiederherstellungsplan/ ; https://www.wwf.de/themen-projekte/biodiversitaet/nature-restoration-law",
+      "assessed_at": "2026-11-20T04:00:00Z"
+    },
+    "menschenrechtsvertraeglichkeit": {
+      "status": "BELEGT",
+      "evidence": "Ge- und Verbote richten sich an die Mitgliedstaaten, gegenueber Privaten keine unmittelbare Wirkung (BMUKN-FAQ). Moor-Wiedervernaessung auf Privatflaechen bleibt freiwillig, Ausgleich und Foerderung entscheidet die nationale Ausgestaltung (bc-legal, Stand 22.06.2026). Keine Enteignungs- oder Zwangsinstrumente dokumentiert.",
+      "source": "https://bc-legal.de/eu-wiederherstellungsverordnung-pflichten-streitfragen-und-der-deutsche-wiederherstellungsplan/",
+      "assessed_at": "2026-11-20T04:00:00Z"
+    },
+    "kosten_und_ressourcenverbrauch": {
+      "status": "NICHT_GEPRUEFT",
+      "evidence": "",
+      "source": "",
+      "assessed_at": "2026-11-20T04:00:00Z"
+    },
+    "transparenz": {
+      "status": "BELEGT",
+      "evidence": "NWP-Entwurf am 25.04.2026 veroeffentlicht (BMUKN). Erste Beteiligung 01.09.-03.10.2025: 6.146 Teilnehmende, 1.143 Anmerkungen von 158 Organisationen, 310 Pinnwand-Beitraege. Zweite formale Phase bis 28.06.2026 mit rund 7.000 Hinweisen. BT-Kleine-Anfrage-Antwort 21/3828 (hib 88/2026) oeffentlich; EU-Referenzportal mit Leitlinien und Berichtshandbuechern.",
+      "source": "https://www.bundesumweltministerium.de/themen/naturschutz/wiederherstellung-von-oekosystemen/die-eu-verordnung-zur-wiederherstellung-der-natur/nationaler-wiederherstellungsplan-fuer-die-natur-in-deutschland ; https://www.bundestag.de/presse/hib/kurzmeldungen-1142980",
+      "assessed_at": "2026-11-20T04:00:00Z"
+    },
+    "nachhaltigkeit": {
+      "status": "PROBLEM_BELEGT",
+      "evidence": "Belegte Umsetzungs- und Verfahrensrisiken: Vorlagefrist an die EU-Kommission 01.09.2026 bei rund 7.000 noch zu verarbeitenden Hinweisen, endgueltiger Plan erst 2027 (BMUKN, hib 03.02.2026: dem Ergebnis nicht vorgegriffen).. Verschlechterungsverbot (Art. 4 Abs. 11/12) greift ausserhalb von Natura 2000 und kann Genehmigungsverfahren erschweren (bc-legal als Hauptstreitpunkt); Durchfuehrungsgesetz noch nicht verabschiedet, kompetenzrechtliche Kritik gerichtlich ungeklaert (angekuendigte Nichtigkeitsklage wurde nicht erhoben).",
+      "source": "https://bc-legal.de/eu-wiederherstellungsverordnung-pflichten-streitfragen-und-der-deutsche-wiederherstellungsplan/ ; https://www.bundesumweltministerium.de/themen/naturschutz/wiederherstellung-von-oekosystemen/die-eu-verordnung-zur-wiederherstellung-der-natur/nationaler-wiederherstellungsplan-fuer-die-natur-in-deutschland ; https://www.bundestag.de/presse/hib/kurzmeldungen-1142980",
+      "assessed_at": "2026-11-20T04:00:00Z"
+    },
+    "missbrauchsrisiken": {
+      "status": "NICHT_GEPRUEFT",
+      "evidence": "",
+      "source": "",
+      "assessed_at": "2026-11-20T04:00:00Z"
+    },
+    "alternativen_und_verbesserbarkeit": {
+      "status": "BELEGT",
+      "evidence": "Belegte verbesserte Ausgestaltungswege: staatliche Anreizsysteme und Ausgleichs-/Foerdermodelle statt Zwang zur Einbindung Privater (BMUKN-FAQ, bc-legal); flaechige Wiederherstellung durch Beseitigung obsoleter Querbauwerke (Art. 9); transparente Kriterien, (raumbezogene) Datensaetze und reproduzierbare Methoden zur Identifizierung und Priorisierung von Flaechen mit lokalen Akteuren (Ecologic-Institut, 04.11.2026).",
+      "source": "https://bc-legal.de/eu-wiederherstellungsverordnung-pflichten-streitfragen-und-der-deutsche-wiederherstellungsplan/ ; https://www.ecologic.eu/de/20726",
+      "assessed_at": "2026-11-20T04:00:00Z"
+    }
+  },
+  "review_result": {
+    "schema_version": 1,
+    "structure_id": "eu_wo_2024_1991_nationaler_wiederherstellungsplan_2026",
+    "assessor": "v91_session_2026-11-20_offentliches_quellenreview",
+    "criteria_total": 7,
+    "criteria_belegt": 4,
+    "criteria_problem_belegt": 1,
+    "criteria_ungeprueft": 2,
+    "problems": [
+      "nachhaltigkeit"
+    ],
+    "ungeprueft": [
+      "kosten_und_ressourcenverbrauch",
+      "missbrauchsrisiken"
+    ],
+    "verdict": "NEGATIVE_FINDING_PROBLEMS_BELEGT",
+    "honest_limits": [
+      "REVIEW != ENTSCHEIDUNG; DETECTION != AUTHORIZATION.",
+      "BELEGT ist eine belegte Einsch\u00e4tzung, keine unabh\u00e4ngige Best\u00e4tigung.",
+      "Ver\u00e4nderungen erfolgen friedlich, demokratisch, rechtsstaatlich (Direktive Abschnitt 6)."
+    ]
+  }
+}
