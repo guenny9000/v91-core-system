@@ -1,0 +1,71 @@
+{
+  "initiative_id": "pilot-d-kita-schulverpflegung-2026",
+  "description": "Pilot D des Ernaehrungs-Waechters: Kita- und Schulverpflegung im Ganztag (rund 6 Mio verpflegte Kinder, Investitionsprogramme Ganztagsausbau und Kindertagesbetreuung). Stufe R2: Kriterien beschrieben, keine Wirkung gemessen.",
+  "watcher": "ernaehrung",
+  "maturity": "R2",
+  "indicators": [
+    {
+      "role": "WIRKUNG",
+      "name": "Taeglich in Kita und Schule verpflegte Kinder und Jugendliche",
+      "unit": "Personen",
+      "baseline": 6000000.0,
+      "target": 6400000.0,
+      "period": {
+        "baseline_at": "2026-10-07T00:00:00Z",
+        "target_at": "2030-06-30T00:00:00Z"
+      },
+      "method": "Auswertung oeffentlich erklaerter Verpflegungszahlen (BLE, Bundeszentrum). Baseline rund 6 Mio laut BLE vom 07.10.2026, Rundungsunsicherheit 300.000. Ziel selbstgesetzt aus dem Ganztagsrechtsanspruch ab 2026.",
+      "verifier": "Bundesanstalt fuer Landwirtschaft und Ernaehrung (BLE)",
+      "uncertainty": 300000.0,
+      "alternative_comparison": "Ohne Investitionsprogramme: kein Rechtsanspruchsumbau, keine zusaetzlichen Kuechen und Mensen; rund 264.000 zusaetzliche Ganztagsplaetze bis 2029/30 blieben ohne Verpflegungsinfrastruktur."
+    },
+    {
+      "role": "KOSTEN",
+      "name": "Verausgabte Investitionsmittel verpflegungsnaher Bau- und Ausstattungsprogramme",
+      "unit": "EUR",
+      "baseline": 0.0,
+      "target": 7500000000.0,
+      "period": {
+        "baseline_at": "2026-01-01T00:00:00Z",
+        "target_at": "2029-12-31T00:00:00Z"
+      },
+      "method": "Verausgabung von Investitionsprogramm Kindertagesbetreuung (4 Mrd EUR 2026-2029) plus Ganztagsausbau (3,5 Mrd EUR bis Ende 2029) laut BMBFSFJ. Verpflegungsnaher Anteil nicht einzeln zugeordnet: Unsicherheit 100.000.000 EUR.",
+      "verifier": "Bundesministerium fuer Familie, Senioren, Frauen und Jugend",
+      "uncertainty": 100000000.0
+    },
+    {
+      "role": "RESILIENZ",
+      "name": "Von Pilot D verifizierte oeffentliche Quellenmeldungen zur Verankerung von Schulessen im Ganztag",
+      "unit": "Quellenmeldungen",
+      "baseline": 0.0,
+      "target": 6.0,
+      "period": {
+        "baseline_at": "2026-11-19T00:00:00Z",
+        "target_at": "2027-12-31T00:00:00Z"
+      },
+      "method": "Selbstgesetzte Pilotpflicht: halbjaehrliche oeffentliche Quellenauswertung (Ministerien, Bundeszentrum, Laender) zur Verankerung von Schulessen in Ganztag und Beschaffung.",
+      "verifier": "V91-Pilot D (ernaehrung), nachvollziehbare Quellenliste je Messpunkt",
+      "uncertainty": 0.0
+    }
+  ],
+  "multiplier": null,
+  "impact_claim_permitted": false,
+  "sources": [
+    {
+      "publisher": "BLE-Pressemitteilung 64 zum BuKo Kita und Schule (07.10.2026)",
+      "url": "https://www.ble.de/SharedDocs/Downloads/DE/Pressemitteilungen/2026/261007_Nachbericht_Buko_Kita_Schule.pdf?__blob=publicationFile&v=2"
+    },
+    {
+      "publisher": "Bundeszentrum fuer Kita- und Schulverpflegung (17.11.2026)",
+      "url": "https://www.gemeinsamgutessen.de/service/aktuelles/schulessen-im-ganztag-grosses-interesse-aber-noch-nicht-selbstverstaendlich-mitgedacht"
+    },
+    {
+      "publisher": "BMBFSFJ: Investitionsprogramm Kindertagesbetreuung (28.07.2026)",
+      "url": "https://www.bmbfsfj.bund.de/bmbfsj/bund-startet-milliardenschweres-investitionsprogramm--291374"
+    },
+    {
+      "publisher": "BMBFSFJ: Ganztagsbetreuung und Investitionsprogramm Ganztagsausbau",
+      "url": "https://www.bmbfsfj.bund.de/bmbfsfj/themen/familie/kinderbetreuung/ganztagsbetreuung"
+    }
+  ]
+}
