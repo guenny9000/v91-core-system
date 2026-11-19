@@ -94,9 +94,6 @@ NICHT GEPRÜFT (bewusst kein Prozentwert ausgegeben):
   keine Vollzaehlung aller kleinsten Erzeuger. Die Werte unterscheiden
   sich von der Landwirtschaftszahlung 2020 durch Stichtag und
   Erhebungsdesign; beide Stands werden getrennt ausgewiesen.
-- Aus dem LZ2020-Bericht: Landwirtschaftliche Betriebe 1.079, LF
-  64.264 ha, Ackerland 31.195 ha, Dauergruenland 33.019 ha - BELEGT
-  (Rechenregel LF-Anteil: 64.264 / 145.891 = 44,0 %).
 - Versorgungsgrad mit regionalen Lebensmitteln, Lagerfähigkeit,
   samenfeste Sorten, Erzeugernetzwerke: NICHT VERFÜGBAR.
 - KEIN "Nenner 1000 = Testdatensatz"-Fehlschluss: ohne belegte
