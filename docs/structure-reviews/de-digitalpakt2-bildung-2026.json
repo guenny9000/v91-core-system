@@ -1,0 +1,72 @@
+{
+  "structure_id": "de_digitalpakt2_bildung_2026",
+  "assessor": "v91_session_2026-11-19_offentliches_quellenreview",
+  "assessed_at_structure": "2026-11-19T14:00:56Z",
+  "note": "Struktur-Einschaetzung des Digitalpakt 2.0 (fuenf Milliarden Euro fuer digitale Bildung, Verwaltungsvereinbarung unterzeichnet, rueckwirkend zum 01.01.2026 in Kraft). Sebastians Hebel 'Gute Bildung fuer alle Kinder, freier Zugang zu Bildung'. REVIEW != ENTSCHEIDUNG.",
+  "criteria": {
+    "gesellschaftlicher_nutzen": {
+      "status": "BELEGT",
+      "evidence": "Fuenf Milliarden Euro in fuenf Jahren fuer digitale Bildung an allgemeinbildenden und berufsbildenden Schulen; Ziel laut Ministerin Prien: gleichwertige Bildungschancen unabhaengig vom Wohnort, moderne Infrastruktur, Lehrkraeftefortbildung auch zu KI, gemeinsame digitale Loesungen ueber Laendergrenzen hinweg, Vermeidung von Doppelentwicklungen.",
+      "source": "https://www.bmbfsfj.bund.de/bmbfsfj/aktuelles/pressemitteilungen/digitalpakt-2-0-startet-am-1-september-293650",
+      "assessed_at": "2026-11-19T14:00:56Z"
+    },
+    "menschenrechtsvertraeglichkeit": {
+      "status": "BELEGT",
+      "evidence": "Investitionsprogramm ohne Pflicht- oder Zwangswirkung; ausdrueckliches Ziel ist die Angleichung von Bildungschancen unabhaengig vom Wohnort (Chancengleichheit). Kein Anhaltspunkt fuer diskriminierende Wirkung in den einsehbaren Dokumenten.",
+      "source": "https://www.bmbfsfj.bund.de/bmbfsfj/aktuelles/pressemitteilungen/digitalpakt-2-0-startet-am-1-september-293650",
+      "assessed_at": "2026-11-19T14:00:56Z"
+    },
+    "kosten_und_ressourcenverbrauch": {
+      "status": "BELEGT",
+      "evidence": "Vollstaendig bezifferte Finanzierung: insgesamt fuenf Milliarden Euro ueber fuenf Jahre, Bund und Laender je 2,5 Milliarden Euro; Bundesmittel aus dem Sondervermoegen 'Infrastruktur und Klimaneutralitaet'; Inkrafttreten rueckwirkend zum 01.01.2026, Auszahlung nach Unterzeichnung aller Laender geregelt.",
+      "source": "https://www.bmbfsfj.bund.de/bmbfsfj/aktuelles/pressemitteilungen/digitalpakt-2-0-startet-am-1-september-293650",
+      "assessed_at": "2026-11-19T14:00:56Z"
+    },
+    "transparenz": {
+      "status": "BELEGT",
+      "evidence": "Amtliche PM (19.08.2026) mit vollstaendigen Zahlen; unterzeichnete Verwaltungsvereinbarung zwischen Bund und allen Laendern; Zitate der Bundesbildungsministerin und der KMK-Praesidentin oeffentlich.",
+      "source": "https://www.bmbfsfj.bund.de/bmbfsfj/aktuelles/pressemitteilungen/digitalpakt-2-0-startet-am-1-september-293650",
+      "assessed_at": "2026-11-19T14:00:56Z"
+    },
+    "nachhaltigkeit": {
+      "status": "NICHT_GEPRUEFT",
+      "evidence": "",
+      "source": "",
+      "assessed_at": "2026-11-19T14:00:56Z"
+    },
+    "missbrauchsrisiken": {
+      "status": "NICHT_GEPRUEFT",
+      "evidence": "",
+      "assessed_at": "2026-11-19T14:00:56Z"
+    },
+    "alternativen_und_verbesserbarkeit": {
+      "status": "BELEGT",
+      "evidence": "Digitalpakt 2.0 ist ausdruecklich als Fortschreibung mit Lehren angelegt: gemeinsame Standards statt 16 Inselloesungen, Doppellungen werden vermieden, laenderuebergreifende Zusammenarbeit als Strukturprinzip; KMK-Praesidentin Stolz: digitale Bildung muss mit paedagogischem Mehrwert einhergehen.",
+      "source": "https://www.bmbfsfj.bund.de/bmbfsfj/aktuelles/pressemitteilungen/digitalpakt-2-0-startet-am-1-september-293650",
+      "assessed_at": "2026-11-19T14:00:56Z"
+    }
+  },
+  "review_result": {
+    "schema_version": 1,
+    "structure_id": "de_digitalpakt2_bildung_2026",
+    "assessor": "v91_session_2026-11-19_offentliches_quellenreview",
+    "criteria_total": 7,
+    "criteria_belegt": 5,
+    "criteria_problem_belegt": 0,
+    "criteria_ungeprueft": 2,
+    "problems": [],
+    "ungeprueft": [
+      "missbrauchsrisiken",
+      "nachhaltigkeit"
+    ],
+    "verdict": "REVIEW_REQUIRED_UNGEPRUEFTE_KRITERIEN",
+    "honest_limits": [
+      "REVIEW != ENTSCHEIDUNG; DETECTION != AUTHORIZATION.",
+      "BELEGT ist eine belegte Einschätzung, keine unabhängige Bestätigung.",
+      "Veränderungen erfolgen friedlich, demokratisch, rechtsstaatlich (Direktive Abschnitt 6)."
+    ],
+    "tool": "controller/structure_review.py @ PR #170",
+    "run_at": "2026-11-19T14:00:56Z",
+    "reproduce": "python3 controller/structure_review.py --report-json docs/structure-reviews/de-digitalpakt2-bildung-2026.json"
+  }
+}
