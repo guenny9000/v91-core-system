@@ -1,7 +1,7 @@
 """
 Tests fuer controller/watcher_registry: die 11 Direktiv-Rollen,
 Existenzpruefung gegen den echten Dateibestand, fail-closed,
-ehrliche [VISION]-Kennzeichnung ohne Zustandssprueche.
+ehrliche VISION-Kennzeichnung fuer Rollen ohne Bausteine.
 """
 import json
 import tempfile
@@ -10,6 +10,7 @@ from pathlib import Path
 
 from controller.watcher_registry import (
     WATCHER_ROLES,
+    WatcherRole,
     WatcherRegistryError,
     build_report,
     get_role,
@@ -39,21 +40,26 @@ class WatcherRegistryTests(unittest.TestCase):
                     f"referenced module missing: {rel} (role {role.role_id})",
                 )
 
+    def test_all_leben_roles_now_have_files(self):
+        report = build_report(REPO_ROOT)
+        self.assertEqual([], report["roles_unimplemented"])
+        self.assertEqual("ALL_ROLES_HAVE_FILES_PRESENT", report["overall"])
+
     def test_sicherheitswaechter_is_implemented_against_repo(self):
         report = probe_role(get_role("sicherheitswaechter"), REPO_ROOT)
         self.assertEqual("IMPLEMENTED_FILES_PRESENT", report["capability"])
         self.assertGreater(len(report["modules_present"]), 0)
         self.assertEqual([], report["modules_missing"])
 
-    def test_wirtschafts_role_now_implemented(self):
-        report = probe_role(get_role("wirtschafts_und_korruptionsanalyse"), REPO_ROOT)
-        self.assertEqual("IMPLEMENTED_FILES_PRESENT", report["capability"])
-        self.assertIn("controller/structure_review.py", report["modules_present"])
-
-    def test_vision_role_reports_unimplemented(self):
+    def test_wissenschafts_role_now_implemented(self):
         report = probe_role(get_role("wissenschafts_und_forschungsbeobachtung"), REPO_ROOT)
+        self.assertEqual("IMPLEMENTED_FILES_PRESENT", report["capability"])
+        self.assertIn("controller/research_watch.py", report["modules_present"])
+
+    def test_empty_role_reports_vision(self):
+        empty = WatcherRole(role_id="zukunftsvision", description="noch nicht gebaut", module_files=())
+        report = probe_role(empty, REPO_ROOT)
         self.assertEqual("VISION_UNIMPLEMENTED", report["capability"])
-        self.assertEqual([], report["modules_present"])
         self.assertIn("VISION", report["honest_note"])
 
     def test_partial_role_lists_missing_files(self):
@@ -76,12 +82,9 @@ class WatcherRegistryTests(unittest.TestCase):
         with self.assertRaises(WatcherRegistryError):
             probe_role(get_role("sicherheitswaechter"), "kein-pfad")
 
-    def test_report_aggregates_honestly(self):
+    def test_report_honest_limits_persist(self):
         report = build_report(REPO_ROOT)
         self.assertEqual(11, report["roles_total"])
-        self.assertEqual("PARTIAL_SOME_ROLES_UNIMPLEMENTED", report["overall"])
-        self.assertIn("wissenschafts_und_forschungsbeobachtung", report["roles_unimplemented"])
-        self.assertNotIn("wirtschafts_und_korruptionsanalyse", report["roles_unimplemented"])
         self.assertTrue(len(report["honest_limits"]) >= 3)
 
     def test_report_json_serializable(self):
