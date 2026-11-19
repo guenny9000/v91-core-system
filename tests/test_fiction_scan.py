@@ -169,7 +169,7 @@ class ScanBehaviorTests(unittest.TestCase):
     def test_nul_byte_in_code_file_fails_closed(self) -> None:
         path = self.root / "controller/binary.py"
         path.parent.mkdir(parents=True)
-        path.write_bytes(b"VALUE = 1\\n\\x00")
+        path.write_bytes(b"VALUE = 1\n\x00")
         with self.assertRaisesRegex(FictionScanError, "contains a NUL byte"):
             find_fiction(self.root)
 
