@@ -60,6 +60,9 @@ PEACE = (
     "controller/use_policy.py",
     "controller/agent_consensus.py",
 )
+ECONOMY = (
+    "controller/structure_review.py",
+)
 INFRASTRUCTURE = (
     "controller/startup_check.py",
     "controller/resilience_mesh.py",
@@ -119,8 +122,8 @@ WATCHER_ROLES: tuple = (
     ),
     WatcherRole(
         role_id="wirtschafts_und_korruptionsanalyse",
-        description="Wirtschafts-/Korruptionsanalyse: noch kein ehrlicher Baustein.",
-        module_files=(),
+        description="Wirtschafts-/Korruptionsanalyse: Struktur-Review nach Direktiv-Abschnitt 6.",
+        module_files=ECONOMY,
     ),
     WatcherRole(
         role_id="infrastruktur_und_ausfallschutz",
