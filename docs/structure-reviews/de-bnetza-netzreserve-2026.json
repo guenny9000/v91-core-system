@@ -1,0 +1,50 @@
+{
+ "structure_id": "de_bnetza_netzreserve_netzentwicklungsplan_2026",
+ "assessor": "v91_session_2026-11-20_quellenreview_max_best",
+ "assessed_at_structure": "2026-11-20T10:00:00Z",
+ "note": "Struktur-Datensatz der Bund-Reihe (Thema Versorgungssicherheit Strom / Netzausbau). Bewertet wird die Feststellung des Netzreservebedarfs und der Planungsprozess Netzentwicklungsplan Strom der Bundesnetzagentur per 22.05.2026 (Pressemitteilung samt Berichtspdf) bzw. per Konsultationsstand 24.08.2026 (NEP 2025-2037/2045, zweiter Entwurf). Die MW-Zahlen sind Regulierungs-BERECHNUNGSWERTE der Bundesnetzagentur (CLAIM, keine unabhaengige Messung); DATENBASIS != MESSUNG; REVIEW != ENTSCHEIDUNG.",
+ "criteria": {
+  "gesellschaftlicher_nutzen": {
+   "status": "BELEGT",
+   "evidence": "Laut Bundesnetzagentur-Pressemitteilung vom 22.05.2026 wurde der Gesamtbedarf an Netzreservekraftwerken fuer den Winter 2026/2027 mit 7.407 MW bestaetigt (Winterhalbjahr 2025/2026: 6.493 MW; fuer den Winter 2028/2029: 8.274 MW). Deckung: 4.742 MW deutsche Reservekraftwerke, 2.665 MW Kraftwerke im benachbarten Ausland. Die Netzreserve dient als Instrument, bis der Netzausbau weiter fortgeschritten ist, die sichere Stromversorgung zu gewaehrleisten. Zielgruppe ist die gesamte Stromversorgung (Bevoelkerung, Wirtschaft).",
+   "source": "https://www.bundesnetzagentur.de/SharedDocs/Pressemitteilungen/DE/2026/20260522_Netzreserve.html",
+   "assessed_at": "2026-11-20T10:00:00Z"
+  },
+  "menschenrechtsvertraeglichkeit": {
+   "status": "NICHT_GEPRUEFT",
+   "evidence": "",
+   "source": "",
+   "assessed_at": ""
+  },
+  "kosten_und_ressourcenverbrauch": {
+   "status": "NICHT_GEPRUEFT",
+   "evidence": "",
+   "source": "",
+   "assessed_at": ""
+  },
+  "transparenz": {
+   "status": "BELEGT",
+   "evidence": "Die Feststellung ist als Pressemitteilung (22.05.2026) oeffentlich veroeffentlicht, inklusive Volltext-Bericht als PDF (Feststellung des Netzreservebedarfs fuer die Betrachtungszeitraeume April 2026 bis Maerz 2027 sowie April 2028 bis Maerz 2029); Zahlen sind nach Zeitraum, Herkunft (In-/Ausland) und Deckung aufgeschluesselt. Der Netzentwicklungsplan-Prozess ist ebenfalls oeffentlich: Konsultation des zweiten Entwurfs NEP 2025-2037/2045 ab 12.06.2026, Auslage in Bonn, Stellungnahmemoeglichkeit bis 24.08.2026; endgueltige Bestaetigung noch offen und als solche benannt.",
+   "source": "https://www.bundesnetzagentur.de/DE/Fachthemen/ElektrizitaetundGas/NEP/Strom/start.html",
+   "assessed_at": "2026-11-20T10:00:00Z"
+  },
+  "nachhaltigkeit": {
+   "status": "NICHT_GEPRUEFT",
+   "evidence": "",
+   "source": "",
+   "assessed_at": ""
+  },
+  "missbrauchsrisiken": {
+   "status": "NICHT_GEPRUEFT",
+   "evidence": "",
+   "source": "",
+   "assessed_at": ""
+  },
+  "alternativen_und_verbesserbarkeit": {
+   "status": "BELEGT",
+   "evidence": "Die Bundesnetzagentur benennt den Netzausbau selbst als wichtigstes Instrument zur Verringerung des Reservebedarfs (vollstaendige Nutzung erneuerbarer Energien sowie Export/Import erfordern laut PM weiteren Netzausbau; bis dahin Redispatch aus Marktkraftwerken plus Reservevorhaltung). Der NEP ist ein wiederholbarer, oeffentlich konsultierter Planungszyklus mit genehmigtem Szenariorahmen (Szenarien 2037/2045), Pruefungsergebnissen der BNetzA und Offenlegung, dass die endgueltige Bestaetigung erst nach Auswertung der Konsultation erfolgt.",
+   "source": "https://www.bundesnetzagentur.de/SharedDocs/Pressemitteilungen/DE/2026/20260522_Netzreserve.html",
+   "assessed_at": "2026-11-20T10:00:00Z"
+  }
+ }
+}
