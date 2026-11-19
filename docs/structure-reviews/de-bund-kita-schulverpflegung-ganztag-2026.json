@@ -1,0 +1,72 @@
+{
+  "structure_id": "de_bund_kita_schulverpflegung_ganztag_2026",
+  "assessor": "v91_session_2026-11-20_offentliches_quellenreview",
+  "assessed_at_structure": "2026-11-20T03:00:00Z",
+  "note": "Struktur-Einschaetzung der deutschen Kita- und Schulverpflegung im Ganzagskontext (BMLEH/Bundeszentrum, Oktober/November 2026). Eingangsdaten: amtliche BLE-Pressemitteilung 64/2026 und Bericht des Bundeszentrums vom 17.11.2026. REVIEW != ENTSCHEIDUNG.",
+  "criteria": {
+    "gesellschaftlicher_nutzen": {
+      "status": "BELEGT",
+      "evidence": "Rund 6 Mio Kinder und Jugendliche essen taeglich in Kita und Schule (Bundesminister Rainer, BLE PM 64/07.10.2026); gute Gemeinschafts-verpflegung staerkt Gesundheit, soziale Teilhabe und Chancen-gerechtigkeit (Buyx-Keynote, DGE-Praesidentin Renner). Unterstuetzung durch Bundeszentrum Kita- und Schulverpflegung, Foerderung der Vernetzungsstellen und DGE-Qualitaetsstandards.",
+      "source": "https://www.ble.de/SharedDocs/Downloads/DE/Pressemitteilungen/2026/261007_Nachbericht_Buko_Kita_Schule.pdf?__blob=publicationFile&v=2 ; https://www.gemeinsamgutessen.de/service/aktuelles/schulessen-im-ganztag-grosses-interesse-aber-noch-nicht-selbstverstaendlich-mitgedacht",
+      "assessed_at": "2026-11-20T03:00:00Z"
+    },
+    "menschenrechtsvertraeglichkeit": {
+      "status": "BELEGT",
+      "evidence": "Rahmung als Angebot und Recht: Buyx stellt das Recht von Kindern auf gesundes Aufwachsen in den Mittelpunkt, Ungleichheiten lassen sich nicht individuell loesen. Keine Zwangsmassnahmen dokumentiert; Verpflegungsangebote beruhen auf kommunaler Aufgabenerfuellung mit freiwilliger Teilnahme der Kinder.",
+      "source": "https://www.ble.de/SharedDocs/Downloads/DE/Pressemitteilungen/2026/261007_Nachbericht_Buko_Kita_Schule.pdf?__blob=publicationFile&v=2",
+      "assessed_at": "2026-11-20T03:00:00Z"
+    },
+    "kosten_und_ressourcenverbrauch": {
+      "status": "NICHT_GEPRUEFT",
+      "evidence": "",
+      "source": "",
+      "assessed_at": "2026-11-20T03:00:00Z"
+    },
+    "transparenz": {
+      "status": "BELEGT",
+      "evidence": "Akteure und Instrumente sind oeffentlich benannt (BMLEH Rainer, BMBFSFJ Wulf, Bundeszentrum, DGE-Standards, Investitionsprogramm Ganztagsausbau und Investitionsprogramm Kindertagesbetreuung); der Bundeskongress (07.10.2026, rund 400 Fachleute) und die Schultraeger-/Schulleitungskongresse Duesseldorf (12.-14.11.2026, 3.500 Teilnehmende) sind oeffentlich dokumentiert.",
+      "source": "https://www.ble.de/SharedDocs/Downloads/DE/Pressemitteilungen/2026/261007_Nachbericht_Buko_Kita_Schule.pdf?__blob=publicationFile&v=2 ; https://www.gemeinsamgutessen.de/service/aktuelles/schulessen-im-ganztag-grosses-interesse-aber-noch-nicht-selbstverstaendlich-mitgedacht",
+      "assessed_at": "2026-11-20T03:00:00Z"
+    },
+    "nachhaltigkeit": {
+      "status": "PROBLEM_BELEGT",
+      "evidence": "Belegtes Strukturproblem: Schulverpflegung ist im Ganztag noch nicht fest verankert, Verantwortlichkeit unklar, das Thema blieb auf den Kongressen unterrepraesentiert (Bundeszentrum, 17.11.2026). Steigende Lebensmittelpreise erhoehen kommunalen Handlungsbedarf; gerade laendliche Regionen haben wenig Verpflegungsinfrastruktur.",
+      "source": "https://www.gemeinsamgutessen.de/service/aktuelles/schulessen-im-ganztag-grosses-interesse-aber-noch-nicht-selbstverstaendlich-mitgedacht",
+      "assessed_at": "2026-11-20T03:00:00Z"
+    },
+    "missbrauchsrisiken": {
+      "status": "NICHT_GEPRUEFT",
+      "evidence": "",
+      "source": "",
+      "assessed_at": "2026-11-20T03:00:00Z"
+    },
+    "alternativen_und_verbesserbarkeit": {
+      "status": "BELEGT",
+      "evidence": "Mehrere belegte Wege statt Blaupause: Free-Flow-Ausgabesysteme, multifunktionale Mensakonzepte, Satellitenkuechen oder Frischkuechen im kommunalen Eigenbetrieb; partizipative Verfahren mit Verpflegungs-ausschuessen und frueher Mitsprache der Schulleitungen; zielgerichtete Investitionen zahlen sich mehrfach und langfristig aus (Dr. Clausen).",
+      "source": "https://www.ble.de/SharedDocs/Downloads/DE/Pressemitteilungen/2026/261007_Nachbericht_Buko_Kita_Schule.pdf?__blob=publicationFile&v=2 ; https://www.gemeinsamgutessen.de/service/aktuelles/schulessen-im-ganztag-grosses-interesse-aber-noch-nicht-selbstverstaendlich-mitgedacht",
+      "assessed_at": "2026-11-20T03:00:00Z"
+    }
+  },
+  "review_result": {
+    "schema_version": 1,
+    "structure_id": "de_bund_kita_schulverpflegung_ganztag_2026",
+    "assessor": "v91_session_2026-11-20_offentliches_quellenreview",
+    "criteria_total": 7,
+    "criteria_belegt": 4,
+    "criteria_problem_belegt": 1,
+    "criteria_ungeprueft": 2,
+    "problems": [
+      "nachhaltigkeit"
+    ],
+    "ungeprueft": [
+      "kosten_und_ressourcenverbrauch",
+      "missbrauchsrisiken"
+    ],
+    "verdict": "NEGATIVE_FINDING_PROBLEMS_BELEGT",
+    "honest_limits": [
+      "REVIEW != ENTSCHEIDUNG; DETECTION != AUTHORIZATION.",
+      "BELEGT ist eine belegte Einsch\u00e4tzung, keine unabh\u00e4ngige Best\u00e4tigung.",
+      "Ver\u00e4nderungen erfolgen friedlich, demokratisch, rechtsstaatlich (Direktive Abschnitt 6)."
+    ]
+  }
+}
