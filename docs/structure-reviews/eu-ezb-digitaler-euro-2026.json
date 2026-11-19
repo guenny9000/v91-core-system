@@ -2,7 +2,7 @@
  "structure_id": "eu_ezb_digitaler_euro_pilotprojekt_2026",
  "assessor": "v91_session_2026-11-19_quellenreview_max_best",
  "assessed_at_structure": "2026-11-19T23:30:00Z",
- "note": "Struktur-Datensatz der EU-Reihe (Thema Digitale Zahlungsverkehrstrukturen / Determinismus und Unabhaengigkeit). Bewertet wird der Stand des Digitalen-Euro-Projekts der EZB per 10./11.11.2026 auf Basis von EZB-Premiarquellen (Rede 10.11.2026, Pressemitteilung 14.07.2026) und einer Sekundaerquelle (Euronews 11.11.2026). Ersetzt KEINE Messung; REVIEW != ENTSCHEIDUNG; keine Bewertung des Lebensmittelcharakters der Politik, nur belegte Befunde zu Nutzen, Transparenz und Alternativen. Missbrauchs- und Kostenfragen bleiben ehrlich NICHT_GEPRUEFT, solange keine Primaerbelege vorliegen (UNKNOWN != PASS).",
+ "note": "Struktur-Datensatz der EU-Reihe (Thema Digitale Zahlungsverkehrstrukturen / Determinismus und Unabhaengigkeit). Bewertet wird der Stand des Digitalen-Euro-Projekts der EZB per 10./11.11.2026 auf Basis von EZB-Premiarquellen (Rede 10.11.2026, Pressemitteilung 14.07.2026) und einer Sekundaerquelle (Euronews 11.11.2026). Ersetzt KEINE Messung; REVIEW != ENTSCHEIDUNG; keine Bewertung der politischen Ausrichtung der Waehrungspolitik, nur belegte Befunde zu Nutzen, Transparenz und Alternativen. Missbrauchs- und Kostenfragen bleiben ehrlich NICHT_GEPRUEFT, solange keine Primaerbelege vorliegen (UNKNOWN != PASS).",
  "criteria": {
   "gesellschaftlicher_nutzen": {
    "status": "BELEGT",
