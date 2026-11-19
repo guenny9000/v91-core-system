@@ -56,7 +56,12 @@ def _parse_instant(value: Any) -> datetime:
 
 
 def _finite_number(value: Any) -> bool:
-    return not isinstance(value, bool) and isinstance(value, (int, float)) and math.isfinite(value)
+    if isinstance(value, bool) or not isinstance(value, (int, float)):
+        return False
+    try:
+        return math.isfinite(value)
+    except (OverflowError, TypeError):
+        return False
 
 
 def _validate_digest(value: Any, field: str, *, nullable: bool = False) -> None:
@@ -201,8 +206,9 @@ def verify_manifest(
     if "signature" not in signed_manifest:
         return False, "manifest carries no signature"
     signature = signed_manifest["signature"]
-    if not isinstance(signature, dict) or signature.get("algorithm") != SIGNATURE_ALGORITHM:
-        return False, "unsupported or missing signature algorithm"
+    if (not isinstance(signature, dict) or set(signature) != {"algorithm", "value"}
+            or signature.get("algorithm") != SIGNATURE_ALGORITHM):
+        return False, "unsupported, malformed or missing signature fields"
     value = signature.get("value")
     if not isinstance(value, str) or len(value) != 128:
         return False, "malformed signature value"
