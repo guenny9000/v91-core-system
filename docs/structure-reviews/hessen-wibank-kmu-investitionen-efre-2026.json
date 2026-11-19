@@ -1,0 +1,50 @@
+{
+ "structure_id": "hessen_wibank_kmu_investitionen_efre_2026",
+ "assessor": "v91_session_2026-11-19_quellenreview_max_best",
+ "assessed_at_structure": "2026-11-19T20:06:36Z",
+ "note": "Struktur-Datensatz der Hessen-Reihe (Saeule Wirtschaft, Lernblock #209). Bewertet wird die einzelbetriebliche KMU-Investitionsfoerderung der WIBank (EFRE-Foerderrichtlinie 21+, Zeitraum 2021-2027) als Instrument regionaler Wirtschafts- und Reparaturfaehigkeit. Datenbasis: WIBank-Programmseite; regionale Statistikbasis aus den Hessischen Kreiszahlen (HSL, Herbst 2026). Ersetzt KEINE Messung; REVIEW != ENTSCHEIDUNG.",
+ "criteria": {
+  "gesellschaftlicher_nutzen": {
+   "status": "BELEGT",
+   "evidence": "Die Foerderung zielt einzeln auf kleine/mittlere Unternehmen: Schaffung/Sicherung von Dauerarbeitsplaetzen und betriebliche Investitionen als Anteilsfinanzierung; Antragstellung nach Genehmigung des EFRE-Flexibilitaetsbetrags wieder im WIBank-Kundenportal moeglich; eine laufende Foerdertranche (Aufrufzeitraum 2021-2027) ist aktiv.",
+   "source": "https://www.wibank.de/wibank/investitionen-und-technologische-modernisierung-in-kmu",
+   "assessed_at": "2026-11-19T20:06:36Z"
+  },
+  "menschenrechtsvertraeglichkeit": {
+   "status": "BELEGT",
+   "evidence": "Die Foerderung ist an EU-Beihilferecht gebunden (Art. 17 der Verordnung (EU) Nr. 651/2014 in der jeweils geltenden Fassung); keine Anhaltspunkte fuer diskriminierende Wirkung in den einsehbaren Foerderunterlagen, keine direkte Grundrechtseinschraenkung erkennbar.",
+   "source": "https://www.wibank.de/wibank/investitionen-und-technologische-modernisierung-in-kmu",
+   "assessed_at": "2026-11-19T20:06:36Z"
+  },
+  "kosten_und_ressourcenverbrauch": {
+   "status": "NICHT_GEPRUEFT",
+   "evidence": "",
+   "source": "",
+   "assessed_at": "2026-11-19T20:06:36Z"
+  },
+  "transparenz": {
+   "status": "BELEGT",
+   "evidence": "Foerderaufruf vom 16.09.2025 oeffentlich, EFRE-Foerderrichtlinie 21+ und Anleitung zum Kundenportal als Downloads, benannte Ansprechpersonen, geforderte Erklaerungen (u.a. Beschaftigtenstruktur); lokale Transparenzbasis: Hessische Kreiszahlen (HSL) mit 60+ Themen je Landkreis, zweimal jaehrlich, kostenfrei.",
+   "source": "https://www.wibank.de/wibank/investitionen-und-technologische-modernisierung-in-kmu ; https://statistik.hessen.de/presse/hessens-landkreise-und-kreisfreie-staedte-im-vergleich-herbst-2026",
+   "assessed_at": "2026-11-19T20:06:36Z"
+  },
+  "nachhaltigkeit": {
+   "status": "BELEGT",
+   "evidence": "Der Foerderaufruf verweist ausdruecklich auf die Anwendung umwelt- und klimafreundlicher Auswahlkriterien; Investitionsfoerderung ist an den EFRE-Zeitraum 2021-2027 gebunden und damit befristet - Dauerhaftigkeit ueber den Zeitraum hinaus ist NICHT belegt.",
+   "source": "https://www.wibank.de/wibank/investitionen-und-technologische-modernisierung-in-kmu",
+   "assessed_at": "2026-11-19T20:06:36Z"
+  },
+  "missbrauchsrisiken": {
+   "status": "BELEGT",
+   "evidence": "Verfahrenshuerden dokumentiert: Projektfoerderung nur als Anteilsfinanzierung (keine Vollfinanzierung), Antrag vor Auftragserteilung, Kundenportal mit Erklaerungspflichten (z.B. Beschaftigungsstruktur); Missbrauchs- und Mitnahmeeffekte werden prozedural erschwert, eine Evaluation liegt der Session NICHT vor.",
+   "source": "https://www.wibank.de/wibank/investitionen-und-technologische-modernisierung-in-kmu",
+   "assessed_at": "2026-11-19T20:06:36Z"
+  },
+  "alternativen_und_verbesserbarkeit": {
+   "status": "NICHT_GEPRUEFT",
+   "evidence": "",
+   "source": "",
+   "assessed_at": "2026-11-19T20:06:36Z"
+  }
+ }
+}

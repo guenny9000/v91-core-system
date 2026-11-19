@@ -1,0 +1,50 @@
+{
+ "structure_id": "hessen_energiewende_monitoring_und_pv_zubau_vogelsberg_2025_2026",
+ "assessor": "v91_session_2026-11-19_quellenreview_max_best",
+ "assessed_at_structure": "2026-11-19T20:06:36Z",
+ "note": "Struktur-Datensatz der Hessen-Reihe (Saeule Energie, Lernblock #209). Basis: Energiemonitoringbericht 2025 des Hessischen Ministeriums fuer Wirtschaft (Primaerquelle, PDF) und PV-Zubauzahlen Vogelsbergkreis aus dem Marktstammdatenregister (MaStR) via IWR/solarbranche.de. Ehrlichkeits-Hinweis: Die Auswertungsseite blockt automatisches Auslesen; die Zubauzahlen stammen aus dem Suchindex-Auszug dieser Seite und sind als Sekundaerdarstellung von Registerdaten (Datenstand 30.09.2026) gekennzeichnet. Ersetzt KEINE Messung; REVIEW != ENTSCHEIDUNG.",
+ "criteria": {
+  "gesellschaftlicher_nutzen": {
+   "status": "BELEGT",
+   "evidence": "Energiemonitoringbericht 2025 (Land): Hessen erzeugte 2024 brutto 17,5 TWh Strom (+1,7 Prozent ggUe. Vorjahr), davon 57 Prozent erneuerbar (9,9 TWh); Bruttostromverbrauch 37,2 TWh (+3,0 Prozent); erneuerbare Deckung des Verbrauchs 26,8 Prozent (mit PV-Selbstverbrauch 28,6 Prozent). Erneuerbarer Anteil an der Bruttostromerzeugung im H1 2025: 58,2 Prozent (H1 2024: 57,0 Prozent). Regionaler Zugewinn: Vogelsbergkreis PV-Zubau Jan-Sep 2026 laut MaStR-Auswertung 1.143 Anlagen mit 11,2 MW brutto (Saldo 11,0 MW nach 54 Rueckbauten); Alsfeld 129 Anlagen/2,5 MW.",
+   "source": "https://wirtschaft.hessen.de/sites/wirtschaft.hessen.de/files/2025-12/energiemonitoringbericht_2025_barrierefrei_web.pdf ; https://www.solarbranche.de/ausbau/kreise-photovoltaik/vogelsbergkreis",
+   "assessed_at": "2026-11-19T20:06:36Z"
+  },
+  "menschenrechtsvertraeglichkeit": {
+   "status": "NICHT_GEPRUEFT",
+   "evidence": "",
+   "source": "",
+   "assessed_at": "2026-11-19T20:06:36Z"
+  },
+  "kosten_und_ressourcenverbrauch": {
+   "status": "BELEGT",
+   "evidence": "Erzeugung 17,5 TWh gegen Verbrauch 37,2 TWh erforderte 2024 Stromimporte von 19,7 TWh (+4,3 Prozent ggUe. 2023): Hessen ist strukturell Nettoimporteur, regionale Alleindeckung ist Stand heute NICHT gegeben. Positiver Ressourcentrend: Fossiler Einsatz sank im H1 2025 (Erdgas -3 Prozent, Kohle -47 Prozent); Windstrom witterungsbedingt -21 Prozent, PV +43 Prozent - Erzeugung bleibt witterungsabhaengig, Speicher/Importe bleiben noetig.",
+   "source": "https://wirtschaft.hessen.de/sites/wirtschaft.hessen.de/files/2025-12/energiemonitoringbericht_2025_barrierefrei_web.pdf",
+   "assessed_at": "2026-11-19T20:06:36Z"
+  },
+  "transparenz": {
+   "status": "BELEGT",
+   "evidence": "Der Monitoringbericht veroeffentlicht Erzeugung, Verbrauch, Importe, EE-Anteile und Zubauzahlen je Jahr mit Quellenangabe (HSL, IE-Leipzig) und Vorlaeufigkeits-/Prognosekennzeichnung ('2023 (v) = vorlaeufig, 2024 (p) = Prognose'); barrierefreies PDF oeffentlich. Registerdaten (MaStR) je Landkreis und Kommune oeffentlich einsehbar.",
+   "source": "https://wirtschaft.hessen.de/sites/wirtschaft.hessen.de/files/2025-12/energiemonitoringbericht_2025_barrierefrei_web.pdf ; https://www.solarbranche.de/ausbau/kreise-photovoltaik/vogelsbergkreis",
+   "assessed_at": "2026-11-19T20:06:36Z"
+  },
+  "nachhaltigkeit": {
+   "status": "BELEGT",
+   "evidence": "Ausbautempo belegt: 2024 erstmals ueber 1 GW elektrische Leistung je Jahr zugebaut; installierte Leistung auf rund 7.700 MW gestiegen (+15 Prozent ggUe. Vorjahr), wesentlich photovoltaisch getrieben. Kohle- und Gaseinsatz sinkend (H1 2025: -47/-3 Prozent). Ehrliche Grenze: Windstrom 2025 witterungsbedingt -21 Prozent - Zubau allein garantiert keine stabile Erzeugung.",
+   "source": "https://wirtschaft.hessen.de/sites/wirtschaft.hessen.de/files/2025-12/energiemonitoringbericht_2025_barrierefrei_web.pdf",
+   "assessed_at": "2026-11-19T20:06:36Z"
+  },
+  "missbrauchsrisiken": {
+   "status": "NICHT_GEPRUEFT",
+   "evidence": "",
+   "source": "",
+   "assessed_at": "2026-11-19T20:06:36Z"
+  },
+  "alternativen_und_verbesserbarkeit": {
+   "status": "BELEGT",
+   "evidence": "Fortentwicklung verankert: Hessisches Energiegesetz (HEG) und regelmaessiges Monitoring; Prognose- und Vorlaeufigkeitsgrade werden offen ausgewiesen, was Nachsteuerung von Ausbau- und Speicherpolitik erlaubt, ohne Strukturen zu brechen.",
+   "source": "https://wirtschaft.hessen.de/sites/wirtschaft.hessen.de/files/2025-12/energiemonitoringbericht_2025_barrierefrei_web.pdf",
+   "assessed_at": "2026-11-19T20:06:36Z"
+  }
+ }
+}
