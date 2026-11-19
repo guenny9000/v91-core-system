@@ -89,3 +89,4 @@ Attribute entstehen ausschliesslich aus gepruefter Evidenz, nicht aus Text.
 - 19.11.2026 #173(REPARATUR) Index-Zeilen fuer #165/#168/#170/#171 nachgezogen;(Datei-Inhalt) wurde durch leere Tool-Rueckgabe unvollstaendig gespeichert, vollstaendig rekonstruiert aus dem Stand vor #173 (CHECK != INHALTSPRUEFUNG).
 - 19.11.2026 #177 Provider-neutrale 2-of-3-Review-Orchestrierung (agent_quorum: Drittabstimmung nur bei NO_QUORUM, keine Aktionen, keine Persistenz).
 - 19.11.2026 #178 Quorum-Ledger: persistente, Ed25519-signierte Abstimmungsbelege (quorum_ledger, Hash-Kette, Replay-Floor ueber Neustarts, fail-closed; BELEGT != VERIFIZIERT).
+- 19.11.2026 #179 Erste belegte Forschungs-Beobachtungen (6 Einträge, alle mit Primaerquelle; JSONL vom echten research_watch-Modul erzeugt und verifiziert; BELEGT_EINSCHAETZUNG != VERIFIZIERT).
