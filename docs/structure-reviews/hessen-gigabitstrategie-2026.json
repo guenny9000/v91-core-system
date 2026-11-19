@@ -1,0 +1,50 @@
+{
+ "structure_id": "hessen_gigabitstrategie_und_glasfaserausbau_2026",
+ "assessor": "v91_session_2026-11-19_quellenreview_max_best",
+ "assessed_at_structure": "2026-11-19T20:22:00Z",
+ "note": "Struktur-Datensatz der Hessen-Reihe (Saeule Digitalisierung, Lernblock #209). Bewertet wird die Hessische Gigabitstrategie (Landesregierung, PM 30.04.2026) auf Basis des Gigabit-Grundbuchs des Bundes (Stand Ende 2025). Regionale Vogelsberg-Zahlen sind darin NICHT ausgewiesen. Ersetzt KEINE Messung; REVIEW != ENTSCHEIDUNG.",
+ "criteria": {
+  "gesellschaftlicher_nutzen": {
+   "status": "BELEGT",
+   "evidence": "Ende 2025 waren 82,1 Prozent der hessischen Haushalte gigabitfaehig (>= 1.000 Mbit/s) versorgt - erstmals seit 2019 ueber dem Bundesschnitt von 80,76 Prozent; echter Glasfaserausbau (FTTB/H) erreichte mit 47,67 Prozent einen neuen Hoechstwert bei knapp 10 Prozentpunkten Zuwachs, dem drittgroessten bundesweit; in mehr als 100 hessischen Kommunen liegt die FTTB/H-Versorgung ueber 90 Prozent.",
+   "source": "https://landesregierung.hessen.de/presse/land-setzt-hohe-dynamik-beim-glasfaserausbau-fort",
+   "assessed_at": "2026-11-19T20:22:00Z"
+  },
+  "menschenrechtsvertraeglichkeit": {
+   "status": "NICHT_GEPRUEFT",
+   "evidence": "",
+   "source": "",
+   "assessed_at": "2026-11-19T20:22:00Z"
+  },
+  "kosten_und_ressourcenverbrauch": {
+   "status": "NICHT_GEPRUEFT",
+   "evidence": "",
+   "source": "",
+   "assessed_at": "2026-11-19T20:22:00Z"
+  },
+  "transparenz": {
+   "status": "BELEGT",
+   "evidence": "Aussagen beruhen auf dem Gigabit-Grundbuch des Bundes mit angegebenem Datenstand (Ende 2025) als unabhaengiger, oefentlich nachvollziehbarer Messbasis; die Landesregierung nennt Vergleichszahlen (Bundesschnitt, Laendervergleich) offengelegt.",
+   "source": "https://landesregierung.hessen.de/presse/land-setzt-hohe-dynamik-beim-glasfaserausbau-fort",
+   "assessed_at": "2026-11-19T20:22:00Z"
+  },
+  "nachhaltigkeit": {
+   "status": "NICHT_GEPRUEFT",
+   "evidence": "",
+   "source": "",
+   "assessed_at": "2026-11-19T20:22:00Z"
+  },
+  "missbrauchsrisiken": {
+   "status": "NICHT_GEPRUEFT",
+   "evidence": "",
+   "source": "",
+   "assessed_at": "2026-11-19T20:22:00Z"
+  },
+  "alternativen_und_verbesserbarkeit": {
+   "status": "BELEGT",
+   "evidence": "Kooperativer Ausbau statt Zentralisierung: 'zielgerichtet und im engen Schulterschluss mit Kommunen und Unternehmen'; der Ausbau 'kommt zunehmend in der Flaeche an' - dezentrale Kommunalpartnerschaft als anpassungsfaehiger Weg, ohne dass V91 Netz-Infrastruktur selbst bewertet oder veraendert.",
+   "source": "https://landesregierung.hessen.de/presse/land-setzt-hohe-dynamik-beim-glasfaserausbau-fort",
+   "assessed_at": "2026-11-19T20:22:00Z"
+  }
+ }
+}
