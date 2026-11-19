@@ -46,7 +46,7 @@ class BuildSignedVoteTests(unittest.TestCase):
         self.assertFalse(verify_signed_vote(rec, b"short"))
 
     def test_tampered_record_rejected(self):
-        rec = vote("agent-a", 1)
+        rec = vote("agent-a", 1, approve=False)
         forged = dict(rec)
         forged["approve"] = True
         self.assertFalse(verify_signed_vote(forged, PUBLIC["agent-a"]))
