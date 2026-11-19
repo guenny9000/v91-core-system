@@ -202,5 +202,102 @@ class ContractTests(unittest.TestCase):
             self.register.record(observation(capabilities=("measurement", "measurement")))
 
 
+class ExportReportTests(unittest.TestCase):
+    def setUp(self):
+        self.clock = 5000.0
+        self.register = CooperationRegister(
+            max_age_seconds=90.0, now_provider=lambda: self.clock)
+
+    def test_export_is_deterministic(self):
+        self.register.record(observation())
+        first = self.register.export_report()
+        second = self.register.export_report()
+        self.assertEqual(first, second)
+        self.assertEqual(first["report_kind"], "LOCAL_REGISTER_EXPORT")
+        self.assertEqual(first["schema_version"], 1)
+
+    def test_export_contains_view_fields_and_read_time_health(self):
+        self.register.record(observation(received_at=self.clock))
+        report = self.register.export_report()
+        peer = report["peers"]["VB-Lauterbach-02"]
+        self.assertEqual(peer["health"], HEALTHY_STATE)
+        self.assertEqual(peer["last_sequence"], 1)
+        self.assertEqual(peer["key_id"], "key-2026-11")
+        self.assertEqual(peer["capabilities"], ["measurement", "verification"])
+        self.assertEqual(peer["verified_observations"], 1)
+        self.assertEqual(peer["open_conflicts"], 0)
+        self.clock += 91.0
+        stale = self.register.export_report()
+        self.assertEqual(stale["peers"]["VB-Lauterbach-02"]["health"], STALE_STATE)
+
+    def test_export_peers_sorted_and_counted(self):
+        self.register.record(observation(peer_id="VB-Zeta-09", key_id="k9"))
+        self.register.record(observation(peer_id="VB-Alpha-01", key_id="k1"))
+        report = self.register.export_report()
+        self.assertEqual(list(report["peers"]), sorted(report["peers"]))
+        self.assertEqual(report["peer_count"], 2)
+        self.assertEqual(report["max_age_seconds"], 90.0)
+
+    def test_export_matches_public_view(self):
+        self.register.record(observation())
+        report = self.register.export_report()
+        exported = report["peers"]["VB-Lauterbach-02"]
+        viewed = self.register.view("VB-Lauterbach-02")
+        for key in ("key_id", "last_sequence", "software_version",
+                    "recorded_state", "health"):
+            self.assertEqual(exported[key], viewed[key])
+
+    def test_unverified_attempts_never_upgrade_exported_health(self):
+        self.register.record(observation(verification=Verification(
+            state="INVALID", reason="no signature")))
+        report = self.register.export_report()
+        peer = report["peers"]["VB-Lauterbach-02"]
+        self.assertEqual(peer["health"], UNKNOWN_STATE)
+        self.assertEqual(peer["failed_attempts"], 1)
+        self.assertEqual(peer["verified_observations"], 0)
+
+    def test_export_carries_conflicts_from_view(self):
+        self.register.record(observation(sequence=5))
+        outcome = self.register.record(
+            observation(sequence=5, key_id="key-attacker"))
+        self.assertTrue(outcome.conflict_recorded)
+        report = self.register.export_report()
+        peer = report["peers"]["VB-Lauterbach-02"]
+        self.assertEqual(peer["open_conflicts"], 1)
+        self.assertEqual(peer["conflicts"][0]["kind"], CONFLICT_DIVERGENT)
+        self.assertEqual(peer["last_sequence"], 5)
+
+    def test_export_is_deep_copy_mutations_do_not_leak(self):
+        self.register.record(observation(sequence=5))
+        self.register.record(observation(sequence=5, key_id="key-attacker"))
+        report = self.register.export_report()
+        report["peers"]["VB-Lauterbach-02"]["conflicts"][0]["resolved"] = True
+        report["peers"]["VB-Lauterbach-02"]["health"] = "FAKED"
+        fresh = self.register.export_report()
+        peer = fresh["peers"]["VB-Lauterbach-02"]
+        self.assertFalse(peer["conflicts"][0]["resolved"])
+        self.assertNotEqual(peer["health"], "FAKED")
+
+    def test_event_log_toggle(self):
+        self.register.record(observation())
+        without_log = self.register.export_report(include_event_log=False)
+        self.assertFalse(without_log["event_log_included"])
+        self.assertNotIn("event_log", without_log)
+        with_log = self.register.export_report(include_event_log=True)
+        self.assertTrue(with_log["event_log_included"])
+        self.assertEqual(len(with_log["event_log"]), 1)
+        self.assertEqual(with_log["event_log"][0]["event"], "VERIFIED")
+
+    def test_include_event_log_fail_closed_on_bad_type(self):
+        with self.assertRaises(RegisterError):
+            self.register.export_report(include_event_log="yes")
+
+    def test_export_refuses_global_status_claim(self):
+        self.register.record(observation())
+        report = self.register.export_report()
+        self.assertIn("REFUSED", report["global_status"])
+        self.assertNotIn("global_health", report)
+
+
 if __name__ == "__main__":
     unittest.main()

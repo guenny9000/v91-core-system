@@ -387,3 +387,53 @@ class CooperationRegister:
     def event_log(self) -> list[dict[str, Any]]:
         """Audit trail copy: events are kept, never rewritten or deleted."""
         return [dict(event) for event in self._history]
+
+    def export_report(self, *, include_event_log: bool = True) -> dict[str, Any]:
+        """Deterministic machine-readable snapshot of THIS local register.
+
+        The export is a COPY of the register's evidence-backed view:
+        read-time health evaluated against the registered max age, peers
+        in sorted order, events kept (ISOLATE_NOT_DESTROY). No wall
+        clock is consulted; the caller drives time via now_provider, so
+        two exports at the same logical time are identical.
+
+        Honest limits, by construction:
+        - No global status: an export is a LOCAL view and merges
+          nothing; a merged status would be a claim, not evidence
+          (issue #37 item 4).
+        - EXPORT != BROADCAST: handing this dict to another system is
+          an explicit, audited caller decision and grants no rights.
+        """
+        if not isinstance(include_event_log, bool):
+            raise RegisterError("include_event_log must be a boolean")
+        now = self._now_value()
+        peers: dict[str, Any] = {}
+        for peer_id, internal in sorted(self._views.items()):
+            peers[peer_id] = {
+                "key_id": internal.key_id,
+                "last_sequence": internal.last_sequence,
+                "last_seen": internal.last_seen,
+                "software_version": internal.software_version,
+                "capabilities": list(internal.capabilities),
+                "recorded_state": internal.state,
+                "health": internal.health(
+                    now=now, max_age_seconds=self._max_age_seconds),
+                "verified_observations": internal.verified_observations,
+                "failed_attempts": internal.failed_attempts,
+                "open_conflicts": sum(
+                    1 for c in internal.open_conflicts if not c["resolved"]),
+                "conflicts": [dict(c) for c in internal.open_conflicts],
+            }
+        report: dict[str, Any] = {
+            "schema_version": SCHEMA_VERSION,
+            "report_kind": "LOCAL_REGISTER_EXPORT",
+            "peers": peers,
+            "peer_count": len(peers),
+            "max_age_seconds": self._max_age_seconds,
+            "event_log_included": include_event_log,
+            "global_status": "REFUSED: export is a local evidence view, "
+                             "not a global truth (issue #37 item 4)",
+        }
+        if include_event_log:
+            report["event_log"] = [dict(event) for event in self._history]
+        return report
