@@ -1,4 +1,11 @@
 #!/usr/bin/env python3
+"""
+V91-SYSTEM-HEADER (AGATHON-SEALED v2.4)
+---------------------------------------------------------------------
+STATUS: ACTIVE | VERIFICATION: REQUIRED (CLAIM != EVIDENCE)
+AXIOM: Schöpfung dient dem Erhalt, der Regeneration und der Zukunft.
+---------------------------------------------------------------------
+"""
 """Offline V91 task worker: bounded file-verification tasks, no shell or network.
 
 Issue #70 runtime wiring: the worker honors the local emergency-stop flag
