@@ -141,6 +141,7 @@ class QuorumLedger:
         self._floors: Dict[str, int] = {}
         self._prev_hash = GENESIS
         self._entries = 0
+        self._records: list = []
         if path.exists():
             self._load_and_verify()
 
@@ -183,6 +184,7 @@ class QuorumLedger:
             self._floors[agent_id] = sequence
             self._prev_hash = entry["entry_hash"]
             self._entries += 1
+            self._records.append(dict(record))
 
     def replay_floor(self, agent_id: str) -> int:
         """ Aktueller Sequenz-Floor (Persistenz ueber Neustarts)."""
@@ -190,6 +192,16 @@ class QuorumLedger:
 
     def entry_count(self) -> int:
         return self._entries
+
+    def records(self) -> Tuple:
+        """Verifizierte Vote-Belege als Kopien, in Anhaengereihenfolge.
+
+        Nur Belege, deren Hash-Kette, Signatur und Sequenzmonotonie beim
+        Laden oder Anhaengen geprueft wurden. Auswertung (Implementierung
+        in quorum_decision.py) ist hier bewusst NICHT enthalten:
+        LEDGER != BEURTEILUNG.
+        """
+        return tuple(dict(record) for record in self._records)
 
     def append_vote(self, record: Dict) -> str:
         """Haengt einen validierten, signierten Vote an; gibt entry_hash zurueck."""
@@ -212,4 +224,5 @@ class QuorumLedger:
         self._floors[agent_id] = sequence
         self._prev_hash = entry_hash
         self._entries += 1
+        self._records.append(dict(record))
         return entry_hash
