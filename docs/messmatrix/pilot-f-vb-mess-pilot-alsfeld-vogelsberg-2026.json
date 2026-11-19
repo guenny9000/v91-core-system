@@ -1,0 +1,61 @@
+{
+ "initiative_id": "pilot-f-vb-mess-pilot-alsfeld-vogelsberg-2026",
+ "description": "Pilot F (technologie, R2): Mess-Pilot Alsfeld/Vogelsberg nach Runbook (Issue #101, PR #214). VB-Messpunkte mit fail-closed Rohdatenpfad. Kein Sensor angebunden, keine Messung erfolgt (MATRIZ != WIRKUNG).",
+ "watcher": "technologie",
+ "maturity": "R2",
+ "indicators": [
+  {
+   "role": "WIRKUNG",
+   "name": "Vollstaendig hash-verkettete Messintervalle VB-NETZ-01 je 24h",
+   "unit": "Intervalle",
+   "baseline": 0.0,
+   "target": 96.0,
+   "period": {
+    "baseline_at": "2026-11-19T00:00:00Z",
+    "target_at": "2027-03-31T00:00:00Z"
+   },
+   "method": "Zaehlung der Eintraege je 24h im Rohprotokoll raw/, die die Kettenpruefung (prev_hash -> entry_hash, seq monoton) bestehen. Intervalllauf 15 Minuten gemaess Runbook-Abschnitt 5.",
+   "verifier": "V91-Hash-Ketten-Validierung des Pilot-Logs (Runbook verified/), Operator Sebastian Guenter",
+   "uncertainty": 0.0,
+   "alternative_comparison": "Ohne Pilot: kein lokaler Messnachweis; Netzstatus bliebe UNKNOWN statt beobachtbar. Ersatz aus Landesdaten ist laut Runbook ausdruecklich unzulaessig (MESSUNG != DATASET)."
+  },
+  {
+   "role": "KOSTEN",
+   "name": "Zusaetzlicher Speicherbedarf der Rohprotokolle je Monat",
+   "unit": "MB",
+   "baseline": 0.0,
+   "target": 30.0,
+   "period": {
+    "baseline_at": "2026-11-19T00:00:00Z",
+    "target_at": "2027-03-31T00:00:00Z"
+   },
+   "method": "Dateisystemgroesse des raw/-Verzeichnisses je Monatsschluss; Ressourcenschonung als Zielband (Runbook-Abschnitt 1: schmale lokale Ressourcen, keine schweren Hintergrunddienste).",
+   "verifier": "Lokale Dateisystemauswertung auf dem Messknoten, Operator Sebastian Guenter",
+   "uncertainty": 10.0
+  },
+  {
+   "role": "RESILIENZ",
+   "name": "Messintervalle je 24h, die nach Neustart an die letzte intakte entry_hash anknuepfen",
+   "unit": "Intervalle",
+   "baseline": 0.0,
+   "target": 96.0,
+   "period": {
+    "baseline_at": "2026-11-19T00:00:00Z",
+    "target_at": "2027-03-31T00:00:00Z"
+   },
+   "method": "Zaehlung der Intervalle mit intakter Kette nach Knoten- oder Sensorausfall; Ausfaelle muessen als UNKNOWN/ERROR offen protokolliert sein (UNKNOWN != PASS), Kettenbrueche als chain_break_detected markiert.",
+   "verifier": "V91-Hash-Ketten-Validierung des Pilot-Logs (Runbook verified/), Operator Sebastian Guenter",
+   "uncertainty": 0.0
+  }
+ ],
+ "sources": [
+  {
+   "publisher": "V91-Runbook Mess-Pilot Alsfeld/Vogelsberg (Issue #101, gemergt als PR #214)",
+   "url": "https://github.com/guenny9000/v91-core-system/pull/214"
+  },
+  {
+   "publisher": "Issue #101: Review v93/v95 Alsfeld runbook (Watchdog, Least-Privilege, Alarm-Pfad)",
+   "url": "https://github.com/guenny9000/v91-core-system/issues/101"
+  }
+ ]
+}
