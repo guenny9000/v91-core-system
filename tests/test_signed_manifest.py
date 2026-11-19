@@ -143,3 +143,101 @@ def test_verification_reason_names_the_limits(keypair):
     signed = sign_manifest(base_manifest(), private_key)
     _, reason = verify_manifest(signed, public_key, now=NOW)
     assert 'no authorization' in reason
+
+
+def test_unknown_top_level_field_is_rejected(keypair):
+    private_key, _ = keypair
+    with pytest.raises(ManifestError, match="unknown top-level"):
+        sign_manifest(base_manifest(unreviewed=True), private_key)
+
+
+def test_unknown_nested_resource_field_is_rejected(keypair):
+    private_key, _ = keypair
+    manifest = base_manifest()
+    manifest["resources"]["unbounded_capacity"] = True
+    with pytest.raises(ManifestError, match="unknown resource"):
+        sign_manifest(manifest, private_key)
+
+
+def test_unknown_contribution_field_is_rejected(keypair):
+    private_key, _ = keypair
+    manifest = base_manifest()
+    manifest["contributions"]["remote_execution"] = True
+    with pytest.raises(ManifestError, match="unknown contribution"):
+        sign_manifest(manifest, private_key)
+
+
+@pytest.mark.parametrize("bad_value", [float("nan"), float("inf"), float("-inf"), True])
+def test_non_finite_or_boolean_cpu_capacity_is_rejected(keypair, bad_value):
+    private_key, _ = keypair
+    manifest = base_manifest()
+    manifest["resources"]["cpu_cores_available"] = bad_value
+    with pytest.raises(ManifestError, match="finite non-negative"):
+        sign_manifest(manifest, private_key)
+
+
+@pytest.mark.parametrize("bad_value", [-1, 1.5, True])
+def test_ram_capacity_must_be_non_negative_integer(keypair, bad_value):
+    private_key, _ = keypair
+    manifest = base_manifest()
+    manifest["resources"]["ram_mb_available"] = bad_value
+    with pytest.raises(ManifestError, match="non-negative integer"):
+        sign_manifest(manifest, private_key)
+
+
+@pytest.mark.parametrize("bad_value", [float("nan"), float("inf"), -1, True])
+def test_optional_bandwidth_must_be_finite_non_negative_number(keypair, bad_value):
+    private_key, _ = keypair
+    manifest = base_manifest()
+    manifest["resources"]["bandwidth_mbps_available"] = bad_value
+    with pytest.raises(ManifestError, match="bandwidth_mbps_available"):
+        sign_manifest(manifest, private_key)
+
+
+def test_expiry_must_be_after_issue_time(keypair):
+    private_key, _ = keypair
+    manifest = base_manifest(expires_at="2026-11-07T10:00:00+00:00")
+    with pytest.raises(ManifestError, match="later than issued_at"):
+        sign_manifest(manifest, private_key)
+
+
+def test_optional_data_classes_reject_non_string_items(keypair):
+    private_key, _ = keypair
+    with pytest.raises(ManifestError, match="data_classes"):
+        sign_manifest(base_manifest(data_classes=[{"class": "PUBLIC"}]), private_key)
+
+
+def test_optional_model_runner_rejects_invalid_determinism_type(keypair):
+    private_key, _ = keypair
+    manifest = base_manifest(model_runners=[{
+        "runner_id": "runner-a",
+        "model_digest": "a" * 64,
+        "determinism": ["UNKNOWN"],
+    }])
+    with pytest.raises(ManifestError, match="determinism"):
+        sign_manifest(manifest, private_key)
+
+
+def test_invalid_verification_clock_returns_fail_closed_result(keypair):
+    private_key, public_key = keypair
+    signed = sign_manifest(base_manifest(), private_key)
+    valid, reason = verify_manifest(signed, public_key, now="not-a-time")
+    assert valid is False
+    assert "manifest validation failed" in reason
+
+
+def test_huge_integer_resource_is_rejected_without_exception(keypair):
+    private_key, _ = keypair
+    manifest = base_manifest()
+    manifest["resources"]["cpu_cores_available"] = 10 ** 10000
+    with pytest.raises(ManifestError, match="finite non-negative"):
+        sign_manifest(manifest, private_key)
+
+
+def test_unknown_signature_field_is_rejected(keypair):
+    private_key, public_key = keypair
+    signed = sign_manifest(base_manifest(), private_key)
+    signed["signature"]["unreviewed"] = "extra"
+    valid, reason = verify_manifest(signed, public_key, now=NOW)
+    assert valid is False
+    assert "signature fields" in reason
