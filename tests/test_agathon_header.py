@@ -19,18 +19,17 @@ REQUIRED_HEADER_LINES = (
 LEGACY_EXEMPTIONS = frozenset({
     "__init__.py",
     "autarky_metrics.py", "autarky_report.py",
-    "crypto_receipts.py", "emergency_stop.py",
+    "crypto_receipts.py",
     "encrypted_store.py", "impact.py",
     "lease_lock.py", "ledger_anchor.py", "legacy_gate.py",
-    "measurement_core.py", "model_gate.py",
-    "model_run_manifest.py", "model_runner.py",
+    "measurement_core.py",
     "peer_store.py", "peer_sync.py", "real_metrics.py",
     "replay_db_unification.py", "replay_session.py", "replay_state_provider.py",
     "resource_admission.py", "resilience_mesh.py", "runtime_control.py",
     "self_study_metrics.py", "signed_manifest.py", "state_monotonicity.py",
     "stewardship_report.py", "task_ingress_gate.py",
     "trusted_peer_registry.py", "use_policy.py", "v91_cli.py",
-    "v91_listener.py", "witness_client.py", "worm_ledger.py",
+    "v91_listener.py", "witness_client.py",
 })
 
 
@@ -129,6 +128,19 @@ class AgathonHeaderPolicyTest(unittest.TestCase):
         self.assertIn("hash-chain ledger", ledger.__doc__ or "")
         self.assertIn("V91 Control Plane", flat_controller.__doc__ or "")
         self.assertIn("Read-only telemetry endpoint", telemetry_server.__doc__ or "")
+
+        # Batch 4: model_gate, model_run_manifest, model_runner, emergency_stop, worm_ledger
+        import emergency_stop as flat_stop  # noqa: E402
+        import model_gate  # noqa: E402
+        import model_run_manifest  # noqa: E402
+        import model_runner  # noqa: E402
+        import worm_ledger  # noqa: E402
+
+        assert "availability/safety gate" in (model_gate.__doc__ or "")
+        assert "replay comparison" in (model_run_manifest.__doc__ or "")
+        assert "model runner" in (model_runner.__doc__ or "")
+        assert "emergency stop" in (flat_stop.__doc__ or "")
+        assert "resource-flow ledger" in (worm_ledger.__doc__ or "")
 
 
 if __name__ == "__main__":

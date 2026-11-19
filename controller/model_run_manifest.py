@@ -1,4 +1,11 @@
-"""Pinned model-run manifests and exact replay comparison.
+"""
+V91-SYSTEM-HEADER (AGATHON-SEALED v2.4)
+---------------------------------------------------------------------
+STATUS: ACTIVE | VERIFICATION: REQUIRED (CLAIM != EVIDENCE)
+AXIOM: Schöpfung dient dem Erhalt, der Regeneration und der Zukunft.
+---------------------------------------------------------------------
+
+Pinned model-run manifests and exact replay comparison.
 
 This module does not execute a model. It records the inputs and execution
 conditions needed by an external runner, then compares independent replay
