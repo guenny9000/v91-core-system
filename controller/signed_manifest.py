@@ -206,9 +206,10 @@ def verify_manifest(
     if "signature" not in signed_manifest:
         return False, "manifest carries no signature"
     signature = signed_manifest["signature"]
-    if (not isinstance(signature, dict) or set(signature) != {"algorithm", "value"}
-            or signature.get("algorithm") != SIGNATURE_ALGORITHM):
-        return False, "unsupported, malformed or missing signature fields"
+    if not isinstance(signature, dict) or set(signature) != {"algorithm", "value"}:
+        return False, "malformed signature fields"
+    if signature.get("algorithm") != SIGNATURE_ALGORITHM:
+        return False, "unsupported signature algorithm"
     value = signature.get("value")
     if not isinstance(value, str) or len(value) != 128:
         return False, "malformed signature value"
