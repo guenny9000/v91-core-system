@@ -1,0 +1,50 @@
+{
+ "structure_id": "eu_ezb_digitaler_euro_pilotprojekt_2026",
+ "assessor": "v91_session_2026-11-19_quellenreview_max_best",
+ "assessed_at_structure": "2026-11-19T23:30:00Z",
+ "note": "Struktur-Datensatz der EU-Reihe (Thema Digitale Zahlungsverkehrstrukturen / Determinismus und Unabhaengigkeit). Bewertet wird der Stand des Digitalen-Euro-Projekts der EZB per 10./11.11.2026 auf Basis von EZB-Premiarquellen (Rede 10.11.2026, Pressemitteilung 14.07.2026) und einer Sekundaerquelle (Euronews 11.11.2026). Ersetzt KEINE Messung; REVIEW != ENTSCHEIDUNG; keine Bewertung des Lebensmittelcharakters der Politik, nur belegte Befunde zu Nutzen, Transparenz und Alternativen. Missbrauchs- und Kostenfragen bleiben ehrlich NICHT_GEPRUEFT, solange keine Primaerbelege vorliegen (UNKNOWN != PASS).",
+ "criteria": {
+  "gesellschaftlicher_nutzen": {
+   "status": "BELEGT",
+   "evidence": "Der digitale Euro ist laut EZB als digitale Form von Bargeld neben dem Bargeld konzipiert, nicht als dessen Ersatz; die EZB unterstuetzt zugleich strikte Rechtsvorschriften zur verpflichtenden Annahme von Bargeld, zum Bargeldzugang im gesamten Euroraum und zur Widerstandsfaehigkeit der Bargeldinfrastruktur. Das Pilotprojekt testet Alltagsfaehigkeit: Start in der zweiten Jahreshaelfte 2027 mit Eurosystem-Mitarbeitern, 36 ausgewaehlten Zahlungsdienstleistern (aus mehr als 50 Bewerbern, Auswahl veroeffentlicht 14.07.2026) und ausgewaehlten Haendlern an EZB-Standorten.",
+   "source": "https://www.ecb.europa.eu/press/key/date/2026/html/ecb.sp261110~9422461bad.de.html",
+   "assessed_at": "2026-11-19T23:30:00Z"
+  },
+  "menschenrechtsvertraeglichkeit": {
+   "status": "NICHT_GEPRUEFT",
+   "evidence": "",
+   "source": "",
+   "assessed_at": ""
+  },
+  "kosten_und_ressourcenverbrauch": {
+   "status": "NICHT_GEPRUEFT",
+   "evidence": "",
+   "source": "",
+   "assessed_at": ""
+  },
+  "transparenz": {
+   "status": "BELEGT",
+   "evidence": "Pilot-Design, Zeitplan und Beteiligte sind oeffentlich dokumentiert (EZB-Rede 10.11.2026; Namensliste der 36 Zahlungsdienstleister als Pressemitteilung vom 14.07.2026; ERPB-Dokument 'Digital euro market rollout plan discussion' vom 13.10.2026 als Diskussionsgrundlage). Eine Beta-Version ohne Status als gesetzliches Zahlungsmittel kommt im Pilot zum Einsatz - der experimentelle Status ist offengelegt; laut Euronews (11.11.2026) laufen seit Juli Trilog-Verhandlungen zum Rechtsrahmen, und die EZB betont, das Projekt sei von Personen unabhaengig.",
+   "source": "https://www.ecb.europa.eu/press/key/date/2026/html/ecb.sp261110~9422461bad.de.html",
+   "assessed_at": "2026-11-19T23:30:00Z"
+  },
+  "nachhaltigkeit": {
+   "status": "NICHT_GEPRUEFT",
+   "evidence": "",
+   "source": "",
+   "assessed_at": ""
+  },
+  "missbrauchsrisiken": {
+   "status": "NICHT_GEPRUEFT",
+   "evidence": "",
+   "source": "",
+   "assessed_at": ""
+  },
+  "alternativen_und_verbesserbarkeit": {
+   "status": "BELEGT",
+   "evidence": "Zwei parallele Strukturen statt Monostruktur: Bargeld soll gesetzliches Zahlungsmittel bleiben (eigener Legislativvorschlag), der digitale Euro kommt nur als zusaetzliche Option; die Erstausgabe ist als schrittweise Einfuehrung geplant, und die EU-Gesetzesgeber pruefen die Machbarkeit der stufenweisen Einfuehrung im stationaeren Handel (EZB-Rede 10.11.2026, ERPB 13.10.2026). Vorbereitungslauf Januar bis Juni 2027 umfasst Tests bedingter Zahlungen und die Erkundung von KI-Anwendungen im Zahlungsverkehr.",
+   "source": "https://www.ecb.europa.eu/press/key/date/2026/html/ecb.sp261110~9422461bad.de.html",
+   "assessed_at": "2026-11-19T23:30:00Z"
+  }
+ }
+}
