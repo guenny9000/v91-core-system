@@ -1,0 +1,72 @@
+{
+  "structure_id": "eu_abwehr_hybride_bedrohungen_2026",
+  "assessor": "v91_session_2026-11-20_offentliches_quellenreview",
+  "assessed_at_structure": "2026-11-20T06:00:00Z",
+  "note": "Struktur-Einschaetzung der europaeischen Abwehr hybrider Bedrohungen (Stoer-Kampagne mit Bombendrohungen gegen Flugverkehr, Medien und Schulen, Cyberangriffe auf Kuehlsysteme und Blutspendedienst) im Stand November 2026. Eingangsdaten: tagesschau 06.11.2026, tagesschau Europamagazin 12.09.2026, AFP-Meldungen 05.-12.11.2026, ACLED-Analyse 30.10.2026. Urheberschaft bleibt UNKNOWN: Vermutungen gegen Russland oder den 'Maennerstaat' sind in Quellen genannt, aber UNBELEGT (CLAIM != EVIDENCE). REVIEW != ENTSCHEIDUNG.",
+  "criteria": {
+    "gesellschaftlicher_nutzen": {
+      "status": "BELEGT",
+      "evidence": "Schutzfunktion dokumentiert: Bei der Dutzende Fluege und ein Kreuzfahrtschiff umfassenden Welle falscher Bombendrohungen (Anfang November 2026, Dutzende Betroffene, darunter elf Fluege von und nach Prag) wurden Maschinen umgeleitet, eskortiert und durchsucht; in keinem Fall wurde Sprengstoff gefunden, alle Flugzeuge landeten sicher (Eurocontrol: keine messbaren Gesamtverspaetungen). Medienhaeuser und Sendezentralen wurden nach Drohungen evakuiert, bewaffnete Polizei rueckte aus; Cyberspezialisten und Nachrichtendienste eingeschlossen. Irischer Regierungssprecher: Polizei, Armee, Luftfahrtbehoerden und Cyberspezialisten taeten alles, um Verantwortliche zu finden und zur Rechenschaft zu ziehen.",
+      "source": "https://www.tagesschau.de/ausland/europa/bombendrohungen-europa-100.html ; https://www.berliner-zeitung.de/article/bombendrohungen-gegen-35-fluege-eu-geheimdienste-pruefen-russland-spur-10573551",
+      "assessed_at": "2026-11-20T06:00:00Z"
+    },
+    "menschenrechtsvertraeglichkeit": {
+      "status": "BELEGT",
+      "evidence": "Dokumentierte Abwehrmassnahmen sind rechtsstaatlich eingebettet: Evakuierungen und Raeumungen zum Schutz von Beschaeftigten (RTE, Irish Independent, Newstalk, Today FM, Virgin Media, Sky News; Schulen in Italien und Grossbritannien); Ermittlungen durch Anti-Terror-Polizei und nationale Sicherheitsraete (Frankreich: Macron beruft Sicherheitsrat ein); keine dokumentierten Uberreaktionen oder Grundrechtseingriffe jenseits von Gefahrenabwehr in den Quellen.",
+      "source": "https://www.tagesschau.de/ausland/europa/bombendrohungen-europa-100.html ; https://www.berliner-zeitung.de/article/bombendrohungen-gegen-35-fluege-eu-geheimdienste-pruefen-russland-spur-10573551",
+      "assessed_at": "2026-11-20T06:00:00Z"
+    },
+    "kosten_und_ressourcenverbrauch": {
+      "status": "NICHT_GEPRUEFT",
+      "evidence": "",
+      "source": "",
+      "assessed_at": "2026-11-20T06:00:00Z"
+    },
+    "transparenz": {
+      "status": "BELEGT",
+      "evidence": "Vorfaelle und behoerdliche Reaktionen sind oeffentlich dokumentiert: Regierungsstatements (Irland: mutmasslich koordinierte Stoer-Kampagne; Spanien: kein Zufall, hybride Aggression und psychologische Kriegsfuehrung), Eurocontrol-Einschaetzung, polizeiliche Mitteilungen an Flughaefen, EPG-Gipfel-Debatte Dublin, sowie die ACLED-Analyse vom 30.10.2026 als Datenbasis.",
+      "source": "https://www.tagesschau.de/ausland/europa/bombendrohungen-europa-100.html ; https://acleddata.com/report/sabotage-escalation-russias-hybrid-threats-ramp-across-europe",
+      "assessed_at": "2026-11-20T06:00:00Z"
+    },
+    "nachhaltigkeit": {
+      "status": "PROBLEM_BELEGT",
+      "evidence": "Belegte Strukturschwaechen: Urheber bleiben ungeklaert (Macron 12.11.2026: keine gesicherten Erkenntnisse ueber auswaertige Maechte; Bekennerschreiben 'Kaempfer des Maennerstaats', Gruppierung dementiert); Kritiker vermissen ein gesamteuropaeisches Konzept (ehemalige NATO-Chefstrategin Babst, Tagesschau 12.09.2026: Verteidigung muesse auf breitere gesamtgesellschaftliche Basis, weder NATO noch EU haetten das durchgesetzt); ACLED 30.10.2026: Eskalation von Sabotage ueber Wegwerf-Proxies, Drohnen-Einfluege zur Erprobung der Abwehr, Zunahme in Polen und Deutschland; Rickli (GCSP): minimale Kosten des Angreifers, grosse Wirkung auf Sicherheitsgefuehl.",
+      "source": "https://www.tagesschau.de/ausland/europa/abwehr-hybride-bedrohung-100.html ; https://www.berliner-zeitung.de/article/bombendrohungen-gegen-35-fluege-eu-geheimdienste-pruefen-russland-spur-10573551 ; https://acleddata.com/report/sabotage-escalation-russias-hybrid-threats-ramp-across-europe",
+      "assessed_at": "2026-11-20T06:00:00Z"
+    },
+    "missbrauchsrisiken": {
+      "status": "NICHT_GEPRUEFT",
+      "evidence": "",
+      "source": "",
+      "assessed_at": "2026-11-20T06:00:00Z"
+    },
+    "alternativen_und_verbesserbarkeit": {
+      "status": "BELEGT",
+      "evidence": "Belegte Verbesserungswege: gesamteuropaeisches Konzept statt Einzelmassnahmen (Babst); gesamtgesellschaftliche Abwehruebungen wie 'Shelter 2026' in Kuopio/Finnland mit mehr als 2.000 Teilnehmenden inklusive Bevoelkerungsevakuierung und Schutzraeumen; Counter-UAV-Protokolle europaweit seit den Drohnen-Vorfaellen Maerz 2026 am Bruesselser Flughafen; grenzueberschreitende Geheimdienst-Ermittlungen zur Herkunftsklaerung; Kombination mit bestehenden Desinformations- und Sabotage-Abwehrstrukturen der EU-Staaten.",
+      "source": "https://www.tagesschau.de/ausland/europa/abwehr-hybride-bedrohung-100.html ; https://www.berliner-zeitung.de/article/bombendrohungen-gegen-35-fluege-eu-geheimdienste-pruefen-russland-spur-10573551 ; https://acleddata.com/report/sabotage-escalation-russias-hybrid-threats-ramp-across-europe",
+      "assessed_at": "2026-11-20T06:00:00Z"
+    }
+  },
+  "review_result": {
+    "schema_version": 1,
+    "structure_id": "eu_abwehr_hybride_bedrohungen_2026",
+    "assessor": "v91_session_2026-11-20_offentliches_quellenreview",
+    "criteria_total": 7,
+    "criteria_belegt": 4,
+    "criteria_problem_belegt": 1,
+    "criteria_ungeprueft": 2,
+    "problems": [
+      "nachhaltigkeit"
+    ],
+    "ungeprueft": [
+      "kosten_und_ressourcenverbrauch",
+      "missbrauchsrisiken"
+    ],
+    "verdict": "NEGATIVE_FINDING_PROBLEMS_BELEGT",
+    "honest_limits": [
+      "REVIEW != ENTSCHEIDUNG; DETECTION != AUTHORIZATION.",
+      "BELEGT ist eine belegte Einsch\u00e4tzung, keine unabh\u00e4ngige Best\u00e4tigung.",
+      "Ver\u00e4nderungen erfolgen friedlich, demokratisch, rechtsstaatlich (Direktive Abschnitt 6)."
+    ]
+  }
+}
