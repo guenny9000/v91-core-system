@@ -1,0 +1,50 @@
+{
+ "structure_id": "bund_foederale_modernisierungsagenda_2026",
+ "assessor": "v91_session_2026-11-20_quellenreview_max_best",
+ "assessed_at_structure": "2026-11-20T15:00:00Z",
+ "note": "Struktur-Datensatz der Bund-Reihe (Thema Foerderalismusreform / Staatsmodernisierung): Foederale Modernisierungsagenda, beschlossen vom Bundeskanzler und den Regierungschefinnen und -chefs der Laender am 04.12.2025, bewertet per 25.06.2026 auf Basis des Ersten Fortschrittsberichts der Bundesregierung (Primaerquelle, PDF) und der Pressekonferenz nach der Ministerpraesidentenkonferenz (25.06.2026). Kontext-Hinweis: Begleitanfrage war, Institutionen abzuschaffen; das liegt ausserhalb des V91-Rahmens (Verfassungsaenderungen sind Prozesse der Souveraenin bzw. des Souveraenen, nicht Modellentscheidungen; REVIEW != ENTSCHEIDUNG). Bewertet wird stattdessen die belegbare Reformstruktur: weniger Buerokratie ueber mehrgliedrige Zusammenarbeit. Agenda-Angaben sind Regierungs-Angaben (CLAIM, keine unabhaengige Messung); DATENBASIS != MESSUNG.",
+ "criteria": {
+  "gesellschaftlicher_nutzen": {
+   "status": "BELEGT",
+   "evidence": "Laut Erstem Fortschrittsbericht (25.06.2026) vereinbarten Bund und Laender am 04.12.2025 einen Massnahmenkatalog mit ueber 200 vereinbarten Massnahmen, nahezu alle mit ambitioniertem Zieldatum; viele Verbesserungen sollen bis Ende 2026 umgesetzt sein mit expliziten Zielen: das Leben von Buergerinnen und Buerger erleichtern, die Verwaltung einfacher und digitaler gestalten und die Wettbewerbsfaehigkeit der Unternehmen verbessern. Themenbereiche reichen bis zu sehr konkreten Buergeranliegen (z. B. Reparaturdauern verkuerzen, Foerderverfahren Nr. 186-196 mit eigener Arbeitsgruppe). Belegt ist die Ziel- und Massnahmenstruktur, nicht die bereits realisierte Wirkung.",
+   "source": "https://www.bundesregierung.de/resource/blob/975200/2445318/98baa702bc15bb8c0bc8894856da1bdc/2026-06-26-fortschrittsbericht-modernisierung-data.pdf",
+   "assessed_at": "2026-11-20T15:00:00Z"
+  },
+  "menschenrechtsvertraeglichkeit": {
+   "status": "NICHT_GEPRUEFT",
+   "evidence": "",
+   "source": "",
+   "assessed_at": ""
+  },
+  "kosten_und_ressourcenverbrauch": {
+   "status": "NICHT_GEPRUEFT",
+   "evidence": "",
+   "source": "",
+   "assessed_at": ""
+  },
+  "transparenz": {
+   "status": "BELEGT",
+   "evidence": "Der Fortschrittsbericht ist als PDF oeffentlich (bundesregierung.de, Stand 25.06.2026) und nennt je Themenbereich Sachstand und Arbeitsteilung: Themenfelder mit eigener Arbeitsgruppe und Federfuehrung (z. B. Foerderverfahren ab April unter Federfuehrung eines Bundesministeriums, Reparaturdauern unter Federfuehrung des Verkehrsministeriums mit Ziel konkreter Vorschlaege bis Ende 2026). Die Einbindung der Kommunalen Spitzenverbaende bei besonders kommunalrelevanten Massnahmen ist offengelegt; die MPK-Pressekonferenz (25.06.2026) ist mit Mitschrift oeffentlich dokumentiert.",
+   "source": "https://www.bundesregierung.de/breg-de/aktuelles/pressekonferenz-nach-minsterpraesidentenkonferenz-2445232",
+   "assessed_at": "2026-11-20T15:00:00Z"
+  },
+  "nachhaltigkeit": {
+   "status": "NICHT_GEPRUEFT",
+   "evidence": "",
+   "source": "",
+   "assessed_at": ""
+  },
+  "missbrauchsrisiken": {
+   "status": "NICHT_GEPRUEFT",
+   "evidence": "",
+   "source": "",
+   "assessed_at": ""
+  },
+  "alternativen_und_verbesserbarkeit": {
+   "status": "BELEGT",
+   "evidence": "Die Agenda zeigt einen wiederholbaren Verbesserungszyklus auf Ebene des foederalen Miteinanders statt Einmaleingriffen: Beschluss (04.12.2025), themenspezifische Arbeitsgruppen mit Federfuehrung, systematische Sachstandsanalyse (im Bericht fuer Reparaturdauern explizit benannt), Fortschrittsberichte und Zieldaten; die Makro-Alternative Zentralabbau/Streichung von Verwaltungsebenen wurde im politischen Prozess durch verteilte Zusammenarbeit ersetzt (Zitatebene MPK: 'neues Kapitel' des foederalen Miteinanders). Damit ist Verbesserung als Prozess angelegt und nachpruefbar, nicht als einmalige Strukturrochade.",
+   "source": "https://www.bundesregierung.de/resource/blob/975200/2445318/98baa702bc15bb8c0bc8894856da1bdc/2026-06-26-fortschrittsbericht-modernisierung-data.pdf",
+   "assessed_at": "2026-11-20T15:00:00Z"
+  }
+ }
+}
