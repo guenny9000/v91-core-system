@@ -1,7 +1,8 @@
 """
 Tests fuer controller/watcher_registry: die 11 Direktiv-Rollen,
 Existenzpruefung gegen den echten Dateibestand, fail-closed,
-ehrliche VISION-Kennzeichnung fuer Rollen ohne Bausteine.
+ehrliche VISION-Kennzeichnung fuer Rollen ohne Bausteine und
+ehrliche PARTIAL-Kennzeichnung fuer Rollen mit fehlenden Modulen.
 """
 import json
 import tempfile
@@ -43,6 +44,7 @@ class WatcherRegistryTests(unittest.TestCase):
     def test_all_leben_roles_now_have_files(self):
         report = build_report(REPO_ROOT)
         self.assertEqual([], report["roles_unimplemented"])
+        self.assertEqual([], report["roles_partial"])
         self.assertEqual("ALL_ROLES_HAVE_FILES_PRESENT", report["overall"])
 
     def test_sicherheitswaechter_is_implemented_against_repo(self):
@@ -73,6 +75,21 @@ class WatcherRegistryTests(unittest.TestCase):
             (root / role.module_files[0]).unlink()
             report = probe_role(role, root)
             self.assertIn(role.module_files[0], report["modules_missing"])
+            self.assertEqual("IMPLEMENTATION_PARTIAL", report["capability"])
+            self.assertIn("Teilweise vorhanden", report["honest_note"])
+
+    def test_partial_report_lists_partial_role(self):
+        role = get_role("infrastruktur_und_ausfallschutz")
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            for rel in role.module_files:
+                p = root / rel
+                p.parent.mkdir(parents=True, exist_ok=True)
+                p.write_text("# stub\n", encoding="utf-8")
+            (root / role.module_files[0]).unlink()
+            report = build_report(root)
+            self.assertIn(role.role_id, report["roles_partial"])
+            self.assertEqual("PARTIAL_ROLES_INCOMPLETE", report["overall"])
 
     def test_unknown_role_fails_closed(self):
         with self.assertRaises(WatcherRegistryError):
