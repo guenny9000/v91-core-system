@@ -1,0 +1,65 @@
+{
+  "initiative_id": "pilot-c-ebola-praevention-2026",
+  "description": "Pilot C des Gesundheits-Waechters: Ebola-Bundibugyo-Ausbruch DRC (erklaert 15.05.2026), Kontinentalplan Africa CDC + WHO (US$ 518 Mio). Konzeptstufe R2: Messkriterien beschrieben, keine Wirkung gemessen.",
+  "watcher": "gesundheit",
+  "maturity": "R2",
+  "indicators": [
+    {
+      "role": "WIRKUNG",
+      "name": "Taeglicher Anteil gesehener Kontakte in DRC",
+      "unit": "Prozent",
+      "baseline": 86.0,
+      "target": 95.0,
+      "period": {
+        "baseline_at": "2026-11-03T00:00:00Z",
+        "target_at": "2027-06-30T00:00:00Z"
+      },
+      "method": "14-Tage-Durchschnitt des Anteils gesehener Kontakte laut WHO DON625 (03.11.2026: 86 Prozent, unter der WHO-Schwelle 95 Prozent; diese Ziel-Vorgabe ist nicht selbstgesetzt). WHO-Rundung auf ganze Prozent: Unsicherheit 1 Punkt.",
+      "verifier": "WHO Disease Outbreak News, Kontaktnachverfolgungs-Daten DRC",
+      "uncertainty": 1.0,
+      "alternative_comparison": "Ohne erhoehte Nachverfolgung: fortgesetzte Gemeinschafts-Sterblichkeit (335 von 512 Todesfaellen seit 21.10.2026 in Gemeinschaften) und aktive Uebertragung in 51 von 67 betroffenen Health Zones (Stand 03.11.2026)."
+    },
+    {
+      "role": "KOSTEN",
+      "name": "Eingeworbene Finanzierung des Kontinentalplans",
+      "unit": "USD",
+      "baseline": 0.0,
+      "target": 518000000.0,
+      "period": {
+        "baseline_at": "2026-06-05T00:00:00Z",
+        "target_at": "2026-12-31T00:00:00Z"
+      },
+      "method": "Soll-Aufkommen des Kontinentalplans Africa CDC + WHO (US$ 518 Mio, Juni-Nov. 2026), Abgleich an WHO-Finanzierungsberichte. Kontext: Pandemic-Fond-Zusage US$ 220 Mio (Africa CDC via ReliefWeb, Suchtreffer, NICHT vollstaendig geprueft).",
+      "verifier": "WHO- und Africa-CDC-Finanzierungsberichte",
+      "uncertainty": 0.0
+    },
+    {
+      "role": "RESILIENZ",
+      "name": "Anteil der Todesfaelle in Behandlungszentren",
+      "unit": "Prozent",
+      "baseline": 34.6,
+      "target": 80.0,
+      "period": {
+        "baseline_at": "2026-11-03T00:00:00Z",
+        "target_at": "2027-06-30T00:00:00Z"
+      },
+      "method": "Selbstgesetzter Messpunkt des Pilotkonzepts (keine WHO-Vorgabe): WHO DON625 meldet 177 von 512 Todesfaellen seit 21.10.2026 in Behandlungszentren. Ziel 80 Prozent: fruehe Fallfindung und Versorgungszugang. Rundung: 1 Punkt Unsicherheit.",
+      "verifier": "WHO Disease Outbreak News (fortlaufende Ausgaben)",
+      "uncertainty": 1.0
+    }
+  ],
+  "sources": [
+    {
+      "publisher": "WHO Disease Outbreak News 2026-DON625 (06.11.2026)",
+      "url": "https://www.who.int/emergencies/disease-outbreak-news/item/2026-DON625"
+    },
+    {
+      "publisher": "WHO Joint News Release Kontinentalplan (05.06.2026)",
+      "url": "https://www.who.int/news/item/05-06-2026-africa-cdc-and-who-launch-joint-continental-ebola-response-plan"
+    },
+    {
+      "publisher": "ReliefWeb / Africa CDC, Pandemic Fund US$ 220m (Suchtreffer, Seite 403)",
+      "url": "https://reliefweb.int/report/democratic-republic-congo/africa-cdc-welcomes-pandemic-funds-us220m-support-bundibugyo-virus-outbreak-response"
+    }
+  ]
+}
