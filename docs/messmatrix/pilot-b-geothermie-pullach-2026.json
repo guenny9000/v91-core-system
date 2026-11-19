@@ -1,0 +1,65 @@
+{
+  "initiative_id": "pilot-b-geothermie-pullach-2026",
+  "description": "Pilot B des Energie-Waechters: Tiefengeothermie Pullach Sued (3 Bohrungen, KfW-Kredit 572, Munich-Re-Fuehndigkeitspolitik). Konzeptstufe R2: Messkriterien beschrieben, keine Wirkung gemessen.",
+  "watcher": "energie",
+  "maturity": "R2",
+  "indicators": [
+    {
+      "role": "WIRKUNG",
+      "name": "Zusaetzlich mit Tiefengeothermie-Waerme versorgte Personen",
+      "unit": "Personen",
+      "baseline": 0.0,
+      "target": 50000.0,
+      "period": {
+        "baseline_at": "2026-11-30T00:00:00Z",
+        "target_at": "2029-12-31T00:00:00Z"
+      },
+      "method": "Anschlusszaehlung im Fernwaermenetz Pullach durch die Projekttraegerin IEP (Lastgang-/Netzdaten). Ziel laut IEP-Planung: ab 2029 Waerme fuer rund 50.000 Menschen. Rund-Angabe: Unsicherheit 2.500 Personen angesetzt.",
+      "verifier": "Innovative Energie fuer Pullach GmbH, Bilanz des Fernwaermenetzes",
+      "uncertainty": 2500.0,
+      "alternative_comparison": "Ohne Projekt: Ergaenzung der Waermeversorgung ueber fossil beheizte Kessel; das Absicherungsprodukt (Munich Re plus KfW-Teilschulderlass) existiert nur fuer Geothermie."
+    },
+    {
+      "role": "KOSTEN",
+      "name": "Verausgabte Projektmittel Pullach Sued",
+      "unit": "EUR",
+      "baseline": 0.0,
+      "target": 47000000.0,
+      "period": {
+        "baseline_at": "2026-11-30T00:00:00Z",
+        "target_at": "2029-12-31T00:00:00Z"
+      },
+      "method": "Kredit- und Haushaltsabgleich des Projektvolumens rund 47 Mio EUR (KfW-Mitteilung 18.11.2026, Finanzierung ueber NORD/LB und KfW-Foerderkredit Geothermie 572). Rund-Angabe: Unsicherheit 1 Mio EUR angesetzt.",
+      "verifier": "KfW / NORD/LB, Kreditverwendungsnachweise",
+      "uncertainty": 1000000.0
+    },
+    {
+      "role": "RESILIENZ",
+      "name": "Geplante Fuehndigkeitsabsicherung des Darlehens",
+      "unit": "Prozent der Darlehenssumme",
+      "baseline": 0.0,
+      "target": 100.0,
+      "period": {
+        "baseline_at": "2026-11-30T00:00:00Z",
+        "target_at": "2027-12-31T00:00:00Z"
+      },
+      "method": "Selbstgesetzter Messpunkt des Pilotkonzepts, keine behoerdliche Vorgabe: Munich Re sichert 30 bis 70 Prozent der Darlehenssumme ab; KfW-Teilschulderlass ergaenzt auf bis zu 100 Prozent. Feststellung des Anteils bei Vertragsabschluss.",
+      "verifier": "Munich Re Police und KfW-Vertragsabschluss",
+      "uncertainty": 0.0
+    }
+  ],
+  "sources": [
+    {
+      "publisher": "Munich Re (Business News, 18.11.2026)",
+      "url": "https://www.munichre.com/de/unternehmen/media-relations/medieninformationen-und-unternehmensnachrichten/business-news/2026/business-news-18-11-2026.html"
+    },
+    {
+      "publisher": "Unternehmensportal (Stefan Kessler, 18.11.2026)",
+      "url": "https://unternehmensportal.com/kfw-und-munich-re-sichern-pullacher-geothermie-projekt-ueber/"
+    },
+    {
+      "publisher": "KfW Newsroom (18.11.2026)",
+      "url": "https://www.kfw.de/Newsroom/Pressemitteilungen-Details_914112.html"
+    }
+  ]
+}
