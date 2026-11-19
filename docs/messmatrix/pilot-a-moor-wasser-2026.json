@@ -1,0 +1,87 @@
+{
+  "initiative_id": "pilot-a-moor-wasser-2026",
+  "description": "Pilot A des Wirkungsindikatoren-Frameworks: Wiedervernaessung deutscher Moore ueber das Palu-Programm mit ehrlichen Baselines und Unsicherheitsbanden. R2: Konzept mit Messkriterien, keine Messung.",
+  "watcher": "wasser",
+  "maturity": "R2",
+  "indicators": [
+    {
+      "role": "WIRKUNG",
+      "name": "wiedervernaesste Moorflaeche",
+      "unit": "ha",
+      "baseline": 1600,
+      "target": 90000,
+      "period": {
+        "baseline_at": "2026-04-01T00:00:00Z",
+        "target_at": "2040-12-31T00:00:00Z"
+      },
+      "method": "Flaechenerfassung nach Palu-Foerdergeometrie; Baseline laut BMUKN aus bisherigen gefoerderten Renaturierungsprojekten (1.600 ha Stand 04/2026); Ziel 90.000 ha gesamt (Programmziel Palu bis 2040).",
+      "verifier": "BMUKN / BfN Flaechenreporting",
+      "uncertainty": 400,
+      "alternative_comparison": "Alternative ohne Programm: Fortsetzung entwaesserter, degradierter Moore mit fortlaufender CO2-Freisetzung; Palu-Nichtstun bietet keine Flaechenwirkung, haelt aber Ausgaben bei null.",
+      "sources": [
+        {
+          "url": "https://www.bfn.de/palu-programm",
+          "publisher": "BfN"
+        },
+        {
+          "url": "https://www.bundestag.de/hib/2016-2021/2020-08-05",
+          "publisher": "Bundestag hib"
+        },
+        {
+          "url": "https://www.greifswaldmoor.de/",
+          "publisher": "Greifswald Moor Centrum"
+        },
+        {
+          "url": "https://klimareporter.de/",
+          "publisher": "klimareporter.de"
+        }
+      ]
+    },
+    {
+      "role": "KOSTEN",
+      "name": "verausgabte Palu-Foerdermittel",
+      "unit": "EUR",
+      "baseline": 0,
+      "target": 1750000000,
+      "period": {
+        "baseline_at": "2026-04-01T00:00:00Z",
+        "target_at": "2029-12-31T00:00:00Z"
+      },
+      "method": "Haushalts- und Foerdermittelnachweis; Ziel aus \"rund 1,75 Mrd EUR\" Programmbudget bis Ende 2029, genehmigte Mittel, keine Messausgaben.",
+      "verifier": "BMUKN Haushalt / Bundesrechnungshof",
+      "uncertainty": 50000000,
+      "sources": [
+        {
+          "url": "https://www.bfn.de/palu-programm",
+          "publisher": "BfN"
+        }
+      ]
+    },
+    {
+      "role": "RESILIENZ",
+      "name": "geplante netzunabhaengige Grundwasserstand-Messstellen",
+      "unit": "Messstellen",
+      "baseline": 0,
+      "target": 12,
+      "period": {
+        "baseline_at": "2026-04-01T00:00:00Z",
+        "target_at": "2029-12-31T00:00:00Z"
+      },
+      "method": "Selbstgesetzte Messpflicht des Pilotkonzepts (kein Behoerdenprogramm): netzunabhaengige Peilrohre mit manueller Ablesung im 15-Minuten-Kontext des V91-Monitorings; Planung, noch nicht gebaut.",
+      "verifier": "Pilotkonzept-Selbstverpflichtung, Ablesprotokolle",
+      "uncertainty": 0,
+      "sources": []
+    }
+  ],
+  "multiplier": null,
+  "sources": [
+    {
+      "url": "https://www.bfn.de/palu-program",
+      "publisher": "BfN"
+    },
+    {
+      "url": "https://www.greifswaldmoor.de/",
+      "publisher": "Greifswald Moor Centrum"
+    }
+  ]
+}
