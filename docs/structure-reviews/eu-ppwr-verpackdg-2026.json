@@ -1,0 +1,73 @@
+{
+  "structure_id": "eu_ppwr_verpackdg_kreislaufwirtschaft_2026",
+  "assessor": "v91_session_2026-11-19_offentliches_quellenreview",
+  "assessed_at_structure": "2026-11-19T13:36:13Z",
+  "note": "Struktur-Einschaetzung der EU-Verpackungsverordnung (PPWR) und des deutschen Verpackungsrecht-Durchfuehrungsgesetzes (VerpackDG), wirksam seit 12.08.2026. Sebastians Hebel 'Kreislaufwirtschaft ausbauen, Verschmutzung reduzieren'. REVIEW != ENTSCHEIDUNG.",
+  "criteria": {
+    "gesellschaftlicher_nutzen": {
+      "status": "BELEGT",
+      "evidence": "Wirksam seit 12.08.2026: EU-weit einheitliche Vorgaben fuer Recycling, Wiederverwendung und Ressourcenschutz; Hersteller muessen Massnahmen zur Verpackungsvermeidung durchfuehren; hoehere Recyclingquoten fuer Verpackungen aus Kunststoff, Aluminium und Eisenmetall; Bundesumweltminister Schneider: einheitlicher europaeischer Rechtsrahmen schafft Planungs- und Investitionssicherheit und setzt den Rahmen fuer Innovationen in der Kreislaufwirtschaft.",
+      "source": "https://www.bundesumweltministerium.de/pressemitteilung/neues-verpackungsgesetz-verbessert-abfallvermeidung-und-recycling ; https://www.bundesumweltministerium.de/pressemitteilung/europaeische-verpackungsverordnung-ab-heute-wirksam",
+      "assessed_at": "2026-11-19T13:36:13Z"
+    },
+    "menschenrechtsvertraeglichkeit": {
+      "status": "BELEGT",
+      "evidence": "Die Regulierung richtet sich an Hersteller und Entsorgungsorganisationen (Zulassungspflicht, erweiterte Herstellerverantwortung), nicht an Buerger; fuer private Verbraucherinnen und Verbraucher sind die Veraenderungen laut Ministerium 'kaum spuerbar'. Kein Zwang, keine diskriminierende Wirkung in den einsehbaren Dokumenten.",
+      "source": "https://www.bundesumweltministerium.de/pressemitteilung/europaeische-verpackungsverordnung-ab-heute-wirksam ; https://www.bundesumweltministerium.de/pressemitteilung/neues-verpackungsgesetz-verbessert-abfallvermeidung-und-recycling",
+      "assessed_at": "2026-11-19T13:36:13Z"
+    },
+    "kosten_und_ressourcenverbrauch": {
+      "status": "NICHT_GEPRUEFT",
+      "evidence": "",
+      "source": "",
+      "assessed_at": "2026-11-19T13:36:13Z"
+    },
+    "transparenz": {
+      "status": "BELEGT",
+      "evidence": "Amtliche Pressemitteilungen zu Kabinettsbeschluss (11.02.2026) und Inkrafttreten (12.08.2026); Gesetzentwurf und Beschlussempfehlung des Bundestags-Umweltausschusses oeffentlich (Drucksache 21/6398 zu VO (EU) 2025/40); Zulassungsverfahren bei der Zentralen Stelle Verpackungsregister mit dokumentierter Finanzierungsregelung.",
+      "source": "https://www.bundesumweltministerium.de/pressemitteilung/neues-verpackungsgesetz-verbessert-abfallvermeidung-und-recycling ; https://www.bundesumweltministerium.de/pressemitteilung/europaeische-verpackungsverordnung-ab-heute-wirksam ; https://www.bundestag.de/presse/hib/kurzmeldungen-1166140",
+      "assessed_at": "2026-11-19T13:36:13Z"
+    },
+    "nachhaltigkeit": {
+      "status": "BELEGT",
+      "evidence": "Kernziel ist die Kreislaufwirtschaft: verpflichtende Abfallvermeidungsmassnahmen der Hersteller, hoehere Recyclingquoten, Stärkung von Wiederverwendung und ressourcenschonendem Umgang mit wirtschaftlich wertvollen Abfaellen; einheitliche EU-Vorgaben fuer den gesamten Binnenmarkt statt Fragmentierung. Langfristigkeit der Wirkung ist im Regelungsziel angelegt; die konkrete Zielerreichung ist erst kuenftigmessbar (ehrliche Grenze).",
+      "source": "https://www.bundesumweltministerium.de/pressemitteilung/europaeische-verpackungsverordnung-ab-heute-wirksam ; https://www.bundesumweltministerium.de/pressemitteilung/neues-verpackungsgesetz-verbessert-abfallvermeidung-und-recycling",
+      "assessed_at": "2026-11-19T13:36:13Z"
+    },
+    "missbrauchsrisiken": {
+      "status": "NICHT_GEPRUEFT",
+      "evidence": "",
+      "source": "",
+      "assessed_at": "2026-11-19T13:36:13Z"
+    },
+    "alternativen_und_verbesserbarkeit": {
+      "status": "BELEGT",
+      "evidence": "Bewaehrte deutsche Systeme (duale Systeme, Branchenloesungen) werden ausdruecklich beibehalten und weiterentwickelt statt abgeschafft; Zulassungsverfahren als buerokratiearmes automatisiertes Verfahren angelegt; Regelung ist EU-weit abstimmbar und anpassbar.",
+      "source": "https://www.bundesumweltministerium.de/pressemitteilung/neues-verpackungsgesetz-verbessert-abfallvermeidung-und-recycling ; https://www.bundesumweltministerium.de/pressemitteilung/europaeische-verpackungsverordnung-ab-heute-wirksam",
+      "assessed_at": "2026-11-19T13:36:13Z"
+    }
+  },
+  "review_result": {
+    "schema_version": 1,
+    "structure_id": "eu_ppwr_verpackdg_kreislaufwirtschaft_2026",
+    "assessor": "v91_session_2026-11-19_offentliches_quellenreview",
+    "criteria_total": 7,
+    "criteria_belegt": 5,
+    "criteria_problem_belegt": 0,
+    "criteria_ungeprueft": 2,
+    "problems": [],
+    "ungeprueft": [
+      "kosten_und_ressourcenverbrauch",
+      "missbrauchsrisiken"
+    ],
+    "verdict": "REVIEW_REQUIRED_UNGEPRUEFTE_KRITERIEN",
+    "honest_limits": [
+      "REVIEW != ENTSCHEIDUNG; DETECTION != AUTHORIZATION.",
+      "BELEGT ist eine belegte Einschätzung, keine unabhängige Bestätigung.",
+      "Veränderungen erfolgen friedlich, demokratisch, rechtsstaatlich (Direktive Abschnitt 6)."
+    ],
+    "tool": "controller/structure_review.py @ PR #170",
+    "run_at": "2026-11-19T13:36:13Z",
+    "reproduce": "python3 controller/structure_review.py --report-json docs/structure-reviews/eu-ppwr-verpackdg-2026.json"
+  }
+}
