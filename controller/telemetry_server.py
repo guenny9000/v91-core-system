@@ -1,4 +1,11 @@
-"""Read-only telemetry endpoint for v91-core-system.
+"""
+V91-SYSTEM-HEADER (AGATHON-SEALED v2.4)
+---------------------------------------------------------------------
+STATUS: ACTIVE | VERIFICATION: REQUIRED (CLAIM != EVIDENCE)
+AXIOM: Schöpfung dient dem Erhalt, der Regeneration und der Zukunft.
+---------------------------------------------------------------------
+
+Read-only telemetry endpoint for v91-core-system.
 
 STANDARD LIBRARY ONLY - this module deliberately adds NO new runtime
 dependencies (no FastAPI, no requests, no pyjwt).
