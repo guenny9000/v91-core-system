@@ -1,0 +1,71 @@
+{
+  "structure_id": "de_koalition_der_willigen_friedenssicherung_2026",
+  "assessor": "v91_session_2026-11-20_offentliches_quellenreview",
+  "assessed_at_structure": "2026-11-20T05:00:00Z",
+  "note": "Struktur-Einschaetzung der 'Koalition der Willigen' zur Unterstuetzung der Ukraine im Stand November 2026 (freiwilliges Staatenformat, KEIN geschlossener Vertrag; Abgrenzung zum Dataset eu-verhandlungsteam-ukraine-2026: dort das Dubliner E5-Team, hier das breitere Koalitions-format mit Gipfeln und Absicherungsplanung). REVIEW != ENTSCHEIDUNG; Unterstuetzung der Ukraine ist hier strukturell geprueft, nicht inhaltlich bewertet.",
+  "criteria": {
+    "gesellschaftlicher_nutzen": {
+      "status": "BELEGT",
+      "evidence": "Koalition der Willigen: Format seit Fruehjahr 2025, Gipfel am 19.11.2026 in Berlin mit 37 Laendern sowie EU- und NATO-Spitzen; geschlossene Abstimmung hinter direkten Russland-Ukraine-Gespraechen mit USA und 'Team Europa', Ziel gerechter und dauerhafter Frieden; Unterstuetzung humanitaer, finanziell und militaerisch; Abschreckung gegen Waffenstillstandsbruch als dokumentierter Zweck einer Schutzmacht-Option.",
+      "source": "https://www.bundesregierung.de/breg-de/aktuelles/koalition-der-willigen-in-berlin-2461162 ; https://www.tagesschau.de/ausland/europa/ukraine-deutsche-truppen-100.html",
+      "assessed_at": "2026-11-20T05:00:00Z"
+    },
+    "menschenrechtsvertraeglichkeit": {
+      "status": "BELEGT",
+      "evidence": "Dokumentierte Rahmenprinzipien: kein Frieden 'ueber den Kopf der Ukraine hinweg' (Pistorius 03.11.2026: Garanten muessen bei der Entstehung beteiligt sein); Bundestag entscheidet ueber Art und Umfang eines deutschen Beitrags (Kanzler Merz, Paris); Stationierung nur auf benachbartem NATO-Gebiet und nur mit Zustimmung der Gastlaender, keine Entsendung in die Ukraine angedacht.",
+      "source": "https://www.tagesschau.de/ausland/europa/ukraine-deutsche-truppen-100.html ; https://www.tagesschau.de/ausland/europa/deutschland-beteiligung-friedenssicherung-100.html",
+      "assessed_at": "2026-11-20T05:00:00Z"
+    },
+    "kosten_und_ressourcenverbrauch": {
+      "status": "BELEGT",
+      "evidence": "Belegte Zahlen im Kontext der Koalition: Deutschland beteiligt sich mit 300 Mio USD (rund 273 Mio EUR) am Purl-Luftverteidigungspaket mit Norwegen (17.11.2026); EU-Darlehen 90 Mrd EUR fuer 2026/2027 beschlossen; Finanzbedarf Kiew 2027 rund 70 Mrd EUR zusaetzlich, davon rund 45 Mrd als EU-Kredit geplant. Panzerbrigade Litauen: rund 5.000 Soldaten bis 2027.",
+      "source": "https://www.tagesschau.de/ausland/europa/ukraine-deutsche-truppen-100.html",
+      "assessed_at": "2026-11-20T05:00:00Z"
+    },
+    "transparenz": {
+      "status": "BELEGT",
+      "evidence": "Gipfel oeffentlich angekuendigt und mit Fotoreihe dokumen-tiert; Ziele und Formate (Koalition der Willigen, Team Europa, E5-Verhandlungsteam) oeffentlich benannt; Positionen der Bundesregierung, des Verteidigungs- und des Aussenministers in recherchierbaren Medienquellen dokumentiert; keine Geheim-diplomatie an der Struktur selbst dokumentiert (Inhalte einzelner Verhandlungsrunden bleiben unstrukturiert offen).",
+      "source": "https://www.bundesregierung.de/breg-de/aktuelles/koalition-der-willigen-in-berlin-2461162 ; https://www.tagesschau.de/ausland/europa/ukraine-deutsche-truppen-100.html ; https://www.tagesschau.de/ausland/eu-vertreter-ukraine-gespraeche-100.html",
+      "assessed_at": "2026-11-20T05:00:00Z"
+    },
+    "nachhaltigkeit": {
+      "status": "PROBLEM_BELEGT",
+      "evidence": "Belegte Strukturrisiken: Friedensbemuehungen 'seit Monaten stockend'; russische Luftangriffe auf Energieinfrastruktur vor dem Winter ausgeweitet, hunderttausende Menschen ohne Strom (Anfang November 2026); EU-Streit ueber faire Beitraege (Fico/Babis gegen Merz-Forderung), Einstimmigkeitsvorbehalt fuer den naechsten EU-Kredit; weiterhin unklar, wer bei Gespraechen auf hoechster Ebene am Tisch sitzt.",
+      "source": "https://www.tagesschau.de/ausland/eu-vertreter-ukraine-gespraeche-100.html ; https://www.tagesschau.de/ausland/europa/ukraine-deutsche-truppen-100.html",
+      "assessed_at": "2026-11-20T05:00:00Z"
+    },
+    "missbrauchsrisiken": {
+      "status": "NICHT_GEPRUEFT",
+      "evidence": "",
+      "source": "",
+      "assessed_at": "2026-11-20T05:00:00Z"
+    },
+    "alternativen_und_verbesserbarkeit": {
+      "status": "BELEGT",
+      "evidence": "Belegte Alternativen und Verbesserungswege: gemeinsames europaeisches Verhandlungsteam (E5 plus EU-Institutionen, Gipfel Dublin 13.11.2026) statt Fragmentierung; integrierte europaeische Beteiligung an den Abu-Dhabi-Gespraechen 'nah dran' auf Berater-Ebene (statt Ausschluss wie geplant); Rechtsgrundlage und Mandat eines Beitrags nur nach Bundestags-beschluss; Konzentration auf Luftraumueberwachung und Luft-verteidigung statt Bodentruppen in der Ukraine.",
+      "source": "https://www.tagesschau.de/ausland/eu-vertreter-ukraine-gespraeche-100.html ; https://www.bundesregierung.de/breg-de/aktuelles/koalition-der-willigen-in-berlin-2461162 ; https://www.tagesschau.de/ausland/europa/ukraine-deutsche-truppen-100.html",
+      "assessed_at": "2026-11-20T05:00:00Z"
+    }
+  },
+  "review_result": {
+    "schema_version": 1,
+    "structure_id": "de_koalition_der_willigen_friedenssicherung_2026",
+    "assessor": "v91_session_2026-11-20_offentliches_quellenreview",
+    "criteria_total": 7,
+    "criteria_belegt": 5,
+    "criteria_problem_belegt": 1,
+    "criteria_ungeprueft": 1,
+    "problems": [
+      "nachhaltigkeit"
+    ],
+    "ungeprueft": [
+      "missbrauchsrisiken"
+    ],
+    "verdict": "NEGATIVE_FINDING_PROBLEMS_BELEGT",
+    "honest_limits": [
+      "REVIEW != ENTSCHEIDUNG; DETECTION != AUTHORIZATION.",
+      "BELEGT ist eine belegte Einsch\u00e4tzung, keine unabh\u00e4ngige Best\u00e4tigung.",
+      "Ver\u00e4nderungen erfolgen friedlich, demokratisch, rechtsstaatlich (Direktive Abschnitt 6)."
+    ]
+  }
+}
