@@ -28,6 +28,7 @@ Stand: 19. November 2026, main-Stand nach PR #172/#173 (Reparatur), Index-Zeilen
 - Mesh: mesh_frame_codec (#117) + mesh_ingest (#137): strikter M-Frame-Wire-Contract zum Messpfad. Kapazitaetsbefund aus #137: LoRa-Body-Budget 157 Bytes (222 - 1 - 64 MAC-Hex), deshalb source optional, kompakte Identifikatoren Pflicht.
 - Evidenz/Integritaet: evidence_report (#135), crypto_receipts, worm_ledger, ledger_anchor, ledger_recovery (Design: docs/V91-WORM-LEDGER-DESIGN.md).
 - Waechter-Registry: watcher_registry (#168, 11 Rollen, FILES_PRESENT != INSTALLIERT), structure_review (#170, Wirtschafts-/Korruptionsanalyse, 7 Direktiv-Kriterien), research_watch (#171, Forschungs-Beobachtungslog, SHA-256-Kette); 11/11 Rollen mit Bausteinen; kein Daemon, keine Laufzeit. Erste belegte Struktur-Einschaetzung als Datenfile (#172, docs/structure-reviews/).
+- Agenten-Quorum: agent_quorum (#177: Orchestrierung 2-of-3, execution_permitted HART False) + quorum_ledger (#178: dauerhaft gespeicherte Ed25519-signierte Abstimmungsbelege, Hash-Kette, persistenter Replay-Floor je Agent; HMAC-Konsens bleibt getrennt, wird NICHT als gleichwertig behandelt).
 - Foederation: federation_receiver, federation_sender, federation_transport, peer_directory, peer_store, peer_sync, trusted_peer_registry.
 - Runtime/Notfall: worker, controller, emergency_stop (Notaus-Verkabelung #132, Issue #70 geschlossen), emergency_protocol.
 - Drill ohne Hardware: scripts/v91_model_drill.py (#133), scripts/v91_dashboard.py.
@@ -86,3 +87,5 @@ Attribute entstehen ausschliesslich aus gepruefter Evidenz, nicht aus Text.
 - 19.11.2026 #171 Forschungs-Beobachtungslog (controller/research_watch.py, SHA-256-verkettetes JSONL, Evidenzpflicht, fail-closed, 12 Tests); 11/11 Rollen mit Bausteinen.
 - 19.11.2026 #172 Erste belegte Struktur-Einschaetzung als Datenfile (docs/structure-reviews/de-breg-stromsteuersenkung-2027.json, Quellen genannt, 2x NICHT_GEPRUEFT ehrlich, REVIEW != ENTSCHEIDUNG).
 - 19.11.2026 #173(REPARATUR) Index-Zeilen fuer #165/#168/#170/#171 nachgezogen;(Datei-Inhalt) wurde durch leere Tool-Rueckgabe unvollstaendig gespeichert, vollstaendig rekonstruiert aus dem Stand vor #173 (CHECK != INHALTSPRUEFUNG).
+- 19.11.2026 #177 Provider-neutrale 2-of-3-Review-Orchestrierung (agent_quorum: Drittabstimmung nur bei NO_QUORUM, keine Aktionen, keine Persistenz).
+- 19.11.2026 #178 Quorum-Ledger: persistente, Ed25519-signierte Abstimmungsbelege (quorum_ledger, Hash-Kette, Replay-Floor ueber Neustarts, fail-closed; BELEGT != VERIFIZIERT).
