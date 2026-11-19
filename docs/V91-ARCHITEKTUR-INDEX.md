@@ -91,3 +91,4 @@ Attribute entstehen ausschliesslich aus gepruefter Evidenz, nicht aus Text.
 - 19.11.2026 #178 Quorum-Ledger: persistente, Ed25519-signierte Abstimmungsbelege (quorum_ledger, Hash-Kette, Replay-Floor ueber Neustarts, fail-closed; BELEGT != VERIFIZIERT).
 - 19.11.2026 #179 Erste belegte Forschungs-Beobachtungen (6 Einträge, alle mit Primaerquelle; JSONL vom echten research_watch-Modul erzeugt und verifiziert; BELEGT_EINSCHAETZUNG != VERIFIZIERT).
 - 19.11.2026 #209 Lernblock Souveraenitaet/Dezentralisierung/regionale Autarkie als verbindliches Dokument (wortgetreu + main-Abgleich je Saeule; OECD-Quelle NICHT zitierfaehig ohne Adresse; kein Vollzugsmandat; DOKUMENTIERT != INSTALLIERT).
+- 19.11.2026 #211 Saeule Gesundheit: erste belastbare Datenbasis als structure_review-Datensatz (hessen-gesundheitsversorgung-vogelsberg-2026.json, Quellen genannt, NEGATIVE_FINDING_PROBLEMS_BELEGT); Lernblock-Bestandszeile ehrlich aktualisiert; DATENBASIS != MESSUNG.
