@@ -1,0 +1,75 @@
+{
+  "initiative_id": "pilot-g-eu-naturwiederherstellung-2026",
+  "description": "Pilot G des Natur-Waechters: Umsetzung der EU-Naturwiederherstellungsverordnung, Mitgliedsstaaten reichten am 01.09.2026 Entwuerfe nationaler Wiederherstellungsplaene ein. Stufe R2: Kriterien beschrieben, keine Wirkung gemessen.",
+  "watcher": "natur",
+  "maturity": "R2",
+  "indicators": [
+    {
+      "role": "WIRKUNG",
+      "name": "In der EU wiederhergestellte frei fliessende Flusskilometer",
+      "unit": "km",
+      "baseline": 0.0,
+      "target": 25000.0,
+      "period": {
+        "baseline_at": "2024-08-18T00:00:00Z",
+        "target_at": "2030-12-31T00:00:00Z"
+      },
+      "method": "Naturwiederherstellungsverordnung (in Kraft 18.08.2024) und Biodiversitaetsstrategie: mindestens 25.000 km Fluesse bis 2030 frei fliessend zurueckfuehren. Baseline 0: keine EU-weite Kilometrierung veroeffentlicht.",
+      "verifier": "Europaeische Umweltagentur (EEA)",
+      "uncertainty": 5000.0,
+      "alternative_comparison": "Ohne Verordnung: kein rechtlich bindendes Ziel, Fluesse bleiben durch veraltete Querbauwerke zerschnitten; das Wiederherstellungsziel der Biodiversitaetsstrategie bliebe ohne Fristen und Berichtspflichten unbeachtet."
+    },
+    {
+      "role": "KOSTEN",
+      "name": "Finanzrahmen des EU-Programms LIFE 2021-2027",
+      "unit": "EUR",
+      "baseline": 0.0,
+      "target": 5432000000.0,
+      "period": {
+        "baseline_at": "2021-01-01T00:00:00Z",
+        "target_at": "2027-12-31T00:00:00Z"
+      },
+      "method": "Verordnung (EU) 2021/783: Finanzrahmen von 5,432 Mrd EUR in laufenden Preisen fuer LIFE 2021-2027, davon rund 3,4 Mrd EUR fuer Natur und Kreislaufwirtschaft. Baseline 0 zum Programmstart 2021.",
+      "verifier": "Europaeisches Parlament und Rat (Verordnung (EU) 2021/783)",
+      "uncertainty": 0.0
+    },
+    {
+      "role": "RESILIENZ",
+      "name": "Bei der EU-Kommission eingereichte nationale Wiederherstellungsplaene",
+      "unit": "Plaene",
+      "baseline": 0.0,
+      "target": 27.0,
+      "period": {
+        "baseline_at": "2026-08-31T00:00:00Z",
+        "target_at": "2026-12-31T00:00:00Z"
+      },
+      "method": "Generaldirektion Umwelt, 01.09.2026: Mitgliedsstaaten reichen Entwuerfe ihrer nationalen Wiederherstellungsplaene ein. Ziel 27 fertige Plaene. Unsicherheit 1 Plan, da die Einreichung nicht fuer alle 27 einzeln belegt ist.",
+      "verifier": "Europaeische Kommission, Generaldirektion Umwelt",
+      "uncertainty": 1.0
+    }
+  ],
+  "multiplier": null,
+  "impact_claim_permitted": false,
+  "sources": [
+    {
+      "publisher": "EU-Kommission: EU countries submit draft plans on restoring nature (01.09.2026)",
+      "url": "https://environment.ec.europa.eu/news/eu-countries-submit-draft-plans-restoring-nature-2026-09-01_en"
+    },
+    {
+      "publisher": "EU-Kommission: The EU Nature Restoration Law, Ziele inkl. 25.000 km frei fliessende Fluesse bis 2030",
+      "url": "https://environment.ec.europa.eu/topics/nature-and-biodiversity/nature-restoration-regulation_en"
+    },
+    {
+      "publisher": "WISE Marine (EEA): Rivers restored into free-flowing rivers (Ziel 25.000 km bis 2030)",
+      "url": "https://water.europa.eu/marine/europe-seas/eu-mission-restore-our-oceans-and-water/mo-indicators/rivers-restored-into-free-flowing-rivers"
+    },
+    {
+      "publisher": "Europaeisches Parlament (OEIL): Verordnung (EU) 2021/783, LIFE-Finanzrahmen 5,432 Mrd EUR",
+      "url": "https://oeil.europarl.europa.eu/oeil/en/procedure-document-summary/pdf?id=1655437"
+    },
+    {
+      "publisher": "CINEA: LIFE allowing rivers to flow freely and cleanly again (26.03.2026)",
+      "url": "https://cinea.ec.europa.eu/news-events/news/life-allowing-rivers-flow-freely-and-cleanly-again-2026-03-26_en"
+    }
+  ]
+}
