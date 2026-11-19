@@ -1,0 +1,75 @@
+{
+  "initiative_id": "pilot-e-ukraine-friedenssicherung-2026",
+  "description": "Pilot E des Frieden-Waechters: Unterstuetzung der Ukraine durch die Koalition der Willigen (Gipfel Berlin 19.11.2026, 37 Vertreter) und EU-Finanzierung (90 Mrd EUR Kredit). Stufe R2: Kriterien beschrieben, keine Wirkung gemessen.",
+  "watcher": "frieden",
+  "maturity": "R2",
+  "indicators": [
+    {
+      "role": "WIRKUNG",
+      "name": "Aus dem EU-Ukraine-Kredit ausgezahlte Finanzmittel",
+      "unit": "EUR",
+      "baseline": 7560000000.0,
+      "target": 90000000000.0,
+      "period": {
+        "baseline_at": "2026-11-05T00:00:00Z",
+        "target_at": "2027-12-31T00:00:00Z"
+      },
+      "method": "Nachweis der EU-Kommission je Tranche: 3,2 Mrd EUR am 25.06.2026 plus 4,36 Mrd EUR am 05.11.2026 kumuliert als Baseline, Ziel volle Auszahlung des 90-Mrd-EUR-Kredits.",
+      "verifier": "Europaeische Kommission (Erweiterung und Nachbarschaft)",
+      "uncertainty": 0.0,
+      "alternative_comparison": "Ohne EU-Kredit: keine planbare Finanzierung 2026/2027; geschaetzte Finanzierungsluecke von rund 70 Mrd EUR fuer 2027 bliebe ungedeckt."
+    },
+    {
+      "role": "KOSTEN",
+      "name": "Deutsche Zusage ueber den Purl-Mechanismus fuer US-Luftverteidigungswaffen",
+      "unit": "USD",
+      "baseline": 0.0,
+      "target": 300000000.0,
+      "period": {
+        "baseline_at": "2026-11-17T00:00:00Z",
+        "target_at": "2026-12-31T00:00:00Z"
+      },
+      "method": "Zusage von Bundesverteidigungsminister Pistorius vom 17.11.2026: Deutschland beteiligt sich mit 300 Mio USD gemeinsam mit Norwegen (je 300 Mio USD). Unsicherheit 10 Mio USD Waehrungsumrechnung.",
+      "verifier": "Bundesministerium der Verteidigung",
+      "uncertainty": 10000000.0
+    },
+    {
+      "role": "RESILIENZ",
+      "name": "Angehoerige der Panzerbrigade 45 Litauen bis Einsatzbereitschaft",
+      "unit": "Soldaten",
+      "baseline": 2800.0,
+      "target": 4800.0,
+      "period": {
+        "baseline_at": "2026-02-04T00:00:00Z",
+        "target_at": "2027-12-31T00:00:00Z"
+      },
+      "method": "Oeffentliche Staerkemeldung Brigade nach Unterstellung der Multinational Battlegroup Lithuania am 04.02.2026: rund 2.800 Soldaten. Ziel 4.800 Soldaten bei Full Operational Capability 2027 laut Bundeswehr.",
+      "verifier": "Bundeswehr, Heer, 10. Panzerdivision",
+      "uncertainty": 0.0
+    }
+  ],
+  "multiplier": null,
+  "impact_claim_permitted": false,
+  "sources": [
+    {
+      "publisher": "Bundesregierung: Treffen der Koalition der Willigen in Berlin (19.11.2026)",
+      "url": "https://www.bundesregierung.de/breg-de/aktuelles/koalition-der-willigen-in-berlin-2461162"
+    },
+    {
+      "publisher": "EU-Kommission: Auszahlung 4,36 Mrd EUR aus dem 90-Mrd-EUR-Ukraine-Kredit (05.11.2026)",
+      "url": "https://enlargement.ec.europa.eu/news/commission-disburses-eur436-billion-ukraine-under-eur90-billion-ukraine-support-loan-2026-11-05_en"
+    },
+    {
+      "publisher": "EU-Kommission: Vorschlag von bis zu 45 Mrd EUR fuer 2027 bei rund 70 Mrd EUR Finanzierungsluecke (18.11.2026)",
+      "url": "https://enlargement.ec.europa.eu/news/commission-proposes-eur45-billion-additional-financial-support-ukraine-2027-2026-11-18_en"
+    },
+    {
+      "publisher": "Ukrinform: Deutschland und Norwegen je 300 Mio USD fuer US-Waffen fuer die Ukraine (17.11.2026)",
+      "url": "https://www.ukrinform.net/rubric-polytics/4185771-germany-norway-to-contribute-300m-each-toward-us-arms-purchases-for-ukraine-pistorius.html"
+    },
+    {
+      "publisher": "Panzerbrigade 45 Litauen: Staerke 2.800 (Feb 2026), Ziel 4.800 bis Full Operational Capability 2027",
+      "url": "https://de.wikipedia.org/wiki/Panzerbrigade_45"
+    }
+  ]
+}
