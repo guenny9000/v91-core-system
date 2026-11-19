@@ -1,0 +1,72 @@
+{
+  "structure_id": "de_dki_psychiatrie_barometer_kjp_2026",
+  "assessor": "v91_session_2026-11-19_offentliches_quellenreview",
+  "assessed_at_structure": "2026-11-19T14:01:38Z",
+  "note": "Struktur-Einschaetzung der kinder- und jugendpsychiatrischen Versorgung laut Psychiatrie-Barometer 2025/2026 des Deutschen Krankenhausinstituts (Befragung 295 Einrichtungen, Oktober 2025 bis Januar 2026; BPtK-Einschaetzung 10.08.2026). Sebastians Hebel 'Unterstuetzung psychischer Gesundheit, fruehe Unterstuetzung statt spaeter Krisenbehandlung'. REVIEW != ENTSCHEIDUNG.",
+  "criteria": {
+    "gesellschaftlicher_nutzen": {
+      "status": "BELEGT",
+      "evidence": "Belastbare Datenbasis: Befragung von 295 Einrichtungen; psychische Erkrankungen sind laut Statistischem Bundesamt bei 10- bis 19-Jaehrigen der haeufigste Grund fuer stationaere Krankenhausaufenthalte (2024: 116.300 Faelle, 18,9 Prozent aller stationaeren Behandlungen dieser Altersgruppe, 36,5 Prozent ueber dem Stand 2004); in der Kinder- und Jugendpsychiatrie wurden 2024 rund 64.916 Kinder und Jugendliche stationaer behandelt. Das Barometer macht den Versorgungsdruck messbar und damit politisch handhabbar.",
+      "source": "https://www.verbandsbuero.de/mehr-krisen-laengere-wartezeiten-psychiatrie-barometer-kinder-jugendpsychiatrie/ ; https://www.bptk.de/neuigkeiten/kinder-und-jugendpsychiatrie-unter-wachsendem-versorgungsdruck/",
+      "assessed_at": "2026-11-19T14:01:38Z"
+    },
+    "menschenrechtsvertraeglichkeit": {
+      "status": "BELEGT",
+      "evidence": "Versorgungsstruktur ohne Zwangswirkung; Erhebung und Behandlung dienen dem Gesundheitsschutz Minderjaehriger. Kein Anhaltspunkt fuer diskriminierende Struktur in den einsehbaren Berichten; betroffen sind alle Bevoelkerungsgruppen dieser Altersstufe.",
+      "source": "https://www.bptk.de/neuigkeiten/kinder-und-jugendpsychiatrie-unter-wachsendem-versorgungsdruck/",
+      "assessed_at": "2026-11-19T14:01:38Z"
+    },
+    "kosten_und_ressourcenverbrauch": {
+      "status": "PROBLEM_BELEGT",
+      "evidence": "Belegtes Strukturproblem: Personalmangel bei Fachaerzten und Pflegekraeften, Stellen bleiben durchschnittlich 62 Wochen vakant; 85 Prozent der Einrichtungen nennen unzureichende ambulante Anschlussversorgung als haeufigstes Problem; zusaetzlich wirtschaftlicher Druck auf die Kliniken. Der Ressourceneinsatz passt nachweislich nicht zum Behandlungsbedarf.",
+      "source": "https://www.verbandsbuero.de/mehr-krisen-laengere-wartezeiten-psychiatrie-barometer-kinder-jugendpsychiatrie/ ; https://www.bptk.de/neuigkeiten/kinder-und-jugendpsychiatrie-unter-wachsendem-versorgungsdruck/",
+      "assessed_at": "2026-11-19T14:01:38Z"
+    },
+    "transparenz": {
+      "status": "BELEGT",
+      "evidence": "Oeffentliches Barometer mit Methodik (295 Einrichtungen, Befragungszeitraum Anfang Oktober 2025 bis Ende Januar 2026) und exakten Zahlen: 86 Prozent der Befragten bestaetigen deutlich gestiegene Wartezeiten; ueber die Haelfte der Einrichtungen meldet Wartezeiten ueber zehn Wochen teilstationaer, 43 Prozent vollstationaer; gestiegener Behandlungsbedarf bei Essstoerungen, Internetabhaengigkeit und suizidalen Krisen; Langzeitvergleich mit Destatis-Daten seit 2004.",
+      "source": "https://www.bptk.de/neuigkeiten/kinder-und-jugendpsychiatrie-unter-wachsendem-versorgungsdruck/ ; https://www.verbandsbuero.de/mehr-krisen-laengere-wartezeiten-psychiatrie-barometer-kinder-jugendpsychiatrie/",
+      "assessed_at": "2026-11-19T14:01:38Z"
+    },
+    "nachhaltigkeit": {
+      "status": "PROBLEM_BELEGT",
+      "evidence": "Belegtes Strukturproblem: Stationaere Faelle bei 10- bis 19-Jaehrigen seit 2004 um 36,5 Prozent gestiegen, während Wartezeiten und Personalmangel wachsen; die Versorgungskapazitaet entwickelt sich nachweislich nicht mit dem Bedarf (mehr Krisen, laengere Wartezeiten), und der Uebergang in die Erwachsenenversorgung bleibt nach Bericht dauerhaft ohne Anschlussstrukturen. Ein System, das bei steigendem Bedarf schrumpfenden Zugang bietet, ist strukturell nicht tragfaehig.",
+      "source": "https://www.verbandsbuero.de/mehr-krisen-laengere-wartezeiten-psychiatrie-barometer-kinder-jugendpsychiatrie/",
+      "assessed_at": "2026-11-19T14:01:38Z"
+    },
+    "missbrauchsrisiken": {
+      "status": "NICHT_GEPRUEFT",
+      "evidence": "",
+      "source": "",
+      "assessed_at": "2026-11-19T14:01:38Z"
+    },
+    "alternativen_und_verbesserbarkeit": {
+      "status": "BELEGT",
+      "evidence": "Benannte Verbesserungswege: BPtK fordert eine separate Bedarfsplanung fuer die psychotherapeutische Versorgung von Kindern und Jugendlichen sowie den Ausbau ambulanter Versorgung zur nahtlosen Anschlussbehandlung nach stationaeren Aufenthalten; Versorgungsdruck und Loesungswege sind dokumentiert und damit adressierbar.",
+      "source": "https://www.bptk.de/neuigkeiten/kinder-und-jugendpsychiatrie-unter-wachsendem-versorgungsdruck/",
+      "assessed_at": "2026-11-19T14:01:38Z"
+    }
+  },
+  "review_result": {
+    "schema_version": 1,
+    "structure_id": "de_dki_psychiatrie_barometer_kjp_2026",
+    "assessor": "v91_session_2026-11-19_offentliches_quellenreview",
+    "criteria_total": 7,
+    "criteria_belegt": 4,
+    "criteria_problem_belegt": 2,
+    "criteria_ungeprueft": 1,
+    "problems": [
+      "kosten_und_ressourcenverbrauch",
+      "nachhaltigkeit"
+    ],
+    "ungeprueft": [
+      "missbrauchsrisiken"
+    ],
+    "verdict": "NEGATIVE_FINDING_PROBLEMS_BELEGT",
+    "honest_limits": [
+      "REVIEW != ENTSCHEIDUNG; DETECTION != AUTHORIZATION.",
+      "BELEGT ist eine belegte Einschätzung, keine unabhängige Bestätigung.",
+      "Veränderungen erfolgen friedlich, demokratisch, rechtsstaatlich (Direktive Abschnitt 6)."
+    ]
+  }
+}
