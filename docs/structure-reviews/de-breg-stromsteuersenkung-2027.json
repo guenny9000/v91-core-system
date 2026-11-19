@@ -1,0 +1,66 @@
+{
+  "structure_id": "de_bundesregierung_stromsteuersenkung_und_spritpreisdeckel_2027",
+  "assessor": "v91_session_2026-11-19_offentliches_quellenreview",
+  "assessed_at_structure": "2026-11-19T11:46:50Z",
+  "note": "Erste belegte Struktur-Einschaetzung fuer den Struktur-Review-Waechter (controller/structure_review.py, PR #170). Eingangsdaten: oeffentliche Berichterstattung vom 18.-19.11.2026. REVIEW != ENTSCHEIDUNG.",
+  "criteria": {
+    "gesellschaftlicher_nutzen": {
+      "status": "BELEGT",
+      "evidence": "Senkung der Stromsteuer ab 01.01.2027 fuer private Haushalte und bislang nicht beguenstigte Betriebe von 2,05 ct/kWh auf 0,1 ct/kWh (EU-Mindestniveau); Entlastungsvolumen laut Bundeskanzler rund 5 Mrd. EUR zusaetzlich; Verivox-Rechnung: 4.000-kWh-Haushalt ca. 7,75 EUR/Monat.",
+      "source": "https://www.bundesregierung.de/breg-de/aktuelles/stromsteuer-spritpreisdeckel-bundesregierung-2461514 ; https://www.zdfheute.de/politik/stromsteuer-senkung-beschlossen-100.html",
+      "assessed_at": "2026-11-19T11:46:50Z"
+    },
+    "menschenrechtsvertraeglichkeit": {
+      "status": "BELEGT",
+      "evidence": "Die Senkung gilt laut Koalitionsbeschluss fuer ALLE privaten Haushalte und bislang nicht beguenstigte Teile der Wirtschaft gleichtermassen; kein Anhaltspunkt fuer diskriminierende Wirkung in den einsehbaren Beschlussdokumenten (18.11.2026). Keine direkte Grundrechtseinschraenkung erkennbar.",
+      "source": "https://www.tagesschau.de/inland/innenpolitik/koalitionsausschuss-einigung-stromsteuer-spritpreisdeckel-100.html",
+      "assessed_at": "2026-11-19T11:46:50Z"
+    },
+    "kosten_und_ressourcenverbrauch": {
+      "status": "PROBLEM_BELEGT",
+      "evidence": "Kosten der Senkung ca. 5,4 Mrd. EUR jaehrlich (ZDF); Gegenfinanzierung NUR fuer 2027 aus nicht benoetigten EEG-Mitteln; Fortsetzung ueber den 31.12.2027 hinaus ausdruecklich an eine 'nachhaltige Gegenfinanzierung' im Haushalt 2028 gebunden, die noch nicht existiert. Ein jaehrlich wiederkehrender Finanzbedarf ohne gesicherte Dauerfinanzierung ist ein belegtes Strukturproblem.",
+      "source": "https://www.zdfheute.de/politik/stromsteuer-senkung-beschlossen-100.html ; https://www.tagesschau.de/inland/innenpolitik/koalitionsausschuss-einigung-stromsteuer-spritpreisdeckel-100.html",
+      "assessed_at": "2026-11-19T11:46:50Z"
+    },
+    "transparenz": {
+      "status": "BELEGT",
+      "evidence": "Stromsteuersenkung: Belastung und Entlastung in ct/kWh oeffentlich beziffert (2,05 auf 0,1). Spritpreisdeckel: Hoechstpreise sollen laut Beschluss 'anhand einer transparenten, an den internationalen Marktpreisen orientierten Berechnungsformel' ermittelt werden; Kabinettsbeschluss des Gesetzentwurfs fuer den 02.12.2026 angekündigt.",
+      "source": "https://blogs.pwc.de/en/steuern-und-recht/article/257905/bundesregierung-beschliesst-senkung-der-stromsteuer-und-einfuehrung-eines-spritpreisdeckels/ ; https://www.bundesregierung.de/breg-de/aktuelles/stromsteuer-spritpreisdeckel-bundesregierung-2461514",
+      "assessed_at": "2026-11-19T11:46:50Z"
+    },
+    "nachhaltigkeit": {
+      "status": "NICHT_GEPRUEFT",
+      "evidence": "",
+      "source": "",
+      "assessed_at": "2026-11-19T11:46:50Z"
+    },
+    "missbrauchsrisiken": {
+      "status": "NICHT_GEPRUEFT",
+      "evidence": "",
+      "source": "",
+      "assessed_at": "2026-11-19T11:46:50Z"
+    },
+    "alternativen_und_verbesserbarkeit": {
+      "status": "BELEGT",
+      "evidence": "Die Massnahmen sind ausdruecklich befristet (Stromsteuer: 1 Jahr mit Verlaengerungsvorbehalt Haushalt 2028; Spritpreisdeckel: 3 Monate) und anpassbar: Bundeslaender duerfen 'ortlichen Besonderheiten' Rechnung tragen und vom bundesweiten Spritpreisdeckel abweichen.",
+      "source": "https://www.tagesschau.de/inland/innenpolitik/koalitionsausschuss-einigung-stromsteuer-spritpreisdeckel-100.html ; news-afp-20261118-54d650f5 (AFP, 18.11.2026)",
+      "assessed_at": "2026-11-19T11:46:50Z"
+    }
+  },
+  "review_result": {
+    "verdict": "NEGATIVE_FINDING_PROBLEMS_BELEGT",
+    "criteria_belegt": 4,
+    "criteria_problem_belegt": 1,
+    "criteria_ungeprueft": 2,
+    "problems": [
+      "kosten_und_ressourcenverbrauch"
+    ],
+    "ungeprueft": [
+      "missbrauchsrisiken",
+      "nachhaltigkeit"
+    ],
+    "tool": "controller/structure_review.py @ commit deeacaf2 (PR #170)",
+    "run_at": "2026-11-19T11:46:50Z",
+    "reproduce": "python3 controller/structure_review.py --report-json docs/structure-reviews/de-breg-stromsteuersenkung-2027.json"
+  }
+}
