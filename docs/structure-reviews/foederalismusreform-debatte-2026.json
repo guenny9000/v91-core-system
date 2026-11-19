@@ -1,0 +1,50 @@
+{
+ "structure_id": "de_foederalismusreform_debatte_2026",
+ "assessor": "v91_session_2026-11-20_quellenreview_max_best",
+ "assessed_at_structure": "2026-11-20T16:00:00Z",
+ "note": "Struktur-Datensatz der Bund-Reihe (Thema foederale Ordnung / Foederalismusreform-Debatte 2026). Bewertet wird die DEBATTE um eine Grundgesetz-Aenderung (Foederalismusreform IV) laut Sekundaerquellen: Bundestag erste Lesung eines Entwurfs, der dem Bund Kompetenzen in Bildung und Verwaltungs-Digitalisierung geben soll, mit Investitionsfonds und Gegenleistung Steuerautonomie der Laender; Widerstand mehrerer Laender; Status: PROPOSAL, NICHT VERABSCHEIDET (PROPOSAL != IMPLEMENTED). Politische Zielsetzungen (Reform von Institutionen wie EU oder Bundesregierung) sind NICHT Gegenstand dieses Reviews; V91 bewertet Struktur und Evidenz, gibt keine politische Empfehlung (REVIEW != ENTSCHEIDUNG). Alle Angaben aus Sekundaerquellen (CLAIM); DATENBASIS != MESSUNG.",
+ "criteria": {
+  "gesellschaftlicher_nutzen": {
+   "status": "BELEGT",
+   "evidence": "Laut Sekundaerquellen verfolgt der Gesetzentwurf (erste Lesung im Bundestag, Mai 2026) Entflechtungs- und Effizienzziele: bundeseinheitliche Lehrplaene und digitale Bildungsplattformen direkt an Schulen, zentrale Standards fuer die Verwaltungs-Digitalisierung statt 16 Landeseinzel-loesungen, gemeinsamer Investitionsfonds fuer Infrastruktur (Bund und Laender, Volumen-Angabe ca. 50 Mrd. Euro), im Gegenzug mehr Autonomie der Laender bei der Steuer auf Unternehmensgewinne. Nutzen bleibt ZIEL des Entwurfs, keine realisierte Wirkung; die Evidenz belegt die Ziel- und Instrumentenstruktur der Reformdebatte.",
+   "source": "https://deutoday.de/politik/foederalismus-reform-machtkampf-bund-laender/",
+   "assessed_at": "2026-11-20T16:00:00Z"
+  },
+  "menschenrechtsvertraeglichkeit": {
+   "status": "NICHT_GEPRUEFT",
+   "evidence": "",
+   "source": "",
+   "assessed_at": ""
+  },
+  "kosten_und_ressourcenverbrauch": {
+   "status": "NICHT_GEPRUEFT",
+   "evidence": "",
+   "source": "",
+   "assessed_at": ""
+  },
+  "transparenz": {
+   "status": "BELEGT",
+   "evidence": "Der Prozess ist der Oeffentlichkeit nachvollziehbar: erste Lesung im Bundestag oeffentlich, Medienberichterstattung (22.05.2026) nennt konkrete Aenderungen (Kompetenzverschiebungen, Fonds-Volumen, Steuer-Kompensation) und den Widerstand mehrerer (Sued-)Laender gegen die Kompetenzverlagerung; die rechtliche Einordnung als Foederalismusreform IV ist durch eine juristische Fachpublikation (MTR Legal Wiki, Stand Mai 2026) hinterlegt. GRENZE: Sekundaerquellen; die Primaerquelle (Bundestags-Drucksache) wurde in diesem Review NICHT verifiziert (Wirkungskontrolle: Drucksache nachlegen, bevor irgendetwas als beschlossen gilt).",
+   "source": "https://www.mtrlegal.com/wiki/foederalismusreform-iv/",
+   "assessed_at": "2026-11-20T16:00:00Z"
+  },
+  "nachhaltigkeit": {
+   "status": "NICHT_GEPRUEFT",
+   "evidence": "",
+   "source": "",
+   "assessed_at": ""
+  },
+  "missbrauchsrisiken": {
+   "status": "BELEGT",
+   "evidence": "Die Sekundaerquellen benennen selbst zentrale Risiken der Debatte: der Entwurf waere der groesste Eingriff in die foederale Struktur seit der Wiedervereinigung (Machtkonzentration beim Bund) und stoesst auf massiven Widerstand mehrerer Laender; eine Kompetenzkonzentration veraendert die Gegenmacht-Struktur des Foederalismus. Das Risiko ist damit als dokumentierter Konflikt der Debatte belegt, NICHT als gemessenes Missbrauchsereignis (RISIKO-BEFUND, kein FALL-BEFUND).",
+   "source": "https://deutoday.de/politik/foederalismus-reform-machtkampf-bund-laender/",
+   "assessed_at": "2026-11-20T16:00:00Z"
+  },
+  "alternativen_und_verbesserbarkeit": {
+   "status": "BELEGT",
+   "evidence": "Die Reformdebatte zeigt selbst Alternativenvielfalt: Kompetenzverlagerung zum Bund vs. erweiterte Steuerautonomie der Laender (Kompensationsmodell), gemeinsamer Investitionsfonds statt Einzelaufgaben, zentrale Digital-Standards vs. Landeseinzel-loesungen; die Foederalismusreform IV ist als konzeptioneller Rahmen (Neuverteilung der Aufgaben zwischen Bund und Laendern zur Effizienzsteigerung unter Wahrung der foederalen Balance) mehrstufig wiederholbar.",
+   "source": "https://www.mtrlegal.com/wiki/foederalismusreform-iv/",
+   "assessed_at": "2026-11-20T16:00:00Z"
+  }
+ }
+}
