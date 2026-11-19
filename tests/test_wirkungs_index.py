@@ -221,14 +221,14 @@ class WirkungsIndexTest(unittest.TestCase):
         empty_ledgers = self.tmp / "empty-ledgers"
         empty_ledgers.mkdir()
         result = build_index(repo_dir, empty_ledgers)
-        self.assertEqual(result["pilots_total"], 5)
-        self.assertEqual(result["by_wirkung_status"]["WIRKUNG_UNKNOWN"], 5)
+        self.assertEqual(result["pilots_total"], 6)
+        self.assertEqual(result["by_wirkung_status"]["WIRKUNG_UNKNOWN"], 6)
         self.assertEqual(result["indicators_observed"], 0)
         self.assertEqual(result["indicators_unknown"],
                          result["indicators_total"])
         self.assertEqual(sorted(result["by_watcher"]),
                          ["energie", "ernaehrung", "frieden",
-                          "gesundheit", "wasser"])
+                          "gesundheit", "technologie", "wasser"])
 
     def test_cli_exit_codes(self):
         matrix = dataset(self.dataset_dir / "pilot-eins-2026.json",
