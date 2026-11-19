@@ -64,7 +64,7 @@ sichern koennen.
 | Energie | Regionale Erzeugung und Speicher | autarky_metrics/autarky_report (MEASURED sonst UNKNOWN), resource_admission |
 | Wasser | Sichere lokale Versorgung | Vogelsberg-Baseline-Daten (docs/V91-AUTARKY-BASELINE-VOGELSBERG-2026.md, Sekundaerquellen) |
 | Ernaehrung | Regionale Produktion und Vorraete | seed_inventory (gezaehlte Evidenz), Baseline-Agrardaten 2020/2023 |
-| Gesundheit | Dezentrale medizinische Grundversorgung | NICHT IMPLEMENTIERT (ehrliche Luecke) |
+| Gesundheit | Dezentrale medizinische Grundversorgung | Struktur-Datensatz docs/structure-reviews/hessen-gesundheitsversorgung-vogelsberg-2026.json (PR #211; erste belastbare Quellenbasis: NEGATIVE_FINDING_PROBLEMS_BELEGT); weiterhin KEINE eigene Messung (DOKUMENTIERT != GEMESSEN) |
 | Wirtschaft | Regionale Produktion und Reparatur | structure_review (7 Direktiv-Kriterien, Bewertungslogik) |
 | Digitalisierung | Eigene Daten, Netze und offene Software | peer_store/encrypted_store (opt-in), MAX-BEST-NETWORK-POLICY |
 
