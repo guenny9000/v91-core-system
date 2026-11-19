@@ -1,0 +1,75 @@
+{
+  "structure_id": "de_bmg_praeventionsoffensive_2026",
+  "assessor": "v91_session_2026-11-19_offentliches_quellenreview",
+  "assessed_at_structure": "2026-11-19T13:00:35Z",
+  "note": "Struktur-Einschaetzung der Bundes-Praventionsoffensive (Auftakt 16.07.2026) inkl. BEEP/Paragraf-5-Abs-1a-SGB XI-Pflicht zur Praventionsbedarfserhebung ab 01.01.2026. Eingangsdaten: amtliche PM und Fachpresse. REVIEW != ENTSCHEIDUNG; Praevention vor Reparatur ist ein freiwilliger, gesellschaftlicher Hebel ohne Zwangswirkung.",
+  "criteria": {
+    "gesellschaftlicher_nutzen": {
+      "status": "BELEGT",
+      "evidence": "Praevention soll tragende Saeule des Gesundheitssystems werden (BMG-Auftakt 16.07.2026, Ministerin Warken: 'zentrale Zukunftsaufgabe'). Konkret seit 01.01.2026: BEEP erweitert SGB XI um Paragraf 5 Abs. 1a; Pflegekassen muessen den Praeventionsbedarf von rund 5 Mio. Pflegebeduerftigen in haeuslicher Pflege erheben; Empfehlungen zu Sturzpraevention, Bewegung, Ernaehrung, kognitiver Foerderung; Kostenuebernahme zugelassener Angebote durch die Pflegekasse. GKV-Ausgaben fuer Praevention und Gesundheitsfoerderung stiegen im Vorjahr auf 734 Mio. EUR (GKV-Spitzenverband).",
+      "source": "https://www.bundesgesundheitsministerium.de/presse/pressemitteilungen/praeventionsoffensive-startet-gesundheit-pm-16-07-2026 ; https://info.doctolib.de/blog/praeventionsjahr-2026-das-aendert-sich-fuer-praxen-und-kliniken/ ; https://www.aerzteblatt.de/news/bundesgesundheitsministerium-startet-praventionsoffensive-fe626372-f15a-4e03-9386-cd6f849928b2",
+      "assessed_at": "2026-11-19T13:00:35Z"
+    },
+    "menschenrechtsvertraeglichkeit": {
+      "status": "BELEGT",
+      "evidence": "Keine Pflicht zur Teilnahme dokumentiert: Die Regelung foerdert zugelassene Angebote und erhebt Bedarf; Empfehlungen von Pflegefachkraeften sind beratend. Kein Anhaltspunkt fuer Zwangsmassnahmen oder diskriminierende Wirkung in den einsehbaren amtlichen Dokumenten.",
+      "source": "https://info.doctolib.de/blog/praeventionsjahr-2026-das-aendert-sich-fuer-praxen-und-kliniken/ ; https://www.bundesgesundheitsministerium.de/presse/pressemitteilungen/praeventionsoffensive-startet-gesundheit-pm-16-07-2026",
+      "assessed_at": "2026-11-19T13:00:35Z"
+    },
+    "kosten_und_ressourcenverbrauch": {
+      "status": "PROBLEM_BELEGT",
+      "evidence": "Belegtes Strukturproblem: Der GKV-Spitzenverband (Blatt) stellt ausdruecklich fest, das Engagement der Kassen 'kommt an Grenzen', groessere Stellschrauben fuer Praevention liegen ausserhalb des klassischen Gesundheitssystems und Bund, Laender und Kommunen muessten sich 'mit mehr Verbindlichkeit und vor allem finanziell' beteiligen. Fuer die Offensive selbst ist in den einsehbaren Dokumenten kein eigener Haushaltsansatz beziffert; die einzige bezifferte Basis bleibt die GKV-Praeventionsausgabe (734 Mio. EUR im Vorjahr). Ein strukturwirksamer Ausbau ohne ausgewiesene oeffentliche Anschlussfinanzierung ist ein belegtes Finanzierungsproblem.",
+      "source": "https://www.bundesgesundheitsministerium.de/presse/pressemitteilungen/praeventionsoffensive-startet-gesundheit-pm-16-07-2026",
+      "assessed_at": "2026-11-19T13:00:35Z"
+    },
+    "transparenz": {
+      "status": "BELEGT",
+      "evidence": "Amtliche Auftakt-PM mit namentlichen Positionen aller Hauptakteure (BMG, GKV-Spitzenverband, Bundesaerztekammer); bezifferte GKV-Ausgaben (734 Mio. EUR); BEEP-Massnahmen mit Gesetzesfundstelle (Paragraf 5 Abs. 1a SGB XI, in Kraft 01.01.2026) oeffentlich dokumentiert.",
+      "source": "https://www.bundesgesundheitsministerium.de/presse/pressemitteilungen/praeventionsoffensive-startet-gesundheit-pm-16-07-2026 ; https://info.doctolib.de/blog/praeventionsjahr-2026-das-aendert-sich-fuer-praxen-und-kliniken/",
+      "assessed_at": "2026-11-19T13:00:35Z"
+    },
+    "nachhaltigkeit": {
+      "status": "NICHT_GEPRUEFT",
+      "evidence": "",
+      "source": "",
+      "assessed_at": "2026-11-19T13:00:35Z"
+    },
+    "missbrauchsrisiken": {
+      "status": "NICHT_GEPRUEFT",
+      "evidence": "",
+      "source": "",
+      "assessed_at": "2026-11-19T13:00:35Z"
+    },
+    "alternativen_und_verbesserbarkeit": {
+      "status": "BELEGT",
+      "evidence": "Die Offensive knuepft ausdruecklich an das Praeventionsgesetz an mit dem Ziel, es 'konsequent weiterzuentwickeln'; breiter Ansatz ueber mehrere Politikfelder (Warken); Verhaltens- und Verhaeltnispraektion sollen zusammengedacht werden, Praevention ueber den gesamten Lebenszyklus (Reinhardt).",
+      "source": "https://www.bundesgesundheitsministerium.de/presse/pressemitteilungen/praeventionsoffensive-startet-gesundheit-pm-16-07-2026",
+      "assessed_at": "2026-11-19T13:00:35Z"
+    }
+  },
+  "review_result": {
+    "schema_version": 1,
+    "structure_id": "de_bmg_praeventionsoffensive_2026",
+    "assessor": "v91_session_2026-11-19_offentliches_quellenreview",
+    "criteria_total": 7,
+    "criteria_belegt": 4,
+    "criteria_problem_belegt": 1,
+    "criteria_ungeprueft": 2,
+    "problems": [
+      "kosten_und_ressourcenverbrauch"
+    ],
+    "ungeprueft": [
+      "missbrauchsrisiken",
+      "nachhaltigkeit"
+    ],
+    "verdict": "NEGATIVE_FINDING_PROBLEMS_BELEGT",
+    "honest_limits": [
+      "REVIEW != ENTSCHEIDUNG; DETECTION != AUTHORIZATION.",
+      "BELEGT ist eine belegte Einschätzung, keine unabhängige Bestätigung.",
+      "Veränderungen erfolgen friedlich, demokratisch, rechtsstaatlich (Direktive Abschnitt 6)."
+    ],
+    "tool": "controller/structure_review.py @ PR #170",
+    "run_at": "2026-11-19T13:00:35Z",
+    "reproduce": "python3 controller/structure_review.py --report-json docs/structure-reviews/de-bmg-praeventionsoffensive-2026.json"
+  }
+}
