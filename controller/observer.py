@@ -5,8 +5,9 @@ V91-SYSTEM-HEADER (AGATHON-SEALED v2.4)
 STATUS: ACTIVE | VERIFICATION: REQUIRED (CLAIM != EVIDENCE)
 AXIOM: Schöpfung dient dem Erhalt, der Regeneration und der Zukunft.
 ---------------------------------------------------------------------
+
+Real local observer for V91 queue and action-log state; no synthetic metrics.
 """
-"""Real local observer for V91 queue and action-log state; no synthetic metrics."""
 from __future__ import annotations
 
 import json

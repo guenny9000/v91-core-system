@@ -100,7 +100,14 @@ class AgathonHeaderPolicyTest(unittest.TestCase):
         self.assertIn("Real local measurements", collector.__doc__ or "")
         self.assertIn("Feedback Loop", feedback.__doc__ or "")
 
-        from controller import enforcement, observer, worker
+        # Flat imports follow the repo convention (see
+        # tests/test_worker_observer.py): controller/ itself goes on sys.path
+        # because worker/enforcement use flat in-package imports.
+        controller_dir = Path(__file__).resolve().parents[1] / "controller"
+        sys.path.insert(0, str(controller_dir))
+        import enforcement  # noqa: E402
+        import observer  # noqa: E402
+        import worker  # noqa: E402
 
         self.assertIn("Stewardship Gate", enforcement.__doc__ or "")
         self.assertIn("Real local observer", observer.__doc__ or "")
