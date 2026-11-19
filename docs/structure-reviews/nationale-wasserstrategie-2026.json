@@ -1,0 +1,50 @@
+{
+ "structure_id": "bund_nationale_wasserstrategie_2026",
+ "assessor": "v91_session_2026-11-20_quellenreview_max_best",
+ "assessed_at_structure": "2026-11-20T14:00:00Z",
+ "note": "Struktur-Datensatz der Bund-Reihe (Saeule Wasser): Nationale Wasserstrategie des Bundesumweltministeriums (BMUKN), bewertet per 14.07.2026 auf Basis der Ministeriums-Fachseiten (Primaerquellen): Strategie bis 2050 mit zehn strategischen Themenfeldern, Aktionsprogramm Wasser mit 78 Einzelaktionen (Umsetzung ab 2030 schrittweise), davon 38 priorisierte Aktionen mit oeffentlich einsehbarem Umsetzungsstand; Kampagne 'Weil wir Wasser wertschuetzen' (seit 2024) mit drei Wasservisionen. Umsetzungsangaben sind Ministeriums-Angaben (CLAIM, keine unabhaengige Messung); DATENBASIS != MESSUNG; REVIEW != ENTSCHEIDUNG.",
+ "criteria": {
+  "gesellschaftlicher_nutzen": {
+   "status": "BELEGT",
+   "evidence": "Die Nationale Wasserstrategie zielt laut BMUKN auf einen Handlungsrahmen fuer ein modernes Wassermanagement in Deutschland bis 2050 mit drei Wasservisionen: Trinkwasserversorgung sichern (ueberall, jederzeit, bezahlbar auch 2050), Wasser speichern (Land und Stadt), naturnahe Wasserhaushalte wiederherstellen (mit der Natur gegen Hochwasser schuetzen). Konkretisierung ueber das Aktionsprogramm Wasser mit 78 Einzelaktionen, darunter Leitlinie fuer den Umgang mit Wasserknappheit, Pruefung bundeseinheitlicher Wasserentnahmeentgelte und Infrastrukturen zur sicheren Wasserversorgung. Nutzen-Zielgruppe ist die Gesamtbevoelkerung; die Evidenz belegt Ziel- und Instrumentenstruktur, nicht die bereits realisierte Wirkung.",
+   "source": "https://www.bundesumweltministerium.de/wasserstrategie",
+   "assessed_at": "2026-11-20T14:00:00Z"
+  },
+  "menschenrechtsvertraeglichkeit": {
+   "status": "NICHT_GEPRUEFT",
+   "evidence": "",
+   "source": "",
+   "assessed_at": ""
+  },
+  "kosten_und_ressourcenverbrauch": {
+   "status": "NICHT_GEPRUEFT",
+   "evidence": "",
+   "source": "",
+   "assessed_at": ""
+  },
+  "transparenz": {
+   "status": "BELEGT",
+   "evidence": "Umsetzungsstand ist oeffentlich: die BMUKN-Fachseite zeigt den Umsetzungsstand der 38 priorisierten Aktionen des Aktionsprogramms Wasser auf einen Blick, insgesamt und nach den zehn strategischen Themenfeldern; das FAQ nennt Stand 14.07.2026 und beschreibt Programmumfang (78 Aktionen, Umsetzungsbeginn bis 2030 schrittweise). Zustaendigkeiten und Kooperationspartner (Laender, Kommunen, Wasserwirtschaft-Stakeholder) sind offengelegt.",
+   "source": "https://www.bundesumweltministerium.de/faqs/nationale-wasserstrategie",
+   "assessed_at": "2026-11-20T14:00:00Z"
+  },
+  "nachhaltigkeit": {
+   "status": "NICHT_GEPRUEFT",
+   "evidence": "",
+   "source": "",
+   "assessed_at": ""
+  },
+  "missbrauchsrisiken": {
+   "status": "NICHT_GEPRUEFT",
+   "evidence": "",
+   "source": "",
+   "assessed_at": ""
+  },
+  "alternativen_und_verbesserbarkeit": {
+   "status": "BELEGT",
+   "evidence": "Die Strategie kombiniert laut BMUKN bewusst unterschiedliche Instrumente (Foerderung, rechtliche Regelungen, Wissensaufbau, Dialog) statt nur einer Steuerung; die oeffentliche Kategorie-Zuordnung (Stand je Themenfeld) macht den Fortschritt fuer Laender, Kommunen und Stakeholder nachvollziehbar und wiederholbar pruefbar; naturnahe Loesungen (Wiedervernaessung von Mooren, Renaturierung von Fluessen und Auen) sind als Alternative zu rein technischem Hochwasserschutz explizit Teil des Programms.",
+   "source": "https://www.bundesumweltministerium.de/wasserstrategie",
+   "assessed_at": "2026-11-20T14:00:00Z"
+  }
+ }
+}
