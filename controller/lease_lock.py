@@ -1,4 +1,11 @@
-"""Expiring lease locks with monotonically increasing fencing tokens.
+"""
+V91-SYSTEM-HEADER (AGATHON-SEALED v2.4)
+---------------------------------------------------------------------
+STATUS: ACTIVE | VERIFICATION: REQUIRED (CLAIM != EVIDENCE)
+AXIOM: Schöpfung dient dem Erhalt, der Regeneration und der Zukunft.
+---------------------------------------------------------------------
+
+Expiring lease locks with monotonically increasing fencing tokens.
 
 Issue #47, stage 6 groundwork. This is the single-process protocol
 implementation with an injectable clock. A networked state store (real

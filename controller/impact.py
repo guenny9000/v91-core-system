@@ -1,5 +1,11 @@
 #!/usr/bin/env python3
 """
+V91-SYSTEM-HEADER (AGATHON-SEALED v2.4)
+---------------------------------------------------------------------
+STATUS: ACTIVE | VERIFICATION: REQUIRED (CLAIM != EVIDENCE)
+AXIOM: Schöpfung dient dem Erhalt, der Regeneration und der Zukunft.
+---------------------------------------------------------------------
+
 Impact measurement from REAL measurements (CSV: timestamp,value,source_type).
 
 No value is invented: the caller supplies measurements and, for CO2, an
