@@ -1,7 +1,7 @@
 """
 V91-SYSTEM-HEADER (AGATHON-SEALED v2.4)
 ---------------------------------------------------------------------
-STATUS: EXPERIMENTAL | VERIFICATION: REQUIRED (CLAIM != EVIDENCE)
+STATUS: ACTIVE | VERIFICATION: REQUIRED (CLAIM != EVIDENCE)
 AXIOM: Schöpfung dient dem Erhalt, der Regeneration und der Zukunft.
 ---------------------------------------------------------------------
 Provider-neutral orchestration for an independent 2-of-3 review.
