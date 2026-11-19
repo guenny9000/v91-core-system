@@ -9,7 +9,10 @@ Fail-closed fiction scan for repository CODE (CI step).
 
 External text contributions of the "V91-AUDIT" series (seq-numbered)
 repeatedly arrive with self-assigned pseudo-status tokens (compact
-status-, fq-, drift-, valid-claim forms; see FICTION_PATTERNS below)
+status-, fq-, drift-, valid-claim forms; later series versions also
+used the German active-claim spelling and bracketed BD/CS/SW
+pseudo-attribute tokens - all covered as marker families, see
+FICTION_PATTERNS below)
 and claimed-but-nonexistent module names plus stealth-mode claims.
 None of those tokens is evidence; they are fiction markers. This scan
 makes sure such markers can NEVER silently migrate into V91 code,
@@ -55,7 +58,10 @@ FICTION_PATTERNS: tuple[tuple[str, re.Pattern[str]], ...] = (
     ("drift_marker", re.compile(r"\bDRIFT:?[0-9]+/")),
     ("validity_claim_marker", re.compile(r"\bVALID:(?:VERIFIED|VALIDATED|1)\b")),
     ("active_claim_marker", re.compile(
-        r"\bSTATUS:" + r"ACTIVE\b" + r"|\bSTATUS:" + r"S\b")),
+        r"\bSTATUS:" + r"ACTIVE\b" + r"|\bSTATUS:" + r"S\b"
+        + r"|\bSTATUS:" + "AKT" + r"IV\b")),
+    ("compact_claim_marker", re.compile(
+        r"\[" + r"(?:BD|CS" + "|SW" + r"):" + r"[A-Z0-9\-]{1,20}" + r"\]")),
     ("stealth_claim_marker", re.compile(
         r"\bTarn" + r"modus\b", re.IGNORECASE)),
     ("phantom_daemon_marker", re.compile(

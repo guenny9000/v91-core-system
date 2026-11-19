@@ -47,6 +47,11 @@ class PatternDetectionTests(unittest.TestCase):
             "VALID:" + "1",
             "STATUS:" + "ACTIVE",
             "STATUS:" + "S",
+            "STATUS:" + "AKTIV",
+            "[BD:" + "2026-11-18]",
+            "[CS:" + "SECURE]",
+            "[SW:" + "TRUE]",
+            "[SW:" + "HARD-MODE]",
             "Tarn" + "modus",
             "V91EnhancedGuard" + "Daemon",
             "Dual-Node-" + "Consensus",
@@ -64,6 +69,28 @@ class PatternDetectionTests(unittest.TestCase):
             "SEQ_FRAME_SIZE = 8",
         ]
         for line in honest_lines:
+            hits = [k for k, p in FICTION_PATTERNS if p.search(line)]
+            self.assertEqual([], hits, f"honest line must stay clean: {line!r}")
+
+    def test_full_series_attribute_block_flags_multiple(self) -> None:
+        # Attribute block in the style of the observed 9133/002
+        # series, rebuilt from fragments so THIS file stays clean.
+        parts = ["[" + "STATUS:" + "AKTIV]",
+                 " [" + "BD:" + "DETERMINISTISCH]",
+                 " [" + "CS:" + "SHA256-READY]",
+                 " [" + "SW:" + "HARD-MODE]"]
+        line = "attrs = '" + "".join(parts) + "'"
+        hits = [k for k, p in FICTION_PATTERNS if p.search(line)]
+        self.assertIn("active_claim_marker", hits)
+        self.assertIn("compact_claim_marker", hits)
+
+    def test_unbracketed_attribute_names_stay_clean(self) -> None:
+        honest = [
+            "BD: 2026, ein lesbares Datum ohne Bracket-Claim-Form",
+            "CS_LABEL = 'checksum'",
+            "SW_VERSION = 2.4",
+        ]
+        for line in honest:
             hits = [k for k, p in FICTION_PATTERNS if p.search(line)]
             self.assertEqual([], hits, f"honest line must stay clean: {line!r}")
 
