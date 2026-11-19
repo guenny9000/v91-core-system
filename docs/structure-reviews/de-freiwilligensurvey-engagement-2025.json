@@ -1,0 +1,72 @@
+{
+  "structure_id": "de_freiwilligensurvey_engagement_2025",
+  "assessor": "v91_session_2026-11-19_offentliches_quellenreview",
+  "assessed_at_structure": "2026-11-19T13:36:48Z",
+  "note": "Struktur-Einschaetzung des freiwilligen Engagements in Deutschland laut 6. Deutschem Freiwilligensurvey (Bericht zur Lage von Engagement und Ehrenamt, veroeffentlicht November 2025, Erhebungsjahr 2024). Sebastians Hebel 'Ehrenamt foerdern, Hilfsbereitschaft, Gemeinschaft staerken'. REVIEW != ENTSCHEIDUNG.",
+  "criteria": {
+    "gesellschaftlicher_nutzen": {
+      "status": "BELEGT",
+      "evidence": "2024 engagierten sich 36,7 Prozent der Bevoelkerung freiwillig im Sportverein, fuer karitative Zwecke, Kultur oder Kirche (rund 27.500 zufaellig ausgewaehlte Befragte ab 14 Jahren, telefonisch; Erhebung etwa alle fuenf Jahre). Engagement ist laut Erhebung keine Frage von Geschlecht oder Alter: Frauen und Maenner engagieren sich gleich haeufig, alle Altersgruppen sind vertreten. Das Engagement traegt Grundversorgung, Zusammenhalt und Nothilfe in Kommunen.",
+      "source": "https://www.evangelisch.de/inhalte/249596/14-11-2025/umfrage-zu-ehrenamt-engagierte-werden-weniger-haben-aber-mehr-zeit ; https://www.bundesregierung.de/breg-de/bundesregierung/bundeskanzleramt/startseite-staatsminister-fuer-sport-und-ehrenamt/bericht-zur-lage-von-engagement-und-ehrenamt-veroeffentlicht-2393064",
+      "assessed_at": "2026-11-19T13:36:48Z"
+    },
+    "menschenrechtsvertraeglichkeit": {
+      "status": "BELEGT",
+      "evidence": "Freiwilliges Engagement ist per Definition freiwillig; der Survey misst Beteiligung aus eigenem Antrieb ohne Zwang. Kein Anhaltspunkt fuer diskriminierende Struktur; Beteiligung ist in allen Gruppen dokumentiert. Klarstellung: Es gibt keine Pflicht zum Engagement, und genau diese Freiwilligkeit ist die Bedingung dieses Hebel.",
+      "source": "https://www.evangelisch.de/inhalte/249596/14-11-2025/umfrage-zu-ehrenamt-engagierte-werden-weniger-haben-aber-mehr-zeit",
+      "assessed_at": "2026-11-19T13:36:48Z"
+    },
+    "kosten_und_ressourcenverbrauch": {
+      "status": "BELEGT",
+      "evidence": "Zeitbudget dokumentiert: knapp ein Viertel der Engagierten (24 Prozent) wendet drei bis fuenf Stunden woechentlich auf, fast jede und jeder Fuenfte (19 Prozent) sechs Stunden oder mehr; 2019 lagen beide Anteile zwei bis drei Prozentpunkte niedriger. Die getragene Last der Engagierten steigt messbar.",
+      "source": "https://www.evangelisch.de/inhalte/249596/14-11-2025/umfrage-zu-ehrenamt-engagierte-werden-weniger-haben-aber-mehr-zeit",
+      "assessed_at": "2026-11-19T13:36:48Z"
+    },
+    "transparenz": {
+      "status": "BELEGT",
+      "evidence": "Amtlicher Bericht im Auftrag der Bundesregierung (Staatsminister fuer Sport und Ehrenamt) veroeffentlicht November 2025; Methodik oeffentlich dokumentiert: rund 27.500 zufaellig ausgewaehlte Personen ab 14 Jahren, telefonische Befragung, Vergleichsmesspunkte zu 2019 (39,7 Prozent) und frueheren Surveys.",
+      "source": "https://www.bundesregierung.de/breg-de/bundesregierung/bundeskanzleramt/startseite-staatsminister-fuer-sport-und-ehrenamt/bericht-zur-lage-von-engagement-und-ehrenamt-veroeffentlicht-2393064 ; https://www.evangelisch.de/inhalte/249596/14-11-2025/umfrage-zu-ehrenamt-engagierte-werden-weniger-haben-aber-mehr-zeit",
+      "assessed_at": "2026-11-19T13:36:48Z"
+    },
+    "nachhaltigkeit": {
+      "status": "PROBLEM_BELEGT",
+      "evidence": "Belegtes Strukturproblem: Die Engagementquote sank von 39,7 Prozent (2019) auf 36,7 Prozent (2024) bei gleichzeitig gestiegenem Zeitbudget der Einzelnen. Weniger Schultern tragen mehr Last; ein Rueckgang der Beteiligung bei steigender Belastung der Verbleibenden ist eine erodierende Gemeinschaftsstruktur, solange keine gegensteuernden Anerkennungs- und Foerdermassnahmen belegt sind. Ob der jetzige Stand ohne Gegensteuerung haltbar bleibt, ist nicht belegt.",
+      "source": "https://www.evangelisch.de/inhalte/249596/14-11-2025/umfrage-zu-ehrenamt-engagierte-werden-weniger-haben-aber-mehr-zeit",
+      "assessed_at": "2026-11-19T13:36:48Z"
+    },
+    "missbrauchsrisiken": {
+      "status": "NICHT_GEPRUEFT",
+      "evidence": "",
+      "source": "",
+      "assessed_at": "2026-11-19T13:36:48Z"
+    },
+    "alternativen_und_verbesserbarkeit": {
+      "status": "NICHT_GEPRUEFT",
+      "evidence": "",
+      "source": "",
+      "assessed_at": "2026-11-19T13:36:48Z"
+    }
+  },
+  "review_result": {
+    "schema_version": 1,
+    "structure_id": "de_freiwilligensurvey_engagement_2025",
+    "assessor": "v91_session_2026-11-19_offentliches_quellenreview",
+    "criteria_total": 7,
+    "criteria_belegt": 4,
+    "criteria_problem_belegt": 1,
+    "criteria_ungeprueft": 2,
+    "problems": [
+      "nachhaltigkeit"
+    ],
+    "ungeprueft": [
+      "alternativen_und_verbesserbarkeit",
+      "missbrauchsrisiken"
+    ],
+    "verdict": "NEGATIVE_FINDING_PROBLEMS_BELEGT",
+    "honest_limits": [
+      "REVIEW != ENTSCHEIDUNG; DETECTION != AUTHORIZATION.",
+      "BELEGT ist eine belegte Einschätzung, keine unabhängige Bestätigung.",
+      "Veränderungen erfolgen friedlich, demokratisch, rechtsstaatlich (Direktive Abschnitt 6)."
+    ]
+  }
+}
