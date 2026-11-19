@@ -1,0 +1,72 @@
+{
+  "structure_id": "de_oberrhein_grundwasser_trinkwasserschutz_2026",
+  "assessor": "v91_session_2026-11-19_offentliches_quellenreview",
+  "assessed_at_structure": "2026-11-19T13:13:23Z",
+  "note": "Struktur-Einschaetzung des Trinkwasserschutzes am Oberrhein: Kontamination der groessten westeuropaeischen Grundwasserreserve (ERMES-ii-Rhein-Bestandsaufnahme) gegen die seit 12.01.2026 verschaerfte Trinkwasserverordnung mit erstmals verbindlichen PFAS-Grenzwerten. REVIEW != ENTSCHEIDUNG; Detektion ist Datenbasis, KEINE Anweisung.",
+  "criteria": {
+    "gesellschaftlicher_nutzen": {
+      "status": "BELEGT",
+      "evidence": "Das Projekt ERMES-ii-Rhein veroeffentlichte die umfassendste Bestandsaufnahme der bedeutsamsten Grundwasserreserve Westeuropas: 1.497 Messstellen, 181 untersuchte Substanzen. Wasserwerke und Behoerden erhalten damit eine belastbare Entscheidungsgrundlage fuer Schutzmassnahmen. Seit 12.01.2026 gelten in Deutschland erstmals verbindliche PFAS-Grenzwerte in der Trinkwasserverordnung.",
+      "source": "https://www.lubw.baden-wuerttemberg.de/-/grundwasser-am-oberrhein-59-prozent-der-messstellen-%C3%BCberschreiten-festgelegte-grenzwerte-f%C3%BCr-trinkwasser ; https://www.zdfheute.de/wissen/pfas-trinkwasser-grenzwert-trinkwasserverordnung-100.html",
+      "assessed_at": "2026-11-19T13:13:23Z"
+    },
+    "menschenrechtsvertraeglichkeit": {
+      "status": "BELEGT",
+      "evidence": "Monitoring und verschaerfte Trinkwassergrenzwerte schuetzen die Grundversorgung aller Menschen (Wasser als Grundbedarf). Keine Zwangsmassnahmen; die Regulierung richtet sich an Versorger und Verursacher, nicht an Betroffene. Kein Anhaltspunkt fuer diskriminierende Wirkung in den einsehbaren Dokumenten.",
+      "source": "https://www.lubw.baden-wuerttemberg.de/-/grundwasser-am-oberrhein-59-prozent-der-messstellen-%C3%BCberschreiten-festgelegte-grenzwerte-f%C3%BCr-trinkwasser ; https://www.zdfheute.de/wissen/pfas-trinkwasser-grenzwert-trinkwasserverordnung-100.html",
+      "assessed_at": "2026-11-19T13:13:23Z"
+    },
+    "kosten_und_ressourcenverbrauch": {
+      "status": "NICHT_GEPRUEFT",
+      "evidence": "",
+      "source": "",
+      "assessed_at": "2026-11-19T13:13:23Z"
+    },
+    "transparenz": {
+      "status": "BELEGT",
+      "evidence": "Oeffentliche Pressemitteilung mit exakten Zahlen (1.497 Messstellen, 181 Substanzen, 96 Prozent der Messstellen mit mind. einem Spurenstoff, 59 Prozent mit mind. einem ueberschrittenen gesundheitlichen Qualitaetswert, PSM an 90 Prozent, PFAS an 69 Prozent der Messstellen); Inkrafttreten und Inhalt der PFAS-Grenzwerte der Trinkwasserverordnung sind oeffentlich dokumentiert (12.01.2026).",
+      "source": "https://www.lubw.baden-wuerttemberg.de/-/grundwasser-am-oberrhein-59-prozent-der-messstellen-%C3%BCberschreiten-festgelegte-grenzwerte-f%C3%BCr-trinkwasser ; https://www.zdfheute.de/wissen/pfas-trinkwasser-grenzwert-trinkwasserverordnung-100.html",
+      "assessed_at": "2026-11-19T13:13:23Z"
+    },
+    "nachhaltigkeit": {
+      "status": "PROBLEM_BELEGT",
+      "evidence": "Belegtes Strukturproblem: 59 Prozent der Messstellen ueberschreiten mindestens einen gesundheitlichen Qualitaetswert des Trinkwassers; Pflanzenschutzmittel an 90 Prozent der Messstellen nachgewiesen, PFAS an 69 Prozent, darunter die extrem stabile Trifluoressigsaeure (TFA). Die Kontamination ist flaechendeckend, vielgestaltig und persistent und ueberlagert sich mit Nitratbelastungen. Persistente Belastung der wichtigsten Grundwasserreserve ohne dokumentierten Sanierungs- oder Reduktionsplan in den einsehbaren Quellen.",
+      "source": "https://www.lubw.baden-wuerttemberg.de/-/grundwasser-am-oberrhein-59-prozent-der-messstellen-%C3%BCberschreiten-festgelegte-grenzwerte-f%C3%BCr-trinkwasser",
+      "assessed_at": "2026-11-19T13:13:23Z"
+    },
+    "missbrauchsrisiken": {
+      "status": "NICHT_GEPRUEFT",
+      "evidence": "",
+      "source": "",
+      "assessed_at": "2026-11-19T13:13:23Z"
+    },
+    "alternativen_und_verbesserbarkeit": {
+      "status": "BELEGT",
+      "evidence": "Die verschaerfte Trinkwasserverordnung (ab 12.01.2026) zeigt einen konkreten Regulierungsschritt mit akkreditierter Analytik; Forscher fordern zusaetzlich eine Einschraenkung der PFAS-Verwendung an der Quelle statt nur Filterung beim Versorger. Grenzueberschreitendes Monitoring (Frankreich/Schweiz/Deutschland) ermoeglichen abgestimmte Schutzmassnahmen.",
+      "source": "https://www.zdfheute.de/wissen/pfas-trinkwasser-grenzwert-trinkwasserverordnung-100.html ; https://www.lubw.baden-wuerttemberg.de/-/grundwasser-am-oberrhein-59-prozent-der-messstellen-%C3%BCberschreiten-festgelegte-grenzwerte-f%C3%BCr-trinkwasser",
+      "assessed_at": "2026-11-19T13:13:23Z"
+    }
+  },
+  "review_result": {
+    "schema_version": 1,
+    "structure_id": "de_oberrhein_grundwasser_trinkwasserschutz_2026",
+    "assessor": "v91_session_2026-11-19_offentliches_quellenreview",
+    "criteria_total": 7,
+    "criteria_belegt": 4,
+    "criteria_problem_belegt": 1,
+    "criteria_ungeprueft": 2,
+    "problems": [
+      "nachhaltigkeit"
+    ],
+    "ungeprueft": [
+      "kosten_und_ressourcenverbrauch",
+      "missbrauchsrisiken"
+    ],
+    "verdict": "NEGATIVE_FINDING_PROBLEMS_BELEGT",
+    "honest_limits": [
+      "REVIEW != ENTSCHEIDUNG; DETECTION != AUTHORIZATION.",
+      "BELEGT ist eine belegte Einschätzung, keine unabhängige Bestätigung.",
+      "Veränderungen erfolgen friedlich, demokratisch, rechtsstaatlich (Direktive Abschnitt 6)."
+    ]
+  }
+}
