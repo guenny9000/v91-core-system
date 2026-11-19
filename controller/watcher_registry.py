@@ -7,9 +7,10 @@ AXIOM: Schöpfung dient dem Erhalt, der Regeneration und der Zukunft.
 Wächter-Registry: setzt die 11 Wächterrollen der Global Federation
 Directive (docs/V91-GLOBAL-FEDERATION-DIRECTIVE.md) in prüfbare,
 ehrliche Fähigkeitsmeldungen um. Jede Rolle wird gegen die echten
-Repository-Dateien geprüft (Existenznachweis, kein Blind-Import);
-Rollen ohne Implementierung bleiben ehrlich UNKNOWN ([VISION]), nie
-"aktiv". Kein Daemon, kein Netzwerk, keine Ausführung von Modulen.
+Repository-Dateien geprüft (Existenznachweis, kein Blind-Import).
+Rollen werden nie als "aktiv" gemeldet - Capability-Meldung ist
+Existenznachweis, kein Betriebsnachweis. Kein Daemon, kein Netzwerk,
+keine Ausführung von Modulen.
 REGISTER != FÄHIGKEIT; FILES_PRESENT != INSTALLIERT.
 """
 from __future__ import annotations
@@ -51,6 +52,9 @@ ENERGY = (
     "controller/autarky_metrics.py",
     "controller/autarky_report.py",
     "controller/resource_admission.py",
+)
+SCIENCE = (
+    "controller/research_watch.py",
 )
 ENVIRONMENT = (
     "controller/resilience_monitors.py",
@@ -107,8 +111,8 @@ WATCHER_ROLES: tuple = (
     ),
     WatcherRole(
         role_id="wissenschafts_und_forschungsbeobachtung",
-        description="Wissenschafts-/Forschungsbeobachtung: noch kein ehrlicher Baustein.",
-        module_files=(),
+        description="Wissenschafts-/Forschungsbeobachtung: hash-verkettetes Claim-Log mit Evidenzpflicht.",
+        module_files=SCIENCE,
     ),
     WatcherRole(
         role_id="umwelt_und_biodiversitaetsbeobachtung",
@@ -207,7 +211,7 @@ def build_report(repo_root: Path) -> Dict:
         "honest_limits": [
             "REGISTER != FÄHIGKEIT; Existenz einer Datei beweist keinen Betrieb.",
             "FILES_PRESENT != INSTALLIERT; SCRIPTED != INSTALLED.",
-            "UNKNOWN != PASS; [VISION]-Rollen werden nie als aktiv gemeldet.",
+            "UNKNOWN != PASS; Rollen werden nie als aktiv gemeldet.",
         ],
     }
 
