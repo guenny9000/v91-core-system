@@ -178,7 +178,12 @@ def probe_role(role: WatcherRole, repo_root: Path) -> Dict:
             present.append(rel)
         else:
             missing.append(rel)
-    capability = "IMPLEMENTED_FILES_PRESENT" if present else "VISION_UNIMPLEMENTED"
+    if present and missing:
+        capability = "IMPLEMENTATION_PARTIAL"
+    elif present:
+        capability = "IMPLEMENTED_FILES_PRESENT"
+    else:
+        capability = "VISION_UNIMPLEMENTED"
     return {
         "role_id": role.role_id,
         "description": role.description,
@@ -188,7 +193,11 @@ def probe_role(role: WatcherRole, repo_root: Path) -> Dict:
         "honest_note": (
             "FILES_PRESENT != INSTALLIERT; REGISTER != FÄHIGKEIT."
             if capability == "IMPLEMENTED_FILES_PRESENT"
-            else "Kein Baustein vorhanden; ehrliche Lücke, kein Zustandsspruch."
+            else (
+                "Teilweise vorhanden; fehlende Module verhindern Vollständigkeit."
+                if capability == "IMPLEMENTATION_PARTIAL"
+                else "Kein Baustein vorhanden; ehrliche Lücke, kein Zustandsspruch."
+            )
         ),
     }
 
@@ -197,15 +206,17 @@ def build_report(repo_root: Path) -> Dict:
     """Gesamtbericht über alle 11 Rollen, ohne Gesund-Ansprüche."""
     roles = [probe_role(role, repo_root) for role in WATCHER_ROLES]
     unknown = [entry["role_id"] for entry in roles if entry["capability"] == "VISION_UNIMPLEMENTED"]
+    partial = [entry["role_id"] for entry in roles if entry["capability"] == "IMPLEMENTATION_PARTIAL"]
     return {
         "schema_version": 1,
         "directive": "docs/V91-GLOBAL-FEDERATION-DIRECTIVE.md",
         "roles_total": len(WATCHER_ROLES),
         "roles": roles,
         "roles_unimplemented": sorted(unknown),
+        "roles_partial": sorted(partial),
         "overall": (
-            "PARTIAL_SOME_ROLES_UNIMPLEMENTED"
-            if unknown
+            "PARTIAL_ROLES_INCOMPLETE"
+            if unknown or partial
             else "ALL_ROLES_HAVE_FILES_PRESENT"
         ),
         "honest_limits": [
