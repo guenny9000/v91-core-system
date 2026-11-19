@@ -1,4 +1,11 @@
-"""Encrypted opt-in peer object storage: AES-256-GCM + Ed25519 receipts.
+"""
+V91-SYSTEM-HEADER (AGATHON-SEALED v2.4)
+---------------------------------------------------------------------
+STATUS: ACTIVE | VERIFICATION: REQUIRED (CLAIM != EVIDENCE)
+AXIOM: Schöpfung dient dem Erhalt, der Regeneration und der Zukunft.
+---------------------------------------------------------------------
+
+Encrypted opt-in peer object storage: AES-256-GCM + Ed25519 receipts.
 
 Signed receipts are verified against an independently trusted public key
 supplied by the caller. Receipt-carried keys are never trusted. Authentication

@@ -20,12 +20,11 @@ LEGACY_EXEMPTIONS = frozenset({
     "__init__.py",
     "autarky_metrics.py", "autarky_report.py",
     "crypto_receipts.py",
-    "encrypted_store.py", "impact.py",
-    "lease_lock.py", "ledger_anchor.py", "legacy_gate.py",
+    "ledger_anchor.py",
     "measurement_core.py",
     "peer_store.py", "peer_sync.py", "real_metrics.py",
     "replay_db_unification.py", "replay_session.py", "replay_state_provider.py",
-    "resource_admission.py", "resilience_mesh.py", "runtime_control.py",
+    "resource_admission.py", "resilience_mesh.py",
     "self_study_metrics.py", "signed_manifest.py", "state_monotonicity.py",
     "stewardship_report.py", "task_ingress_gate.py",
     "trusted_peer_registry.py", "use_policy.py", "v91_cli.py",
@@ -141,6 +140,19 @@ class AgathonHeaderPolicyTest(unittest.TestCase):
         assert "model runner" in (model_runner.__doc__ or "")
         assert "emergency stop" in (flat_stop.__doc__ or "")
         assert "resource-flow ledger" in (worm_ledger.__doc__ or "")
+
+        # Batch 5: runtime_control, encrypted_store, legacy_gate, lease_lock, impact
+        import encrypted_store  # noqa: E402
+        import impact  # noqa: E402
+        import lease_lock  # noqa: E402
+        import legacy_gate  # noqa: E402
+        import runtime_control  # noqa: E402
+
+        assert "bounded Docker Compose controller" in (runtime_control.__doc__ or "")
+        assert "peer object storage" in (encrypted_store.__doc__ or "")
+        assert "legacy transformation release gate" in (legacy_gate.__doc__ or "")
+        assert "Expiring lease locks" in (lease_lock.__doc__ or "")
+        assert "Impact measurement from REAL measurements" in (impact.__doc__ or "")
 
 
 if __name__ == "__main__":

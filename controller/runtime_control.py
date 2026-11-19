@@ -1,5 +1,12 @@
 #!/usr/bin/env python3
-"""V91 bounded Docker Compose controller.
+"""
+V91-SYSTEM-HEADER (AGATHON-SEALED v2.4)
+---------------------------------------------------------------------
+STATUS: ACTIVE | VERIFICATION: REQUIRED (CLAIM != EVIDENCE)
+AXIOM: Schöpfung dient dem Erhalt, der Regeneration und der Zukunft.
+---------------------------------------------------------------------
+
+V91 bounded Docker Compose controller.
 
 Runs on the Docker host, not inside the controller container. It observes real
 Compose/Docker state, records a decision before any change, and only scales the
