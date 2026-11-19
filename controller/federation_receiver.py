@@ -247,7 +247,7 @@ class FederationReceiver:
         try:
             key.verify(bytes.fromhex(signature),
                        json.dumps(signed_payload, sort_keys=True,
-                                  separators=(",", ":")).encode("utf-8"))
+                                  separators=(",", ":"), ensure_ascii=False).encode("utf-8"))
         except InvalidSignature:
             return reject("signature verification failed", peer_id)
         accepted, reason = self._replay.claim(peer_id, epoch, sequence)
