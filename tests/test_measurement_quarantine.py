@@ -93,6 +93,26 @@ class QuarantineTest(unittest.TestCase):
                 self.assertTrue(Path(str(path) + LOCK_SUFFIX).exists())
             self.assertFalse(Path(str(path) + LOCK_SUFFIX).exists())
 
+    def test_write_after_close_is_rejected(self):
+        with TemporaryDirectory() as d:
+            path = Path(d) / "quarantine.jsonl"
+            q = self._q(path.parent)
+            q.close()
+            with self.assertRaisesRegex(QuarantineError, "quarantine is closed"):
+                q.quarantine(RAW, reason="must not write after close")
+            self.assertFalse(path.exists())
+
+    def test_duplicate_resolution_is_rejected(self):
+        with TemporaryDirectory() as d:
+            with self._q(Path(d)) as q:
+                record = q.quarantine(RAW, reason="needs review")
+                q.resolve(record["seq"], resolution="confirmed", resolved_by="operator")
+                with self.assertRaisesRegex(QuarantineError, "already resolved"):
+                    q.resolve(record["seq"], resolution="conflicting second result",
+                              resolved_by="operator")
+                self.assertEqual(q.list_open(), [])
+                self.assertTrue(q.verify_chain())
+
     def test_fsync_used_for_durability(self):
         import controller.measurement_quarantine as mq
         with TemporaryDirectory() as d:

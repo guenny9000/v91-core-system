@@ -101,6 +101,8 @@ class MeasurementQuarantine:
         return True
 
     def _append(self, record: dict[str, Any]) -> dict[str, Any]:
+        if self._lock_fd is None:
+            raise QuarantineError("quarantine is closed; refusing writes")
         entries = self._read_entries()
         if entries and not self.verify_chain():
             raise QuarantineError("existing quarantine chain is invalid; append refused")
@@ -146,11 +148,21 @@ class MeasurementQuarantine:
         return self._append(record)
 
     def resolve(self, original_seq: int, *, resolution: str, resolved_by: str) -> dict[str, Any]:
-        """Record a resolution as a NEW entry; the original is never modified or deleted."""
+        """Record exactly one resolution as a NEW entry; the original is never modified or deleted."""
+        if type(original_seq) is not int or original_seq < 1:
+            raise QuarantineError("original_seq must be a positive integer")
+        for name, value in (("resolution", resolution), ("resolved_by", resolved_by)):
+            if not isinstance(value, str) or not value.strip():
+                raise QuarantineError(f"{name} must be a non-empty string")
         entries = self._read_entries()
         original = next((e for e in entries if e.get("seq") == original_seq and e.get("kind") == "QUARANTINE_ENTRY"), None)
         if original is None:
-            raise QuarantineError(f"no open quarantine entry with seq {original_seq}")
+            raise QuarantineError(f"no quarantine entry with seq {original_seq}")
+        if any(
+            e.get("kind") == "RESOLUTION" and e.get("original_seq") == original_seq
+            for e in entries
+        ):
+            raise QuarantineError(f"quarantine entry {original_seq} is already resolved")
         record: dict[str, Any] = {
             "kind": "RESOLUTION",
             "original_seq": original_seq,
