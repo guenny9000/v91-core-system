@@ -45,6 +45,11 @@ class WatcherRegistryTests(unittest.TestCase):
         self.assertGreater(len(report["modules_present"]), 0)
         self.assertEqual([], report["modules_missing"])
 
+    def test_wirtschafts_role_now_implemented(self):
+        report = probe_role(get_role("wirtschafts_und_korruptionsanalyse"), REPO_ROOT)
+        self.assertEqual("IMPLEMENTED_FILES_PRESENT", report["capability"])
+        self.assertIn("controller/structure_review.py", report["modules_present"])
+
     def test_vision_role_reports_unimplemented(self):
         report = probe_role(get_role("wissenschafts_und_forschungsbeobachtung"), REPO_ROOT)
         self.assertEqual("VISION_UNIMPLEMENTED", report["capability"])
@@ -76,7 +81,7 @@ class WatcherRegistryTests(unittest.TestCase):
         self.assertEqual(11, report["roles_total"])
         self.assertEqual("PARTIAL_SOME_ROLES_UNIMPLEMENTED", report["overall"])
         self.assertIn("wissenschafts_und_forschungsbeobachtung", report["roles_unimplemented"])
-        self.assertIn("wirtschafts_und_korruptionsanalyse", report["roles_unimplemented"])
+        self.assertNotIn("wirtschafts_und_korruptionsanalyse", report["roles_unimplemented"])
         self.assertTrue(len(report["honest_limits"]) >= 3)
 
     def test_report_json_serializable(self):
