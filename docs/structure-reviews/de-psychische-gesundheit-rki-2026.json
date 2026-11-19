@@ -1,0 +1,75 @@
+{
+  "structure_id": "de_psychische_gesundheit_rki_2026",
+  "assessor": "v91_session_2026-11-19_offentliches_quellenreview",
+  "assessed_at_structure": "2026-11-19T13:15:00Z",
+  "note": "Struktur-Einschaetzung der psychischen Gesundheit in Deutschland anhand der RKI-Mental-Health-Surveillance und des RKI-Panels Gesundheit in Deutschland. Hebel: psychische Gesundheit, Praevention und bedarfsgerechte Versorgung staerken. REVIEW != ENTSCHEIDUNG. Bevoelkerungsindikatoren sind keine Individualdiagnosen.",
+  "criteria": {
+    "gesellschaftlicher_nutzen": {
+      "status": "BELEGT",
+      "evidence": "Das RKI beschreibt psychische Gesundheit als wesentliche Voraussetzung von Lebensqualitaet und sozialer Teilhabe. Im RKI-Panel 2024 wiesen 21,9 Prozent der Erwachsenen eine depressive Symptomatik (PHQ-9 >=10) und 14,3 Prozent eine Angstsymptomatik (GAD-7 >=10) auf. Das zeigt die hohe Public-Health-Relevanz, ohne einzelne Menschen zu diagnostizieren.",
+      "source": "https://www.rki.de/DE/Themen/Nichtuebertragbare-Krankheiten/Psychische-Gesundheit/Psychische-Gesundheit-und-Stoerungen/themenschwerpunkt-psych-gesundheit.html ; https://www.rki.de/DE/Aktuelles/Publikationen/Epidemiologisches-Bulletin/2026/31_26.pdf?__blob=publicationFile&v=6",
+      "assessed_at": "2026-11-19T13:15:00Z"
+    },
+    "menschenrechtsvertraeglichkeit": {
+      "status": "NICHT_GEPRUEFT",
+      "evidence": "",
+      "source": "",
+      "assessed_at": "2026-11-19T13:15:00Z"
+    },
+    "kosten_und_ressourcenverbrauch": {
+      "status": "NICHT_GEPRUEFT",
+      "evidence": "",
+      "source": "",
+      "assessed_at": "2026-11-19T13:15:00Z"
+    },
+    "transparenz": {
+      "status": "BELEGT",
+      "evidence": "Das RKI betreibt seit 2019 Mental Health Surveillance und stellt ausgewaehlte Kernindikatoren und Zeitreihen bereit. Das Panel Gesundheit in Deutschland ermoeglicht wiederholte Befragungen; laut RKI-Pressemitteilung waren mehr als 40.000 Personen ab 16 Jahren registriert. Methodik und Ergebnisse werden oeffentlich dokumentiert.",
+      "source": "https://www.rki.de/DE/Themen/Nichtuebertragbare-Krankheiten/Studien-und-Surveillance/Studien/MHS/mhs_inhalt.html ; https://www.rki.de/DE/Aktuelles/Neuigkeiten-und-Presse/Meldungen-PM/Pressemitteilungen/2025/02_2025.html",
+      "assessed_at": "2026-11-19T13:15:00Z"
+    },
+    "nachhaltigkeit": {
+      "status": "PROBLEM_BELEGT",
+      "evidence": "Die RKI-Zeitreihen zeigen fuer 2019 bis 2024 eine Verschlechterung mehrerer Indikatoren psychischer Gesundheit. Im RKI-Panel 2024 berichteten 28,2 Prozent ein niedriges psychisches Wohlbefinden; bei 18- bis 29-Jaehrigen waren es 37,7 Prozent, in der niedrigen Bildungsgruppe 33,2 Prozent. Im RKI-Panel wiesen 21,9 Prozent depressive Symptomatik auf. Diese Befunde belegen erheblichen und ungleich verteilten Praeventionsbedarf; sie beweisen nicht, dass jede Belastung eine klinische Erkrankung ist.",
+      "source": "https://www.rki.de/DE/Themen/Nichtuebertragbare-Krankheiten/Studien-und-Surveillance/Studien/MHS/NCD-Surveillance-Bericht.pdf?__blob=publicationFile&v=2 ; https://www.rki.de/DE/Themen/Nichtuebertragbare-Krankheiten/Studien-und-Surveillance/Studien/MHS/mhs_inhalt.html ; https://www.rki.de/DE/Aktuelles/Publikationen/Epidemiologisches-Bulletin/2026/31_26.pdf?__blob=publicationFile&v=6",
+      "assessed_at": "2026-11-19T13:15:00Z"
+    },
+    "missbrauchsrisiken": {
+      "status": "NICHT_GEPRUEFT",
+      "evidence": "",
+      "source": "",
+      "assessed_at": "2026-11-19T13:15:00Z"
+    },
+    "alternativen_und_verbesserbarkeit": {
+      "status": "BELEGT",
+      "evidence": "Das RKI benennt Praevention neben bedarfsgerechter Behandlung als wesentlich. Es hebt soziale Faktoren und Lebenswelten als wichtige und veraenderbare Einflussfaktoren hervor und baut die Surveillance fuer Erwachsene sowie methodische Indikatoren fuer Kinder und Jugendliche aus. Konkrete Wirksamkeit einzelner Interventionen ist mit diesen Quellen nicht nachgewiesen.",
+      "source": "https://www.rki.de/DE/Themen/Nichtuebertragbare-Krankheiten/Psychische-Gesundheit/Psychische-Gesundheit-und-Stoerungen/themenschwerpunkt-psych-gesundheit.html ; https://www.rki.de/DE/Themen/Nichtuebertragbare-Krankheiten/Studien-und-Surveillance/Studien/MHS/mhs_inhalt.html",
+      "assessed_at": "2026-11-19T13:15:00Z"
+    }
+  },
+  "review_result": {
+    "schema_version": 1,
+    "structure_id": "de_psychische_gesundheit_rki_2026",
+    "assessor": "v91_session_2026-11-19_offentliches_quellenreview",
+    "criteria_total": 7,
+    "criteria_belegt": 3,
+    "criteria_problem_belegt": 1,
+    "criteria_ungeprueft": 3,
+    "problems": [
+      "nachhaltigkeit"
+    ],
+    "ungeprueft": [
+      "kosten_und_ressourcenverbrauch",
+      "menschenrechtsvertraeglichkeit",
+      "missbrauchsrisiken"
+    ],
+    "verdict": "NEGATIVE_FINDING_PROBLEMS_BELEGT",
+    "honest_limits": [
+      "REVIEW != ENTSCHEIDUNG; DETECTION != AUTHORIZATION.",
+      "Bevoelkerungsindikatoren sind keine Individualdiagnosen.",
+      "BELEGT ist eine belegte Einschaetzung, keine unabhaengige Bestaetigung.",
+      "NICHT_GEPRUEFT ist keine Entwarnung (UNKNOWN != PASS).",
+      "Veraenderungen erfolgen friedlich, demokratisch, rechtsstaatlich."
+    ]
+  }
+}

@@ -1,0 +1,74 @@
+{
+  "structure_id": "de_bildungsbericht_2026_chancengerechtigkeit",
+  "assessor": "v91_session_2026-11-19_offentliches_quellenreview",
+  "assessed_at_structure": "2026-11-19T13:15:00Z",
+  "note": "Struktur-Einschaetzung des deutschen Bildungssystems anhand des Bildungsberichts 2026 (indikatorengestuetzter Bericht mit Schwerpunkt Bildungsungleichheiten nach sozialer Herkunft). Hebel: Bildung und Wissen zugaenglich machen. REVIEW != ENTSCHEIDUNG.",
+  "criteria": {
+    "gesellschaftlicher_nutzen": {
+      "status": "BELEGT",
+      "evidence": "Der Bildungsbericht dokumentiert den Ausbau fruehkindlicher Bildung und ganztägiger Bildungs- und Betreuungsangebote, eine gestiegene Bildungsbeteiligung sowie verstaerkte Sprachfoerderung und multiprofessionelle Unterstuetzung an Schulen. 2025 gab es mit mehr als 57.000 Einrichtungen einen Hoechststand bei Kitas. Der Bericht deckt fruehe Bildung, Schule, Ausbildung, Hochschule und Weiterbildung ab.",
+      "source": "https://www.bildungsbericht.de/de/bildungsberichte-seit-2006/bildungsbericht-2026/ ; https://www.bmbfsfj.bund.de/bmbfsfj/aktuelles/pressemitteilungen/bildungsbericht-2026-chancengerechtigkeit-und-fachkraeftesicherung-bleiben-zentrale-aufgaben-289888",
+      "assessed_at": "2026-11-19T13:15:00Z"
+    },
+    "menschenrechtsvertraeglichkeit": {
+      "status": "PROBLEM_BELEGT",
+      "evidence": "Der Bericht belegt fortbestehende Bildungsungleichheiten nach sozialer Herkunft. Unterschiede zeigen sich bereits vor dem Schuleintritt, unter anderem beim Wortschatz von Kindern im Alter von zwei Jahren; soziale Herkunft beeinflusst weiterhin Bildungserfolg und Bildungsteilhabe. Das ist ein belegtes Chancengerechtigkeitsproblem, aber fuer sich genommen kein Nachweis einer konkreten Rechtsverletzung oder rechtswidrigen Diskriminierung.",
+      "source": "https://www.bildungsbericht.de/de/bildungsberichte-seit-2006/bildungsbericht-2026/ ; https://www.bmbfsfj.bund.de/bmbfsfj/aktuelles/pressemitteilungen/bildungsbericht-2026-chancengerechtigkeit-und-fachkraeftesicherung-bleiben-zentrale-aufgaben-289888",
+      "assessed_at": "2026-11-19T13:15:00Z"
+    },
+    "kosten_und_ressourcenverbrauch": {
+      "status": "BELEGT",
+      "evidence": "Die oeffentlichen und privaten Bildungsausgaben beliefen sich 2024 auf rund 305 Milliarden Euro. Gegenueber 2014 stiegen sie nominal um 59 Prozent und real um 21 Prozent. Zugleich sank der Anteil der oeffentlichen Bildungsausgaben am oeffentlichen Gesamthaushalt gegenueber 2019. Die Daten belegen Umfang und Entwicklung der Ressourcen, nicht automatisch deren Effizienz oder ausreichende Verteilung.",
+      "source": "https://www.bildungsbericht.de/de/bildungsberichte-seit-2006/bildungsbericht-2026/pdf-dateien-2026/bildung_in_deutschland_2026_web.pdf/%40%40download/file/Bildung_in_Deutschland_2026_web.pdf",
+      "assessed_at": "2026-11-19T13:15:00Z"
+    },
+    "transparenz": {
+      "status": "BELEGT",
+      "evidence": "Der Bildungsbericht erscheint seit 2006 alle zwei Jahre, wird von einer wissenschaftlich unabhaengigen Autor:innengruppe erstellt und stuetzt sich auf amtliche Statistik und sozialwissenschaftliche Erhebungen. Kapitel, Tabellen, Abbildungen und Errata sind oeffentlich zugaenglich.",
+      "source": "https://www.bildungsbericht.de/de/bildungsberichte-seit-2006/bildungsbericht-2026/ ; https://www.bildungsbericht.de/de/bildungsberichte-seit-2006/bildungsbericht-2026/pdf-dateien-2026/bildung_in_deutschland_2026_kompakt_web.pdf",
+      "assessed_at": "2026-11-19T13:15:00Z"
+    },
+    "nachhaltigkeit": {
+      "status": "PROBLEM_BELEGT",
+      "evidence": "Der Bildungsbericht meldet ruecklaeufige Kompetenzentwicklungen insbesondere in Mathematik sowie bei computer- und informationsbezogenen Kompetenzen. Zugleich bestehen regionale Betreuungsengpaesse fuer unter Dreijaehrige und langfristige Herausforderungen bei Chancengerechtigkeit, Fachkraeftesicherung und Integration. Dies belegt strukturelle Risiken fuer dauerhaft tragfaehige Bildungsergebnisse; es ist keine Prognose eines sicheren Systemversagens.",
+      "source": "https://www.bmbfsfj.bund.de/bmbfsfj/aktuelles/pressemitteilungen/bildungsbericht-2026-chancengerechtigkeit-und-fachkraeftesicherung-bleiben-zentrale-aufgaben-289888 ; https://www.bildungsbericht.de/de/bildungsberichte-seit-2006/bildungsbericht-2026/",
+      "assessed_at": "2026-11-19T13:15:00Z"
+    },
+    "missbrauchsrisiken": {
+      "status": "NICHT_GEPRUEFT",
+      "evidence": "",
+      "source": "",
+      "assessed_at": "2026-11-19T13:15:00Z"
+    },
+    "alternativen_und_verbesserbarkeit": {
+      "status": "BELEGT",
+      "evidence": "Der Bericht dokumentiert bereits laufende Ansatzpunkte zur Verbesserung: Investitionen in fruehe Bildung, Sprachfoerderung, Ganztagsangebote, bessere Uebergaenge und das Startchancen-Programm fuer Schulen in herausfordernden sozialen Lagen. Ob diese Massnahmen wirksam und ausreichend sind, muss anhand spaeterer Ergebnisdaten geprueft werden.",
+      "source": "https://www.bmbfsfj.bund.de/bmbfsfj/aktuelles/pressemitteilungen/bildungsbericht-2026-chancengerechtigkeit-und-fachkraeftesicherung-bleiben-zentrale-aufgaben-289888",
+      "assessed_at": "2026-11-19T13:15:00Z"
+    }
+  },
+  "review_result": {
+    "schema_version": 1,
+    "structure_id": "de_bildungsbericht_2026_chancengerechtigkeit",
+    "assessor": "v91_session_2026-11-19_offentliches_quellenreview",
+    "criteria_total": 7,
+    "criteria_belegt": 4,
+    "criteria_problem_belegt": 2,
+    "criteria_ungeprueft": 1,
+    "problems": [
+      "menschenrechtsvertraeglichkeit",
+      "nachhaltigkeit"
+    ],
+    "ungeprueft": [
+      "missbrauchsrisiken"
+    ],
+    "verdict": "NEGATIVE_FINDING_PROBLEMS_BELEGT",
+    "honest_limits": [
+      "REVIEW != ENTSCHEIDUNG; DETECTION != AUTHORIZATION.",
+      "BELEGT ist eine belegte Einschaetzung, keine unabhaengige Bestaetigung.",
+      "Soziale Ungleichheit ist hier als Chancengerechtigkeitsproblem bewertet, nicht als Nachweis einer konkreten Rechtsverletzung.",
+      "Die Wirksamkeit laufender Foerdermassnahmen ist noch nicht abschliessend belegt.",
+      "Veraenderungen erfolgen friedlich, demokratisch, rechtsstaatlich."
+    ]
+  }
+}
