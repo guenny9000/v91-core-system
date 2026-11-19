@@ -141,6 +141,127 @@ def evaluate_measurement(record: Any) -> dict[str, Any]:
     }
 
 
+# ---------------------------------------------------------------------------
+# Messmatrix v1.0 (Global Impact Engine, standard agreed 2026-11-20):
+# every initiative needs per indicator a baseline, target, measurement
+# period, method, responsible verifier, uncertainty band and, for Wirkung
+# indicators, a comparison with a suitable alternative. Matrix metadata are
+# claims until independently checked; a target value is not an outcome.
+# ---------------------------------------------------------------------------
+WATCHERS = frozenset({
+    "wasser", "energie", "ernaehrung", "gesundheit", "natur", "frieden",
+    "technologie",
+})
+MATURITY_LEVELS = frozenset({
+    "R0", "R1", "R2", "R3", "R4", "R5", "R6",
+})
+INDICATOR_ROLES = frozenset({"WIRKUNG", "KOSTEN", "RESILIENZ"})
+
+
+def _non_empty_string(value: Any, field: str, limit: int = 240) -> str:
+    if not isinstance(value, str) or not value.strip():
+        raise ValueError(f"{field} must be a non-empty string")
+    if len(value) > limit:
+        raise ValueError(f"{field} exceeds the permitted length")
+    return value
+
+
+def evaluate_messmatrix(record: Any) -> dict[str, Any]:
+    """Validate a Messmatrix v1.0 record (claims only, never proof of impact).
+
+    A record describes one initiative: watcher domain, maturity R0-R6 and
+    at least one WIRKUNG, one KOSTEN and one RESILIENZ indicator, each with
+    baseline, target, period, method, verifier, uncertainty and (WIRKUNG)
+    an alternative comparison. Fail-closed on any missing obligation.
+    """
+    if not isinstance(record, dict):
+        raise ValueError("record must be an object")
+    _non_empty_string(record.get("initiative_id"), "initiative_id")
+    _non_empty_string(record.get("description"), "description")
+    watcher = record.get("watcher")
+    if watcher not in WATCHERS:
+        raise ValueError("watcher is not recognized")
+    maturity = record.get("maturity")
+    if maturity not in MATURITY_LEVELS:
+        raise ValueError("maturity must be one of R0-R6")
+
+    indicators = record.get("indicators")
+    if not isinstance(indicators, list) or not indicators:
+        raise ValueError("indicators must be a non-empty list")
+    seen_roles: set[str] = set()
+    for index, entry in enumerate(indicators):
+        prefix = f"indicators[{index}]"
+        if not isinstance(entry, dict):
+            raise ValueError(f"{prefix} must be an object")
+        role = entry.get("role")
+        if role not in INDICATOR_ROLES:
+            raise ValueError(f"{prefix}.role must be WIRKUNG, KOSTEN or RESILIENZ")
+        seen_roles.add(role)
+        _non_empty_string(entry.get("name"), f"{prefix}.name")
+        _non_empty_string(entry.get("unit"), f"{prefix}.unit")
+        _number(entry.get("baseline"), f"{prefix}.baseline")
+        _number(entry.get("target"), f"{prefix}.target")
+        if entry["baseline"] < 0 or entry["target"] < 0:
+            raise ValueError(f"{prefix}.baseline and target must be non-negative")
+        period = entry.get("period")
+        if not isinstance(period, dict):
+            raise ValueError(f"{prefix}.period must be an object")
+        baseline_at = _timestamp(period.get("baseline_at"), f"{prefix}.period.baseline_at")
+        target_at = _timestamp(period.get("target_at"), f"{prefix}.period.target_at")
+        if target_at < baseline_at:
+            raise ValueError(f"{prefix}.period.target_at must not precede baseline_at")
+        _non_empty_string(entry.get("method"), f"{prefix}.method")
+        _non_empty_string(entry.get("verifier"), f"{prefix}.verifier")
+        uncertainty = _number(entry.get("uncertainty"), f"{prefix}.uncertainty")
+        if uncertainty < 0:
+            raise ValueError(f"{prefix}.uncertainty must be non-negative")
+        if role == "WIRKUNG":
+            _non_empty_string(entry.get("alternative_comparison"),
+                              f"{prefix}.alternative_comparison")
+
+    missing_roles = sorted(INDICATOR_ROLES - seen_roles)
+    if missing_roles:
+        raise ValueError(
+            "Messmatrix v1.0 requires at least one WIRKUNG, KOSTEN and "
+            f"RESILIENZ indicator; missing: {missing_roles}")
+
+    multiplier = None
+    multiplier_input = record.get("multiplier")
+    if multiplier_input is not None:
+        if not isinstance(multiplier_input, dict):
+            raise ValueError("multiplier must be an object")
+        added_benefit = _number(multiplier_input.get("added_benefit"),
+                                "multiplier.added_benefit")
+        added_effort = _number(multiplier_input.get("added_effort"),
+                               "multiplier.added_effort")
+        if added_benefit < 0 or added_effort <= 0:
+            raise ValueError(
+                "multiplier.added_benefit must be non-negative and "
+                "multiplier.added_effort must be positive")
+        multiplier = added_benefit / added_effort
+        if not isfinite(multiplier):
+            raise ValueError("multiplier exceeds the supported finite range")
+
+    return {
+        "initiative_id": record["initiative_id"],
+        "watcher": watcher,
+        "maturity": maturity,
+        "indicator_count": len(indicators),
+        "roles_covered": sorted(seen_roles),
+        "multiplier": multiplier,
+        "multiplier_status": "MODELED" if multiplier is not None else "UNKNOWN",
+        "matrix_status": "MASSE_BESCHRIEBEN",
+        "impact_claim_permitted": False,
+        "limitations": [
+            "MATRIZ != WIRKUNG; an indicator definition is not a measured outcome.",
+            "ZIELWERT != ERGEBNIS; targets are obligations, never results.",
+            "Method and verifier labels are caller-supplied claims, not verified identities.",
+            "A multiplier is a modeled ratio, not evidence of achieved benefit.",
+            "UNKNOWN stays UNKNOWN; this evaluator performs independent verification nowhere.",
+        ],
+    }
+
+
 def evaluate_dataset(payload: Any) -> dict[str, Any]:
     """Evaluate supplied measurements; empty data remains UNKNOWN, never zero impact."""
     if not isinstance(payload, dict) or not isinstance(payload.get("measurements"), list):
