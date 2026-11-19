@@ -1,4 +1,11 @@
-"""Local emergency stop for V91-owned systems (Issue #70).
+"""
+V91-SYSTEM-HEADER (AGATHON-SEALED v2.4)
+---------------------------------------------------------------------
+STATUS: ACTIVE | VERIFICATION: REQUIRED (CLAIM != EVIDENCE)
+AXIOM: Schöpfung dient dem Erhalt, der Regeneration und der Zukunft.
+---------------------------------------------------------------------
+
+Local emergency stop for V91-owned systems (Issue #70).
 
 A tested, fail-closed kill-switch that ONLY affects the local V91 instance:
 an atomic stop flag plus an HMAC-SHA256 hash-chained ledger. It never

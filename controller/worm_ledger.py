@@ -1,4 +1,11 @@
-"""Append-only, tamper-evident resource-flow ledger backed by SQLite.
+"""
+V91-SYSTEM-HEADER (AGATHON-SEALED v2.4)
+---------------------------------------------------------------------
+STATUS: ACTIVE | VERIFICATION: REQUIRED (CLAIM != EVIDENCE)
+AXIOM: Schöpfung dient dem Erhalt, der Regeneration und der Zukunft.
+---------------------------------------------------------------------
+
+Append-only, tamper-evident resource-flow ledger backed by SQLite.
 
 This is NOT physical or administrative WORM: a host administrator can alter the
 database or remove triggers. Independent signed checkpoints and separately

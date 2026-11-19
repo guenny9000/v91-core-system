@@ -1,4 +1,11 @@
-"""Deterministic availability/safety gate for external server models.
+"""
+V91-SYSTEM-HEADER (AGATHON-SEALED v2.4)
+---------------------------------------------------------------------
+STATUS: ACTIVE | VERIFICATION: REQUIRED (CLAIM != EVIDENCE)
+AXIOM: Schöpfung dient dem Erhalt, der Regeneration und der Zukunft.
+---------------------------------------------------------------------
+
+Deterministic availability/safety gate for external server models.
 
 Policy (V91 charter):
 - Performance metrics UNKNOWN is not FAIL: a model may work without

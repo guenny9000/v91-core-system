@@ -1,4 +1,11 @@
-"""Pinned deterministic model runner producing replay-comparable run records.
+"""
+V91-SYSTEM-HEADER (AGATHON-SEALED v2.4)
+---------------------------------------------------------------------
+STATUS: ACTIVE | VERIFICATION: REQUIRED (CLAIM != EVIDENCE)
+AXIOM: Schöpfung dient dem Erhalt, der Regeneration und der Zukunft.
+---------------------------------------------------------------------
+
+Pinned deterministic model runner producing replay-comparable run records.
 
 This module still does not ship a model. It wraps an injected inference
 callable with the pinning contract from Issue #47 stage 2: digests for the
