@@ -62,6 +62,8 @@ class WatcherRegistryTests(unittest.TestCase):
             (root / role.module_files[0]).unlink()
             report = probe_role(role, root)
             self.assertIn(role.module_files[0], report["modules_missing"])
+            self.assertEqual("IMPLEMENTATION_PARTIAL", report["capability"])
+            self.assertIn("Teilweise vorhanden", report["honest_note"])
 
     def test_unknown_role_fails_closed(self):
         with self.assertRaises(WatcherRegistryError):
@@ -74,7 +76,8 @@ class WatcherRegistryTests(unittest.TestCase):
     def test_report_aggregates_honestly(self):
         report = build_report(REPO_ROOT)
         self.assertEqual(11, report["roles_total"])
-        self.assertEqual("PARTIAL_SOME_ROLES_UNIMPLEMENTED", report["overall"])
+        self.assertEqual("PARTIAL_ROLES_INCOMPLETE", report["overall"])
+        self.assertEqual([], report["roles_partial"])
         self.assertIn("wissenschafts_und_forschungsbeobachtung", report["roles_unimplemented"])
         self.assertIn("wirtschafts_und_korruptionsanalyse", report["roles_unimplemented"])
         self.assertTrue(len(report["honest_limits"]) >= 3)
