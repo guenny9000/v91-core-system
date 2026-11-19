@@ -105,7 +105,7 @@ class StoreTest(unittest.TestCase):
             entry = json.loads(path.read_text(encoding="utf-8"))
             entry["entry_hash"] = "f" * 64
             entry["entry_hmac"] = store._sign(entry)
-            path.write_text(json.dumps(entry) + "\\n", encoding="utf-8")
+            path.write_text(json.dumps(entry) + "\n", encoding="utf-8")
             self.assertFalse(store.verify_chain())
             self.assertFalse(store.verify_record(entry))
 
@@ -115,7 +115,7 @@ class StoreTest(unittest.TestCase):
             store = MeasurementStore(path, key=KEY)
             store.record_valid(sensor_id="s1", metric="m", normalized_value=1.0, unit="u",
                                timestamp_utc="2026-11-17T08:00:00Z")
-            path.write_text(path.read_text(encoding="utf-8") + "\\n", encoding="utf-8")
+            path.write_text(path.read_text(encoding="utf-8") + "\n", encoding="utf-8")
             with self.assertRaisesRegex(MeasurementStoreError, "blank store line"):
                 store.verify_chain()
 
