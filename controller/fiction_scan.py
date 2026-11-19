@@ -24,10 +24,12 @@ allowlisted, never hidden).
 
 Honest limits:
 - SCAN != GUARANTEE: this catches the KNOWN fiction-marker forms;
-  a CLEAN result means the known markers were not found in code.
+  a CLEAN result means the known markers were not found in scanned code.
 - docs/ is deliberately NOT scanned here: documentation legitimately
   quotes and rejects fiction (see docs/SEQ befound sections); code
   never may. Markdown files are skipped everywhere by suffix rule.
+- Oversized files and NUL-containing files with code/config extensions
+  fail closed; they are never silently counted as a clean scan.
 - The honest AGATHON header line does NOT match any pattern here
   because the patterns require the compact pseudo-token form (no
   space after the colon); that whitelist is by explicit rule, not
@@ -122,13 +124,17 @@ def _iter_files(root: Path):
             except OSError as exc:
                 raise FictionScanError(f"cannot stat {candidate}: {exc}") from exc
             if size > MAX_SCAN_BYTES:
-                continue
+                raise FictionScanError(
+                    f"code-like file exceeds MAX_SCAN_BYTES ({size} > {MAX_SCAN_BYTES}): {candidate}"
+                )
             try:
                 data = candidate.read_bytes()
             except OSError as exc:
                 raise FictionScanError(f"cannot read {candidate}: {exc}") from exc
             if b"\x00" in data:
-                continue  # binary payload, no text layer to scan
+                raise FictionScanError(
+                    f"code-like file contains a NUL byte; refusing incomplete scan: {candidate}"
+                )
             yield candidate, data
 
 
