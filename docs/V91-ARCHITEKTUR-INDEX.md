@@ -90,3 +90,4 @@ Attribute entstehen ausschliesslich aus gepruefter Evidenz, nicht aus Text.
 - 19.11.2026 #177 Provider-neutrale 2-of-3-Review-Orchestrierung (agent_quorum: Drittabstimmung nur bei NO_QUORUM, keine Aktionen, keine Persistenz).
 - 19.11.2026 #178 Quorum-Ledger: persistente, Ed25519-signierte Abstimmungsbelege (quorum_ledger, Hash-Kette, Replay-Floor ueber Neustarts, fail-closed; BELEGT != VERIFIZIERT).
 - 19.11.2026 #179 Erste belegte Forschungs-Beobachtungen (6 Einträge, alle mit Primaerquelle; JSONL vom echten research_watch-Modul erzeugt und verifiziert; BELEGT_EINSCHAETZUNG != VERIFIZIERT).
+- 19.11.2026 #209 Lernblock Souveraenitaet/Dezentralisierung/regionale Autarkie als verbindliches Dokument (wortgetreu + main-Abgleich je Saeule; OECD-Quelle NICHT zitierfaehig ohne Adresse; kein Vollzugsmandat; DOKUMENTIERT != INSTALLIERT).
