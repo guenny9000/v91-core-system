@@ -1,0 +1,50 @@
+{
+ "structure_id": "hessen_egov_flaechendeckung_pilot_2026",
+ "assessor": "v91_session_2026-11-20_quellenreview_max_best",
+ "assessed_at_structure": "2026-11-20T01:40:00Z",
+ "note": "Struktur-Datensatz der Hessen-Reihe (Saeule Digitalisierung, Lernblock #209; Thema Verwaltungsdigitalisierung statt Papier-Zwangsverwaltung). Bewertet wird das hessisch-bundesweite Pilotprojekt zur flaechendeckenden Einfuehrung digitaler Verwaltungsleistungen (Halbzeitbilanz 02.10.2026, Hessisches Ministerium fuer Digitalisierung und Innovation mit BMDS und Kommunen) sowie die OZG-Datenschutzregelungen laut Datenschutzbeauftragtem Hessen (Stand 12.01.2026). Ersetzt KEINE Messung; REVIEW != ENTSCHEIDUNG; bewertet wird die Struktur des Digitalisierungsprozesses, nicht die politische Richtung.",
+ "criteria": {
+  "gesellschaftlicher_nutzen": {
+   "status": "BELEGT",
+   "evidence": "Halbzeitbilanz des Pilotprojekts (02.10.2026, operativer Start April 2026): Fuenf zentrale Verwaltungsleistungen (Wohnsitzanmeldung, Fuehrerscheinantrag, Aufenthaltsrecht, Unterhaltsvorschuss, immissionsschutzrechtliche Genehmigungen fuer Industrie-/Gewerbeanlagen) sollen bis Ende 2026 groesstmoeglich flaechendeckend digital verfuegbar sein. Stand Ende August 2026: Anlagengenehmigung in allen drei Regierungspraesidien und damit hessenweit online; Unterhaltsvorschuss und Aufenthaltsrecht bei rund 80 Prozent Flaechendeckung; mehr als 90 Prozent der Kommunen bieten digitale An- und Ummeldung an. Eroeffnete Ziel: 'Schluss mit Formularen und unnoetigen Behoerdenwegen' ('Amt. Klick. Fertig.').",
+   "source": "https://versorgungsamt.hessen.de/presse/land-bringt-digitale-verwaltungsleistungen-erfolgreich-in-die-flaeche",
+   "assessed_at": "2026-11-20T01:40:00Z"
+  },
+  "menschenrechtsvertraeglichkeit": {
+   "status": "BELEGT",
+   "evidence": "Datenschutzregelungen sind dokumentiert und verortet (nicht als unproblematisch bewertet, sondern als belegtes Regelwerk): Das OZG enthaelt seit der Aenderung Juli 2024 datenschutzrechtliche Regelungen fuer die Datenverarbeitung in laenderuebergreifenden Onlinediensten, insbesondere Paragraf 8a Abs. 4 OZG (Verantwortlichkeitsregelung gegenueber der den Onlinedienst betreibenden Behoerde) und Paragraf 8a Abs. 1 OZG (Rechtsgrundlagen der Verarbeitung); die datenschutzrechtliche Verantwortlichkeit der Empfaengerbehoerde bleibt unberuehrt. Der Datenschutzbeauftragte Hessen verweist auf die Orientierungshilfe der DSK sowie einen standardisierten Pruefprozess zu datenschutzrechtlichen Anforderungen bei EfA-Onlinediensten (Stand 12.01.2026).",
+   "source": "https://datenschutz.hessen.de/datenschutz/verwaltungsmodernisierung/onlinezugangsgesetz",
+   "assessed_at": "2026-11-20T01:40:00Z"
+  },
+  "kosten_und_ressourcenverbrauch": {
+   "status": "NICHT_GEPRUEFT",
+   "evidence": "",
+   "source": "",
+   "assessed_at": ""
+  },
+  "transparenz": {
+   "status": "BELEGT",
+   "evidence": "Die Halbzeitbilanz nennt Datenstand (Stand Ende August 2026), Leistungsliste, Zeitplan (Ende 2026), Akteure (Land, BMDS, Kommunen) und konkrete Versorgungsgrade je Leistung (100 Prozent Regierungspraesidien, rund 80 Prozent, mehr als 90 Prozent); eine Sekundaerquelle (kommune21, 05.10.2026) berichtet dieselben Kennzahlen ohne Widerspruch. Flaechenkontext ist offengelegt: 421 Staedte und Gemeinden, 21 Landkreise.",
+   "source": "https://versorgungsamt.hessen.de/presse/land-bringt-digitale-verwaltungsleistungen-erfolgreich-in-die-flaeche",
+   "assessed_at": "2026-11-20T01:40:00Z"
+  },
+  "nachhaltigkeit": {
+   "status": "NICHT_GEPRUEFT",
+   "evidence": "",
+   "source": "",
+   "assessed_at": ""
+  },
+  "missbrauchsrisiken": {
+   "status": "PROBLEM_BELEGT",
+   "evidence": "Strukturelles Risiko laenderuebergreifender Onlinedienste ist von der Aufsichtsbehoerde selbst benannt: Fuer die Datenverarbeitung in einem laenderuebergreifenden Onlinedienst musste Paragraf 8a OZG eigens eine Verantwortlichkeits- und Rechtsgrundlagenregelung schaffen (Novelle Juli 2024), und der Datenschutzbeauftragte Hessen stellt gleichzeitig einen standardisierten Pruefprozess fuer EfA-Onlinedienste bereit - der Bedarf an gesondertem Pruefprozess belegt, dass die standardmaessige Verarbeitung personenbezogener Daten in Verbunddiensten ohne gezielte Pruefung nicht als risikofrei gilt. Kein konkreter Missbrauchsfall belegt (deshalb Risiko-Befund, kein Fall-Befund); UNKNOWN != PASS.",
+   "source": "https://datenschutz.hessen.de/datenschutz/verwaltungsmodernisierung/onlinezugangsgesetz",
+   "assessed_at": "2026-11-20T01:40:00Z"
+  },
+  "alternativen_und_verbesserbarkeit": {
+   "status": "BELEGT",
+   "evidence": "Der Prozess zeigt einen anpassungsfaehigen Weg statt Einheitszwang: Schritt-fuer-Schritt-Einfuehrung je Leistung mit kommunaler Begleitung ('Wir stellen nicht einfach digitale Loesungen bereit, sondern begleiten die Kommunen bei der tatsaechlichen Umsetzung'), foederaler Aufbau mit Portalverbund (OZG Paragrafen 1 und 1a, rund 600 digitalisierbare Verwaltungsleistungen) und Nutzerkonten des Bundes (Deutschland-ID, Mein Unternehmenskonto); das Pilotland-Design ist laut PM explizit als bundesweit replizierbarer Fahrplan angelegt.",
+   "source": "https://versorgungsamt.hessen.de/presse/land-bringt-digitale-verwaltungsleistungen-erfolgreich-in-die-flaeche",
+   "assessed_at": "2026-11-20T01:40:00Z"
+  }
+ }
+}
