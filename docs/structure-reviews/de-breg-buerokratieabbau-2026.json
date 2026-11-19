@@ -1,0 +1,50 @@
+{
+ "structure_id": "de_breg_buerokratieabbauprogramm_2026",
+ "assessor": "v91_session_2026-11-20_quellenreview_max_best",
+ "assessed_at_structure": "2026-11-20T03:05:00Z",
+ "note": "Struktur-Datensatz der Bund-Reihe (Thema Abbau von Pflicht- und Dokumentationslasten / Verwaltungsvereinfachung). Bewertet wird das Buerokratieabbauprogramm der Bundesregierung per 21.09.2026 auf Basis der Bundestagsdrucksache 21/8067 (Antwort des Bundesministeriums fuer Digitales und Staatsmodernisierung, Anfragebasis BT-Drs. 21/7842), aufbereitet durch drucksachlich.de (26.09.2026) und experten.de (16.07.2026) als Sekundaerquellen. Die 9,8-Mrd-Euro-Zahl ist ein SALDIERTER Regierungs-Berechnungswert des Erfuellungsaufwands nach Normenkontrollratsgesetz (CLAIM, keine unabhaengige Messung); DATENBASIS != MESSUNG; REVIEW != ENTSCHEIDUNG.",
+ "criteria": {
+  "gesellschaftlicher_nutzen": {
+   "status": "BELEGT",
+   "evidence": "Laut BT-Drs. 21/8067 betraegt die jaehrliche Entlastung durch das erste Entlastungskabinett (5. November 2025) 9,8 Mrd. Euro jaehrlich (saldierter Betrag aus Belastungen und Entlastungen der beschlossenen Vorhaben; Berechnungsgrundlage Erfuellungsaufwand nach Normenkontrollratsgesetz), aufgelistet in 43 Einzelmassnahmen fuer Buerger, Wirtschaft und Verwaltung (z.B. digitales Fuehrungszeugnis, Abschaffung der Kassenbon-Pflicht). Das zweite Entlastungskabinett (15. Juli 2026) soll laut Bundesregierung zusaetzlich rund 600 Mio. Euro pro Jahr einsparen; die Modernisierungsagenda umfasst inzwischen 72 Massnahmen und insgesamt rund 10,4 Mrd. Euro jaehrliche beschlossene Entlastung (Regierungsangabe, 16.07.2026).",
+   "source": "https://drucksachlich.de/buerokratieabbau-98-mrd-euro-entlastung-im-detail/",
+   "assessed_at": "2026-11-20T03:05:00Z"
+  },
+  "menschenrechtsvertraeglichkeit": {
+   "status": "NICHT_GEPRUEFT",
+   "evidence": "",
+   "source": "",
+   "assessed_at": ""
+  },
+  "kosten_und_ressourcenverbrauch": {
+   "status": "NICHT_GEPRUEFT",
+   "evidence": "",
+   "source": "",
+   "assessed_at": ""
+  },
+  "transparenz": {
+   "status": "BELEGT",
+   "evidence": "Die Zahlen sind parlamentarisch offengelegt: Bundestagsdrucksache 21/8067 (21.09.2026) antwortet auf 16 Einzelfragen (BT-Drs. 21/7842) und enthaelt eine Anlage mit allen 43 Einzelmassnahmen und deren Entlastungsvolumen je Gruppe (Buerger, Wirtschaft, Verwaltung); die Antwort weist die 9,8-Mrd-Summe ausdruecklich als SALDIERTEN Betrag aus und nennt die Berechnungsmethodik (Erfuellungsaufwand nach Normenkontrollratsgesetz). Damit ist die Zahl als Regierungs-Rechnung erkennbar und von der Struktur her nachvollziehbar.",
+   "source": "https://drucksachlich.de/buerokratieabbau-98-mrd-euro-entlastung-im-detail/",
+   "assessed_at": "2026-11-20T03:05:00Z"
+  },
+  "nachhaltigkeit": {
+   "status": "NICHT_GEPRUEFT",
+   "evidence": "",
+   "source": "",
+   "assessed_at": ""
+  },
+  "missbrauchsrisiken": {
+   "status": "NICHT_GEPRUEFT",
+   "evidence": "",
+   "source": "",
+   "assessed_at": ""
+  },
+  "alternativen_und_verbesserbarkeit": {
+   "status": "BELEGT",
+   "evidence": "Das Programm zeigt Systematik statt Einzelflickschneiderei: statt nur Pflichten zu streichen, will die Bundesregierung laut Modernisierungsagenda das Regulierungsverstaendnis grundlegend aendern (digitale Verwaltungsprozesse, vereinfachte Planungs- und Genehmigungsverfahren, systematischer Abbau von Berichts- und Dokumentationspflichten); das Kabinett-Rhythmus-Verfahren (erstes Kabinett 11/2025, zweites 07/2026, laufende Ergaenzung auf 72 Massnahmen) ist ein offengelegter, wiederholbarer Verbesserungszyklus.",
+   "source": "https://www.experten.de/id/4950886/Buerokratierueckbau-2026-72-Massnahmen-sollen-Unternehmen-um-Milliarden-entlasten/",
+   "assessed_at": "2026-11-20T03:05:00Z"
+  }
+ }
+}
