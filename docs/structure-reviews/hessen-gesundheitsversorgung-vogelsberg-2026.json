@@ -1,0 +1,50 @@
+{
+ "structure_id": "hessen_dezentrale_gesundheitsversorgung_erste_datenbasis_2026",
+ "assessor": "v91_session_2026-11-19_quellenreview_max_best",
+ "assessed_at_structure": "2026-11-19T19:32:27Z",
+ "note": "Erste belastbare Datenbasis fuer die Saeule Gesundheit des Lernblocks 'Souveraenitaet, Dezentralisierung und regionale Autarkie' (docs/V91-LERNBLOCK-DEZENTRALISIERUNG-REGIONALE-AUTARKIE.md). Ersetzt KEINE Messung: es liegen ausschliesslich oeffentliche Quellen-Einschaetzungen vor, keine eigenen V91-Messwerte (CLAIM != EVIDENCE, BELEGT_EINSCHAETZUNG != VERIFIZIERT, UNKNOWN != PASS). REVIEW != ENTSCHEIDUNG; keine Politik-Ausfuehrung.",
+ "criteria": {
+  "gesellschaftlicher_nutzen": {
+   "status": "BELEGT",
+   "evidence": "Hessen reserviert bis zu 7,8 Prozent der hessischen Medizinstudienplaetze fuer den laendlichen Raum und den Oeffentlichen Gesundheitsdienst: 6,5 Prozent Landarztquote (WS 2025/26: 74 Plaetze) und 1,3 Prozent OGD-Quote (WS 2025/26: 15 Plaetze fuer 24 hessische Gesundheitsaemter); Quote seit 2022, 2024/25 starteten 76 Studierende auf dem 'Hessischen Weg'; Auswahl nicht nach Notenschnitt, sondern nach Eignung inkl. Ehrenamt/Freiwilligendienst.",
+   "source": "https://medien-pa.hessen.de/presse/fuer-das-wintersemester-20262027-bewerben",
+   "assessed_at": "2026-11-19T19:32:27Z"
+  },
+  "menschenrechtsvertraeglichkeit": {
+   "status": "BELEGT",
+   "evidence": "Neuer Hessischer Krankenhausplan (18.12.2025, Gesundheitsministerin Stolz) schreibt als strategisches Ziel fest: Notfallversorgung im Regelfall ueberall in Hessen in 30 Minuten erreichbar, Geburtshilfe sowie Kinder- und Jugendmedizin in 40 Minuten. Landesziel-Aussage 'Gesundheit darf nicht vom Wohnort abhaengen' (Stolz, 07.01.2026). Zumutbarkeit der Erreichbarkeit wird landesweit als messbares Ziel definiert; Umsetzung ist NICHT unabhaengig gemessen.",
+   "source": "https://erfolgreich-regiert.hessen.de/presse/neuer-hessischer-krankenhausplan-veroeffentlicht ; https://medien-pa.hessen.de/presse/fuer-das-wintersemester-20262027-bewerben",
+   "assessed_at": "2026-11-19T19:32:27Z"
+  },
+  "kosten_und_ressourcenverbrauch": {
+   "status": "NICHT_GEPRUEFT",
+   "evidence": "",
+   "source": "",
+   "assessed_at": "2026-11-19T19:32:27Z"
+  },
+  "transparenz": {
+   "status": "BELEGT",
+   "evidence": "Krankenhausplan in ueber 20 Sitzungen mit den Partnern in transparentem Verfahren erarbeitet, mit Anhoerung vor Verabschiedung; Auswahlkriterien fuer Leistungsgruppen oeffentlich festgeschrieben; Landarzt-/OGD-Quote mit oeffentlichem zweistufigem Bewerbungs- und Auswahlverfahren; Zulassungskriterien der vertragsaerztlichen Bedarfsplanung oeffentlich (G-BA-Richtlinien, Paragraph 99 SGB V).",
+   "source": "https://erfolgreich-regiert.hessen.de/presse/neuer-hessischer-krankenhausplan-veroeffentlicht ; https://medien-pa.hessen.de/presse/fuer-das-wintersemester-20262027-bewerben ; https://www.kvhessen.de/praxis-management/bedarfsplanung",
+   "assessed_at": "2026-11-19T19:32:27Z"
+  },
+  "nachhaltigkeit": {
+   "status": "PROBLEM_BELEGT",
+   "evidence": "Vogelsbergkreis: Bis 2040 benoetigen 48,5 Prozent der Hausaerzte eine Nachfolge (Oberhessische Zeitung, 02.08.2026); in Romrod schlossen im Maerz 2026 zwei Hausarztpraxen, die Stadt plante einen runden Tisch (OZ, 25.03.2026). Bundesweite Einordnung: bis 2040 droht rund jeder fuenfte Hausarztsitz unbesetzt (ca. 12.000 Sitze), fast 20 Prozent der Landkreise hausaerztlich unterversorgt, weitere 15 Prozent an der Grenze; Hessen ausdruecklich unter den besonders betroffenen Regionen (Bertelsmann-Stiftung/bifg und IGES, aufbereitet bei aerzteverbund.de). Der regionale Nachwuchserfolg der Landarztquote wirkt erst mit mehrjaehriger Verzoegerung; Versorgungssicherheit im Vogelsberg ist damit belegt gefaehrdet.",
+   "source": "https://www.oberhessische-zeitung.de/vogelsbergkreis/alsfeld/bis-2040-brauchen-48-prozent-der-hausaerzte-im-vogelsbergkreis-nachfolge-94424166.html ; https://www.oberhessische-zeitung.de/vogelsbergkreis/romrod/zwei-hausarztpraxen-schliessen-romrod-droht-ein-medizinisches-fiasko-94235663.html ; https://aerzteverbund.de/hausarztmangel-2040-prognose/",
+   "assessed_at": "2026-11-19T19:32:27Z"
+  },
+  "missbrauchsrisiken": {
+   "status": "NICHT_GEPRUEFT",
+   "evidence": "",
+   "source": "",
+   "assessed_at": "2026-11-19T19:32:27Z"
+  },
+  "alternativen_und_verbesserbarkeit": {
+   "status": "BELEGT",
+   "evidence": "Es existieren anpassfaehige Instrumente ohne Systemwechsel: vertragsaerztliche Bedarfsplanung mit Sonderbedarfszulassungen durch den Zulassungsausschuss Hessen bei drohender/bestehender Unterversorgung (kvhessen.de, G-BA-Richtlinien); Medizinische Versorgungszentren (MVZ) und Stipendienprogramme werden im Vogelsbergkreis bereits eingesetzt (OZ, u.a. Podiumsdiskussion/Veroeffentlichung mit dem Titel 'Trotz Stipendien und MVZ: Die Praxen im Vogelsbergkreis schliessen'); Krankenhausplan ausdruecklich als 'lernender Prozess' anpassbar mit anpassbaren Antraegen (HKG-Praesident Hoeftberger). OGD-Quote als zweiter Rekrutierungspfad (24 Gesundheitsaemter).",
+   "source": "https://www.kvhessen.de/praxis-management/bedarfsplanung ; https://www.oberhessische-zeitung.de/vogelsbergkreis/trotz-stipendien-und-mvz-die-praxen-im-vogelsbergkreis-schliessen-94064097.html ; https://erfolgreich-regiert.hessen.de/presse/neuer-hessischer-krankenhausplan-veroeffentlicht",
+   "assessed_at": "2026-11-19T19:32:27Z"
+  }
+ }
+}
