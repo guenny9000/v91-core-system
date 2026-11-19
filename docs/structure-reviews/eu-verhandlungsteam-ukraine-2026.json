@@ -1,0 +1,72 @@
+{
+  "structure_id": "eu_verhandlungsteam_ukraine_frieden_2026",
+  "assessor": "v91_session_2026-11-19_offentliches_quellenreview",
+  "assessed_at_structure": "2026-11-19T13:14:35Z",
+  "note": "Struktur-Einschaetzung des europaeischen Verhandlungsteams fuer Friedensgespraeche zum russischen Angriffskrieg gegen die Ukraine (EU-Gipfel Dublin 13.11.2026, US-vermittelte Vorgespraeche Abu Dhabi). Frieden ohne Toeten ist das Ziel dieser Struktur; REVIEW != ENTSCHEIDUNG, keine Aussage ueber Verhandlungserfolg.",
+  "criteria": {
+    "gesellschaftlicher_nutzen": {
+      "status": "BELEGT",
+      "evidence": "Diplomatie statt Eskalation: Auf dem informellen EU-Gipfel in Dublin (13.11.2026) einigten sich die europaeischen Staats- und Regierungschefs auf ein 'europaeisches Verhandlungsteam fuer den Frieden in der Ukraine' aus EU-Institutionen (Kommission, Rat) und den E5-Laendern Deutschland, Grossbritannien, Frankreich, Italien, Polen. Ziel ist ein multilateraler Verhandlungsprozess mit Russland unter Beteiligung Europas statt ein Ausschluss vom Tisch; die USA vermitteln seit November 2026 direkte Gespraeche zwischen der Ukraine und Russland (u.a. Abu Dhabi).",
+      "source": "https://www.tagesschau.de/ausland/eu-vertreter-ukraine-gespraeche-100.html ; https://de.euronews.com/2026/11/17/europa-macht-ernst-gemeinsames-team-soll-mit-putin-verhandeln",
+      "assessed_at": "2026-11-19T13:14:35Z"
+    },
+    "menschenrechtsvertraeglichkeit": {
+      "status": "BELEGT",
+      "evidence": "Das Format ist ausschliesslich diplomatisch: Verhandlungen und Vermittlung statt Zwang oder Gewalt; von der Leyen: 'Wir werden die Ukraine unterstuetzen und unsere Interessen schuetzen'; Costa: Europa muesse 'mit einer klaren und geeinten Stimme sprechen'. Kein Anhaltspunkt fuer menschenrechtsverletzende Massnahmen in den einsehbaren Berichten; das Verhandlungsziel (Beendigung des Angriffskriegs) dient dem Leben der Zivilbevoelkerung.",
+      "source": "https://www.tagesschau.de/ausland/eu-vertreter-ukraine-gespraeche-100.html",
+      "assessed_at": "2026-11-19T13:14:35Z"
+    },
+    "kosten_und_ressourcenverbrauch": {
+      "status": "NICHT_GEPRUEFT",
+      "evidence": "",
+      "source": "",
+      "assessed_at": "2026-11-19T13:14:35Z"
+    },
+    "transparenz": {
+      "status": "BELEGT",
+      "evidence": "Oeffentliches Gipfelergebnis mit namentlicher Zusammensetzung (E5 plus EU-Kommission und Rat; Euronews zufolge zudem die NATO als Teil der Delegation), oeffentliche Erklaerungen von EU-Ratspraesident Costa und Kommissionspraesidentin von der Leyen, oeffentliche Position des Kanzlers ('Deutschland ist gesetzt'); offene Punkte werden ehrlich benannt (unklar, wer bei Gespraechen hoechster Ebene am Tisch sitzt).",
+      "source": "https://www.tagesschau.de/ausland/eu-vertreter-ukraine-gespraeche-100.html ; https://de.euronews.com/2026/11/17/europa-macht-ernst-gemeinsames-team-soll-mit-putin-verhandeln",
+      "assessed_at": "2026-11-19T13:14:35Z"
+    },
+    "nachhaltigkeit": {
+      "status": "PROBLEM_BELEGT",
+      "evidence": "Belegtes Strukturproblem des Friedensprozesses: Russland blockiert bislang direkte Gespraeche mit der europaeischen Delegation ('Der Termin steht noch nicht fest... mit uns nicht vereinbart', Uschakow am 17.11.2026) und schlaegt zunaechst weitere trilaterale Runden mit den USA und der Ukraine vor. Es existiert kein verbindlicher Zeitplan oder festes Verhandlungsformat mit europaeischer Beteiligung. Ein Friedensprozess ohne gesicherte Termine und ohne Zusage Moskaus zu einem festen Format ist strukturell gefaehrdet, auch wenn die europaeische Einigkeit selbst ein Fortschritt ist.",
+      "source": "https://de.euronews.com/2026/11/17/europa-macht-ernst-gemeinsames-team-soll-mit-putin-verhandeln",
+      "assessed_at": "2026-11-19T13:14:35Z"
+    },
+    "missbrauchsrisiken": {
+      "status": "NICHT_GEPRUEFT",
+      "evidence": "",
+      "source": "",
+      "assessed_at": "2026-11-19T13:14:35Z"
+    },
+    "alternativen_und_verbesserbarkeit": {
+      "status": "BELEGT",
+      "evidence": "Kompromissloesung nach Streit ueber die Vertretung: Team aus EU-Institutionen und fuenf Laendern statt einzelner Alleingaenge; USA stellen europaeische Beteiligung an kuenftigen Gespraechen in Aussicht; US-Sondergesandte aeusserten sich vorsichtig optimistisch nach dem Kontakt mit Uschakow. Das Format ist mehrstufig anpassbar (trilaterale Vorrunden plus multilaterale Hauptverhandlungen).",
+      "source": "https://www.tagesschau.de/ausland/eu-vertreter-ukraine-gespraeche-100.html ; https://de.euronews.com/2026/11/17/europa-macht-ernst-gemeinsames-team-soll-mit-putin-verhandeln",
+      "assessed_at": "2026-11-19T13:14:35Z"
+    }
+  },
+  "review_result": {
+    "schema_version": 1,
+    "structure_id": "eu_verhandlungsteam_ukraine_frieden_2026",
+    "assessor": "v91_session_2026-11-19_offentliches_quellenreview",
+    "criteria_total": 7,
+    "criteria_belegt": 4,
+    "criteria_problem_belegt": 1,
+    "criteria_ungeprueft": 2,
+    "problems": [
+      "nachhaltigkeit"
+    ],
+    "ungeprueft": [
+      "kosten_und_ressourcenverbrauch",
+      "missbrauchsrisiken"
+    ],
+    "verdict": "NEGATIVE_FINDING_PROBLEMS_BELEGT",
+    "honest_limits": [
+      "REVIEW != ENTSCHEIDUNG; DETECTION != AUTHORIZATION.",
+      "BELEGT ist eine belegte Einschätzung, keine unabhängige Bestätigung.",
+      "Veränderungen erfolgen friedlich, demokratisch, rechtsstaatlich (Direktive Abschnitt 6)."
+    ]
+  }
+}
