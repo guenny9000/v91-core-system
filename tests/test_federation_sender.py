@@ -42,6 +42,15 @@ class EnvelopeSenderTest(unittest.TestCase):
             receipt = receiver.receive(env.wire)
             self.assertEqual(receipt.status, "ACCEPTED", receipt.reason)
 
+    def test_roundtrip_accepts_unicode_payload(self):
+        with tempfile.TemporaryDirectory() as td:
+            sender, receiver = make_pair(Path(td))
+            payload = {"message": "Grüße aus Alsfeld – Frieden für alle 🌍"}
+            env = sender.build_envelope(payload)
+            receipt = receiver.receive(env.wire)
+            self.assertEqual(receipt.status, "ACCEPTED", receipt.reason)
+            self.assertEqual(receipt.message["payload"], payload)
+
     def test_sequence_is_monotonic_and_replay_is_refused(self):
         with tempfile.TemporaryDirectory() as td:
             sender, receiver = make_pair(Path(td))
