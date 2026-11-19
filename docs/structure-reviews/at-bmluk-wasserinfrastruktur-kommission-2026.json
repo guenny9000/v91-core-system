@@ -1,0 +1,71 @@
+{
+  "structure_id": "at_bmluk_wasserinfrastruktur_kommission_2026",
+  "assessor": "v91_session_2026-11-20_offentliches_quellenreview",
+  "assessed_at_structure": "2026-11-20T00:45:00Z",
+  "note": "Struktur-Einschaetzung der oesterreichischen Wasserinfrastruktur-Foerderung (BMLUK, Kommission Wasserwirtschaft, 12.11.2026). Eingangsdaten: amtliche BMLUK-Seite und Pressemitteilung, ORF-Berichterstattung. REVIEW != ENTSCHEIDUNG.",
+  "criteria": {
+    "gesellschaftlicher_nutzen": {
+      "status": "BELEGT",
+      "evidence": "Kommissionssitzung Wasserwirtschaft 12.11.2026: 171 Mio EUR Bundesmittel fuer 1.511 Wasserprojekte, ausloesendes Gesamtinvestitionsvolumen 563 Mio EUR. Trinkwasserversorgung/Abwasser: 915 Projekte mit 66 Mio EUR (Investitionsvolumen rund 354 Mio EUR, u.a. zusaetzliche Wasserressourcen, Netzverbindungen, Speicher, Leitungserneuerung). Oekologisierung: 37 Projekte mit 14 Mio EUR (33 Mio EUR; Renaturierung von Fluessen). Hochwasserschutz: 559 Projekte mit 91 Mio EUR (176 Mio EUR; Vorbeugung, Instandhaltung). Klimaanpassung als ausdrueckliches Ziel angesichts anhaltender Trockenheit.",
+      "source": "https://www.bmluk.gv.at/themen/wasser/foerderungen/94-kosi.html ; https://orf.at/stories/3448008/",
+      "assessed_at": "2026-11-20T00:45:00Z"
+    },
+    "menschenrechtsvertraeglichkeit": {
+      "status": "BELEGT",
+      "evidence": "Foerderung ist investiv ausgerichtet: Zuschuesse fuer kommunale Trink- und Abwasserprojekte, Gewaesseroekologie und Hochwasserschutz. Keine Zwangsmassnahmen gegen Personen dokumentiert; Trinkwassersicherung wird als Daseinsvorsorge beggruendet (ORF, Totschnig-Statement).",
+      "source": "https://www.bmluk.gv.at/themen/wasser/foerderungen/94-kosi.html ; https://orf.at/stories/3448008/",
+      "assessed_at": "2026-11-20T00:45:00Z"
+    },
+    "kosten_und_ressourcenverbrauch": {
+      "status": "BELEGT",
+      "evidence": "Bundesmittel 171 Mio EUR loesen 563 Mio EUR Gesamtinvestitionen aus (dokumentierte Hebelwirkung, rund 1:3,3). Mittelverteilung auf alle 9 Bundeslaender beziffert: Burgenland 7,4, Kaernten 15,9, Niederoesterreich 42,4, Oberoesterreich 25,4, Salzburg 19,2, Steiermark 19,9, Tirol 12,5, Vorarlberg 26,0, Wien 1,8 Mio EUR.",
+      "source": "https://www.bmluk.gv.at/themen/wasser/foerderungen/94-kosi.html",
+      "assessed_at": "2026-11-20T00:45:00Z"
+    },
+    "transparenz": {
+      "status": "BELEGT",
+      "evidence": "Projektzahlen, Foerderbetraege je Bereich (66/14/91 Mio EUR), Bundeslaenderverteilung und Ausloesevolumen sind oeffentlich beziffert (BMLUK, 12.11.2026, inkl. eigener Pressemitteilung). Unabhaengige Berichterstattung durch ORF am 12.11.2026 deckt die Kernzahlen (171 Mio EUR, ueber 1.500 Projekte) konsistent ab.",
+      "source": "https://www.bmluk.gv.at/themen/wasser/foerderungen/94-kosi.html ; https://orf.at/stories/3448008/ ; https://www.bmluk.gv.at/service/presse/wasser/2026/totschnig-1500-projekte-fuer-klimafitte-wasserinfrastrutkur.html",
+      "assessed_at": "2026-11-20T00:45:00Z"
+    },
+    "nachhaltigkeit": {
+      "status": "PROBLEM_BELEGT",
+      "evidence": "Belegtes Strukturproblem: Die aussergewoehnliche Trockenheit 2026 zeigt laut BMLUK-Pressemitteilung, dass eine sichere Wasserversorgung keine Selbstverstaendlichkeit ist; der Investitionsbedarf ist strukturell und dauerhaft. Die aus einsehbaren Quellen belegbare Finanzierung ist auf die einzelne Kommissionssitzung (171 Mio EUR, 12.11.2026) beschraenkt; ein verbindlicher mehrjaehriger Finanzierungsrahmen fuer die Klimaanpassung ist in den eingesehenen Dokumenten nicht ausgewiesen.",
+      "source": "https://www.bmluk.gv.at/themen/wasser/foerderungen/94-kosi.html ; https://www.bmluk.gv.at/service/presse/wasser/2026/totschnig-1500-projekte-fuer-klimafitte-wasserinfrastrutkur.html ; https://orf.at/stories/3448008/",
+      "assessed_at": "2026-11-20T00:45:00Z"
+    },
+    "missbrauchsrisiken": {
+      "status": "NICHT_GEPRUEFT",
+      "evidence": "",
+      "source": "",
+      "assessed_at": "2026-11-20T00:45:00Z"
+    },
+    "alternativen_und_verbesserbarkeit": {
+      "status": "BELEGT",
+      "evidence": "Programm kombiniert mehrere Wege statt nur technischen Schutz: Gewaesseroekologie und naturnaher Wasserrueckhalt (Kommissionsvorsitzender Pernkopf: Niederschlaege moeglichst dort halten, wo sie fallen, Gewaessern mehr Platz geben, Wasser staerker in der Flaeche zurueckhalten). Anpassung ueber regelmaessigen Kommissionssitzungen moeglich; Foerderung deckt Trinkwasser, Abwasser, Gewaesseroekologie UND Hochwasserschutz ab.",
+      "source": "https://orf.at/stories/3448008/",
+      "assessed_at": "2026-11-20T00:45:00Z"
+    }
+  },
+  "review_result": {
+    "schema_version": 1,
+    "structure_id": "at_bmluk_wasserinfrastruktur_kommission_2026",
+    "assessor": "v91_session_2026-11-20_offentliches_quellenreview",
+    "criteria_total": 7,
+    "criteria_belegt": 5,
+    "criteria_problem_belegt": 1,
+    "criteria_ungeprueft": 1,
+    "problems": [
+      "nachhaltigkeit"
+    ],
+    "ungeprueft": [
+      "missbrauchsrisiken"
+    ],
+    "verdict": "NEGATIVE_FINDING_PROBLEMS_BELEGT",
+    "honest_limits": [
+      "REVIEW != ENTSCHEIDUNG; DETECTION != AUTHORIZATION.",
+      "BELEGT ist eine belegte Einsch\u00e4tzung, keine unabh\u00e4ngige Best\u00e4tigung.",
+      "Ver\u00e4nderungen erfolgen friedlich, demokratisch, rechtsstaatlich (Direktive Abschnitt 6)."
+    ]
+  }
+}
