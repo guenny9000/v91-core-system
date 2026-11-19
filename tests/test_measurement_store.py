@@ -96,6 +96,29 @@ class StoreTest(unittest.TestCase):
             forged = dict(record, normalized_value=5.0)
             self.assertFalse(store.verify_record(forged))
 
+    def test_entry_hash_is_recomputed_even_with_valid_hmac(self):
+        with TemporaryDirectory() as d:
+            path = Path(d) / "store.jsonl"
+            store = MeasurementStore(path, key=KEY)
+            store.record_valid(sensor_id="s1", metric="m", normalized_value=1.0, unit="u",
+                               timestamp_utc="2026-11-17T08:00:00Z")
+            entry = json.loads(path.read_text(encoding="utf-8"))
+            entry["entry_hash"] = "f" * 64
+            entry["entry_hmac"] = store._sign(entry)
+            path.write_text(json.dumps(entry) + "\\n", encoding="utf-8")
+            self.assertFalse(store.verify_chain())
+            self.assertFalse(store.verify_record(entry))
+
+    def test_blank_line_in_store_fails_closed(self):
+        with TemporaryDirectory() as d:
+            path = Path(d) / "store.jsonl"
+            store = MeasurementStore(path, key=KEY)
+            store.record_valid(sensor_id="s1", metric="m", normalized_value=1.0, unit="u",
+                               timestamp_utc="2026-11-17T08:00:00Z")
+            path.write_text(path.read_text(encoding="utf-8") + "\\n", encoding="utf-8")
+            with self.assertRaisesRegex(MeasurementStoreError, "blank store line"):
+                store.verify_chain()
+
     def test_invalid_inputs_rejected(self):
         with TemporaryDirectory() as d:
             store = self._store(Path(d))
