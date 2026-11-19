@@ -224,3 +224,20 @@ def test_invalid_verification_clock_returns_fail_closed_result(keypair):
     valid, reason = verify_manifest(signed, public_key, now="not-a-time")
     assert valid is False
     assert "manifest validation failed" in reason
+
+
+def test_huge_integer_resource_is_rejected_without_exception(keypair):
+    private_key, _ = keypair
+    manifest = base_manifest()
+    manifest["resources"]["cpu_cores_available"] = 10 ** 10000
+    with pytest.raises(ManifestError, match="finite non-negative"):
+        sign_manifest(manifest, private_key)
+
+
+def test_unknown_signature_field_is_rejected(keypair):
+    private_key, public_key = keypair
+    signed = sign_manifest(base_manifest(), private_key)
+    signed["signature"]["unreviewed"] = "extra"
+    valid, reason = verify_manifest(signed, public_key, now=NOW)
+    assert valid is False
+    assert "signature fields" in reason
