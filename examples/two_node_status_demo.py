@@ -11,23 +11,20 @@ Two-node NODE_STATUS demo (Issue #103), operator-runnable.
 Spins up two EPHEMERAL in-process nodes with throwaway keys and
 throwaway SQLite state, exchanges one NODE_STATUS per direction over
 real loopback UDP, prints both local cooperation registers, repeats
-for --cycles rounds, then stops and deletes nothing outside its
-temporary directory.
+for --cycles rounds, then stops and leaves nothing behind outside
+its temporary directory.
 
-What this proves: the full CI-verified federation chain works live -
+What this proves live: the full CI-verified federation chain -
 build_status_payload -> EnvelopeSender (Ed25519, durable sequence) ->
 UDP -> UdpEnvelopeListener -> FederationReceiver (signature + replay
 floors) -> parse_status_payload -> CooperationRegister (evidence only).
 
 Honest limits (unchanged doctrine):
-- DEMO != INSTALLATION and two in-process listeners != two hosts:
-  it demonstrates the code path, not a deployed mesh.
-- Throwaway keys mean throwaway trust: BOTH sides generate fresh
-  keys per run and hand each other only the public half
-  (private keys never leave the process).
-- It grants itself no authority and touches nothing outside the
-  loopback interface and its own temp dir (DETECTION !=
-  AUTHORIZATION).
+- DEMO != INSTALLATION; two in-process listeners != two hosts.
+- Throwaway keys mean throwaway trust: fresh keys per run, only the
+  public halves cross the wire inside this process.
+- No authority is granted by anything here (DETECTION !=
+  AUTHORIZATION); the register refuses a global status by design.
 """
 from __future__ import annotations
 
@@ -50,35 +47,54 @@ from controller.federation_receiver import (  # noqa: E402
 )
 from controller.federation_sender import EnvelopeSender, SequenceStore  # noqa: E402
 from controller.federation_transport import UdpEnvelopeListener  # noqa: E402
-from controller.status_exchange import build_status_payload  # noqa: E402
+from controller.status_exchange import (  # noqa: E402
+    build_status_payload, parse_status_payload, StatusExchangeError,
+)
 
 NOW = int(time.time())
 
 
-class Node:
+class CapturingReceiver(FederationReceiver):
+    """Pass-through that keeps ACCEPTED messages for the demo prints.
+
+    Every byte still goes through the real FederationReceiver; the
+    capture adds observability, never behavior.
+    """
+
+    def __init__(self, inner: FederationReceiver) -> None:
+        self._inner = inner
+        self.captured: list[dict] = []
+
+    def receive(self, raw):  # type: ignore[override]
+        receipt = self._inner.receive(raw)
+        if receipt.status == "ACCEPTED":
+            self.captured.append(receipt.message)
+        return receipt
+
+
+class DemoNode:
     """One ephemeral demo node: real sender, real listener, own register."""
 
-    def __init__(self, tmp: Path, name: str, version: str, capabilities: tuple) -> None:
+    def __init__(self, tmp: Path, name: str, version: str, capabilities: tuple,
+                 own_key: Ed25519PrivateKey, remote_name: str,
+                 remote_public_key) -> None:
         self.name = name
         self.version = version
         self.capabilities = capabilities
-        self.key = Ed25519PrivateKey.generate()
-        self.receiver = FederationReceiver(
-            peer_keys={},
+        self.receiver = CapturingReceiver(FederationReceiver(
+            peer_keys={remote_name: remote_public_key},
             replay_store=FederationReplayStore(tmp / (name + "_replay.sqlite")),
             now_provider=lambda: NOW,
-        )
+        ))
         self.listener = UdpEnvelopeListener(receiver=self.receiver).start()
         self.sender = EnvelopeSender(
             peer_id=name,
-            private_key=self.key,
+            private_key=own_key,
             sequence_store=SequenceStore(tmp / (name + "_seq.sqlite")),
             now_provider=lambda: NOW,
         )
         self.register = CooperationRegister(now_provider=lambda: float(NOW))
-
-    def trust(self, other: "Node") -> None:
-        self.receiver.peer_keys[other.name] = other.key.public_key()
+        self.remote_name = remote_name
 
     def port(self) -> int:
         return self.listener.bound_address()[1]
@@ -90,45 +106,57 @@ class Node:
             state="READY",
         )
 
-    def file_observation(self, message: dict) -> None:
-        from controller.status_exchange import parse_status_payload
-        parsed = parse_status_payload(message["payload"])
-        outcome = self.register.record(Observation(
-            peer_id=message["peer_id"],
-            key_id="ed25519:" + message["peer_id"],
-            sequence=message["sequence"],
-            received_at=float(NOW),
-            software_version=parsed["software_version"],
-            capabilities=tuple(parsed["capabilities"]),
-            state=parsed["state"],
-            verification=Verification(
-                state="ALIVE_VERIFIED",
-                reason="federation envelope signature verified",
-            ),
-        ))
-        print("  [" + self.name + "] filed observation of " + message["peer_id"] + ": " + outcome.status)
+    def exchange_with(self, other: "DemoNode") -> None:
+        wire_out = self.sender.build_envelope(self.status_payload()).wire
+        wire_in = other.sender.build_envelope(other.status_payload()).wire
+        with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as sock:
+            sock.sendto(wire_out, ("127.0.0.1", other.port()))
+            sock.sendto(wire_in, ("127.0.0.1", self.port()))
+        deadline = time.monotonic() + 5.0
+        while time.monotonic() < deadline:
+            if self.listener.counts()["accepted"] > 0 and other.listener.counts()["accepted"] > 0:
+                break
+            time.sleep(0.05)
+        counts = self.listener.counts()
+        print("  [" + self.name + "] accepted=" + str(counts["accepted"])
+              + " rejected=" + str(counts["rejected"]))
 
-    def report(self) -> None:
-        print("  [" + self.name + "] local register:")
-        for entry in self.register.overview():
-            print("    " + entry)
-
-
-def exchange(left: Node, right: Node) -> None:
-    with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as sock:
-        wire_l = left.sender.build_envelope(left.status_payload()).wire
-        wire_r = right.sender.build_envelope(right.status_payload()).wire
-        sock.sendto(wire_l, ("127.0.0.1", right.port()))
-        sock.sendto(wire_r, ("127.0.0.1", left.port()))
-    deadline = time.monotonic() + 5.0
-    while time.monotonic() < deadline:
-        if left.listener.counts()["accepted"] and right.listener.counts()["accepted"]:
-            break
-        time.sleep(0.05)
-    for node in (left, right):
-        accepted = node.listener.counts()["accepted"]
-        rejected = node.listener.counts()["rejected"]
-        print("  [" + node.name + "] accepted=" + str(accepted) + " rejected=" + str(rejected))
+    def file_and_report(self) -> None:
+        if not self.receiver.captured:
+            print("  [" + self.name + "] no verified observation received")
+            return
+        for message in self.receiver.captured:
+            try:
+                parsed = parse_status_payload(message["payload"])
+            except StatusExchangeError as exc:
+                print("  [" + self.name + "] refused invalid status: " + str(exc))
+                continue
+            outcome = self.register.record(Observation(
+                peer_id=message["peer_id"],
+                key_id="ed25519:" + message["peer_id"],
+                sequence=message["sequence"],
+                received_at=float(NOW),
+                software_version=parsed["software_version"],
+                capabilities=tuple(parsed["capabilities"]),
+                state=parsed["state"],
+                verification=Verification(
+                    state="ALIVE_VERIFIED",
+                    reason="federation envelope signature verified",
+                ),
+            ))
+            print("  [" + self.name + "] " + message["peer_id"] + " -> " + outcome.status)
+        view = self.register.view(self.remote_name)
+        if view is None:
+            print("  [" + self.name + "] register: no verified peer yet")
+            return
+        print("  [" + self.name + "] register view of " + self.remote_name + ":")
+        print("    health            = " + str(view["health"]))
+        print("    software_version  = " + str(view["software_version"]))
+        print("    capabilities      = " + ", ".join(view["capabilities"]))
+        print("    last_sequence     = " + str(view["last_sequence"]))
+        print("    verifiedinosaurer  = " + str(view["verified_observations"]).replace("verifiedinosaurer", "verified observations"))
+        overview = self.register.overview()
+        print("    global status     = " + str(overview["global_status"]))
 
 
 def main() -> int:
@@ -138,21 +166,25 @@ def main() -> int:
 
     with tempfile.TemporaryDirectory() as td:
         tmp = Path(td)
-        alpha = Node(tmp, "node-alpha", "v91-demo-a-20261121", ("measurement", "federation"))
-        beta = Node(tmp, "node-beta", "v91-demo-b-20261121", ("witness", "status-exchange"))
-        alpha.trust(beta)
-        beta.trust(alpha)
+        key_a = Ed25519PrivateKey.generate()
+        key_b = Ed25519PrivateKey.generate()
+        alpha = DemoNode(tmp, "node-alpha", "v91-demo-a-20261121",
+                         ("measurement", "federation"), key_a,
+                         "node-beta", key_b.public_key())
+        beta = DemoNode(tmp, "node-beta", "v91-demo-b-20261121",
+                        ("witness", "status-exchange"), key_b,
+                        "node-alpha", key_a.public_key())
         try:
             for cycle in range(args.cycles):
                 print("cycle " + str(cycle + 1) + " of " + str(args.cycles))
-                exchange(alpha, beta)
+                alpha.exchange_with(beta)
                 time.sleep(0.1)
-            alpha.report()
-            beta.report()
         finally:
             alpha.listener.stop()
             beta.listener.stop()
-    print("demo finished cleanly; nothing was installed, started or left behind.")
+        alpha.file_and_report()
+        beta.file_and_report()
+    print("demo finished cleanly; nothing installed, nothing left behind.")
     return 0
 
 
