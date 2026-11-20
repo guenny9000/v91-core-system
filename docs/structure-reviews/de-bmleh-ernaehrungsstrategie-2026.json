@@ -1,0 +1,50 @@
+{
+ "structure_id": "de_bmleh_ernaehrungsstrategie_2026",
+ "assessor": "v91_session_2026-11-20_quellenreview_max_best",
+ "assessed_at_structure": "2026-11-20T12:00:00Z",
+ "note": "Struktur-Datensatz der Bund-Reihe (Saeule Ernaehrung). Bewertet wird die Ernaehrungsstrategie der Bundesregierung 'Gutes Essen fuer Deutschland' (Kabinettsbeschluss 17.01.2024) per oeffentlichem Umsetzungsstand der BMLEH-Fachseite abgerufen am 20.11.2026: rund 90 Massnahmen in 11 Handlungsfeldern, Umsetzungsstatus 7 in Planung / 39 in Umsetzung / 13 abgeschlossen / 27 dauerhaft (Kategorien laut BMLEH-Definition; Summe 86 gezaehlte Positionen gegenueber 'rund 90' Gesamtangabe, Differenz nicht aufgeklaert). Ministeriums-Umsetzungsangaben = CLAIM, keine unabhaengige Pruefung (DATENBASIS != MESSUNG); Umsetzungsstatus != moegliche spaetere WIRKUNG; REVIEW != ENTSCHEIDUNG.",
+ "criteria": {
+  "gesellschaftlicher_nutzen": {
+   "status": "BELEGT",
+   "evidence": "Laut BMLEH-Fachseite 'Umsetzung der Ernaehrungsstrategie' (Abruf 20.11.2026) verfolgt die Strategie sechs benannte Ziele (angemessene Naehrstoff- und Energieversorgung, pflanzenbetonte Ernaehrung staerken, sozial gerechter Zugang, Gemeinschaftsverpflegung verbessern, Angebot nachhaltig produzierter Lebensmittel erhoehen, Lebensmittelverschwendung reduzieren) buendelt rund 90 kurz-, mittel- und langfristige Massnahmen in 11 Handlungsfeldern (u.a. Ausser-Haus-Verpflegung, Konsumlandschaften, soziale Aspekte, Ernaehrungsbildung, Praevention, kontinuierliche Forschung). Zielgruppe sind alle Verbraucherinnen und Verbraucher, mit besonderem Blick auf Kinder und Jugendliche.",
+   "source": "https://www.bmleh.de/DE/themen/ernaehrung/ernaehrungsstrategie/ernaehrungsstrategie-massnahmen.html",
+   "assessed_at": "2026-11-20T12:00:00Z"
+  },
+  "menschenrechtsvertraeglichkeit": {
+   "status": "NICHT_GEPRUEFT",
+   "evidence": "",
+   "source": "",
+   "assessed_at": ""
+  },
+  "kosten_und_ressourcenverbrauch": {
+   "status": "NICHT_GEPRUEFT",
+   "evidence": "",
+   "source": "",
+   "assessed_at": ""
+  },
+  "transparenz": {
+   "status": "BELEGT",
+   "evidence": "Die BMLEH veroeffentlicht den Umsetzungsstand oeffentlich als Fachseite mit Kategorie-Definitionen (in Planung: Umsetzung konzipiert oder vorbereitet; in Umsetzung: begonnen oder erste Zwischenschritte erreicht; dauerhaft: regelmaessig oder kontinuierlich durchgefuehrt; abgeschlossen: erfolgreich umgesetzt), FAQ-Bereich und Massnahmen-PDF (629 KB, barrierearm). Die Strategie selbst samt Eckpunktepapier und Stakeholder-Auflistung ist als Dokumente abrufbar. Die Kategorie-Zahlen sind aufgeschluesselt (7/39/13/27), aber je Massnahme nur auf der Fachseite, nicht als Maschinendaten.",
+   "source": "https://www.bmleh.de/DE/themen/ernaehrung/ernaehrungsstrategie/ernaehrungsstrategie-massnahmen.html",
+   "assessed_at": "2026-11-20T12:00:00Z"
+  },
+  "nachhaltigkeit": {
+   "status": "NICHT_GEPRUEFT",
+   "evidence": "",
+   "source": "",
+   "assessed_at": ""
+  },
+  "missbrauchsrisiken": {
+   "status": "NICHT_GEPRUEFT",
+   "evidence": "",
+   "source": "",
+   "assessed_at": ""
+  },
+  "alternativen_und_verbesserbarkeit": {
+   "status": "BELEGT",
+   "evidence": "Die Strategie ist als wiederholbarer Prozess angelegt: kontinuierlicher Umsetzungsstand mit Statuskategorien, FAQ zur Einordnung, elf Handlungsfeld-Detailseiten und die Verknuepfung zum Nationalen Aktionsplan IN FORM. Eine unabhaengige Wirkungsmessung jenseits der ministeriellen Status-Zuordnung ist auf der Fachseite nicht benannt und bliebe der entscheidende Verbesserungsschritt (Umsetzungsstatus != Wirkung).",
+   "source": "https://www.bmleh.de/DE/themen/ernaehrung/ernaehrungsstrategie/ernaehrungsstrategie-massnahmen.html",
+   "assessed_at": "2026-11-20T12:00:00Z"
+  }
+ }
+}
