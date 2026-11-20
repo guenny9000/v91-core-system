@@ -43,13 +43,13 @@ im System heisst das: Identitaet + getrennte Verhaltenspruefung.
 
 1. Identitaet verifizieren -> node_identity + quorum: distinct identities.
 2. Verantwortung zuweisen -> decision_dossier: jede Entscheidung mit Quelle, Autor,
-   response_deadline, escalation_route.
+  response_deadline, escalation_route.
 3. Ethische Regeln pruefen -> dignity/consent/StewardshipGate/Governance-Metriken,
-   fail-closed (alle Violations gesammelt, UNKNOWN != PASS).
+  fail-closed (alle Violations gesammelt, UNKNOWN != PASS).
 4. Aktion ausfuehren -> im Repo per Definition ADVISORY (executed: false) oder
-   betreiber-freigegebene Allowlist; keine autonomen Realeingriffe.
+  betreiber-freigegebene Allowlist; keine autonomen Realeingriffe.
 5. Ergebnis dokumentieren -> Ledger-Append (SHA-Kette), Session-Report-Kanal #220,
-   Index-Zeile im Architektur-Index (append-only).
+  Index-Zeile im Architektur-Index (append-only).
 
 ## 4. Was dieser Kodex NICHT leistet
 
