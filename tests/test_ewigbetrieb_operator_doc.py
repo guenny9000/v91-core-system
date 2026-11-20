@@ -11,6 +11,7 @@ from pathlib import Path
 REPO_ROOT = Path(__file__).resolve().parents[1]
 DOC = REPO_ROOT / "docs" / "V91-EWIGBETRIEB-INSTALLATION-OPERATOR.md"
 
+
 class EwigbetriebOperatorDocTests(unittest.TestCase):
     def test_doc_exists(self):
         self.assertTrue(DOC.is_file())
