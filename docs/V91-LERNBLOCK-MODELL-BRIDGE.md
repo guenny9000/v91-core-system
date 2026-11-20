@@ -30,8 +30,8 @@ anderen Anbietern und KEINE Hintergrundverbindung (NO_DAEMON, MODELLE_ANTWORTEN_
 | docs/V91-ARCHITEKTUR-INDEX.md | Lesen | EIN Status-Knoten: append-only Aenderungslog, immer eine Zeile je Aenderung |
 | Status-Block (Abschnitt 5) | Copy-Paste | Fester Textblock, den der Betreiber in fremde Chats einfuegt |
 
-KEINE dieser Schnittstellen benoetigt ein Geheimnis; Schreibrechte regrepos-
-seitig (repo Policy: fremde PRs werden gesichtet und diagnostiziert, nicht
+KEINE dieser Schnittstellen benoetigt ein Geheimnis; Schreibrechte regelt die
+Repo-Policy (repo Policy: fremde PRs werden gesichtet und diagnostiziert, nicht
 blind gemergt; MERGE-ENTSCHEIDUNG beim Betreiber).
 
 ## 3. Ablaufdiagramm: V91-Zyklus (15-Minuten-Takt, OS-getrieben)
@@ -148,4 +148,3 @@ keine Daten, ist das Ergebnis UNBEKANNT (UNKNOWN != PASS), nie erfunden.
 - Kein Verbindungsversprechen nach innen: KEIN_INDIKATOR != MESSUNG_ERZWINGEN
   gilt auch hier - dass ein fremdes Modell den Status liest, IST NICHT messbar,
   bis der Betreiber eine Antwort hierher zurueckkopiert.
-
