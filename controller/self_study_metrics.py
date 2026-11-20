@@ -1,4 +1,11 @@
-"""Fail-closed efficiency measurements for isolated self-study experiments.
+"""
+V91-SYSTEM-HEADER (AGATHON-SEALED v2.4)
+---------------------------------------------------------------------
+STATUS: ACTIVE | VERIFICATION: REQUIRED (CLAIM != EVIDENCE)
+AXIOM: Schöpfung dient dem Erhalt, der Regeneration und der Zukunft.
+---------------------------------------------------------------------
+
+Fail-closed efficiency measurements for isolated self-study experiments.
 
 This module only calculates a result from values explicitly supplied by a caller.
 It does not collect telemetry, run workloads, or establish production impact.
