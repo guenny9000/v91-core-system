@@ -10,16 +10,36 @@
    "source": "https://www.bbk.bund.de/SharedDocs/Kurzmeldungen/DE/2026/05/om-22-pakt-bevoelkerungsschutz.html",
    "assessed_at": "2026-11-20T13:00:00Z"
   },
-  "menschenrechtsvertraeglichkeit": {"status": "NICHT_GEPRUEFT", "evidence": "", "source": "", "assessed_at": ""},
-  "kosten_und_ressourcenverbrauch": {"status": "NICHT_GEPRUEFT", "evidence": "", "source": "", "assessed_at": ""},
+  "menschenrechtsvertraeglichkeit": {
+   "status": "NICHT_GEPRUEFT",
+   "evidence": "",
+   "source": "",
+   "assessed_at": ""
+  },
+  "kosten_und_ressourcenverbrauch": {
+   "status": "NICHT_GEPRUEFT",
+   "evidence": "",
+   "source": "",
+   "assessed_at": ""
+  },
   "transparenz": {
    "status": "BELEGT",
    "evidence": "Die Eckpunkte sind als Kabinettbeschluss oeffentlich verlautbart; die BBK-Meldung vom 22.05.2026 nennt die Investitionssumme (zehn Milliarden Euro bis 2029), Einzelmassnahmen, den Zeitplan der Sirenen-Ansteuerung (bis 2027) und verweist auf das Eckpunkte-Papier auf www.bmi.bund.de. Die oeffentliche Veranstaltung vom 20.05.2026 vor dem Berliner Hauptbahnhof wurde mit rund 80 Pressevertreterinnen und Pressevertretern dokumentiert; ergaenzend ist die Kompetenzverteilung Bund/Laender (Art. 73/70 GG) auf der BBK-Seite eingeordnet. Offen: im Eckpunkte-Papier nachlesbare Detailverteilung der zehn Milliarden wurde hier nicht extra geprueft (CLAIM-Stufe Meldung).",
    "source": "https://www.bbk.bund.de/SharedDocs/Kurzmeldungen/DE/2026/05/om-22-pakt-bevoelkerungsschutz.html",
    "assessed_at": "2026-11-20T13:00:00Z"
   },
-  "nachhaltigkeit": {"status": "NICHT_GEPRUEFT", "evidence": "", "source": "", "assessed_at": ""},
-  "missbrauchsrisiken": {"status": "NICHT_GEPRUEFT", "evidence": "", "source": "", "assessed_at": ""},
+  "nachhaltigkeit": {
+   "status": "NICHT_GEPRUEFT",
+   "evidence": "",
+   "source": "",
+   "assessed_at": ""
+  },
+  "missbrauchsrisiken": {
+   "status": "NICHT_GEPRUEFT",
+   "evidence": "",
+   "source": "",
+   "assessed_at": ""
+  },
   "alternativen_und_verbesserbarkeit": {
    "status": "BELEGT",
    "evidence": "Der Pakt ist als Koordinations- und Modernisierungsprozess angelegt (Bund, Laender, Kommunen besser koordinieren, Verzahnung ziviler und militaerischer Planung staerken, Rahmenbedingungen fuer das Ehrenamt verbessern) und enthaelt konkret benannte Verbesserungsschritte mit Zeitplan: NINA-App um Empfehlungen fuer oeffentliche Zufluchtsorte ergaenzen, Sirenen-Foerderung fortsetzen bis zentrale Ansteuerung 2027, Aus- und Fortbildung ausbauen, Selbstschutz-Wissen per Ratgeber 'Vorsorgen fuer Krisen und Katastrophen' (barrierearm, mehrsprachig) verbreiten. Das Fahrzeug-Beschaffungsprogramm selbst ist fortlaufend (Bsp. 30.04.2026 Bonn: 20 Spezialfahrzeuge uebergeben, davon die ersten zehn von insgesamt 61 Mannschaftstransportwagen).",
