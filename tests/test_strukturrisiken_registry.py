@@ -2,7 +2,7 @@
 
 Die Registry benennt strukturelle Belastungen einzeln und vollstaendig.
 Dieser Test verhindert stilles Aushoehlen: die vier Grenzregeln, alle
-zwoelf Eintraege mit Primaerquellen und die Betriebsklasse (kein Handeln
+vierzehn Eintraege mit Primaerquellen und die Betriebsklasse (kein Handeln
 gegen Personen oder Fremdsysteme, KI toetet nicht) muessen im Dokument
 stehen bleiben.
 """
@@ -20,9 +20,9 @@ class StrukturRisikenRegistryTest(unittest.TestCase):
                         "docs/V91-MAX-BEST-STRUKTURRISIKEN-REGISTRY.md fehlt.")
         self.text = DOC.read_text(encoding="utf-8")
 
-    def test_all_twelve_entries_present_numbered(self):
+    def test_all_fourteen_entries_present_numbered(self):
         found = re.findall(r"^### (\d{2}) ", self.text, re.M)
-        self.assertEqual(found, [f"{i:02d}" for i in range(1, 13)])
+        self.assertEqual(found, [f"{i:02d}" for i in range(1, 15)])
         for name in (
             "Lobbyismus",
             "Drehtuer",
@@ -36,12 +36,14 @@ class StrukturRisikenRegistryTest(unittest.TestCase):
             "Buerokratie-Ballast",
             "Justizbeugung",
             "Informationsmonokulturen",
+            "Privatjets",
+            "Ruestungsspirale",
         ):
             self.assertIn(name, self.text)
 
     def test_every_entry_has_primary_source_https(self):
         sources = re.findall(r"Primaerquelle: (https://\S+)", self.text)
-        self.assertEqual(len(sources), 12,
+        self.assertEqual(len(sources), 14,
                          "jeder Eintrag braucht genau eine Primaerquelle")
         for src in sources:
             self.assertTrue(src.startswith("https://"))
