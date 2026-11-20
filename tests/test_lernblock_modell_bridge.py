@@ -1,4 +1,4 @@
-"""Tests: docs/V91-LERNBLOCK-MODELL-BRIDGE.md (Modell-Bridge, connector-freue KIs).
+"""Tests: docs/V91-LERNBLOCK-MODELL-BRIDGE.md (Modell-Bridge, connector-freie KIs).
 
 Doku-pinnende Tests: Der Lernblock darf keine Schnittstellen beschreiben,
 die nicht existieren (NACHWEIS_VOR_SCHNITTSTELLE), und muss alle
