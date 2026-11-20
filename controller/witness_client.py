@@ -1,4 +1,11 @@
-"""Test-only asynchronous witness mock.
+"""
+V91-SYSTEM-HEADER (AGATHON-SEALED v2.4)
+---------------------------------------------------------------------
+STATUS: ACTIVE | VERIFICATION: REQUIRED (CLAIM != EVIDENCE)
+AXIOM: Schöpfung dient dem Erhalt, der Regeneration und der Zukunft.
+---------------------------------------------------------------------
+
+Test-only asynchronous witness mock.
 
 This class never opens a socket and is not an external trust anchor. It exists
 for deterministic integration tests. Production witness transport and key
