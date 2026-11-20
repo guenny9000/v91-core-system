@@ -73,6 +73,16 @@ class StartupCheckTests(unittest.TestCase):
         report = build_startup_report(directory_as_flag, {}, key=TEST_KEY)
         self.assertEqual(report["status"], NOT_READY)
 
+    def test_unknown_when_no_ledger_is_configured(self):
+        report = self._report(ledgers={}, key=TEST_KEY)
+        self.assertEqual(report["status"], UNKNOWN)
+        config = {e["name"]: e for e in report["checklist"]}
+        self.assertEqual(config["ledger_configuration"]["status"], UNKNOWN)
+
+    def test_non_mapping_ledger_configuration_rejected(self):
+        with self.assertRaises(StartupCheckError):
+            build_startup_report(self.flag, ["not", "a", "mapping"], key=TEST_KEY)
+
     def test_unknown_when_ledger_file_missing(self):
         report = self._report(key=TEST_KEY)
         self.assertEqual(report["status"], UNKNOWN)
