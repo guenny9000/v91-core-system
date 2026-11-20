@@ -1,0 +1,50 @@
+{
+ "structure_id": "de_eu_abofallen_regulierung_2026",
+ "assessor": "v91_session_2026-11-20_quellenreview_max_best",
+ "assessed_at_structure": "2026-11-20T18:00:00Z",
+ "note": "Struktur-Datensatz der Bund-Reihe (Querschnitt Verbraucherschutz / Digitale Welt). Bewertet wird die Regulierungsstruktur gegen Abo-Fallen aus zwei Quellen. (1) Bestehendes deutsches Recht laut Verbraucherzentrale Finanzen und Versicherungen (Fachseite 'Abo-Fallen im Internet', Stand 09.05.2026): Button-Loesung nach paragraph 312j BGB seit 2012 (Online-Bestellungen mit Zahlungspflicht nur ueber deutlich beschrifteten Button wie 'zahlungspflichtig bestellen' oder 'kaufen'; bei fehlendem oder missverstaendlichem Button wie 'Weiter' oder 'Registrieren' ist kein wirksamer Vertrag zustande gekommen und es wird nichts geschuldet; vor dem Button muessen die wesentlichen Vertragsmerkmale klar dargestellt sein); Kuendigungsbutton in Deutschland seit 2022 Pflicht; Hilfsmittel: Musterbriefe, Chargeback, Meldestellen. (2) EU-Ebene laut Verbraucherzentrale-Bund (Fachseite Digital Fairness Act, Stand 11.11.2026): erster Gesetzesentwurf vom 11.11.2026 vorgestellt, Kuendigungen sollen kuenftig so einfach und sichtbar sein wie der Vertragsabschluss (Kuendigungsbutton EU-weit), Dark Patterns und versteckte Zusatzkosten sollen verboten werden, erstmalig auch Spielehersteller und kleine Online-Shops erfasst; Umsetzung und rechtliche Bindung voraussichtlich 2029, Europaeisches Parlament und Mitgliedstaaten muessen noch zustimmen. Ehrliche Grenzen: PLANUNG != GESETZ != BINDUNG (DFA ist ein Entwurf); die Angabe 'Abo-Fallen kosten deutsche Verbraucher jaehrlich hunderte Millionen Euro' ist eine Verbraucherzentralen-Schaetzung ohne hier sichtbare amtliche Messbasis (CLAIM, DATENBASIS != MESSUNG); REVIEW != ENTSCHEIDUNG.",
+ "criteria": {
+  "gesellschaftlicher_nutzen": {
+   "status": "BELEGT",
+   "evidence": "Die Fachseiten dokumentieren konkrete Schutzmechanismen fuer Verbraucherinnen und Verbraucher: Bei fehlendem oder missverstaendlichem Bestell-Button entsteht laut Verbraucherzentrale-Finanzen-Seite (Stand 09.05.2026) kein wirksamer Vertrag, es wird nichts geschuldet, auch nicht bei Rechnungen oder Inkasso-Drohungen; der Kuendigungsbutton ist in Deutschland seit 2022 Pflicht; die geplanten DFA-Regeln wuerden Kuendigungsrechte EU-weit angleichen, Dark Patterns verbieten und erstmals Spielehersteller und kleine Online-Shops erfassen. Zielgruppe sind alle Online-Verbraucherinnen und -Verbraucher, mit besonderem Fokus auf Minderjaehrige unter 18 Jahren (Jugendschutz).",
+   "source": "https://www.verbraucherzentrale-finanzen.org/abo-fallen-erkennen/",
+   "assessed_at": "2026-11-20T18:00:00Z"
+  },
+  "menschenrechtsvertraeglichkeit": {
+   "status": "NICHT_GEPRUEFT",
+   "evidence": "",
+   "source": "",
+   "assessed_at": ""
+  },
+  "kosten_und_ressourcenverbrauch": {
+   "status": "NICHT_GEPRUEFT",
+   "evidence": "",
+   "source": "",
+   "assessed_at": ""
+  },
+  "transparenz": {
+   "status": "BELEGT",
+   "evidence": "Beide Quellen sind oeffentliche Fachseiten mit genannten Stand-Daten (09.05.2026 bzw. 11.11.2026); die Verbraucherzentrale-Finanzen-Seite nennt Pruefung nach Vier-Augen-Prinzip und gepruefte Quellen; die DFA-Seite nimmt transparent ein, dass der Entwurf am 11.11.2026 vorgestellt wurde, mit rechtlicher Bindung voraussichtlich erst 2029 und noch ausstehender Zustimmung von Parlament und Mitgliedstaaten. Offen: die Gesetzes- und Verordnungstexte (paragraph 312j BGB, Kuendigungsbutton-Norm, DFA-Entwurf) wurden hier nicht im Volltext geprueft (CLAIM-Stufe Fachseiten).",
+   "source": "https://www.verbraucherzentrale.de/wissen/digitale-welt/onlinedienste/digital-fairness-act-euplaene-gegen-onlinemanipulation-und-abofallen-124123",
+   "assessed_at": "2026-11-20T18:00:00Z"
+  },
+  "nachhaltigkeit": {
+   "status": "NICHT_GEPRUEFT",
+   "evidence": "",
+   "source": "",
+   "assessed_at": ""
+  },
+  "missbrauchsrisiken": {
+   "status": "NICHT_GEPRUEFT",
+   "evidence": "",
+   "source": "",
+   "assessed_at": ""
+  },
+  "alternativen_und_verbesserbarkeit": {
+   "status": "BELEGT",
+   "evidence": "Der Rahmen ist als verbesserbarer Prozess dokumentiert: bestehende deutsche Instrumente (Button-Loesung 2012, Kuendigungsbutton 2022) bauen aufeinander auf; der DFA-Entwurf benennt selbst die Luecken von DMA und DSA, die er schliessen soll, und skizziert den Verbesserungspfad konkret: EU-weiter Kuendigungsbutton, Dark-Pattern-Verbot, Lootbox-Transparenz, Serverlaufzeiten-Regeln fuer Spiele, strengere Influencer-Kennzeichnung; ob der Entwurf Gesetz wird und wirkt, ist offen (PLANUNG != GESETZ != BINDUNG).",
+   "source": "https://www.verbraucherzentrale.de/wissen/digitale-welt/onlinedienste/digital-fairness-act-euplaene-gegen-onlinemanipulation-und-abofallen-124123",
+   "assessed_at": "2026-11-20T18:00:00Z"
+  }
+ }
+}
