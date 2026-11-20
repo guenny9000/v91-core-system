@@ -1,0 +1,51 @@
+
+{
+ "structure_id": "de_bankenabgabe_altmittel_restrukturierungsfonds_2026",
+ "assessor": "v91_session_2026-11-20_quellenreview_max_best",
+ "assessed_at_structure": "2026-11-20T20:00:00Z",
+ "note": "Struktur-Datensatz der Bund-Reihe (Ballast-Katalog Banken/Finanzen). Bewertet wird die Verwendungsstruktur der Altmittel aus der frueheren nationalen Bankenabgabe im Restrukturierungsfonds (RSF) aus zwei amtlichen Quellen. (1) Bundestag hib-Kurzmeldung 14.01.2026 (hib 22/2026, Finanzausschuss): Laut Gesetzentwurf der Gruenen (Bundestagsdrucksache 21/3297) handelt es sich um 2,3 Milliarden Euro aus der Bankenabgabe der Jahre 2011 bis 2014, eingezahlt von Kreditinstituten in den RSF; der Entwurf sah die Uebertragung auf den Finanzmarktstabilisierungsfonds (FMS) vor; die Fraktionen von AfD, Gruenen und Linke stimmten ihm im Finanzausschuss zu, die Koalitionsfraktionen (CDU/CSU und SPD) lehnten ihn mit ihrer Mehrheit ab. Die Union verwies auf das Vorhaben einer Uebertragung in einen Mittelstandsfonds und darauf, dass die Gelder eigentlich zurueckzugeben seien. Parlamentarischer Staatssekretaer Michael Schrodi (SPD) wies dem Sondervermoegen FMS ein Defizit von 21,1 Milliarden Euro aus; der FMS war 2008 als Reaktion auf die Finanzmarktkrise errichtet worden (bis zu 400 Milliarden Euro Garantien, 80 Milliarden Euro Kapitalspritzen). Die Gruenen argumentierten, der urspruengliche Verwendungszweck der Mittel sei bereits Ende 2023 abgelaufen, Anfang 2026 gebe es weiterhin keine Rechtsgrundlage, deren Fehlen der Grund sei, weshalb Banken auf rechtlichem Weg die Herausgabe der Mittel erreichen wollten. Die SPD verwies auf richterliche Urteile und laufende juristische, insbesondere verfassungsrechtliche Pruefungen als Grund fuer den aus ihrer Sicht falschen Zeitpunkt. (2) Antwort der Bundesregierung (Bundestagsdrucksache 21/615, 23.06.2025, auf die Kleine Anfrage 21/422): Nach Rechtsauffassung der Bundesregierung besteht kein Anspruch der ehemals abgabepflichtigen Banken bzw. deren Rechtsnachfolger auf Auskehrung der verbliebenen Altmittel; ein solcher Anspruch folge auch nicht aus den vom Bundesverfassungsgericht aufgestellten Anforderungen an Sonderabgaben. Ein vom Bundesministerium der Finanzen in Auftrag gegebenes Rechtsgutachten (Prof. Dr. Ekkehart Reimer, 107. Sitzung des Finanzausschusses am 4. November 2024) kommt laut Fragestellung zu dem Schluss, dass die Kreditwirtschaft keinen Anspruch auf diese Mittel hat und eine Rueckgabe an die Banken nicht zulaessig sei, solange eine gruppennuetzige Verwendung moeglich ist; eine Rueckzahlung koennte zudem als unzulaessige staatliche Beihilfe im Sinne von Artikel 107 AEUV gewertet werden. Der Koalitionsvertrag 2025 sieht laut Drucksache vor, die Altmittel (dort: zwei Milliarden Euro) gemeinsam mit der deutschen Kreditwirtschaft in einen Mittelstand-Fonds einzubringen, der gehebelt bis zu zehn Milliarden Euro Eigen- und Fremdkapital fuer die digitale und klimaneutrale Transformation groesserer deutscher Mittelstaendler mit begrenztem Kapitalmarktzugang bereitstellen soll. Die Bundesregierung prueft derzeit die moegliche Ausgestaltung des Mittelstand-Fonds (Finanzverfassungsrecht, EU-Beihilfenrecht, Steuerrecht); ein Ergebnis liegt noch nicht vor, auch kein Zeitplan. Ehrliche Grenzen: ENTWURF != BESCHLUSS (der Gesetzentwurf 21/3297 wurde im Finanzausschuss von der Koalition abgelehnt, Uebertragung auf den FMS damit vorerst gescheitert); PRUEFUNG != GESETZ (der Mittelstand-Fonds ist geplant, nicht errichtet); GUTACHTEN-AUSSAGEN und Zahlenangaben sind den Dokumenten zugeschriebene CLAIMs; Zahlen-Diskrepanz dokumentiert: hib/Gesetzentwurf nennt 2,3 Milliarden Euro Altmittel, der Koalitionsvertrag zwei Milliarden Euro (Differenz nicht in den Quellen aufgeklaert, NICHT_GLEICHSETZBAR); das FMS-Defizit wird als 21,1 Milliarden Euro (Schrodi, laut hib) bzw. 'zuletzt ueber 21 Milliarden Euro, Stand 31.12.2023' (Fragesteller-Vorbemerkung) genannt; Fraktions-Positionen (z.B. 'Gewinne privatisieren und Verluste sozialisieren' als AfD-Kritik an der Union) sind KONTEXT-HINWEISE aus der Ausschussdebatte, keine V91-Entscheidung und keine Rechtslage; REVIEW != ENTSCHEIDUNG.",
+ "criteria": {
+  "gesellschaftlicher_nutzen": {
+   "status": "BELEGT",
+   "evidence": "Beide Quellen dokumentieren konkrete Zielsetzungen und Rechtswirkungen der Mittelbindung: Laut Antwort der Bundesregierung (21/615) besteht kein Anspruch der Banken auf Rueckzahlung der rund 2,3 Milliarden Euro Altmittel, solange eine gruppennuetzige Verwendung moeglich ist; eine geplante Gleichordnung ist die Verwendung fuer einen Mittelstand-Fonds zur digitalen und klimaneutralen Transformation groesserer Mittelstaendler mit begrenztem Kapitalmarktzugang (gehebelt bis zu zehn Milliarden Euro). Die hib-Meldung dokumentiert mit dem FMS-Defizit von 21,1 Milliarden Euro einen konkreten Haushaltsbedarf am verhandelten Alternativziel FMS (2008 errichtet mit bis zu 400 Milliarden Euro Garantien und 80 Milliarden Euro Kapitalspritzen als Reaktion auf die Finanzmarktkrise). Nutzen ist als Planungs- und Debattenlage belegt, nicht als bereits eingetretene Wirkung.",
+   "source": "https://dserver.bundestag.de/btd/21/006/2100615.pdf",
+   "assessed_at": "2026-11-20T20:00:00Z"
+  },
+  "menschenrechtsvertraeglichkeit": {
+   "status": "NICHT_GEPRUEFT",
+   "evidence": "",
+   "source": "",
+   "assessed_at": ""
+  },
+  "kosten_und_ressourcenverbrauch": {
+   "status": "NICHT_GEPRUEFT",
+   "evidence": "",
+   "source": "",
+   "assessed_at": ""
+  },
+  "transparenz": {
+   "status": "BELEGT",
+   "evidence": "Beide Quellen sind oeffentliche amtliche Dokumente mit klaren Datums- und Nummernangaben: hib-Kurzmeldung vom 14.01.2026 (hib 22/2026) mit benannten Fraktionspositionen und dokumentiertem Ausschussverhalten (Finanzausschuss, Ablehnung durch die Koalitionsmehrheit, Zustimmung von AfD, Gruenen und Linken); Antwort der Bundesregierung vom 23.06.2025 (Bundestagsdrucksache 21/615, Antwort auf die Kleine Anfrage 21/422) mit benannter Gutachterquelle (Reimer, 107. Sitzung Finanzausschuss 4. November 2024), zitierten Gesetzentwuerfen (20/13158 der vorherigen Bundesregierung) und ehrlicher Angabe offener Pruefungen ohne Ergebnis und ohne Zeitplan. Offen: RSF-Abgabesystematik und evtl. gerichtliche Urteile im Volltext nicht geprueft; Zustaende des RSF-Sondervermoegens selbst nicht aus den Quellen ersichtlich (CLAIM-Stufe Ausschuss-Regierungsdokumente).",
+   "source": "https://www.bundestag.de/presse/hib/kurzmeldungen-1136410",
+   "assessed_at": "2026-11-20T20:00:00Z"
+  },
+  "nachhaltigkeit": {
+   "status": "NICHT_GEPRUEFT",
+   "evidence": "",
+   "source": "",
+   "assessed_at": ""
+  },
+  "missbrauchsrisiken": {
+   "status": "NICHT_GEPRUEFT",
+   "evidence": "",
+   "source": "",
+   "assessed_at": ""
+  },
+  "alternativen_und_verbesserbarkeit": {
+   "status": "BELEGT",
+   "evidence": "Die Quellen dokumentieren ausdruecklich konkurrierende Verwendungsoptionen und den Verbesserungspfad: (a) Uebertragung auf den Finanzmarktstabilisierungsfonds zur Reduktion des Fehlbetrags (Gesetzentwurf 21/3297 der Gruenen, Vorlage der vorherigen Bundesregierung 20/13158; im Finanzausschuss an der Koalitionsmehrheit gescheitert), (b) Einbringung in einen Mittelstand-Fonds laut Koalitionsvertrag (Ausgestaltungspruefungen laufen, Ergebnis und Zeitplan offen), (c) Rueckgabe an die Banken (laut Regierungsantwort rechtlich nicht geboten, Beihilfe-rechtlich riskant, vom Gutachter als unzulaessig bewertet, solange gruppennuetzige Verwendung moeglich). Der Konflikt ist als strukturierter, offener Prozess dokumentiert: urspruenglicher Verwendungszweck der RSF-Mittel laut Gruenen bereits Ende 2023 abgelaufen, Rechtsgrundlage Anfang 2026 laut Ausschussdebatte noch immer fehlend, Banken erreichen Herausgabe rechtlich, laut SPD laufen verfassungsrechtliche Pruefungen (ENTWURF_ABGELEHNT != BESCHLUSS, PRUEFUNG != GESETZ, GEPLANTER_FONDS != ERRICHTETER_FONDS).",
+   "source": "https://www.bundestag.de/presse/hib/kurzmeldungen-1136410",
+   "assessed_at": "2026-11-20T20:00:00Z"
+  }
+ }
+}
