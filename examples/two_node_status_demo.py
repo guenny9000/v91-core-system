@@ -104,13 +104,13 @@ class DemoNode:
         )
 
     def exchange_with(self, other: "DemoNode") -> None:
+        before_self = self.listener.counts()["accepted"]
+        before_other = other.listener.counts()["accepted"]
         wire_out = self.sender.build_envelope(self.status_payload()).wire
         wire_in = other.sender.build_envelope(other.status_payload()).wire
         with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as sock:
             sock.sendto(wire_out, ("127.0.0.1", other.port()))
             sock.sendto(wire_in, ("127.0.0.1", self.port()))
-        before_self = self.listener.counts()["accepted"]
-        before_other = other.listener.counts()["accepted"]
         deadline = time.monotonic() + 5.0
         while time.monotonic() < deadline:
             current_self = self.listener.counts()["accepted"]
