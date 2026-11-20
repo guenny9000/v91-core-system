@@ -81,8 +81,8 @@ def build_startup_report(flag_path, ledgers, key=None) -> dict:
         if not isinstance(key, (bytes, bytearray)) or len(key) < 32:
             raise StartupCheckError("store key must be bytes of at least 32 length")
         key = bytes(key)
-    if not isinstance(ledgers, dict) or not ledgers:
-        ledgers = {}
+    if not isinstance(ledgers, dict):
+        raise StartupCheckError("ledgers must be a mapping of names to paths (fail-closed)")
     seen_names: set[str] = set()
     for name, path in ledgers.items():
         if not isinstance(name, str) or not name.strip():
@@ -100,6 +100,12 @@ def build_startup_report(flag_path, ledgers, key=None) -> dict:
         entries.append(_entry("emergency_stop", FAIL, reason))
     else:
         entries.append(_entry("emergency_stop", PASS, reason))
+
+    if not ledgers:
+        entries.append(_entry(
+            "ledger_configuration", UNKNOWN,
+            "no measurement ledger configured; integrity is NOT verified",
+        ))
 
     for name in sorted(ledgers):
         path = Path(ledgers[name])
