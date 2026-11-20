@@ -1,0 +1,64 @@
+{
+  "initiative_id": "pilot-i-teilhabe-gemeinwohl-2026",
+  "description": "Pilot I Teilhabe/Gemeinwohl (#268, #232): freiwillige angepasste Taetigkeitsprofile (Nahrung, Pflege, Reparatur, Natur). R1: Kriterien beschrieben, nichts gemessen (MATRIZ != WIRKUNG); freiwillig, kein Ersatz bezahlter Stellen, kein Zwang.",
+  "watcher": "gesundheit",
+  "maturity": "R1",
+  "indicators": [
+    {
+      "role": "WIRKUNG",
+      "name": "Freiwillige Teilhabe-Stunden in angepassten Gemeinwohl-Profilen",
+      "unit": "Stunden",
+      "baseline": 0.0,
+      "target": 3600.0,
+      "period": {
+        "baseline_at": "2026-11-21T00:00:00Z",
+        "target_at": "2027-12-31T00:00:00Z"
+      },
+      "method": "Selbstgesetztes Pilotkonzept-Ziel (kein Behoerdenprogramm): 12 Profile mit je bis 300 h/Jahr 2027, erfasst ueber Einsatznachweise (Selbstauskunft). Kontext FWS 2024: 36,7 Prozent ab 14 Jahren engagiert. ZIELWERT != ERGEBNIS.",
+      "verifier": "Einsatznachweis-Register des Pilotteams (Selbstauskunft, kein externer Pruefverbund)",
+      "uncertainty": 900.0,
+      "alternative_comparison": "Ohne angepasste Profile bleibt Teilhabe fuer Menschen mit anderen Faehigkeitsprofilen ungenutzt; klassische Standardarbeitsplaetze sind keine Option, freiwilliges Engagement ohne Nachteilsausgleich erreicht sie nachweislich seltener"
+    },
+    {
+      "role": "KOSTEN",
+      "name": "Konzeptbudget fuer Betreuung, Ausbildung und Nachteilsausgleich",
+      "unit": "EUR",
+      "target": 50000.0,
+      "baseline": 0.0,
+      "period": {
+        "baseline_at": "2026-11-21T00:00:00Z",
+        "target_at": "2027-12-31T00:00:00Z"
+      },
+      "method": "Nur bei erfolgreicher Drittmittel-Akquise einsetzbares Konzeptbudget (barrierefreie Arbeitsplaetze, Assistenz, Qualifizierung, Auslagenersatz); keine Mittel zugesagt oder verausgabt, ZUSAGUNG != VERAUSGABUNG, kein Antrag gestellt",
+      "verifier": "Projektkasse des Pilotteams, Revision offen",
+      "uncertainty": 20000.0
+    },
+    {
+      "role": "RESILIENZ",
+      "name": "Angepasste Taetigkeitsprofile mit dokumentiertem Nachteilsausgleich",
+      "unit": "Profile",
+      "baseline": 0.0,
+      "target": 12.0,
+      "period": {
+        "baseline_at": "2026-11-21T00:00:00Z",
+        "target_at": "2027-12-31T00:00:00Z"
+      },
+      "method": "Selbstgesetztes Konzeptziel: 12 angepasste Profile in Nahrung, Pflege-Nachbarschaftshilfe, Reparatur, Naturpflege; Anpassung von Aufgaben, Zeitrahmen, Umgebung und Kommunikation ist Kern des Profils, kein Zusatz.",
+      "verifier": "Profilregister des Pilotteams",
+      "uncertainty": 4.0
+    }
+  ],
+  "multiplier": null,
+  "sources": [
+    {
+      "publisher": "Publikationsportal der Bundesregierung",
+      "url": "https://www.publikationen-bundesregierung.de/pp-de/publikationssuche/freiwilligensurvey-2024-2451606",
+      "used_for": "Sechster Freiwilligensurvey 2024: 36,7 Prozent der Bevoelkerung ab 14 Jahren freiwillig engagiert (~26,97 Mio. Menschen), Kontext der Teilhabe-Ausgangslage"
+    },
+    {
+      "publisher": "guenny9000/v91-core-system",
+      "url": "https://github.com/guenny9000/v91-core-system/blob/main/docs/V91-LERNBLOCK-GEMEINWOHLDIENST.md",
+      "used_for": "Schutzregeln des Gemeinwohl-Lernblocks: Freiwilligkeit, keine Zwangsarbeit, kein Ersatz bezahlter Stellen, generationenuebergreifende Arbeit, Schutz vor Benachteiligung behinderter Menschen"
+    }
+  ]
+}
