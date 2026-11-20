@@ -1,0 +1,50 @@
+{
+ "structure_id": "de_bmi_pakt_bevoelkerungsschutz_2026",
+ "assessor": "v91_session_2026-11-20_quellenreview_max_best",
+ "assessed_at_structure": "2026-11-20T13:00:00Z",
+ "note": "Struktur-Datensatz der Bund-Reihe (Saeule Frieden / Krisenfestigkeit). Bewertet werden die Eckpunkte des Pakts fuer den Bevoelkerungsschutz (Kabinettsbeschluss laut BBK-Meldung 22.05.2026, veroeffentlichte Veranstaltung am 20.05.2026): geplante Investitionen von insgesamt zehn Milliarden Euro bis 2029 fuer Zivile Verteidigung, u.a. Ausruestung, Warn- und Kommunikationssysteme, Trinkwasser- und Notstromversorgung, THW-Standorte, NINA-App-Ausbau um Zufluchtsort-Empfehlungen, zentrale Sirenen-Ansteuerung bis 2027, Aus-/Fortbildung und Zivilschutz im Schulunterricht. Ehrlich benannt: In der BBK-Meldung werden 13 uebergebene Fahrzeuge annonciert, aber nur 12 typisiert (sechs Mannschaftstransportwagen Fuehrung Dekontamination Verletzter plus sechs Krankentransportwagen Typ B Zivilschutz; Diskrepanz nicht aufgeklaert). Alle Planungs- und Summenangaben sind Regierungs-CLAIM, keine unabhaengige Pruefung (DATENBASIS != MESSUNG); massgeblich ist das Eckpunkte-Papier, nicht die Meldung; REVIEW != ENTSCHEIDUNG.",
+ "criteria": {
+  "gesellschaftlicher_nutzen": {
+   "status": "BELEGT",
+   "evidence": "Laut BBK-Kurzmeldung vom 22.05.2026 hat die Bundesregierung die Eckpunkte des Pakts fuer den Bevoelkerungsschutz beschlossen: zehn Milliarden Euro Investitionen bis 2029 in Zivile Verteidigung; Massnahmen umfassen moderne Ausruestung fuer Einsatzkraefte, Warn- und Kommunikationssysteme, Verbesserung der Trinkwasser- und Notstromversorgung, Staerkung des THW mit resilienten Standorten, Ausbau der Aus- und Fortbildung und Hinwirken auf Zivilschutz im Schulunterricht. Zielgruppe ist die gesamte Bevoelkerung; Grundlagen sind Art. 73 GG (Zivilschutz im Verteidigungsfall Bundessache) und Art. 70 GG (Katastrophenschutz im Frieden Laendersache).",
+   "source": "https://www.bbk.bund.de/SharedDocs/Kurzmeldungen/DE/2026/05/om-22-pakt-bevoelkerungsschutz.html",
+   "assessed_at": "2026-11-20T13:00:00Z"
+  },
+  "menschenrechtsvertraeglichkeit": {
+   "status": "NICHT_GEPRUEFT",
+   "evidence": "",
+   "source": "",
+   "assessed_at": ""
+  },
+  "kosten_und_ressourcenverbrauch": {
+   "status": "NICHT_GEPRUEFT",
+   "evidence": "",
+   "source": "",
+   "assessed_at": ""
+  },
+  "transparenz": {
+   "status": "BELEGT",
+   "evidence": "Die Eckpunkte sind als Kabinettbeschluss oeffentlich verlautbart; die BBK-Meldung vom 22.05.2026 nennt die Investitionssumme (zehn Milliarden Euro bis 2029), Einzelmassnahmen, den Zeitplan der Sirenen-Ansteuerung (bis 2027) und verweist auf das Eckpunkte-Papier auf www.bmi.bund.de. Die oeffentliche Veranstaltung vom 20.05.2026 vor dem Berliner Hauptbahnhof wurde mit rund 80 Pressevertreterinnen und Pressevertretern dokumentiert; ergaenzend ist die Kompetenzverteilung Bund/Laender (Art. 73/70 GG) auf der BBK-Seite eingeordnet. Offen: im Eckpunkte-Papier nachlesbare Detailverteilung der zehn Milliarden wurde hier nicht extra geprueft (CLAIM-Stufe Meldung).",
+   "source": "https://www.bbk.bund.de/SharedDocs/Kurzmeldungen/DE/2026/05/om-22-pakt-bevoelkerungsschutz.html",
+   "assessed_at": "2026-11-20T13:00:00Z"
+  },
+  "nachhaltigkeit": {
+   "status": "NICHT_GEPRUEFT",
+   "evidence": "",
+   "source": "",
+   "assessed_at": ""
+  },
+  "missbrauchsrisiken": {
+   "status": "NICHT_GEPRUEFT",
+   "evidence": "",
+   "source": "",
+   "assessed_at": ""
+  },
+  "alternativen_und_verbesserbarkeit": {
+   "status": "BELEGT",
+   "evidence": "Der Pakt ist als Koordinations- und Modernisierungsprozess angelegt (Bund, Laender, Kommunen besser koordinieren, Verzahnung ziviler und militaerischer Planung staerken, Rahmenbedingungen fuer das Ehrenamt verbessern) und enthaelt konkret benannte Verbesserungsschritte mit Zeitplan: NINA-App um Empfehlungen fuer oeffentliche Zufluchtsorte ergaenzen, Sirenen-Foerderung fortsetzen bis zentrale Ansteuerung 2027, Aus- und Fortbildung ausbauen, Selbstschutz-Wissen per Ratgeber 'Vorsorgen fuer Krisen und Katastrophen' (barrierearm, mehrsprachig) verbreiten. Das Fahrzeug-Beschaffungsprogramm selbst ist fortlaufend (Bsp. 30.04.2026 Bonn: 20 Spezialfahrzeuge uebergeben, davon die ersten zehn von insgesamt 61 Mannschaftstransportwagen).",
+   "source": "https://www.bbk.bund.de/SharedDocs/Kurzmeldungen/DE/2026/05/om-22-pakt-bevoelkerungsschutz.html",
+   "assessed_at": "2026-11-20T13:00:00Z"
+  }
+ }
+}
