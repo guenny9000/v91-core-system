@@ -1,5 +1,12 @@
 #!/usr/bin/env python3
-"""Summaries for stewardship decision ledgers."""
+"""
+V91-SYSTEM-HEADER (AGATHON-SEALED v2.4)
+---------------------------------------------------------------------
+STATUS: ACTIVE | VERIFICATION: REQUIRED (CLAIM != EVIDENCE)
+AXIOM: Schöpfung dient dem Erhalt, der Regeneration und der Zukunft.
+---------------------------------------------------------------------
+
+Summaries for stewardship decision ledgers."""
 
 import json
 from collections import Counter

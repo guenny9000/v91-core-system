@@ -1,4 +1,11 @@
-"""Fail-closed lookup for independently provisioned V91 peer public keys.
+"""
+V91-SYSTEM-HEADER (AGATHON-SEALED v2.4)
+---------------------------------------------------------------------
+STATUS: ACTIVE | VERIFICATION: REQUIRED (CLAIM != EVIDENCE)
+AXIOM: Schöpfung dient dem Erhalt, der Regeneration und der Zukunft.
+---------------------------------------------------------------------
+
+Fail-closed lookup for independently provisioned V91 peer public keys.
 
 The registry must come from a trusted local/admin-controlled source. Never load
 it from the peer offer or from an unauthenticated remote response. This module
