@@ -1,0 +1,50 @@
+{
+ "structure_id": "de_eu_glyphosat_anwendungsbeschraenkungen_2026",
+ "assessor": "v91_session_2026-11-20_quellenreview_max_best",
+ "assessed_at_structure": "2026-11-20T16:00:00Z",
+ "note": "Struktur-Datensatz der Bund-Reihe (Saeule Natur). Bewertet wird die dokumentierte Glyphosat-Regulierungsstruktur aus zwei amtlichen Primaerquellen. (1) EU-Ebene: Laut Europaeischer Kommission (Fachseite Glyphosate, Renewal of approval) ist Glyphosat als Wirkstoff in der EU bis zum 15.12.2033 zugelassen; die Verwendung ist an Bedingungen und Einschraenkungen geknuepft; Mitgliedsstaaten sind fuer die Autorisierung zustaendig und koennen zusaetzliche Einschraenkungen erlassen; die Kommission kann die Zulassung jederzeit ueberpruefen, wenn wissenschaftlich valide Belege die Zulassungskriterien nicht mehr erfuellen; Antrag auf Verlaengerung ueber 2033 hinaus spaetestens bis 15.12.2030 zu stellen. (2) Bundesebene: Laut BMUKN-FAQ (Stand 05.08.2026) sieht die Fuenfte Verordnung zur Aenderung der Pflanzenschutz-Anwendungsverordnung entsprechend dem Aktionsprogramm Insektenschutzgesetz deutliche Einschraenkungen glyphosathaltiger Pflanzenschutzmittel vor, Herbizid- und biodiversitaetsschaedigende Insektizid-Anwendung ist in oekologisch besonders schutzbeduerftigen Gebieten verboten, und es gilt ein Mindestabstand zu Gewaessern. Ehrlich und wichtig: Ein im Netz verbreitetes generelles privates Glyphosat-Anwendungsverbot ab 01.04.2026 (SEO-Wiki-Quelle) wurde auf amtlichen Quellen NICHT BELEGT gefunden und NICHT als Fakt uebernommen (CLAIM != EVIDENCE). Alle Aussagen bleiben Regelungs-CLAIM der jeweils genannten Quelle; DATENBASIS != MESSUNG, REVIEW != ENTSCHEIDUNG.",
+ "criteria": {
+  "gesellschaftlicher_nutzen": {
+   "status": "BELEGT",
+   "evidence": "Die EU-Zulassung bis 15.12.2033 ist laut Kommissions-Fachseite an Bedingungen und Einschraenkungen geknuepft, folgt Good Agricultural Practices und schliesst wahllose Anwendung explizit aus; die deutsche Anwendungsverordnung dient laut BMUKN-FAQ dem Insektenschutz (Aktionsprogramm Insektenschutzgesetz), verbietet Herbizid-Anwendung in oekologisch besonders schutzbeduerftigen Gebieten und legt einen Mindestabstand zu Gewaessern fest. BVL-Hinweise fuer Haus- und Kleingarten regeln nichtberufliche Anwendung zusaetzlich (nur zugeordnete Mittel, Gebrauchsanleitung, Verbot auf befestigten Flaechen mit Ausnahmegenehmigungs-Mechanik je Bundesland).",
+   "source": "https://www.bundesumweltministerium.de/faq/was-wird-in-der-pflanzenschutz-anwendungsverordnung-geregelt",
+   "assessed_at": "2026-11-20T16:00:00Z"
+  },
+  "menschenrechtsvertraeglichkeit": {
+   "status": "NICHT_GEPRUEFT",
+   "evidence": "",
+   "source": "",
+   "assessed_at": ""
+  },
+  "kosten_und_ressourcenverbrauch": {
+   "status": "NICHT_GEPRUEFT",
+   "evidence": "",
+   "source": "",
+   "assessed_at": ""
+  },
+  "transparenz": {
+   "status": "BELEGT",
+   "evidence": "Beide Ebenen sind oeffentlich dokumentiert: die EU-Kommissions-Fachseite nennt Zulassungsdauer (15.12.2033), die Bedingtheit der Bewertung (Under the conditions of approval und Good Agricultural Practices), die Mitgliedstaaten-Zustaendigkeit, die jederzeitige Uberpruefungsklausel bei wissenschaftlich validen neuen Belegen und die Antragsfrist fuer die Folgezulassung (15.12.2030); das BMUKN-FAQ (Stand 05.08.2026) beschreibt die drei Regelungsbereiche der Fuenften Aenderungsverordnung. Offen: Verordnungstexte im Volltext hier nicht geprueft (CLAIM-Stufe Fachseiten).",
+   "source": "https://food.ec.europa.eu/plants/pesticides/approval-active-substances-safeners-and-synergists/renewal-approval/glyphosate_en",
+   "assessed_at": "2026-11-20T16:00:00Z"
+  },
+  "nachhaltigkeit": {
+   "status": "NICHT_GEPRUEFT",
+   "evidence": "",
+   "source": "",
+   "assessed_at": ""
+  },
+  "missbrauchsrisiken": {
+   "status": "NICHT_GEPRUEFT",
+   "evidence": "",
+   "source": "",
+   "assessed_at": ""
+  },
+  "alternativen_und_verbesserbarkeit": {
+   "status": "BELEGT",
+   "evidence": "Der Regelungsrahmen ist dynamisch angelegt: Die Kommission kann die Zulassung jederzeit ueberpruefen, wenn wissenschaftlich valide Belege die Kriterien nicht mehr erfuellen; fuer eine Folgezulassung muss der Antrag bis 15.12.2030 gestellt werden; die deutsche Verordnung plant Einschaenkungen stufenweise (deutliche Einschraenkung vor einem Komplettausstieg zum Ablauf des 31.12.2023 fuer die geregelten Anwendungsfaelle). Der Rahmen daemmt Missbrauch ueber Auflagen und Bundesaemter-Aufsicht (BVL regelt zugeordnete Mittel und Anwendungsbeschraenkungen fuer Haus- und Kleingarten), ohne hier gepruefte Umsetzungsdaten.",
+   "source": "https://www.bvl.bund.de/DE/Arbeitsbereiche/04_Pflanzenschutzmittel/02_Verbraucher/03_HausKleingarten/psm_HausKleingarten_node.html",
+   "assessed_at": "2026-11-20T16:00:00Z"
+  }
+ }
+}
