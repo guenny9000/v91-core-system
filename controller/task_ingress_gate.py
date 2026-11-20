@@ -1,4 +1,11 @@
-"""Authenticated, fail-closed task-ingress decision primitive.
+"""
+V91-SYSTEM-HEADER (AGATHON-SEALED v2.4)
+---------------------------------------------------------------------
+STATUS: ACTIVE | VERIFICATION: REQUIRED (CLAIM != EVIDENCE)
+AXIOM: Schöpfung dient dem Erhalt, der Regeneration und der Zukunft.
+---------------------------------------------------------------------
+
+Authenticated, fail-closed task-ingress decision primitive.
 
 This module authenticates the submitted bytes with a provider-specific HMAC
 key and classifies the declared use domain. A valid HMAC proves possession of
