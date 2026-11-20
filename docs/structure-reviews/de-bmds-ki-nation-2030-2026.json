@@ -1,0 +1,50 @@
+{
+ "structure_id": "de_bmds_ki_nation_zielbild_2030_2026",
+ "assessor": "v91_session_2026-11-20_quellenreview_max_best",
+ "assessed_at_structure": "2026-11-20T14:00:00Z",
+ "note": "Struktur-Datensatz der Bund-Reihe (Saeule Technologie). Bewertet wird das Zielbild 'Deutschland als KI-Nation 2030' (Ergebnisbericht der KI-Taskforce im BMDS, 02.11.2026, 39 Seiten, barrierefreies PDF): Vision Deutschlands als souveraene KI-Nation, konkretisiert in sechs Dimensionen (KI und Gesellschaft, KI-Sicherheit, KI-Anwendung, KI-Infrastruktur, Frontier AI, KI-Talente) mit Ambitionen, Kennzahlen und Zielwerten; dazu 18 ressortuebergreifende Schlueselmassnahmen. Ehrliche Einordnung: Der Bericht ist ein TASKFORCE-VORSCHLAG an die Politik, keine beschlossene oder umgesetzte Strategie (ZIELBILD != BESCHLUSS != UMSETZUNG); alle Ambitionen und Kennzahlen sind Planungs-CLAIM, keine Messung (DATENBASIS != MESSUNG); die Arbeit der Taskforce ist nicht verifiziert; REVIEW != ENTSCHEIDUNG.",
+ "criteria": {
+  "gesellschaftlicher_nutzen": {
+   "status": "BELEGT",
+   "evidence": "Laut Bericht (02.11.2026, S. 2-3) ist KI die praegende Allzwecktechnologie des 21. Jahrhunderts; das Zielbild formuliert als Zielzustand: KI als Motor fuer Wirtschaftswachstum, zukunftsfeste Arbeitsplaetze und moderne Verwaltung, Buergerinnen und Buerger profitieren durch bessere Leistungen und schnellere Verfahren; Deutschland soll fuehrender europaeischer Ermoeglichungsraum fuer KI werden (Talent, Kapital, Forschung, Rechenkapazitaet, unternehmerische Initiative) mit gesellschaftlichem Fortschritt, Teilhabe und demokratischer Resilienz. Dimension 'KI und Gesellschaft' adressiert Vertrauen, Teilhabe, Demokratie und Zusammenhalt als eigene Dimension.",
+   "source": "https://bmds.bund.de/fileadmin/BMDS/Dokumente/Publikationen/Deutschland_als_KI-Nation_2030_barrierefrei-Nov2026.pdf",
+   "assessed_at": "2026-11-20T14:00:00Z"
+  },
+  "menschenrechtsvertraeglichkeit": {
+   "status": "NICHT_GEPRUEFT",
+   "evidence": "",
+   "source": "",
+   "assessed_at": ""
+  },
+  "kosten_und_ressourcenverbrauch": {
+   "status": "NICHT_GEPRUEFT",
+   "evidence": "",
+   "source": "",
+   "assessed_at": ""
+  },
+  "transparenz": {
+   "status": "BELEGT",
+   "evidence": "Der Ergebnisbericht ist als oeffentliches, barrierefreies PDF (39 Seiten) abrufbar, gliedert sich in Auftrag/Vorgehen, strategischen Rahmen, Zielbild mit sechs Dimensionen, Massnahmenkapitel (18 Schlueselmassnahmen) und Umsetzung mit Steuerungsbedarfen und Empfehlung naechster Schritte; benannt sind auch Risiken (Fachkraeftemangel, Produktivitaetsschwaeche, demografischer Wandel, Abstand zu USA/China bei KI-Investitionen) und das enge Zeitfenster von zwoelf bis achtzehn Monaten. Offen: die konkreten Kennzahlenausfuehrungen je Massnahme wurden hier nicht einzeln verifiziert (CLAIM-Stufe Bericht).",
+   "source": "https://bmds.bund.de/fileadmin/BMDS/Dokumente/Publikationen/Deutschland_als_KI-Nation_2030_barrierefrei-Nov2026.pdf",
+   "assessed_at": "2026-11-20T14:00:00Z"
+  },
+  "nachhaltigkeit": {
+   "status": "NICHT_GEPRUEFT",
+   "evidence": "",
+   "source": "",
+   "assessed_at": ""
+  },
+  "missbrauchsrisiken": {
+   "status": "NICHT_GEPRUEFT",
+   "evidence": "",
+   "source": "",
+   "assessed_at": ""
+  },
+  "alternativen_und_verbesserbarkeit": {
+   "status": "BELEGT",
+   "evidence": "Das Zielbild ist selbst als steuerbares Instrument angelegt: Ambitionen werden durch Kennzahlen und Zielwerte konkretisiert (damit ueberpruefbar statt reine Absichtserklaerungen), eine strategische Analyse- und Monitoringstruktur ist als Massnahme vorgesehen, 18 ressortuebergreifende Schlueselmassnahmen ersetzen bestehende Ressort-Aktivitaeten nicht, sondern bauen auf ihnen auf; Kapitel 5 benennt Steuerungsbedarfe und empfiehlt naechste Schritte. Der Verbesserungspfad ist damit eigenstaendig benannt; seine tatsaechliche Umsetzung bleibt offen (ZIELBILD != BESCHLUSS).",
+   "source": "https://bmds.bund.de/fileadmin/BMDS/Dokumente/Publikationen/Deutschland_als_KI-Nation_2030_barrierefrei-Nov2026.pdf",
+   "assessed_at": "2026-11-20T14:00:00Z"
+  }
+ }
+}
