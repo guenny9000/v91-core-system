@@ -57,6 +57,30 @@ class DecisionDossierTest(unittest.TestCase):
         out = validate_decision_dossier(valid_dossier())
         self.assertEqual(out["dossier_id"], "DOS-2026-0001")
 
+    def test_non_dict_fails_closed(self):
+        with self.assertRaises(DecisionDossierError):
+            validate_decision_dossier(None)
+
+    def test_missing_required_string_fails(self):
+        record = valid_dossier()
+        del record["escalation_route"]
+        with self.assertRaises(DecisionDossierError) as ctx:
+            validate_decision_dossier(record)
+        self.assertTrue(any("escalation_route" in v for v in ctx.exception.args[0]))
+
+    def test_fact_without_source_fails(self):
+        record = valid_dossier()
+        record["verified_facts"] = [{"fact": "income 1420 EUR"}]
+        with self.assertRaises(DecisionDossierError) as ctx:
+            validate_decision_dossier(record)
+        self.assertTrue(any("verified_facts[0]" in v for v in ctx.exception.args[0]))
+
+    def test_empty_fact_list_fails(self):
+        record = valid_dossier()
+        record["verified_facts"] = []
+        with self.assertRaises(DecisionDossierError):
+            validate_decision_dossier(record)
+
     def test_missing_personal_account_fails(self):
         record = valid_dossier()
         del record["personal_account"]
