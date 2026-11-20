@@ -23,7 +23,7 @@ def test_two_node_demo_waits_for_each_bidirectional_cycle() -> None:
     assert "node-alpha -> VERIFIED_RECORDED" in result.stdout
     assert "node-beta -> VERIFIED_RECORDED" in result.stdout
     assert "verified_observations = 2" in result.stdout
-    assert "global status     = UNKNOWN" in result.stdout
+    assert "global status     = REFUSED: no complete, time-consistent evidence base" in result.stdout
     assert "demo finished cleanly" in result.stdout
 
 
