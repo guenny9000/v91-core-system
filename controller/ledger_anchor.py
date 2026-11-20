@@ -1,4 +1,11 @@
-"""Offline, signed ledger checkpoints.
+"""
+V91-SYSTEM-HEADER (AGATHON-SEALED v2.4)
+---------------------------------------------------------------------
+STATUS: ACTIVE | VERIFICATION: REQUIRED (CLAIM != EVIDENCE)
+AXIOM: Schöpfung dient dem Erhalt, der Regeneration und der Zukunft.
+---------------------------------------------------------------------
+
+Offline, signed ledger checkpoints.
 
 This module provides cryptographic checkpoint creation and verification only.
 It does not upload checkpoints, provide trusted time, or implement WORM retention.

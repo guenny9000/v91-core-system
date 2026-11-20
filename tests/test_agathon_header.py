@@ -18,11 +18,9 @@ REQUIRED_HEADER_LINES = (
 
 LEGACY_EXEMPTIONS = frozenset({
     "__init__.py",
-    "ledger_anchor.py",
-    "peer_sync.py", "real_metrics.py",
-    "replay_db_unification.py", "replay_session.py", "replay_state_provider.py",
+    "replay_db_unification.py", "replay_state_provider.py",
     "resource_admission.py", "resilience_mesh.py",
-    "self_study_metrics.py", "signed_manifest.py", "state_monotonicity.py",
+    "signed_manifest.py", "state_monotonicity.py",
     "stewardship_report.py", "task_ingress_gate.py",
     "trusted_peer_registry.py", "use_policy.py", "v91_cli.py",
     "v91_listener.py", "witness_client.py",
@@ -165,6 +163,21 @@ class AgathonHeaderPolicyTest(unittest.TestCase):
         assert "Ed25519-signed receipts" in (crypto_receipts.__doc__ or "")
         assert "read-only measurement core" in (measurement_core.__doc__ or "")
         assert "content-addressed peer object storage" in (peer_store.__doc__ or "")
+
+        # Batch 7: real_metrics, peer_sync, ledger_anchor, self_study_metrics,
+        # replay_session. Loaded via the conftest-preloaded package:
+        # ledger_anchor needs the cryptography runtime dependency (CI), and
+        # replay_session uses controller.*-imports internally.
+        from controller import (  # noqa: E402
+            ledger_anchor, peer_sync, real_metrics, replay_session,
+            self_study_metrics,
+        )
+
+        assert "Read-only host telemetry" in (real_metrics.__doc__ or "")
+        assert "Local, transport-independent peer heartbeat validation" in (peer_sync.__doc__ or "")
+        assert "Offline, signed ledger checkpoints" in (ledger_anchor.__doc__ or "")
+        assert "Fail-closed efficiency measurements" in (self_study_metrics.__doc__ or "")
+        assert "Two-node independent replay verification" in (replay_session.__doc__ or "")
 
 
 if __name__ == "__main__":

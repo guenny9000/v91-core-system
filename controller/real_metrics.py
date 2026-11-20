@@ -1,4 +1,11 @@
-"""Read-only host telemetry with explicit source and fail-closed behavior.
+"""
+V91-SYSTEM-HEADER (AGATHON-SEALED v2.4)
+---------------------------------------------------------------------
+STATUS: ACTIVE | VERIFICATION: REQUIRED (CLAIM != EVIDENCE)
+AXIOM: Schöpfung dient dem Erhalt, der Regeneration und der Zukunft.
+---------------------------------------------------------------------
+
+Read-only host telemetry with explicit source and fail-closed behavior.
 
 This adapter reports host CPU and memory only. It does not infer application
 latency, request/error counts, GPU metrics, or production health.

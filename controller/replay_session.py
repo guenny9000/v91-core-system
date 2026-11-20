@@ -1,4 +1,11 @@
-"""Two-node independent replay verification (Issue #47, stage 4 groundwork).
+"""
+V91-SYSTEM-HEADER (AGATHON-SEALED v2.4)
+---------------------------------------------------------------------
+STATUS: ACTIVE | VERIFICATION: REQUIRED (CLAIM != EVIDENCE)
+AXIOM: Schöpfung dient dem Erhalt, der Regeneration und der Zukunft.
+---------------------------------------------------------------------
+
+Two-node independent replay verification (Issue #47, stage 4 groundwork).
 
 A reference run and a replay run must come from two DIFFERENT runner
 instances. The comparison itself is delegated to the pure function
