@@ -1,4 +1,10 @@
-"""Ed25519-signed receipts (Issue #47, stage 5 completion).
+"""
+V91-SYSTEM-HEADER (AGATHON-SEALED v2.4)
+---------------------------------------------------------------------
+STATUS: ACTIVE | VERIFICATION: REQUIRED (CLAIM != EVIDENCE)
+AXIOM: Schöpfung dient dem Erhalt, der Regeneration und der Zukunft.
+---------------------------------------------------------------------
+Ed25519-signed receipts (Issue #47, stage 5 completion).
 
 Private keys remain caller-managed; this module never persists signing or
 verification keys. Receipts are signed over canonical JSON, excluding only

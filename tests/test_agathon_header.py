@@ -18,11 +18,8 @@ REQUIRED_HEADER_LINES = (
 
 LEGACY_EXEMPTIONS = frozenset({
     "__init__.py",
-    "autarky_metrics.py", "autarky_report.py",
-    "crypto_receipts.py",
     "ledger_anchor.py",
-    "measurement_core.py",
-    "peer_store.py", "peer_sync.py", "real_metrics.py",
+    "peer_sync.py", "real_metrics.py",
     "replay_db_unification.py", "replay_session.py", "replay_state_provider.py",
     "resource_admission.py", "resilience_mesh.py",
     "self_study_metrics.py", "signed_manifest.py", "state_monotonicity.py",
@@ -153,6 +150,21 @@ class AgathonHeaderPolicyTest(unittest.TestCase):
         assert "legacy transformation release gate" in (legacy_gate.__doc__ or "")
         assert "Expiring lease locks" in (lease_lock.__doc__ or "")
         assert "Impact measurement from REAL measurements" in (impact.__doc__ or "")
+
+        # Batch 6: autarky_metrics, autarky_report, crypto_receipts,
+        # measurement_core, peer_store. These modules use controller.*-imports
+        # internally, so they are loaded via the (conftest-preloaded) package
+        # instead of flat imports (see conftest.py shadowing note).
+        from controller import (  # noqa: E402
+            autarky_metrics, autarky_report, crypto_receipts,
+            measurement_core, peer_store,
+        )
+
+        assert "Local autarky and resilience metrics" in (autarky_metrics.__doc__ or "")
+        assert "Autarky report wiring" in (autarky_report.__doc__ or "")
+        assert "Ed25519-signed receipts" in (crypto_receipts.__doc__ or "")
+        assert "read-only measurement core" in (measurement_core.__doc__ or "")
+        assert "content-addressed peer object storage" in (peer_store.__doc__ or "")
 
 
 if __name__ == "__main__":

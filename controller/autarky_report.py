@@ -1,5 +1,11 @@
 #!/usr/bin/env python3
-"""Autarky report wiring (Issue #83 Phase 2).
+"""
+V91-SYSTEM-HEADER (AGATHON-SEALED v2.4)
+---------------------------------------------------------------------
+STATUS: ACTIVE | VERIFICATION: REQUIRED (CLAIM != EVIDENCE)
+AXIOM: Schöpfung dient dem Erhalt, der Regeneration und der Zukunft.
+---------------------------------------------------------------------
+Autarky report wiring (Issue #83 Phase 2).
 
 Verbindet die Autarkie-Metriken (Phase 1) mit dem echten, hash-verketteten
 Mess-Ledger aus controller/measurement_core.py. Ehrlichkeitsregeln:

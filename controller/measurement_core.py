@@ -1,5 +1,11 @@
 #!/usr/bin/env python3
-"""V91 read-only measurement core.
+"""
+V91-SYSTEM-HEADER (AGATHON-SEALED v2.4)
+---------------------------------------------------------------------
+STATUS: ACTIVE | VERIFICATION: REQUIRED (CLAIM != EVIDENCE)
+AXIOM: Schöpfung dient dem Erhalt, der Regeneration und der Zukunft.
+---------------------------------------------------------------------
+V91 read-only measurement core.
 
 Collects only measurements for which a real source is available. Missing
 sources remain UNKNOWN; ecological values are deliberately not estimated.

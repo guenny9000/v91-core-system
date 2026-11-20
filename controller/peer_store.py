@@ -1,4 +1,10 @@
-"""Opt-in, content-addressed peer object storage with HMAC-signed receipts.
+"""
+V91-SYSTEM-HEADER (AGATHON-SEALED v2.4)
+---------------------------------------------------------------------
+STATUS: ACTIVE | VERIFICATION: REQUIRED (CLAIM != EVIDENCE)
+AXIOM: Schöpfung dient dem Erhalt, der Regeneration und der Zukunft.
+---------------------------------------------------------------------
+Opt-in, content-addressed peer object storage with HMAC-signed receipts.
 
 Issue #47, stage 5 (stdlib part). Explicit, opt-in only: no store exists
 until a participant consciously constructs one with opt_in=True. There is
