@@ -25,7 +25,7 @@ gegen Personen.
    bleibt ein Eintrag UNKNOWN und wird nicht verteidigt
    (KEIN_INDIKATOR != MESSUNG_ERZWINGEN).
 
-## Registry (12 Eintraege, einzeln aufgefuehrt)
+## Registry (14 Eintraege, einzeln aufgefuehrt)
 
 ### 01 Lobbyismus und verwobene Interessen
 Strukturmuster: Gesetzgebung wird systematisch durch private
@@ -132,6 +132,29 @@ Primaerquelle: https://transparency.dsa.ec.europa.eu
 V91-Haltung: Autarkie-Alternativen foerdern (Selbsthosting, offene
 Protokolle, eigene Knoten) - hier ist die Systemloesung die gezielte
 Wette.
+
+### 13 Ressourcenverschwendung im Luftverkehr (Privatjets und Leerfluege)
+Strukturmuster: Privatjets und Leerfluege (Repositionierungsfluege ohne
+Passagiere) verbrennen ein Vielfaches der Energie je Person gegenueber
+dem Linienverkehr; wenige Nutzer tragen den Grossteil der Bewegungen.
+Schaden: Energie- und Klimabilanzverlust ohne Grundversorgungsnutzen;
+reiner BALLAST im Sinne von Nr. 5 des Grundsatzes.
+Indikator: Zahl und Anteil der Privatfluege und Leerfluege je Grossflughafen;
+Primaerquelle: https://www.ce.nl (CE Delft-Studie Privatjets Hamburg Airport)
+und AB: https://www.transportenvironment.org
+V91-Haltung: Datengetriebenes Review der Bewegungszahlen; keine
+Lebensstil-Kontrolle von Einzelpersonen (Regel 1).
+
+### 14 Krieg als Dauerstruktur (Ruestungsspirale)
+Strukturmuster: Eskalative Aufruestungslogik bindet Ressourcen dauerhaft
+an Kriegsvorbereitung statt an Daseinsvorsorge; Rechenschaft bleibt
+schwach (vgl. Struktur-Review #239 zu Ruestungsexporten).
+Schaden: Grundversorgung verliert Ressourcen; Kriegsrisiko steigt.
+Indikator: Jaehrliche weltweite Militaerausgaben (SIPRI Yearbook,
+Weltreihen);
+Primaerquelle: https://www.sipri.org
+V91-Haltung: Folgeindizes als Datenpunkte; REVIEW != ENTSCHEIDUNG,
+kein Verbot, keine Freigabe, keine Kriegsmission.
 
 ## Betriebsklasse (kein Eintrag impliziert Handeln im Netz)
 
