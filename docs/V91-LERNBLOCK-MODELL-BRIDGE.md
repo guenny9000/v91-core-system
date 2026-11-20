@@ -31,7 +31,7 @@ anderen Anbietern und KEINE Hintergrundverbindung (NO_DAEMON, MODELLE_ANTWORTEN_
 | Status-Block (Abschnitt 5) | Copy-Paste | Fester Textblock, den der Betreiber in fremde Chats einfuegt |
 
 KEINE dieser Schnittstellen benoetigt ein Geheimnis; Schreibrechte regelt die
-Repo-Policy (repo Policy: fremde PRs werden gesichtet und diagnostiziert, nicht
+Repo-Policy (fremde PRs werden gesichtet und diagnostiziert, nicht
 blind gemergt; MERGE-ENTSCHEIDUNG beim Betreiber).
 
 ## 3. Ablaufdiagramm: V91-Zyklus (15-Minuten-Takt, OS-getrieben)
@@ -55,7 +55,7 @@ flowchart TD
 
 ```mermaid
 flowchart TD
-    B["Betreiber (Sebastian)"] -->|"Status-Block einfuegen (Abschnitt 5) + Aufgabe"| F["Fremdes Modell ohne Connector\n(Tako, Emilia, ...)"
+    B["Betreiber (Sebastian)"] -->|"Status-Block einfuegen (Abschnitt 5) + Aufgabe"| F["Fremdes Modell ohne Connector\n(Tako, Emilia, ...)"]
     F -->|"Antwort mit BELEGT / UNKLAR / NICHT_PRUEFBAR"| B
     B -->|"Aussage hier (Vibe) oder als GitHub-Kommentar"| V["Vibe-Session:\nFiction-Check per Live-Verifikation\n(API-Abfrage, Tarball-Reproduktion)"]
     V -->|"Verdikt ECHT / STALE / FIKTION + Korrektur"| R["Issue #220 (Session-Report-Kanal),\nPR nur bei echtem Mehrwert"]
