@@ -51,9 +51,6 @@ from controller.status_exchange import (  # noqa: E402
     build_status_payload, parse_status_payload, StatusExchangeError,
 )
 
-NOW = int(time.time())
-
-
 class CapturingReceiver(FederationReceiver):
     """Pass-through that keeps ACCEPTED messages for the demo prints.
 
@@ -84,16 +81,16 @@ class DemoNode:
         self.receiver = CapturingReceiver(FederationReceiver(
             peer_keys={remote_name: remote_public_key},
             replay_store=FederationReplayStore(tmp / (name + "_replay.sqlite")),
-            now_provider=lambda: NOW,
+            now_provider=time.time,
         ))
         self.listener = UdpEnvelopeListener(receiver=self.receiver).start()
         self.sender = EnvelopeSender(
             peer_id=name,
             private_key=own_key,
             sequence_store=SequenceStore(tmp / (name + "_seq.sqlite")),
-            now_provider=lambda: NOW,
+            now_provider=time.time,
         )
-        self.register = CooperationRegister(now_provider=lambda: float(NOW))
+        self.register = CooperationRegister(now_provider=time.time)
         self.remote_name = remote_name
 
     def port(self) -> int:
@@ -112,12 +109,23 @@ class DemoNode:
         with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as sock:
             sock.sendto(wire_out, ("127.0.0.1", other.port()))
             sock.sendto(wire_in, ("127.0.0.1", self.port()))
+        before_self = self.listener.counts()["accepted"]
+        before_other = other.listener.counts()["accepted"]
         deadline = time.monotonic() + 5.0
         while time.monotonic() < deadline:
-            if self.listener.counts()["accepted"] > 0 and other.listener.counts()["accepted"] > 0:
+            current_self = self.listener.counts()["accepted"]
+            current_other = other.listener.counts()["accepted"]
+            if current_self >= before_self + 1 and current_other >= before_other + 1:
                 break
             time.sleep(0.05)
         counts = self.listener.counts()
+        other_counts = other.listener.counts()
+        if counts["accepted"] < before_self + 1 or other_counts["accepted"] < before_other + 1:
+            raise TimeoutError(
+                "bidirectional NODE_STATUS exchange timed out: "
+                f"{self.name} accepted={counts['accepted']}, "
+                f"{other.name} accepted={other_counts['accepted']}"
+            )
         print("  [" + self.name + "] accepted=" + str(counts["accepted"])
               + " rejected=" + str(counts["rejected"]))
 
@@ -135,7 +143,7 @@ class DemoNode:
                 peer_id=message["peer_id"],
                 key_id="ed25519:" + message["peer_id"],
                 sequence=message["sequence"],
-                received_at=float(NOW),
+                received_at=time.time(),
                 software_version=parsed["software_version"],
                 capabilities=tuple(parsed["capabilities"]),
                 state=parsed["state"],
@@ -163,25 +171,31 @@ def main() -> int:
     parser = argparse.ArgumentParser(description="Two-node NODE_STATUS exchange demo")
     parser.add_argument("--cycles", type=int, default=1)
     args = parser.parse_args()
+    if args.cycles < 1:
+        parser.error("--cycles must be at least 1")
 
     with tempfile.TemporaryDirectory() as td:
         tmp = Path(td)
         key_a = Ed25519PrivateKey.generate()
         key_b = Ed25519PrivateKey.generate()
-        alpha = DemoNode(tmp, "node-alpha", "v91-demo-a-20261121",
-                         ("measurement", "federation"), key_a,
-                         "node-beta", key_b.public_key())
-        beta = DemoNode(tmp, "node-beta", "v91-demo-b-20261121",
-                        ("witness", "status-exchange"), key_b,
-                        "node-alpha", key_a.public_key())
+        alpha = None
+        beta = None
         try:
+            alpha = DemoNode(tmp, "node-alpha", "v91-demo-a-20261121",
+                             ("measurement", "federation"), key_a,
+                             "node-beta", key_b.public_key())
+            beta = DemoNode(tmp, "node-beta", "v91-demo-b-20261121",
+                            ("witness", "status-exchange"), key_b,
+                            "node-alpha", key_a.public_key())
             for cycle in range(args.cycles):
                 print("cycle " + str(cycle + 1) + " of " + str(args.cycles))
                 alpha.exchange_with(beta)
                 time.sleep(0.1)
         finally:
-            alpha.listener.stop()
-            beta.listener.stop()
+            if alpha is not None:
+                alpha.listener.stop()
+            if beta is not None:
+                beta.listener.stop()
         alpha.file_and_report()
         beta.file_and_report()
     print("demo finished cleanly; nothing installed, nothing left behind.")
