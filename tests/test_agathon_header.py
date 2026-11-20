@@ -18,8 +18,6 @@ REQUIRED_HEADER_LINES = (
 
 LEGACY_EXEMPTIONS = frozenset({
     "__init__.py",
-    "v91_cli.py",
-    "v91_listener.py", "witness_client.py",
 })
 
 
@@ -208,6 +206,22 @@ class AgathonHeaderPolicyTest(unittest.TestCase):
         assert "Authenticated, fail-closed task-ingress decision primitive" in (task_ingress_gate.__doc__ or "")
         assert "Fail-closed lookup for independently provisioned V91 peer public keys" in (trusted_peer_registry.__doc__ or "")
         assert "Conservative, deterministic V91 use-domain policy classification" in (use_policy.__doc__ or "")
+
+
+        # Batch 10 (final): v91_cli, v91_listener, witness_client. The header
+        # migration is complete after this batch; LEGACY_EXEMPTIONS shrinks to
+        # __init__.py only. v91_cli and v91_listener use flat in-package
+        # imports ('from ledger import ...', stdlib only) and load flat from
+        # the controller directory already on sys.path above; witness_client
+        # uses controller.*-imports plus the cryptography runtime dependency
+        # (CI), so it is loaded via the conftest-preloaded package.
+        import v91_cli as flat_cli  # noqa: E402
+        import v91_listener as flat_listener  # noqa: E402
+        from controller import witness_client  # noqa: E402
+
+        assert "V91 CLI" in (flat_cli.__doc__ or "")
+        assert "SafeSignal Protocol" in (flat_listener.__doc__ or "")
+        assert "Test-only asynchronous witness mock" in (witness_client.__doc__ or "")
 
 
 if __name__ == "__main__":
