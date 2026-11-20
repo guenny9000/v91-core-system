@@ -9,6 +9,7 @@ import os
 import subprocess
 import sys
 import tempfile
+import time
 import unittest
 from pathlib import Path
 
@@ -152,7 +153,7 @@ class CLIAndGenerationTests(Base):
             self.skipTest("cryptography not installed locally (generation is CI-only here)")
         rc, out = self._cli("new", "--peer-id", "node-a", "--store-dir",
                             self.tmp.name, "--directory-db", self.db,
-                            "--expires-at", "100000")
+                            "--expires-at", str(int(time.time()) + 3600))
         self.assertEqual(rc, 0)
         self.assertTrue(out["ok"])
         self.assertEqual(out["registered"], True)
