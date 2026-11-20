@@ -1,4 +1,11 @@
-"""Verify externally signed monotonic replay-store checkpoints.
+"""
+V91-SYSTEM-HEADER (AGATHON-SEALED v2.4)
+---------------------------------------------------------------------
+STATUS: ACTIVE | VERIFICATION: REQUIRED (CLAIM != EVIDENCE)
+AXIOM: Schöpfung dient dem Erhalt, der Regeneration und der Zukunft.
+---------------------------------------------------------------------
+
+Verify externally signed monotonic replay-store checkpoints.
 
 This is a verification primitive only. The caller must obtain a fresh,
 challenge-bound response from an independently operated witness. No network
