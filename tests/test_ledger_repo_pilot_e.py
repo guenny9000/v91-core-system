@@ -1,9 +1,10 @@
 """Integrationstest: erster realer Messwert-Ledger (R3) fuer Pilot E.
 
-Der Ledger enthaelt zwei dokumentierte amtliche Beobachtungen. OBSERVED ist
-nicht ERFOLG: Der WIRKUNG-Wert entspricht der dokumentierten Baseline,
-Fortschritt 0. SIGNATUR != WAHRHEIT; das Assessment prueft Struktur,
-nicht die Wahrheit der Quelle. UNKNOWN bleibt UNKNOWN.
+Der Ledger enthaelt drei dokumentierte amtliche Beobachtungen. OBSERVED ist
+nicht ERFOLG: Der dritte WIRKUNG-Wert ist eine einzelquellenbasierte
+Untergrenze (MINDESTUMFANG != Totalstand). SIGNATUR != WAHRHEIT; das
+Assessment prueft Struktur, nicht die Wahrheit der Quelle. UNKNOWN bleibt
+UNKNOWN.
 """
 import sys
 import unittest
@@ -37,12 +38,15 @@ class PilotELedgerTests(unittest.TestCase):
         ledger = MesswertLedger(LEDGER_PATH)
         self.assertTrue(ledger.verify_chain())
         entries = ledger.entries()
-        self.assertEqual(len(entries), 2)
+        self.assertEqual(len(entries), 3)
         self.assertEqual(entries[0]["seq"], 1)
         self.assertEqual(entries[1]["seq"], 2)
+        self.assertEqual(entries[2]["seq"], 3)
         self.assertEqual(entries[1]["prev_hash"], entries[0]["entry_hash"])
+        self.assertEqual(entries[2]["prev_hash"], entries[1]["entry_hash"])
         self.assertEqual(entries[0]["value"], 2800.0)
         self.assertEqual(entries[1]["value"], 7560000000.0)
+        self.assertEqual(entries[2]["value"], 12660000000.0)
 
     def test_all_gates_open_and_wirkung_beobachtet(self):
         result = assess(DATASET_PATH, LEDGER_PATH)
@@ -57,9 +61,21 @@ class PilotELedgerTests(unittest.TestCase):
         wirkung = result["indicators"][
             "Aus dem EU-Ukraine-Kredit ausgezahlte Finanzmittel"]
         self.assertEqual(wirkung["status"], "WIRKUNG_BEOBACHTET")
-        self.assertEqual(wirkung["latest"], 7560000000.0)
-        self.assertEqual(wirkung["progress"], 0.0)
+        self.assertEqual(wirkung["latest"], 12660000000.0)
+        self.assertAlmostEqual(wirkung["progress"], 0.0619, places=3)
         self.assertFalse(wirkung["target_reached"])
+
+    def test_wirkung_dritter_eintrag_ist_untergrenze(self):
+        """Dritter Eintrag (20.11.2026): dokumentierte Untergrenze.
+        MINDESTUMFANG != Totalstand; Summe der drei primaeren
+        Tranchennachweise der EU-Kommission."""
+        ledger = MesswertLedger(LEDGER_PATH)
+        entries = ledger.entries()
+        self.assertEqual(entries[2]["measured_at"], "2026-11-20T00:00:00Z")
+        self.assertEqual(entries[2]["value"], 12660000000.0)
+        note = entries[2]["note"]
+        self.assertIn("MINDESTUMFANG", note)
+        self.assertIn("Untergrenze", note)
 
     def test_resilienz_beobachtet_kosten_unknown(self):
         result = assess(DATASET_PATH, LEDGER_PATH)
