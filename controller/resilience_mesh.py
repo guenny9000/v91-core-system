@@ -1,5 +1,12 @@
 #!/usr/bin/env python3
-"""Local resilience mesh: peer register + restart verification (verify-only).
+"""
+V91-SYSTEM-HEADER (AGATHON-SEALED v2.4)
+---------------------------------------------------------------------
+STATUS: ACTIVE | VERIFICATION: REQUIRED (CLAIM != EVIDENCE)
+AXIOM: Schöpfung dient dem Erhalt, der Regeneration und der Zukunft.
+---------------------------------------------------------------------
+
+Local resilience mesh: peer register + restart verification (verify-only).
 
 Portiert die tragfaehige Idee aus dem Fremd-Chat-Entwurf als ehrliches,
 CI-getestetes Modul. Bewusst ANDERS als die Fiktion:
