@@ -1,0 +1,50 @@
+{
+ "structure_id": "de_pflegeneuordnungsgesetz_pnog_2026",
+ "assessor": "v91_session_2026-11-20_quellenreview_max_best",
+ "assessed_at_structure": "2026-11-20T22:00:00Z",
+ "note": "Struktur-Datensatz der Bund-Reihe (Vertiefung Grundversorgung, Thema Pflege). Bewertet wird die Reformstruktur der sozialen Pflegeversicherung aus drei amtlichen Bundesquellen. (1) BMG-Pressemitteilung 30.09.2026 (Nr. 26, 'Kabinett beschliesst Pflegeneuordnungsgesetz'): Das Bundeskabinett hat den Entwurf eines Gesetzes zur Neuordnung der Pflegeversicherung (Pflegeneuordnungsgesetz, PNOG) beschlossen; Ziel laut Minister Linnemann: Pflegeversicherung wieder auf stabilere finanzielle Grundlage stellen, pflegerische Versorgung sichern; Kernregelungen laut Mitteilung: Anhebung der Beitragsbemessungsgrenze der SPV um 300 Euro pro Monat analog GKV; zum 1. Januar 2028 analog GKV-Reform ein Beitragszuschlag fuer die Mitversicherung von Ehegatten oder Lebenspartnern in Hoehe von 0,52 Prozent; keine Abstriche bei der Rente pflegender Angehoeriger; Erleichterungen im Alltag durch fachliche Pflegebegleitung vor Ort; staerkere Frueherkennung und Rehabilitation (Praevention); Minister-Benennung des Pflegesystems als Teilleistungssystem mit Forderung, insbesondere die haeusliche Pflege staerker zu unterstuetzen; weitere Anstrengungen fuer die 2030er Jahre sollen durch eine Strukturkommission ab Oktober erarbeitet werden. (2) BMG-Pressemitteilung 14.10.2026 ('Pflegestrukturkommission eingesetzt'): Das Bundeskabinett hat die Pflegestrukturkommission berufen; Auftrag: konkrete Reformvorschlaege fuer eine gute pflegerische Versorgung und Stabilisierung des Beitragssatzes zur sozialen Pflegeversicherung bis in die Jahre nach 2030; vier Aufgabenfelder (Analyse der Ausgabenentwicklung, Finanzierung, Versorgung, Verzahnung von Praevention und Fruehrehabilitation mit Akutmedizin/Pflege); 13 benannte Mitglieder, Vorsitz Prof. Dr. Georg Cremer, Co-Vorsitz Prof. Gabriele Kuhn-Zuber; Ziel laut Ministerium: Strukturreform auf Grundlage der Kommissionsempfehlungen, die zum 1. Juli 2027 in Kraft treten soll. (3) BMG-Pressemitteilung 27.10.2026 ('Pflegestrukturkommission nimmt Arbeit auf'): konstituierende Sitzung in Berlin; Vorschlaege sollen bis Ende Januar 2027 vorliegen (Versorgung, bedarfsgerechte und nachhaltige Finanzierung); Beruecksichtigung der Ergebnisse der Bund-Laender-AG 'Zukunftspakt Pflege' und der FinanzKommission Gesundheit. Ehrliche Grenzen: KABINETTSENTWURF != GESETZ != BINDUNG (der PNOG-Entwurf ist laut Quellen Kabinettsbeschluss, ein parlamentarisches Gesetzgebungsverfahren in Bundestag und Bundesrat ist in den Quellen nicht berichtet); KOMMISSION_BERUFEN != EMPFEHLUNG != REFORM_GESETZ (die Kommission hat laut Stand der Quellen erst begonnen, Vorschlaege sind fuer Ende Januar 2027 angekuendigt); die Beitragssatz-Stabilisierung 'bis nach 2030' ist ein Auftrag und Ziel, keine Messung (ZIEL != MESSUNG); das Inkrafttreten der Strukturreform zum 1. Juli 2027 ist Planung (PLANUNG != BESCHLUSS != UMSETZUNG); SUMMENANGABEN ZU AUSWIRKUNGEN auf Beitragssaetze sind in den Quellen nicht belegt; MINISTER-ZITATE ('stille Helden', 'Kosten laufen aus dem Ruder') sind Regierungs-Positionen; REVIEW != ENTSCHEIDUNG.",
+ "criteria": {
+  "gesellschaftlicher_nutzen": {
+   "status": "BELEGT",
+   "evidence": "Die Quellen dokumentieren konkrete Ziel- und Regelungsangebote fuer die Grundversorgung Pflege: mit dem PNOG-Entwurf soll die Finanzierung der sozialen Pflegeversicherung stabilisiert werden (Beitragsbemessungsgrenze +300 Euro/Monat, Beitragszuschlag 0,52 Prozent fuer mitversicherte Ehegatten ab 1.1.2028) und der Alltag von Pflegebeduerftigen erleichtert werden (deren Rentenansprueche pflegender Angehoeriger unangetastet, fachliche Pflegebegleitung vor Ort, Praevention und Fruehrehabilitation staerken); die Strukturkommission soll die Versorgung und eine bedarfsgerechte, nachhaltige Finanzierung fuer die Zeit bis nach 2030 sichern, mit ausdruecklichem Fokus auf die haeusliche Pflege und diejenigen, die zu Hause Verantwortung uebernehmen. Nutzen ist als Kabinettsbeschluss-Planung belegt, nicht als bereits eingetretene Wirkung.",
+   "source": "https://www.bundesgesundheitsministerium.de/presse/pressemitteilungen/kabinett-beschliesst-pflegeneuordnungsgesetz",
+   "assessed_at": "2026-11-20T22:00:00Z"
+  },
+  "menschenrechtsvertraeglichkeit": {
+   "status": "NICHT_GEPRUEFT",
+   "evidence": "",
+   "source": "",
+   "assessed_at": ""
+  },
+  "kosten_und_ressourcenverbrauch": {
+   "status": "NICHT_GEPRUEFT",
+   "evidence": "",
+   "source": "",
+   "assessed_at": ""
+  },
+  "transparenz": {
+   "status": "BELEGT",
+   "evidence": "Alle drei Quellen sind oeffentliche, datierte BMG-Pressemitteilungen (30.09.2026, 14.10.2026, 27.10.2026) mit einer nachvollziehbaren Verfahrenskette: Kabinettsbeschluss des PNOG-Entwurfs, Berufung der Kommission durch das Kabinett am 14.10.2026, konstituierende Sitzung am 27.10.2026, mit Zieltermin fuer Vorschlaege Ende Januar 2027 und angepeilter Strukturreform zum 1. Juli 2027; die Kommission besteht aus 13 namentlich benannten Mitgliedern aus Wissenschaft, Pflegepraxis, Oekonomie und Recht (Vorsitz Cremer, Co-Vorsitz Kuhn-Zuber) und soll laut Ministerium Leistungserbringer, Kommunen und Betroffene anhoeren. Offen: der PNOG-Gesetzentwurf (PDF verlinkt, 2 MB barrierefrei) wurde hier nicht im Volltext geprueft und zitiert nach der Pressemitteilung (CLAIM-Stufe PM), ebenso die Verwaltungs- und Arbeitspapiere der Kommission.",
+   "source": "https://www.bundesgesundheitsministerium.de/presse/pressemitteilungen/pflegekommission-eingesetzt",
+   "assessed_at": "2026-11-20T22:00:00Z"
+  },
+  "nachhaltigkeit": {
+   "status": "NICHT_GEPRUEFT",
+   "evidence": "",
+   "source": "",
+   "assessed_at": ""
+  },
+  "missbrauchsrisiken": {
+   "status": "NICHT_GEPRUEFT",
+   "evidence": "",
+   "source": "",
+   "assessed_at": ""
+  },
+  "alternativen_und_verbesserbarkeit": {
+   "status": "BELEGT",
+   "evidence": "Der Verbesserungspfad ist in drei Stufen dokumentiert: (1) kurzfristige Stabilisierung der SPV-Finanzen durch den PNOG-Kabinettsentwurf (Einnahmenseite), (2) mittelfristige Strukturreform auf Grundlage der Kommissionsempfehlungen zum 1. Juli 2027 (geplant), (3) langfristige Zukunftssicherung fuer die 2030er Jahre als ausdrueckliche Aufgabe der Strukturkommission; benannte Verbesserungshebel in den Quellen: Verstaerkung der haeuslichen Pflege gegenueber der Heimversorgung ('Teilleistungssystem'), zielgenauere Leistungsgestaltung, Praevention und Fruehrehabilitation sowie eine Verzahnung mit den Ergebnissen von Zukunftspakt Pflege und FinanzKommission Gesundheit im Sinne einer besseren Nutzung bestehender Ressourcen; transparenter offener Konflikt benannt: stark steigende Kosten bei laut Ministerium gleichzeitig zu oft fehlpassender Versorgung, ausdruecklicher Koalitionsauftrag 'bezahlbar und zielgerecht'. Offen: konkrete Reformoptionen (z.B. Kopfpauschale, Steuerfinanzierung, Leistungsausbau im Detail) liegen in den Quellen nicht vor (KOMMISSION_BERUFEN != EMPFEHLUNG).",
+   "source": "https://www.bundesgesundheitsministerium.de/presse/pressemitteilungen/pflegestrukturkommission-nimmt-arbeit-auf",
+   "assessed_at": "2026-11-20T22:00:00Z"
+  }
+ }
+}
