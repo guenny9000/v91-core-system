@@ -1,4 +1,10 @@
-"""Local autarky and resilience metrics (Issue #83).
+"""
+V91-SYSTEM-HEADER (AGATHON-SEALED v2.4)
+---------------------------------------------------------------------
+STATUS: ACTIVE | VERIFICATION: REQUIRED (CLAIM != EVIDENCE)
+AXIOM: Schöpfung dient dem Erhalt, der Regeneration und der Zukunft.
+---------------------------------------------------------------------
+Local autarky and resilience metrics (Issue #83).
 
 Ehrliche, lokale Kennzahlen aus echten Messungen: UNKNOWN ist nie HEALTHY,
 fehlende Quellen werden nie interpoliert. Keine Netzaufrufe, keine Wirkung
