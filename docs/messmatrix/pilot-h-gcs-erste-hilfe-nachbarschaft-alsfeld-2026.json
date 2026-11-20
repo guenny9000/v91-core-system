@@ -1,0 +1,67 @@
+{
+  "initiative_id": "pilot-h-gcs-erste-hilfe-nachbarschaft-alsfeld-2026",
+  "description": "GCS-Massnahme-001 (gesundheit): freiwilliges Quartalsmodul 'Erste Hilfe & Nachbarschaftshilfe' Alsfeld/Vogelsberg nach Lernblock PR #232. Konzeptbeschreibung, keine Umsetzung erfolgt (MATRIZ != WIRKUNG); Freiwilligkeit als Grundprinzip.",
+  "watcher": "gesundheit",
+  "maturity": "R1",
+  "indicators": [
+    {
+      "role": "WIRKUNG",
+      "name": "Durchgefuehrte freiwillige Quartalsmodule (1-2 Tage) Erste Hilfe & Nachbarschaftshilfe je 12 Monate",
+      "unit": "Module",
+      "baseline": 0.0,
+      "target": 4.0,
+      "period": {
+        "baseline_at": "2026-11-20T00:00:00Z",
+        "target_at": "2027-11-30T00:00:00Z"
+      },
+      "method": "Zaehlung der tatsaechlich durchgefuehrten Module mit Datum, Ort, Teilnehmerzahl und Modulprotokoll (eine Seite je Modul); nur belegte Zaehlung, keine Anmeldung als Durchfuehrung.",
+      "verifier": "Modulprotokolle, Operator Sebastian Guenter (freiwillige Organisation vor Ort)",
+      "uncertainty": 0.0,
+      "alternative_comparison": "Ohne Massnahme: einmalige Erste-Hilfe-Schulung ohne Auffrischung verliert nach Jahren an Verfuegbarkeit; Folgeleistung im Ernstfall bleibt UNKNOWN statt wiederholt trainiert."
+    },
+    {
+      "role": "KOSTEN",
+      "name": "Aufwand je Modul (Planung plus Durchfuehrung, alle Beteiligten)",
+      "unit": "Personenstunden",
+      "baseline": 0.0,
+      "target": 40.0,
+      "period": {
+        "baseline_at": "2026-11-20T00:00:00Z",
+        "target_at": "2027-11-30T00:00:00Z"
+      },
+      "method": "Zaehlung der geleisteten Stunden laut Modulprotokoll (Vorbereitung, Koordination, Durchfuehrung); Zielband: schlank halten, keine bezahlte Parallelverwaltung (Schutzregel 5 des Lernblocks: keine Verdraengung regulraer Arbeitsplaetze).",
+      "verifier": "Modulprotokolle, Operator Sebastian Guenter",
+      "uncertainty": 20.0,
+      "alternative_comparison": "Ohne Massnahme: 0 Personenstunden Aufwand, aber auch 0 wiederholte Faehigkeiten; oder Alternative externe zertifizierte Kurse mit Kosten je Person deutlich hoeher."
+    },
+    {
+      "role": "RESILIENZ",
+      "name": "Anteil Teilnehmender, die innerhalb von 12 Monaten an einem weiteren Modul teilnehmen",
+      "unit": "percent",
+      "baseline": 0.0,
+      "target": 50.0,
+      "period": {
+        "baseline_at": "2026-11-20T00:00:00Z",
+        "target_at": "2027-11-30T00:00:00Z"
+      },
+      "method": "Anonymisierte Teilnahmezaehlung je Modulprotokoll (nur Anwesenheit, keine Gesundheitsdaten); Quotient Wiederkehrer je 12 Monate. Keine Schaetzung, nur gezaehlte Teilnahmen; Nicht-Teilnahme unkritisch (Freiwilligkeit).",
+      "verifier": "Modulprotokolle, Operator Sebastian Guenter",
+      "uncertainty": 10.0,
+      "alternative_comparison": "Ohne Wiederkehrmessung bliebe unklar, ob das Quartalsmodell wirkt oder nur einmal besucht wird; die Messung ist der Fruehindikator fuer generationenuebergreifende Verankerung."
+    }
+  ],
+  "sources": [
+    {
+      "publisher": "V91-Lernblock Gemeinwohl- & Ethikdienst + V91-GCS (PR #232, Status IDEA_DOCUMENTED)",
+      "url": "https://github.com/guenny9000/v91-core-system/pull/232"
+    },
+    {
+      "publisher": "Pilot-F-Messmatrix als Muster fuer Ausgangswert/Zielwert/Quelle/Verantwortlichkeit (PR #215)",
+      "url": "https://github.com/guenny9000/v91-core-system/pull/215"
+    },
+    {
+      "publisher": "Erfolgsmessungs-Vorgaben des Lernblocks (tatsaechlich unterstuetzte Menschen, vermittelte Kompetenzen, verbesserte Krisenfestigkeit)",
+      "url": "https://github.com/guenny9000/v91-core-system/blob/main/docs/V91-LERNBLOCK-GEMEINWOHLDIENST.md"
+    }
+  ]
+}
