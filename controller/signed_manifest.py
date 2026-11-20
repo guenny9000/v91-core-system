@@ -1,4 +1,11 @@
-"""Signed capability manifests: validation, Ed25519 signing, freshness, revocation.
+"""
+V91-SYSTEM-HEADER (AGATHON-SEALED v2.4)
+---------------------------------------------------------------------
+STATUS: ACTIVE | VERIFICATION: REQUIRED (CLAIM != EVIDENCE)
+AXIOM: Schöpfung dient dem Erhalt, der Regeneration und der Zukunft.
+---------------------------------------------------------------------
+
+Signed capability manifests: validation, Ed25519 signing, freshness, revocation.
 
 Issue #47, stage 1. Validates the machine-readable schema's structural
 constraints without a jsonschema dependency. Signature verification and
