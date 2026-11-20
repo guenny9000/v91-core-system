@@ -18,9 +18,7 @@ REQUIRED_HEADER_LINES = (
 
 LEGACY_EXEMPTIONS = frozenset({
     "__init__.py",
-    "replay_db_unification.py", "replay_state_provider.py",
-    "resource_admission.py", "resilience_mesh.py",
-    "signed_manifest.py", "state_monotonicity.py",
+    "state_monotonicity.py",
     "stewardship_report.py", "task_ingress_gate.py",
     "trusted_peer_registry.py", "use_policy.py", "v91_cli.py",
     "v91_listener.py", "witness_client.py",
@@ -178,6 +176,23 @@ class AgathonHeaderPolicyTest(unittest.TestCase):
         assert "Offline, signed ledger checkpoints" in (ledger_anchor.__doc__ or "")
         assert "Fail-closed efficiency measurements" in (self_study_metrics.__doc__ or "")
         assert "Two-node independent replay verification" in (replay_session.__doc__ or "")
+
+        # Batch 8: replay_db_unification, replay_state_provider,
+        # resource_admission, resilience_mesh, signed_manifest. Package
+        # imports: replay_db_unification uses controller.task_ingress_gate;
+        # signed_manifest uses controller.crypto_receipts (cryptography is a
+        # CI/runtime dependency); resilience_mesh keeps its shebang, the
+        # header lives inside its single module docstring.
+        from controller import (  # noqa: E402
+            replay_db_unification, replay_state_provider,
+            resource_admission, resilience_mesh, signed_manifest,
+        )
+
+        assert "Transactional migration and fail-closed ingress composition" in (replay_db_unification.__doc__ or "")
+        assert "Transactional SQLite provider for monotonic replay-state snapshots" in (replay_state_provider.__doc__ or "")
+        assert "Local resource measurement and deterministic, bounded admission" in (resource_admission.__doc__ or "")
+        assert "Local resilience mesh: peer register + restart verification" in (resilience_mesh.__doc__ or "")
+        assert "Signed capability manifests: validation, Ed25519 signing, freshness, revocation" in (signed_manifest.__doc__ or "")
 
 
 if __name__ == "__main__":

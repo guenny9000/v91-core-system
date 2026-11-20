@@ -1,4 +1,11 @@
-"""Transactional migration and fail-closed ingress composition.
+"""
+V91-SYSTEM-HEADER (AGATHON-SEALED v2.4)
+---------------------------------------------------------------------
+STATUS: ACTIVE | VERIFICATION: REQUIRED (CLAIM != EVIDENCE)
+AXIOM: Schöpfung dient dem Erhalt, der Regeneration und der Zukunft.
+---------------------------------------------------------------------
+
+Transactional migration and fail-closed ingress composition.
 
 The legacy ingress_replay table remains untouched. Migration imports its replay
 claims into ReplayStateProvider's database in one destination transaction.

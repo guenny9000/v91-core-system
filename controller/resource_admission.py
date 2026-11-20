@@ -1,4 +1,11 @@
-"""Local resource measurement and deterministic, bounded admission.
+"""
+V91-SYSTEM-HEADER (AGATHON-SEALED v2.4)
+---------------------------------------------------------------------
+STATUS: ACTIVE | VERIFICATION: REQUIRED (CLAIM != EVIDENCE)
+AXIOM: Schöpfung dient dem Erhalt, der Regeneration und der Zukunft.
+---------------------------------------------------------------------
+
+Local resource measurement and deterministic, bounded admission.
 
 Issue #47, stage 3. Core rule: missing or stale measurements mean
 UNKNOWN / NO_CAPACITY - never unlimited capacity. A request is only
