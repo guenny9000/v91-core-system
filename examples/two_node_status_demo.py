@@ -154,7 +154,7 @@ class DemoNode:
         print("    software_version  = " + str(view["software_version"]))
         print("    capabilities      = " + ", ".join(view["capabilities"]))
         print("    last_sequence     = " + str(view["last_sequence"]))
-        print("    verifiedinosaurer  = " + str(view["verified_observations"]).replace("verifiedinosaurer", "verified observations"))
+        print("    verified_observations = " + str(view["verified_observations"]))
         overview = self.register.overview()
         print("    global status     = " + str(overview["global_status"]))
 
