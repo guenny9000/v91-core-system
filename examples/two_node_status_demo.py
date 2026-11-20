@@ -81,14 +81,14 @@ class DemoNode:
         self.receiver = CapturingReceiver(FederationReceiver(
             peer_keys={remote_name: remote_public_key},
             replay_store=FederationReplayStore(tmp / (name + "_replay.sqlite")),
-            now_provider=time.time,
+            now_provider=lambda: int(time.time()),
         ))
         self.listener = UdpEnvelopeListener(receiver=self.receiver).start()
         self.sender = EnvelopeSender(
             peer_id=name,
             private_key=own_key,
             sequence_store=SequenceStore(tmp / (name + "_seq.sqlite")),
-            now_provider=time.time,
+            now_provider=lambda: int(time.time()),
         )
         self.register = CooperationRegister(now_provider=time.time)
         self.remote_name = remote_name
