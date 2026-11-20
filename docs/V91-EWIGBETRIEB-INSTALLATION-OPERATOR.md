@@ -89,4 +89,3 @@ Systeme.
 - macOS: `launchctl unload` + plist aus LaunchAgents entfernen
 Keine V91-Daten werden dabei geloescht (Ledgers bleiben unberuehrt,
 ISOLATE_NOT_DESTROY).
-
