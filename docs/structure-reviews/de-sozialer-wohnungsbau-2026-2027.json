@@ -1,0 +1,50 @@
+{
+ "structure_id": "de_sozialer_wohnungsbau_2026_2027",
+ "assessor": "v91_session_2026-11-20_quellenreview_max_best",
+ "assessed_at_structure": "2026-11-20T21:00:00Z",
+ "note": "Struktur-Datensatz der Bund-Reihe (Vertiefung Grundversorgung, Thema Wohnen). Bewertet wird die Foerderstruktur des Sozialen Wohnungsbau und des Sonderprogramms Junges Wohnen fuer die Programmjahre 2026 und 2027 aus zwei amtlichen Bundesquellen. (1) BMWSB-Pressemitteilung 28.11.2025: Bundesbauministerin Verena Hubertz hat fuer den Bund die Verwaltungsvereinbarungen fuer den Sozialen Wohnungsbau und das Sonderprogramm Junges Wohnen fuer die Jahre 2026 und 2027 unterzeichnet; die Verwaltungsvereinbarungen treten nach Unterzeichnung aller 16 Bundeslaender in Kraft; der Bund investiert fuer die Programmjahre 2026 und 2027 insgesamt neun Milliarden Euro in den Sozialen Wohnungsbau der Laender; die Mittel fuer das Junge Wohnen werden ab 2027 auf dann eine Milliarde Euro jaehrlich verdoppelt. (2) BMWSB-Pressemitteilung 20.03.2026: die Verwaltungsvereinbarungen sind in Kraft getreten, alle 16 Bundeslaender haben unterzeichnet; im Programmjahr 2026 stellt der Bund den Laendern insgesamt vier Milliarden Euro zur Verfuegung, davon 500 Millionen Euro fuer das Programm Junges Wohnen; fuer das Programmjahr 2027 sollen die Programmmittel auf insgesamt fuenf Milliarden Euro weiterwachsen, davon Junges Wohnen auf eine Milliarde Euro verdoppelt; laut Ministerin Hubertz gibt die zweijaehrige Vereinbarung den Laendern mehr Planungssicherheit; die Ministerin nennt den Sektor einen Stabilitaetsanker fuer den gesamten Wohnungsbau; im Jahr 2024 wurden laut Mitteilung von den Laendern insgesamt rund 62.000 Wohneinheiten im Bereich des Sozialen Wohnungsbaus gefoerdert, rund 50 Prozent mehr als 2022 und rund 25 Prozent mehr als im Vorjahr, trotz gestiegener Bau- und Finanzierungskosten und sinkender Baugenehmigungen im Gesamtmarkt. Ehrliche Grenzen: VEREINBARUNG != GESETZ (Finanzierungsrahmen beruht auf Verwaltungsvereinbarungen mit den Laendern, nicht auf einem einschlaegigen Bundesgesetz in diesen Quellen); BEREITGESTELLTE_MITTEL != VERBRAUCHTE_MITTEL != FERTIGE_WOHNUNGEN (ueber die tatsaechliche Verwendung und den Bau-Fortschritt 2026/2027 sagen beide Quellen nichts); GEPLANTES_WACHSTUM_2027 != BESCHLOSSENE_AUSZAHLUNG ('sollen weiter aufwachsen' bleibt in beiden Quellen als Planung formuliert); die 62.000-Foerderung 2024 ist eine Landes-Meldungszahl aus der Ministeriums-Pressemitteilung (CLAIM-Stufe PM, keine hier sichtbare amtliche Baulast- oder Fertigstellungsstatistik geprueft, DATENBASIS != MESSUNG); MINISTERINNEN-ZITATE sind Regierungs-Positionen; REVIEW != ENTSCHEIDUNG.",
+ "criteria": {
+  "gesellschaftlicher_nutzen": {
+   "status": "BELEGT",
+   "evidence": "Beide Quellen dokumentieren ein konkretes Angebot der Grundversorgung Wohnen: insgesamt neun Milliarden Euro Bundesmittel fuer die Programmjahre 2026 und 2027 in den Sozialen Wohnungsbau der Laender (davon vier Milliarden Euro im Programmjahr 2026, davon 500 Millionen Euro fuer Junges Wohnen); Zielgruppe sind laut Ministerin Menschen mit kleineren Einkommen sowie ausdruecklich junges Wohnen ('bezahlbares Wohnen kennt kein Mindestalter'); die Verwaltungsvereinbarung mit allen 16 Bundeslaendern ist laut PM 20.03.2026 in Kraft getreten; Nutzenaussagen sind Planungs- und Foerderzusage-Wirkungen, nicht als eingetretene Wohnraeume belegt.",
+   "source": "https://www.bmwsb.bund.de/SharedDocs/pressemitteilungen/DE/2026/03/VV-soz-wohnungsbau.html",
+   "assessed_at": "2026-11-20T21:00:00Z"
+  },
+  "menschenrechtsvertraeglichkeit": {
+   "status": "NICHT_GEPRUEFT",
+   "evidence": "",
+   "source": "",
+   "assessed_at": ""
+  },
+  "kosten_und_ressourcenverbrauch": {
+   "status": "NICHT_GEPRUEFT",
+   "evidence": "",
+   "source": "",
+   "assessed_at": ""
+  },
+  "transparenz": {
+   "status": "BELEGT",
+   "evidence": "Beide Quellen sind oeffentliche amtliche Pressemitteilungen des BMWSB mit klaren Datumsangaben (28.11.2025 und 20.03.2026), benannten Summen pro Programmjahr (4+5=9 Milliarden Euro, davon 500 Mio./1 Mrd. Junges Wohnen), benannten Akteuren (Bundesbauministerin Hubertz, alle 16 Bundeslaender als Unterzeichner) und einer nachvollziehbaren Verfahrenslogik (Unterzeichnung 28.11.2025, Inkrafttreten nach Laender-Unterzeichnung bestaetigt 20.03.2026). Offen: die Verwaltungsvereinbarungstexte selbst wurden hier nicht geoeffnet (CLAIM-Stufe Pressemitteilungen); eine kleine Abweichung der Sprachlogik zwischen beiden Mitteilungen (PM 28.11.2025 nennt 1 Mrd. 'ab 2027 jaehrlich', PM 20.03.2026 nennt 1 Mrd. fuer 'das Programmjahr 2027') ist dokumentiert, sachlich deckungsgleich.",
+   "source": "https://www.bmwsb.bund.de/SharedDocs/pressemitteilungen/DE/2025/11/VV-sozialer-wohnungsbau-2026.html",
+   "assessed_at": "2026-11-20T21:00:00Z"
+  },
+  "nachhaltigkeit": {
+   "status": "NICHT_GEPRUEFT",
+   "evidence": "",
+   "source": "",
+   "assessed_at": ""
+  },
+  "missbrauchsrisiken": {
+   "status": "NICHT_GEPRUEFT",
+   "evidence": "",
+   "source": "",
+   "assessed_at": ""
+  },
+  "alternativen_und_verbesserbarkeit": {
+   "status": "BELEGT",
+   "evidence": "Der Verbesserungspfad ist in beiden Quellen konkret dokumentiert: Programmmittel-Wachstum von vier Milliarden Euro (2026) auf fuenf Milliarden Euro (2027, Planung), Verdopplung Junges Wohnen von 500 Millionen auf eine Milliarde Euro; zweijaehrige Vereinbarung bewusst fuer mehr Planungssicherheit der Laender; ergaenzend nennt die PM 20.03.2026 weitere Instrumente des Hauses (Wohngeld, Bau-Turbo, Foerderprogramme-Uebersicht) und den gegenlaeufigen Kontext des Gesamtmarkts (steigende Bau- und Finanzierungskosten, sinkende Baugenehmigungen), gegen den der Soziale Wohnungsbau laut Mitteilung als Stabilitaetsanker gewachsen ist (62.000 gefoerderte Wohneinheiten 2024, +50% vs. 2022, +25% vs. Vorjahr; CLAIM-Stufe PM). Offen: Referenz-Alternative zur Wachstumslogik (z.B. Bedarfsdeckelung nach regionaler Wohnungsnot) liegt nicht in den Quellen (GEPLANTES_WACHSTUM != AUSGEZAHLTE_MITTEL, VEREINBARUNG != GESETZ).",
+   "source": "https://www.bmwsb.bund.de/SharedDocs/pressemitteilungen/DE/2026/03/VV-soz-wohnungsbau.html",
+   "assessed_at": "2026-11-20T21:00:00Z"
+  }
+ }
+}
