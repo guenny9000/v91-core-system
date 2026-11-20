@@ -67,24 +67,23 @@ class CapturingReceiver(FederationReceiver):
         return receipt
 
 
-def make_node(tmp: Path, peer_id: str, remote_public_key) -> dict:
-    private_key = Ed25519PrivateKey.generate()
+def make_node(tmp: Path, peer_id: str, own_key: Ed25519PrivateKey,
+                   remote_peer_id: str, remote_public_key) -> dict:
     receiver = CapturingReceiver(FederationReceiver(
-        peer_keys={f"node-{remote_public_key[0]}": remote_public_key[1]},
+        peer_keys={remote_peer_id: remote_public_key},
         replay_store=FederationReplayStore(tmp / f"{peer_id}_replay.sqlite"),
         now_provider=lambda: NOW,
     ))
     listener = UdpEnvelopeListener(receiver=receiver).start()
     sender = EnvelopeSender(
         peer_id=peer_id,
-        private_key=private_key,
+        private_key=own_key,
         sequence_store=SequenceStore(tmp / f"{peer_id}_seq.sqlite"),
         now_provider=lambda: NOW,
     )
     register = CooperationRegister(now_provider=lambda: float(NOW))
     return {
         "peer_id": peer_id,
-        "private_key": private_key,
         "receiver": receiver,
         "listener": listener,
         "sender": sender,
@@ -157,8 +156,8 @@ class TwoNodeLoopbackTest(unittest.TestCase):
             tmp = Path(td)
             key_a = Ed25519PrivateKey.generate()
             key_b = Ed25519PrivateKey.generate()
-            node_a = make_node(tmp, "node-alpha", ("beta", key_b.public_key()))
-            node_b = make_node(tmp, "node-beta", ("alpha", key_a.public_key()))
+            node_a = make_node(tmp, "node-alpha", key_a, "node-beta", key_b.public_key())
+            node_b = make_node(tmp, "node-beta", key_b, "node-alpha", key_a.public_key())
             sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
             try:
                 port_a = node_a["listener"].bound_address()[1]
@@ -231,8 +230,8 @@ class TwoNodeLoopbackTest(unittest.TestCase):
             tmp = Path(td)
             key_a = Ed25519PrivateKey.generate()
             key_b = Ed25519PrivateKey.generate()
-            node_a = make_node(tmp, "node-alpha", ("beta", key_b.public_key()))
-            node_b = make_node(tmp, "node-beta", ("alpha", key_a.public_key()))
+            node_a = make_node(tmp, "node-alpha", key_a, "node-beta", key_b.public_key())
+            node_b = make_node(tmp, "node-beta", key_b, "node-alpha", key_a.public_key())
             sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
             try:
                 wire = node_a["sender"].build_envelope(
@@ -253,8 +252,8 @@ class TwoNodeLoopbackTest(unittest.TestCase):
             tmp = Path(td)
             key_a = Ed25519PrivateKey.generate()
             key_b = Ed25519PrivateKey.generate()
-            node_a = make_node(tmp, "node-alpha", ("beta", key_b.public_key()))
-            node_b = make_node(tmp, "node-beta", ("alpha", key_a.public_key()))
+            node_a = make_node(tmp, "node-alpha", key_a, "node-beta", key_b.public_key())
+            node_b = make_node(tmp, "node-beta", key_b, "node-alpha", key_a.public_key())
             sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
             try:
                 wire = bytearray(node_a["sender"].build_envelope(
