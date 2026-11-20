@@ -18,9 +18,7 @@ REQUIRED_HEADER_LINES = (
 
 LEGACY_EXEMPTIONS = frozenset({
     "__init__.py",
-    "state_monotonicity.py",
-    "stewardship_report.py", "task_ingress_gate.py",
-    "trusted_peer_registry.py", "use_policy.py", "v91_cli.py",
+    "v91_cli.py",
     "v91_listener.py", "witness_client.py",
 })
 
@@ -193,6 +191,23 @@ class AgathonHeaderPolicyTest(unittest.TestCase):
         assert "Local resource measurement and deterministic, bounded admission" in (resource_admission.__doc__ or "")
         assert "Local resilience mesh: peer register + restart verification" in (resilience_mesh.__doc__ or "")
         assert "Signed capability manifests: validation, Ed25519 signing, freshness, revocation" in (signed_manifest.__doc__ or "")
+
+        # Batch 9: state_monotonicity, stewardship_report, task_ingress_gate,
+        # trusted_peer_registry, use_policy. stewardship_report uses the flat
+        # in-package import style ('from ledger import ...'), so it is loaded
+        # flat from the controller directory already on sys.path above;
+        # state_monotonicity needs the cryptography runtime dependency (CI).
+        from controller import (  # noqa: E402
+            state_monotonicity, task_ingress_gate,
+            trusted_peer_registry, use_policy,
+        )
+        import stewardship_report as flat_stewardship  # noqa: E402
+
+        assert "Verify externally signed monotonic replay-store checkpoints" in (state_monotonicity.__doc__ or "")
+        assert "Summaries for stewardship decision ledgers" in (flat_stewardship.__doc__ or "")
+        assert "Authenticated, fail-closed task-ingress decision primitive" in (task_ingress_gate.__doc__ or "")
+        assert "Fail-closed lookup for independently provisioned V91 peer public keys" in (trusted_peer_registry.__doc__ or "")
+        assert "Conservative, deterministic V91 use-domain policy classification" in (use_policy.__doc__ or "")
 
 
 if __name__ == "__main__":
