@@ -1,0 +1,50 @@
+{
+ "structure_id": "de_sgb2_grundsicherung_arbeitsuchende_2026",
+ "assessor": "v91_session_2026-11-20_quellenreview_max_best",
+ "assessed_at_structure": "2026-11-20T15:00:00Z",
+ "note": "Struktur-Datensatz der Bund-Reihe (Querschnitt Soziale Grundversorgung). Bewertet wird das Gesetz zur Umgestaltung der Grundsicherung fuer Arbeitsuchende (SGB-II-Aenderungen; laut Bundesregierungs-Artikel vom 01.07.2026 stufenweise in Kraft getreten; Kabinett 17.12.2025, Bundestag 05.03.2026, Bundesrat 27.03.2026). Dokumentierte Kernpunkte: Umbenennung Buergergeld in Grundsicherungsgeld, Vermittlungsvorrang, Vollzeitarbeitspflicht fuer zumutbare Faelle insbesondere Alleinstehender, Heranziehung zur Erwerbsarbeit ab dem 14. Lebensmonat des Kindes (zuvor ab dem dritten Lebensjahr), Kooperationsplan mit Verwaltungsakten, Pflichtverletzung: Minderung des Regelbedarfs um 30 Prozent fuer je drei Monate, gestuftes Meldeversaeumnis-Verfahren bis zum kompletten Leistungsentfall inklusive Kosten der Unterkunft, fruehere Arbeitsverweigerer-Regelung, Abschaffung der einjaehrigen Vermoegens-Karenzzeit mit Schonvermoegen nach Lebensalter, KdU-Deckel bei 1,5-facher Angemessenheitsgrenze. Ehrliche Grenzen: Bewertet sind die REGELUNGEN, nicht ihre WIRKUNG (REGELUNG != WIRKUNG); Sanktions- und Missbrauchsangaben sind Regierungs-CLAIM ohne hier gepruefte Umsetzungsdaten (DATENBASIS != MESSUNG); REVIEW != ENTSCHEIDUNG, keine Sozialpolitik-Engine.",
+ "criteria": {
+  "gesellschaftlicher_nutzen": {
+   "status": "BELEGT",
+   "evidence": "Laut Bundesregierungs-Artikel (01.07.2026) bezweckt das Gesetz faire und treffsicherere Sozialleistungen nach dem Grundsatz des Forderns und Foerderns: Menschen, die Hilfe brauchen, koennen sich weiter auf Unterstuetzung verlassen; wer arbeiten kann, muss an der Eigenbedeckung des Lebensunterhalts mitwirken; Jobcenter erhalten wirksamere Vermittlungs- und Foerderinstrumente (Qualifizierungs- und Weiterbildungsmassnahmen insbesondere fuer unter 30-Jaehrige, gezieltere Unterstuetzung bei gesundheitlichen Einschraenkungen, umfassendere Beratung fuer Jugendliche in komplexen Lebenslagen, gestaerkte Jugendberufsagenturen). Zielgruppe sind alle arbeitsuchenden Leistungsbeziehenden.",
+   "source": "https://www.bundesregierung.de/breg-de/aktuelles/neue-grundsicherung-2399562",
+   "assessed_at": "2026-11-20T15:00:00Z"
+  },
+  "menschenrechtsvertraeglichkeit": {
+   "status": "NICHT_GEPRUEFT",
+   "evidence": "",
+   "source": "",
+   "assessed_at": ""
+  },
+  "kosten_und_ressourcenverbrauch": {
+   "status": "NICHT_GEPRUEFT",
+   "evidence": "",
+   "source": "",
+   "assessed_at": ""
+  },
+  "transparenz": {
+   "status": "BELEGT",
+   "evidence": "Der Bundesregierungs-Artikel vom 01.07.2026 dokumentiert den Gesetzgebungsweg vollstaendig (Kabinettsbeschluss 17.12.2025, Bundestag 05.03.2026, Bundesrat 27.03.2026, stufenweises Inkrafttreten ab 01.07.2026) und nennt fuer jede Kernregelung die konkrete Ausgestaltung (30-Prozent-Minderung je drei Monate bei Pflichtverletzung, gestuftes Meldeversaeumnis-Verfahren mit benannter letzter Konsequenz, KdU-Deckel 1,5-fache Angemessenheitsgrenze, Schonvermoegen nach Lebensalter). FAQ beim BMAS und Informationen der Bundesagentur fuer Arbeit sind verlinkt. Offen: die SGB-II-Rechtsquelle selbst wurde hier nicht im Volltext geprueft (CLAIM-Stufe Regierungsartikel).",
+   "source": "https://www.bundesregierung.de/breg-de/aktuelles/neue-grundsicherung-2399562",
+   "assessed_at": "2026-11-20T15:00:00Z"
+  },
+  "nachhaltigkeit": {
+   "status": "NICHT_GEPRUEFT",
+   "evidence": "",
+   "source": "",
+   "assessed_at": ""
+  },
+  "missbrauchsrisiken": {
+   "status": "NICHT_GEPRUEFT",
+   "evidence": "",
+   "source": "",
+   "assessed_at": ""
+  },
+  "alternativen_und_verbesserbarkeit": {
+   "status": "BELEGT",
+   "evidence": "Das Gesetz ist selbst die dokumentierte Alternative zum vorherigen Buergergeldsystem und benennt Einzelaenderungen mit Regelungsdetail (Karenzzeit beim Vermoegen abgeschafft statt beibehalten, Arbeitsverweigerer-Regelung frueher aber zeitlich begrenzt maximal zwei Monate, Milderung: erstes Meldeversaeumnis ohne Konsequenz). Ethisch offene Felder bleiben benennbar: Heranziehung ab dem 14. Lebensmonat eines Kindes, kompletter Leistungsentfall inklusive KdU bei Nichterreichbarkeit und Arbeitspflicht zum maximal zumutbaren Umfang sind Regel-Inhalte, deren Folgewirkungen hier nicht geprueft sind (REGELUNG != WIRKUNG); eine Wirkungsevaluation steht aus.",
+   "source": "https://www.bundesregierung.de/breg-de/aktuelles/neue-grundsicherung-2399562",
+   "assessed_at": "2026-11-20T15:00:00Z"
+  }
+ }
+}
