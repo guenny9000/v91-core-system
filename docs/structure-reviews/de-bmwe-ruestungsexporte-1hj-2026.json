@@ -1,0 +1,50 @@
+{
+ "structure_id": "de_bmwe_ruestungsexporte_1hj_2026",
+ "assessor": "v91_session_2026-11-20_quellenreview_max_best",
+ "assessed_at_structure": "2026-11-20T17:00:00Z",
+ "note": "Struktur-Datensatz der Bund-Reihe (Saeule Frieden). Bewertet wird die deutsche Ruestungsexportpolitik im 1. Halbjahr 2026 laut Bundesregierung: Erstens die BMWE-Pressemitteilung vom 15.07.2026 mit vorlaeufigen Angaben (Gesamtwert der Exportgenehmigungen rund 13,87 Mrd. EUR, davon rund 9,6 Mrd. Kriegswaffen und rund 4,3 Mrd. sonstige Ruestungsgueter; Hauptempfaengerland Ukraine mit rund 2,5 Mrd. EUR; rund 12,8 Mrd. Einzelausfuhrgenehmigungen und rund 1,1 Mrd. Meldewerte Allgemeine Genehmigungen); zweitens die Unterrichtung des Bundestags per Drucksache 21/9150 vom 12.11.2026 gemass den Politischen Grundsaetzen der Bundesregierung fuer den Export von Kriegswaffen und sonstigen Ruestungsguetern (Fassung 19.01.2000 i.V.m. Beschluss 08.05.2014). Kontext-Hinweis: Die persoenliche ethische Position des Repository-Owners, jede Kriegswaffe sei illegal und Ruestungskonzerne unerwuenscht, ist hier als Position dokumentiert; sie ist keine geltende Rechtslage. V91 bewertet die belegbare Verwaltungs- und Berichtsstruktur; eine Verbotswuerdigung oder Freigabe von Exporten ist KEINE V91-Entscheidung (REVIEW != ENTSCHEIDUNG, keine Kriegs- und Waffenpolitik-Engine). Grenzen: Zahlen sind GENEHMIGUNGSwerte, vorlaeufig, keine Ausfuhr-Messung (GENEHMIGUNG != AUSFUHR, DATENBASIS != MESSUNG).",
+ "criteria": {
+  "gesellschaftlicher_nutzen": {
+   "status": "BELEGT",
+   "evidence": "Laut BMWE-Pressemitteilung (15.07.2026) entscheidet die Bundesregierung ueber Ruestungsexporte im Einzelfall nach sorgfaeltiger Pruefung unter Einbeziehung aussen- und sicherheitspolitischer Erwaegungen nach rechtlichen und politischen Vorgaben, mit Pruefung je Empfaengerland, Art des Ruestungsgutes und Verwendungszweck; als Hauptempfaengerland ist die Ukraine benannt. Der Berichtsrahmen dokumentiert damit staatliche Steuerungsansaetze; ob die Exporte ihre sicherheitspolitischen Ziele erreichen, ist hier NICHT geprueft (ZIEL != WIRKUNG).",
+   "source": "https://www.bundeswirtschaftsministerium.de/Redaktion/DE/Pressemitteilungen/2026/07/20260715-ruestungsexportpolitik-1-halbjahr-2026.html",
+   "assessed_at": "2026-11-20T17:00:00Z"
+  },
+  "menschenrechtsvertraeglichkeit": {
+   "status": "NICHT_GEPRUEFT",
+   "evidence": "",
+   "source": "",
+   "assessed_at": ""
+  },
+  "kosten_und_ressourcenverbrauch": {
+   "status": "NICHT_GEPRUEFT",
+   "evidence": "",
+   "source": "",
+   "assessed_at": ""
+  },
+  "transparenz": {
+   "status": "BELEGT",
+   "evidence": "Die Bundesregierung berichtet halbjaehrlich oeffentlich per Bundestagsdrucksache (aktuell 21/9150 vom 12.11.2026 fuer das 1. Halbjahr 2026, zugeleitet vom BMWE gemass den Politischen Grundsaetzen in der Fassung 19.01.2000 i.V.m. Beschluss 08.05.2014); die BMWE-Pressemitteilung vom 15.07.2026 nennt Gesamt- und Kategorienwerte (Kriegswaffen vs. sonstige Ruestungsgueter, Einzel- vs. Allgemeine Genehmigungen) und das Hauptempfaengerland. Offen: die Drucksache im Volltext wurde hier nicht auf Einzelposten geprueft (CLAIM-Stufe PM und Drucksachen-Nachweis).",
+   "source": "https://dserver.bundestag.de/btd/21/091/2109150.pdf",
+   "assessed_at": "2026-11-20T17:00:00Z"
+  },
+  "nachhaltigkeit": {
+   "status": "NICHT_GEPRUEFT",
+   "evidence": "",
+   "source": "",
+   "assessed_at": ""
+  },
+  "missbrauchsrisiken": {
+   "status": "NICHT_GEPRUEFT",
+   "evidence": "",
+   "source": "",
+   "assessed_at": ""
+  },
+  "alternativen_und_verbesserbarkeit": {
+   "status": "BELEGT",
+   "evidence": "Der Rahmen ist als wiederholbarer Prozess angelegt: halbjaehrliche Unterrichtung des Bundestags mit Genehmigungs- und Endgueltige-Ausfuhren-Teilen (Drucksache 21/9150), Einzelfallpruefung und Allgemeine Genehmigungen als dokumentierte Verfahrenskategorien (risikobasierte Verfahrenserleichterungen fuer EU- und bestimmte NATO-Laender). Ein eigenstaendig benannter Verbesserungsschritt fehlt in den Quellen: eine unabhaengige Wirkungs- und Missbrauchsevaluation der Exportentscheidungen wurde hier nirgends benannt und bliebe der entscheidende Fortschritt (GENEHMIGUNG != AUSFUHR, STRUKTUR != WIRKUNG).",
+   "source": "https://dserver.bundestag.de/btd/21/091/2109150.pdf",
+   "assessed_at": "2026-11-20T17:00:00Z"
+  }
+ }
+}
