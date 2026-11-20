@@ -208,11 +208,6 @@ class AgathonHeaderPolicyTest(unittest.TestCase):
         assert "Conservative, deterministic V91 use-domain policy classification" in (use_policy.__doc__ or "")
 
 
-if __name__ == "__main__":
-    unittest.main()
-
-assert "Conservative, deterministic V91 use-domain policy classification" in (use_policy.__doc__ or "")
-
         # Batch 10 (final): v91_cli, v91_listener, witness_client. The header
         # migration is complete after this batch; LEGACY_EXEMPTIONS shrinks to
         # __init__.py only. v91_cli and v91_listener use flat in-package
