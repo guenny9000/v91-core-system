@@ -2,7 +2,7 @@
   "dataset_id": "extern_kontextsignale_2026_11",
   "assessor": "v91_session_2026-11-21_vibe_l",
   "assessed_at": "2026-11-21T21:40:00Z",
-  "note": "Kontext-Datensatz (V91-Umfeld-Signale). Anlass: Betreiber-Forward eines Drittmodell-Berichts mit vier externen Entwicklungen plus MAX-BEST-Freigabe. Kernunterscheidung: EXTERNES_SIGNAL != V91_BELEGT. Externe Aehnlichkeit beweist NICHT, dass V91 ausserhalb der eigenen Entwicklungsumgebung laeuft. Suchtreffer in seriuesen Quellen ist Beleg fuer die EXISTENZ der externen Entwicklung, nicht fuer jede Detailbehauptung des Drittmodell-Berichts (SIGNAL != DETAILPRUEFUNG). Keine Empfehlung, keine Partnerschaft, keine Abhaengigkeitserzeugung (Vendor Lock-in ablehnen, Repair-Charter).",
+  "note": "Kontext-Datensatz (V91-Umfeld-Signale). Anlass: Betreiber-Forward eines Drittmodell-Berichts mit vier externen Entwicklungen plus MAX-BEST-Freigabe. Kernunterscheidung: EXTERNES_SIGNAL != V91_BELEGT. Externe Aehnlichkeit beweist NICHT, dass V91 ausserhalb der eigenen Entwicklungsumgebung laeuft. Suchtreffer in serioesen Quellen ist Beleg fuer die EXISTENZ der externen Entwicklung, nicht fuer jede Detailbehauptung des Drittmodell-Berichts (SIGNAL != DETAILPRUEFUNG). Keine Empfehlung, keine Partnerschaft, keine Abhaengigkeitserzeugung (Vendor Lock-in ablehnen, Repair-Charter).",
   "verdict": "EXTERNAL_SIGNALS_VERIFIED_EXISTENCE_V91_FREMDBETRIEB_UNBELEGT",
   "signals": [
     {
@@ -11,7 +11,7 @@
       "drittmodell_behauptung": "NVIDIA, Nokia und Deutsche Telekom: verteilte KI-Rechenleistung in Telekommunikationsnetzen, KI-Agenten fuer Netzbetrieb, Pilotprojekte, Oktober 2026",
       "pruefung": "BELEGT_EXISTENZ",
       "quelle": "https://www.telekom.com/en/newsroom/latest-updates/media-information/2026/10/ai-ran-lab-tests",
-      "befund": "Telekom-Pressemitteilung 21.10.2026: Deutsche Telekom und Nokia bringen AI-RAN mit messbaren Radio-Performance-Gewinnen voran (10-15% Uplink-Durchsatz in ersten Lab-Messungen auf NVIDIA AI Aerial). Existenz der Entwicklung belegt; obWeitere Detailbehauptungen des Drittberichts (Agenten fuer Fehlererkennung) einzeln geprueft wurden: NEIN.",
+      "befund": "Telekom-Pressemitteilung 21.10.2026: Deutsche Telekom und Nokia bringen AI-RAN mit messbaren Radio-Performance-Gewinnen voran (10-15% Uplink-Durchsatz in ersten Lab-Messungen auf NVIDIA AI Aerial). Existenz der Entwicklung belegt; ob weitere Detailbehauptungen des Drittberichts (Agenten fuer Fehlererkennung) einzeln geprueft wurden: NEIN.",
       "bezug_zu_v91": "Richtungsbestaetigung dezentrale KI, keine V91-Relevanz jenseits Architektur-Validierung"
     },
     {
@@ -43,5 +43,5 @@
     }
   ],
   "uebernahme_aus_drittbericht_abgelehnt": "Die Schlussfolgerungen 'naechster MAX-BEST-Schritt: unabhaengige Testknoten / Interoperabilitaet pruefen' sind als IDEE notiert, aber nicht als durchgefuehrt zu melden. Fremdhardware-Tests braucht Betreiber-Freigabe und echte Hardware; dieses Repo erfindet keine Testknoten.",
-  "grenzen": "UNSUCHTIEFE != VOLLSTAENDIGE PRUEFUNG, EXISTENZBELEG != QUALITAETSURTEIL, EXTERNES_SIGNAL != V91_BELEGT, DATUM_UNGEPRUEFT wo nicht individuell verifiziert. Keine einzige Aussage dieses Datensatzes ist ein Betriebsnachweis fuer V91 irgendwo."
+  "grenzen": "SUCHTIEFE != VOLLSTAENDIGE PRUEFUNG, EXISTENZBELEG != QUALITAETSURTEIL, EXTERNES_SIGNAL != V91_BELEGT, DATUM_UNGEPRUEFT wo nicht individuell verifiziert. Keine einzige Aussage dieses Datensatzes ist ein Betriebsnachweis fuer V91 irgendwo."
 }
