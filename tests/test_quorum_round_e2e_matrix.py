@@ -113,8 +113,14 @@ def run_round(providers, *, health=None, cancel_scope=None, quorum=2):
         batch = collect_provider_votes(
             PROPOSAL, providers, cancel_scope=cancel_scope,
         )
+    # VIBE-XLI CANCEL-GUARD (Rufer-Vertrag aus VoteBatch.cancelled):
+    # Eine abgebrochene Runde ist GESCHEITERT, egal wie viele gueltige
+    # Stimmen vorher gesammelt wurden. Teilquorums sind unzulaessig,
+    # deshalb werden die Stimmen einer abgebrochenen Runde NIE ausgewertet
+    # (CANCELLED != PARTIAL QUORUM), und es wird nichts persistiert.
+    effective_votes = [] if batch.cancelled else list(batch.votes)
     result = evaluate_consensus(
-        list(batch.votes),
+        effective_votes,
         member_keys=MEMBERS,
         proposal_digest=DIGEST,
         epoch=EPOCH,
@@ -164,7 +170,9 @@ def test_t02_degraded_after_failures_and_owner_only_clear():
     assert pol.advisory("agent-a", now=62).allow is False
     # Besitzer-Reset statt Selbstheilung, danach offen.
     pol.clear("agent-a")
-    assert pol.status("agent-a", now=62) is HealthStatus.HEALTHY
+    # VIBE-XLI REGRESSION: clear() erzeugt keine Gesundheitsevidenz:
+    # ohne ein einziges OK bleibt der Zustand UNKNOWN (CLEAR != HEALTH-PROOF).
+    assert pol.status("agent-a", now=62) is HealthStatus.UNKNOWN
 
 
 # --- T-03: Abbruch vor der Runde -> kein Call, kein Quorum -------------
@@ -203,9 +211,12 @@ def test_t04_mid_round_cancel_stops_remaining_providers_no_false_quorum():
     assert calls == [first_agent]                        # agent-b unberuehrt
     assert [v.agent_id for v in batch.votes] == [first_agent]
     assert any("round cancelled" in f for f in batch.failures)
-    # Genau EINE gueltige Stimme kann kein Quorum von Zwei erzeugen.
+    # VIBE-XLI: Die Teilstimme bleibt im Batch belegtbar, zaehlt aber NICHT:
+    # die abgebrochene Runde wird nie ausgewertet (guard in run_round).
+    assert batch.cancelled is True
+    assert batch.cancellation_digest == DIGEST
     assert result.decision is Decision.NO_QUORUM
-    assert result.valid_approvals == 1
+    assert result.valid_approvals == 0
 
 
 # --- T-05: Providerausfall = fehlende Stimme, nie Vetozahl --------------
@@ -332,6 +343,50 @@ def test_t08_foreign_vote_is_invalid_and_blocks_no_slot():
     assert result.decision is Decision.ACCEPT
     assert result.valid_approvals == 1
     assert result.accepted_agents == ("agent-a",)
+
+
+# --- T-11: Abbruch trotz erreichtem Teilquorum (Q=1) -> NO_QUORUM -------
+
+def test_t11_mid_round_cancel_with_quorum_one_never_accepts_partial_vote():
+    """VIBE-XLI REGRESSION (externer Gegenbefund): Bei quorum=1 duerfen
+    vor dem Abbruch gesammelte Stimmen kein ACCEPT erzeugen. Der VoteBatch
+    trägt das bindende Abbruchkennzeichen, der Rufer-Guard wertet die
+    Stimmen einer abgebrochenen Runde nie aus."""
+    calls: list = []
+    scope = CancelScope()
+    inner = ok_provider("agent-a", calls)
+
+    def cancelling_invoke(proposal: Proposal):
+        result = inner.invoke(proposal)
+        scope.cancel(proposal.digest, reason="stop after first vote")
+        return result
+
+    first = Provider("agent-a", inner.independence_id, cancelling_invoke)
+    ok_agent = ok_provider("agent-b", calls)
+    batch, result = run_round([first, ok_agent], cancel_scope=scope, quorum=1)
+    assert calls == ["agent-a"]                     # die Stimme wurde real gesammelt
+    assert [v.agent_id for v in batch.votes] == ["agent-a"]
+    assert batch.cancelled is True
+    assert batch.cancellation_digest == DIGEST
+    # Genau hier lag die Luecke: Q=1 + eine Teilstimme != ACCEPT.
+    assert result.decision is Decision.NO_QUORUM
+    assert result.valid_approvals == 0
+
+
+# --- T-12: Abbruch-Digest-Bindung: falscher Digest wird offengelegt -----
+
+def test_t12_cancellation_digest_mismatch_is_disclosed_and_fail_closed():
+    """Ein fuer einen ANDEREN Proposal-Digest gesetzter Abbruch stoppt
+    die Runde trotzdem (fail-closed), wird aber nie verschwiegen."""
+    scope = CancelScope()
+    scope.cancel("f" * 64, reason="cancel token from a different round")
+    batch, result = run_round(
+        [ok_provider("agent-a", [], 1)], cancel_scope=scope, quorum=1,
+    )
+    assert batch.cancelled is True
+    assert batch.cancellation_digest == "f" * 64
+    assert any("digest mismatch" in f for f in batch.failures)
+    assert result.decision is Decision.NO_QUORUM
 
 
 if __name__ == "__main__":

@@ -23,6 +23,10 @@ Fail-closed core rules, by construction:
    in-memory and owned by the caller.
 4. Health labels are ADVISORIES, not evidence of provider independence and
    not proof that a provider worked correctly in the past.
+5. HEALTHY requires at least ONE recorded OK outcome (EVIDENCE-BASED
+   HEALTH). A history of only CANCELLED events, or a cleared failure
+   history without a single success, stays UNKNOWN: unproven, not healthy
+   (UNKNOWN != HEALTHY, CLEAR != HEALTH-PROOF).
 
 Honest limits:
 - HEALTHY is a claim from past call outcomes, not a guarantee for the next
@@ -226,7 +230,9 @@ class ProviderHealthPolicy:
 
     def clear(self, provider_id: str) -> None:
         """Revoke manual exclusion and reset failure counters. Owner-fired
-        only: health state must not self-heal silently."""
+        only: health state must not self-heal silently. clear() NEVER
+        creates health evidence: without at least one recorded OK the
+        status afterwards is UNKNOWN, not HEALTHY (CLEAR != HEALTH-PROOF)."""
         self.__require_id(provider_id)
         self.__manually_excluded.discard(provider_id)
         rec = self.__records.get(provider_id)
@@ -256,6 +262,11 @@ class ProviderHealthPolicy:
             return HealthStatus.COOLDOWN
         if rec.consecutive_failures >= self.__degraded_after:
             return HealthStatus.DEGRADED
+        if rec.total_ok == 0:
+            # History exists, but not a single OK outcome: failures below
+            # the degraded threshold or only CANCELLED events. Availability
+            # is a claim; unproven is UNKNOWN, never HEALTHY.
+            return HealthStatus.UNKNOWN
         return HealthStatus.HEALTHY
 
     def advisory(self, provider_id: str, *, now: int) -> CallAdvisory:
@@ -281,10 +292,13 @@ class ProviderHealthPolicy:
                 reason="recent failures; call allowed, watch closely",
             )
         if st is HealthStatus.UNKNOWN:
-            assert rec is None
+            reason = (
+                "no call history (UNKNOWN != HEALTHY, assertion, not evidence)"
+                if rec is None
+                else "call history without a single success (UNKNOWN != HEALTHY)"
+            )
             return CallAdvisory(
-                provider_id=provider_id, allow=True, status=st,
-                reason="no call history (UNKNOWN != HEALTHY, assertion, not evidence)",
+                provider_id=provider_id, allow=True, status=st, reason=reason,
             )
         if rec is None:
             return CallAdvisory(

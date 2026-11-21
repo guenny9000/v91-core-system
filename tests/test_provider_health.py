@@ -55,7 +55,9 @@ class ProviderHealthTests(unittest.TestCase):
             degraded_after=2, cooldown_seconds=60, unavailable_after=4
         )
         pol.record("a", HealthEvent(HealthEventKind.TIMEOUT, now=10), now=10)
-        self.assertIs(pol.status("a", now=11), HealthStatus.HEALTHY)
+        # VIBE-XLI: ein Fehler unterhalb der Schwelle ohne ein OK ist
+        # unbestaetigt, nicht gesund (EVIDENCE-BASED HEALTH).
+        self.assertIs(pol.status("a", now=11), HealthStatus.UNKNOWN)
         pol.record("a", HealthEvent(HealthEventKind.RATE_LIMITED, now=12), now=12)
         self.assertIs(pol.status("a", now=13), HealthStatus.COOLDOWN)
         self.assertFalse(pol.advisory("a", now=13).allow)
@@ -105,7 +107,30 @@ class ProviderHealthTests(unittest.TestCase):
         snap = pol.snapshot("a")
         self.assertEqual(snap["total_cancelled"], 2)
         self.assertEqual(snap["consecutive_failures"], 0)
-        self.assertIs(pol.status("a", now=3), HealthStatus.HEALTHY)
+        # VIBE-XLI REGRESSION: CANCELLED ist weder Fehler noch Erfolg.
+        # Ohne ein einziges OK bleibt der Zustand UNKNOWN (unproven),
+        # niemals HEALTHY (CANCELLED != HEALTH-EVIDENCE).
+        self.assertIs(pol.status("a", now=3), HealthStatus.UNKNOWN)
+        adv = pol.advisory("a", now=3)
+        self.assertIs(adv.status, HealthStatus.UNKNOWN)
+        self.assertTrue(adv.allow)  # Advisory erlaubt den Versuch weiter
+        self.assertIn("without a single success", adv.reason)
+
+    def test_clear_without_success_stays_unknown(self):
+        """clear() nimmt die Sperre zurueck, erzeugt aber keine Gesundheit:
+        ohne mindestens ein OK bleibt UNKNOWN (CLEAR != HEALTH-PROOF)."""
+        pol = ProviderHealthPolicy()
+        pol.record("a", HealthEvent(HealthEventKind.PROVIDER_ERROR, now=1), now=1)
+        pol.record("a", HealthEvent(HealthEventKind.CANCELLED, now=2), now=2)
+        pol.clear("a")
+        self.assertIs(pol.status("a", now=3), HealthStatus.UNKNOWN)
+
+    def test_single_failure_below_threshold_without_ok_is_unknown(self):
+        """Ein Fehler unterhalb der DEGRADED-Schwelle ist noch kein
+        Gesundheitsevidenz-Nachweis: ohne OK bleibt UNKNOWN."""
+        pol = ProviderHealthPolicy()
+        pol.record("a", HealthEvent(HealthEventKind.TIMEOUT, now=1), now=1)
+        self.assertIs(pol.status("a", now=2), HealthStatus.UNKNOWN)
 
     def test_manual_exclusion_and_owner_clear(self):
         pol = ProviderHealthPolicy()

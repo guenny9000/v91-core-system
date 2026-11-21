@@ -63,6 +63,13 @@ class Provider:
 class VoteBatch:
     votes: tuple[Vote, ...]
     failures: tuple[str, ...]
+    # Binding cancellation disclosure (VIBE-XLI): a batch from a cancelled
+    # round carries cancelled=True and the recorded cancellation digest.
+    # CALLER CONTRACT: a cancelled batch is a FAILED round regardless of
+    # how many valid votes were collected before the stop; partial votes
+    # must never be evaluated into a quorum (CANCELLED != PARTIAL QUORUM).
+    cancelled: bool = False
+    cancellation_digest: str | None = None
 
 
 def collect_provider_votes(
@@ -87,7 +94,10 @@ def collect_provider_votes(
       MISSING VOTE, never a verdict (FAIL != APPROVE).
     - With `cancel_scope`, the cooperative scope is checked before every
       provider call; a cancelled round stops without contacting the
-      remaining providers.
+      remaining providers, and the returned batch carries cancelled=True
+      plus the recorded cancellation digest. A cancelled batch is a
+      FAILED round even if valid votes were collected earlier (CALLER
+      CONTRACT: never evaluate a cancelled batch into a quorum).
     - `now` is REQUIRED when `health` is given (UNKNOWN is never defaulted;
       failing to pass a clock is a configuration error, not a guess).
     - NO_QUORUM capacity enforcement stays with agent_consensus via
@@ -163,4 +173,22 @@ def collect_provider_votes(
         accepted.append(vote)
         record(provider.agent_id, HealthEventKind.OK)
 
-    return VoteBatch(tuple(accepted), tuple(failures))
+    cancelled = cancel_scope is not None and cancel_scope.cancelled
+    cancellation_digest: str | None = None
+    if cancelled:
+        cancellation = cancel_scope.cancellation if cancel_scope else None
+        if cancellation is not None:
+            cancellation_digest = cancellation.proposal_digest
+            if cancellation.proposal_digest != proposal.digest:
+                # Fail-closed: the round stops anyway, but the mismatch is
+                # disclosed, never silently ignored (BINDING != BLINDNESS).
+                failures.append(
+                    f"cancellation digest mismatch (fail-closed): "
+                    f"scope={cancellation.proposal_digest} "
+                    f"proposal={proposal.digest}"
+                )
+
+    return VoteBatch(
+        tuple(accepted), tuple(failures),
+        cancelled=cancelled, cancellation_digest=cancellation_digest,
+    )
