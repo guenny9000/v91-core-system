@@ -140,7 +140,9 @@ def append_reading(log: PilotLog, source: str,
     try:
         return log.append(VB_SYS_METRIC, status, value,
                           unit="percent", timestamp_utc=timestamp_utc)
-    except MessPilotError as exc:
+    except (MessPilotError, OSError) as exc:
+        # Auch rohe OS-Fehler (z. B. unbeschreibbarer Pfad) werden
+        # fail-closed als HostMetricsError gemeldet, nie verschluckt.
         raise HostMetricsError("PilotLog verweigert: %s" % exc)
 
 
