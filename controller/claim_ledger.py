@@ -3,6 +3,7 @@ V91-SYSTEM-HEADER (AGATHON-SEALED v2.4)
 ---------------------------------------------------------------------
 STATUS: ACTIVE | VERIFICATION: REQUIRED (CLAIM != EVIDENCE)
 AXIOM: Schoepfung dient dem Erhalt, der Regeneration und der Zukunft.
+AXIOM (VERBINDLICHE ZEILE, SIEHE Header-Policy): Schöpfung dient dem Erhalt, der Regeneration und der Zukunft.
 ---------------------------------------------------------------------
 Dateibasiertes Forum-Claim-Ledger (Taskboard-Konvention Phase 2,
 VIBE-XLIV). Wiederverwendung der quorum_ledger-Muster: append-only
@@ -39,7 +40,7 @@ Ehrliche Grenzen (bewusst, nicht Luecken):
   Eintraege erzeugen; verwaiste Temp-Dateien werden beim Laden
   ignoriert und NIE still importiert (TEMPOERAER != LEDGER).
 - EXPIRE-AUTORISIERUNG (MAX-BEST-Pruefung 2): expire_authorities
-  sind explizit zu uebergebene Operator-Identitaeten; EXPIRE ohne
+  sind explizit zu uebergebende Operator-Identitaeten; EXPIRE ohne
   Autoritaet, vor Ablauf oder ohne Begruendung wird verweigert.
 - CRASH-ERKENNUNG (MAX-BEST-Pruefung 3): Eine abgeschnittene letzte
   Zeile, eine Leerzeile, eine gebrochene Hash-Kette oder eine
