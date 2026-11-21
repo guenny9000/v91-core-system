@@ -151,6 +151,12 @@ class QuorumEvaluatorEvidenceTests(unittest.TestCase):
         self.assertTrue(any("ABSTAIN must carry approve=False" in r
                             for r in result.invalid_reasons))
 
+    def test_non_string_evidence_entry_is_invalid(self):
+        result = run_quorum([make_review("agent-a", "prov-1", "cat-1", "APPROVE",
+                                         evidence=("ok://entry", 42)),
+                             make_review("agent-b", "prov-2", "dog-2", "APPROVE")])
+        self.assertTrue(any("evidence missing" in r for r in result.invalid_reasons))
+
     def test_stance_approve_must_not_carry_reject_signature_payload(self):
         reject_vote = make_vote("agent-a", False, KEY_A)
         review = ReviewVote(vote=reject_vote, provider="prov-1", model="cat-1",
