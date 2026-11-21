@@ -98,7 +98,7 @@ class QuorumEvaluatorAgreementTests(unittest.TestCase):
                              make_review("agent-b", "prov-2", "dog-2", "ABSTAIN",
                                          evidence=())])
         self.assertEqual(result.decision, ReviewDecision.NO_QUORUM)
-        self.assertEqual(result.abstained_sources and 1, 1)
+        self.assertEqual(len(result.abstained_sources), 1)
 
     def test_conflicting_stances_within_one_source_void_it(self):
         first = make_review("agent-a", "prov-1", "cat-1", "APPROVE")
