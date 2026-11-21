@@ -3,6 +3,7 @@ import hashlib
 import pytest
 
 from controller.agent_consensus import Vote, sign_vote
+from controller.provider_health import CancelScope
 from controller.provider_vote_adapter import (
     Proposal, Provider, collect_provider_votes,
 )
@@ -95,3 +96,64 @@ def test_non_vote_response_is_not_approval():
     )
     assert batch.votes == ()
     assert batch.failures == ("agent-a: returned value is not a Vote",)
+
+
+# --- VIBE-XLI: bindendes Abbruch-Kennzeichen am Batch (CALLER CONTRACT) ---
+
+def test_pre_cancelled_batch_is_marked_cancelled_with_binding_digest():
+    scope = CancelScope()
+    scope.cancel(DIGEST, reason="operator stop")
+    batch = collect_provider_votes(
+        PROPOSAL,
+        [Provider("agent-a", "boundary-a", lambda p: signed("agent-a", KEY_A, p))],
+        cancel_scope=scope,
+    )
+    assert batch.votes == ()
+    assert batch.cancelled is True
+    assert batch.cancellation_digest == DIGEST
+
+
+def test_mid_round_cancel_keeps_partial_vote_but_marks_batch_failed():
+    scope = CancelScope()
+
+    def cancelling(p):
+        vote = signed("agent-a", KEY_A, p)
+        scope.cancel(p.digest, reason="mid-round stop")
+        return vote
+
+    batch = collect_provider_votes(
+        PROPOSAL,
+        [
+            Provider("agent-a", "boundary-a", cancelling),
+            Provider("agent-b", "boundary-b", lambda p: signed("agent-b", KEY_B, p)),
+        ],
+        cancel_scope=scope,
+    )
+    # Die Teilstimme bleibt belegbar (Evidence), aber der Batch ist als
+    # abgebrochen markiert: der Rufer darf ihn nie auswerten.
+    assert [v.agent_id for v in batch.votes] == ["agent-a"]
+    assert batch.cancelled is True
+    assert batch.cancellation_digest == DIGEST
+
+
+def test_cancellation_digest_mismatch_is_disclosed_fail_closed():
+    scope = CancelScope()
+    scope.cancel("f" * 64, reason="token from a different round")
+    batch = collect_provider_votes(
+        PROPOSAL,
+        [Provider("agent-a", "boundary-a", lambda p: signed("agent-a", KEY_A, p))],
+        cancel_scope=scope,
+    )
+    assert batch.cancelled is True
+    assert batch.cancellation_digest == "f" * 64
+    assert any("digest mismatch" in f for f in batch.failures)
+    assert batch.votes == ()
+
+
+def test_uncancelled_batch_is_never_marked_cancelled():
+    batch = collect_provider_votes(
+        PROPOSAL,
+        [Provider("agent-a", "boundary-a", lambda p: signed("agent-a", KEY_A, p))],
+    )
+    assert batch.cancelled is False
+    assert batch.cancellation_digest is None
