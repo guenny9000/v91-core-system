@@ -55,6 +55,9 @@ class HealthEventKind(str, Enum):
 class HealthStatus(str, Enum):
     HEALTHY = "HEALTHY"
     DEGRADED = "DEGRADED"
+    # UNKNOWN is a first-class status: a provider without call history is
+    # not healthy, it is unproven (UNKNOWN != PASS, UNKNOWN != HEALTHY).
+    UNKNOWN = "UNKNOWN"
     COOLDOWN = "COOLDOWN"
     UNAVAILABLE = "UNAVAILABLE"
 
@@ -240,10 +243,10 @@ class ProviderHealthPolicy:
             return HealthStatus.UNAVAILABLE
         rec = self.__records.get(provider_id)
         if rec is None:
-            # No call history: no negative evidence. UNKNOWN is not HEALTHY,
-            # but punishing unseen providers would break every cold start.
-            # The advisory reports the missing history honestly.
-            return HealthStatus.HEALTHY
+            # No call history is no evidence of health. The provider status
+            # is UNKNOWN (not HEALTHY); the advisory still allows a cold
+            # start call, but the status never claims unearned health.
+            return HealthStatus.UNKNOWN
         if rec.consecutive_failures >= self.__unavailable_after:
             return HealthStatus.UNAVAILABLE
         if (
@@ -277,6 +280,12 @@ class ProviderHealthPolicy:
                 provider_id=provider_id, allow=True, status=st,
                 reason="recent failures; call allowed, watch closely",
             )
+        if st is HealthStatus.UNKNOWN:
+            assert rec is None
+            return CallAdvisory(
+                provider_id=provider_id, allow=True, status=st,
+                reason="no call history (UNKNOWN != HEALTHY, assertion, not evidence)",
+            )
         if rec is None:
             return CallAdvisory(
                 provider_id=provider_id, allow=True, status=st,
@@ -296,11 +305,15 @@ class ProviderHealthPolicy:
         ids = tuple(provider_ids)
         if len(set(ids)) != len(ids):
             raise ProviderHealthError("provider ids must be distinct")
+        # UNKNOWN ranks after DEGRADED: a failing-but-allowed provider has
+        # at least real call evidence; an unproven provider has none. This
+        # is an ordering, never a verdict (ORDER != VOTE).
         rank = {
             HealthStatus.HEALTHY: 0,
             HealthStatus.DEGRADED: 1,
-            HealthStatus.COOLDOWN: 2,
-            HealthStatus.UNAVAILABLE: 3,
+            HealthStatus.UNKNOWN: 2,
+            HealthStatus.COOLDOWN: 3,
+            HealthStatus.UNAVAILABLE: 4,
         }
         keyed = sorted(
             ((rank[self.status(i, now=now)], idx, i) for idx, i in enumerate(ids)),
