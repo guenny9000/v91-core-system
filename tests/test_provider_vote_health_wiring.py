@@ -165,6 +165,9 @@ class CancellationWiringTests(unittest.TestCase):
         self.assertEqual([v.agent_id for v in batch.votes], ["agent-a"])
         self.assertEqual(len(batch.failures), 1)
         self.assertIn("round cancelled", batch.failures[0])
+        # VIBE-XLI: Batch bindend als abgebrochen markiert.
+        self.assertTrue(batch.cancelled)
+        self.assertEqual(batch.cancellation_digest, PROPOSAL.digest)
 
     def test_cancel_records_cancelled_events_without_blaming_provider(self):
         calls: list = []
