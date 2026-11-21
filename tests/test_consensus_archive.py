@@ -330,3 +330,43 @@ def test_authorization_stays_none():
             expected_policy_version=POLICY, min_sequence_by_agent={})
         assert result["decision"] == "APPROVED_FOR_DOCUMENTATION"
         assert result["authorization"] == "NONE (EVALUATION != AUTHORIZATION)"
+
+
+# --- Gepaarter Reload -> Unabhaengigkeits-Auswertung ------------------
+
+def test_archive_evaluate_reviews_reloads_and_reports_limits():
+    import tempfile
+    world = make_world(["alpha", "beta"])
+    keys = keys_of(world)
+    with tempfile.TemporaryDirectory() as tmp:
+        archive = ConsensusArchive(_P(tmp), keys)
+        for name in sorted(world):
+            cast(archive, world[name], approve=True)
+        # Die Methode laedt beide Dateien frisch und bewertet erst danach.
+        result = archive.evaluate_reviews(
+            proposal_digest=PROPOSAL_DIGEST, epoch=EPOCH, now=NOW,
+            expected_policy_version=POLICY, min_sequence_by_agent={})
+        assert result["decision"] == "APPROVED_FOR_DOCUMENTATION"
+        assert result["archive_pairing"] == "VERIFIED_ON_RELOAD"
+        assert result["archive_entry_count"] == 2
+        assert "INDEPENDENCE != PROVEN" in result["archive_limitations"]
+        assert result["authorization"] == "NONE (EVALUATION != AUTHORIZATION)"
+
+
+def test_archive_evaluate_reloads_and_detects_post_init_tampering():
+    import tempfile
+    world = make_world(["alpha", "beta"])
+    keys = keys_of(world)
+    with tempfile.TemporaryDirectory() as tmp:
+        archive = ConsensusArchive(_P(tmp), keys)
+        for name in sorted(world):
+            cast(archive, world[name])
+        # Mutation NACH Konstruktion: evaluate_reviews darf nicht nur den
+        # alten In-Memory-Zustand auswerten, sondern muss frisch laden.
+        path = _P(tmp) / RECEIPTS_FILENAME
+        text = path.read_text(encoding="utf-8")
+        path.write_text(text.replace("model-y", "model-z"), encoding="utf-8")
+        with pytest.raises(ConsensusArchiveError):
+            archive.evaluate_reviews(
+                proposal_digest=PROPOSAL_DIGEST, epoch=EPOCH, now=NOW,
+                expected_policy_version=POLICY, min_sequence_by_agent={})
