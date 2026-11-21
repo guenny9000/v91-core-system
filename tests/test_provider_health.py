@@ -25,10 +25,24 @@ from controller.provider_health import (
 class ProviderHealthTests(unittest.TestCase):
     def test_unknown_provider_starts_callable_with_honest_claim(self):
         pol = ProviderHealthPolicy()
+        # Regression (VIBE-XL): no history is UNKNOWN, never HEALTHY
+        # (UNKNOWN != PASS, UNKNOWN != HEALTHY).
+        self.assertIs(pol.status("prov-a", now=100), HealthStatus.UNKNOWN)
         adv = pol.advisory("prov-a", now=100)
         self.assertTrue(adv.allow)
-        self.assertIs(adv.status, HealthStatus.HEALTHY)
-        self.assertIn("assertion, not evidence", adv.reason)
+        self.assertIs(adv.status, HealthStatus.UNKNOWN)
+        self.assertIn("UNKNOWN != HEALTHY", adv.reason)
+
+    def test_unknown_ranks_degraded_first_but_cold_start_callable(self):
+        pol = ProviderHealthPolicy(degraded_after=1, cooldown_seconds=0)
+        pol.record("known-ok", HealthEvent(HealthEventKind.OK, now=1), now=1)
+        pol.record("degr", HealthEvent(HealthEventKind.TIMEOUT, now=1), now=1)
+        order = pol.callable_order(("unproven", "degr", "known-ok"), now=2)
+        self.assertEqual(order[0], "known-ok")
+        self.assertEqual(order[-1], "unproven")
+        self.assertTrue(pol.advisory("unproven", now=2).allow)
+        self.assertIn("unproven", pol.quorum_capacity(("unproven",), now=2))
+
 
     def test_ok_events_keep_provider_healthy(self):
         pol = ProviderHealthPolicy()
@@ -129,7 +143,7 @@ class ProviderHealthTests(unittest.TestCase):
         pol.record("degr", HealthEvent(HealthEventKind.RATE_LIMITED, now=3), now=3)
         # Both 'cool' and 'degr' have 1 consecutive failure -> with
         # degraded_after=1 both sit in cooldown (rank COOLDOWN), 'fresh'
-        # (no history) is HEALTHY and must come first.
+        # (no history) is UNKNOWN (rank 2) and stays before COOLDOWN entries.
         order = pol.callable_order(("cool", "degr", "fresh"), now=4)
         self.assertEqual(set(order), {"cool", "degr", "fresh"})
         self.assertEqual(order[0], "fresh")
