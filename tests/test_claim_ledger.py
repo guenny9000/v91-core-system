@@ -254,5 +254,21 @@ class IntegrityTests(unittest.TestCase):
                 ClaimLedger(Path(tmp) / "c.jsonl", PUBLIC, "operator")
 
 
+class ReloadAppendRegressionTests(unittest.TestCase):
+
+    def test_reload_append_reload_keeps_history(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "claims.jsonl"
+            first = ClaimLedger(path, PUBLIC, ["operator"])
+            first.append_event(claim("session-a"))
+            reloaded = ClaimLedger(path, PUBLIC, ["operator"])
+            reloaded.append_event(follow("DONE", "session-a", sequence=2))
+            third = ClaimLedger(path, PUBLIC, ["operator"])
+            self.assertEqual(2, third.entry_count())
+            raw = path.read_text(encoding="utf-8")
+            self.assertTrue(raw.endswith(chr(10)))
+            self.assertEqual(2, len(raw.strip().split(chr(10))))
+
+
 if __name__ == "__main__":
     unittest.main()
