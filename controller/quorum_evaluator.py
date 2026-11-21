@@ -140,7 +140,7 @@ def evaluate_independent_quorum(
             if vote.approve is not expected_approve:
                 invalid.append("%s: stance/approve mismatch" % vote.agent_id)
                 continue
-            if (not isinstance(review.evidence, tuple)
+            if (not isinstance(review.evidence, tuple) or not review.evidence
                     or any(not isinstance(e, str) or not e.strip() for e in review.evidence)):
                 invalid.append("%s: evidence missing (CLAIM != EVIDENCE)" % vote.agent_id)
                 continue
