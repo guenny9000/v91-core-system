@@ -41,7 +41,7 @@ class RequirementsTests(ProbeHarness):
     def test_without_real_backend_probe_refuses(self):
         code, payload = self.run_probe([])
         if HAS_CRYPTO:
-            self.skipTest("Backend vorhanden; Verweigerungspfad braucht keine CI-Gegenprobe")
+            self.skipTest("Backend vorhanden; Verweigerungspfad braucht CI-Gegenprobe nicht")
         self.assertEqual(code, 2)
         self.assertEqual(payload["status"], "REQUIREMENTS_MISSING")
         self.assertIn("STUB != ECHT", payload["honesty"])
@@ -92,7 +92,7 @@ class FullProbeTests(ProbeHarness):
         kept = Path(payload["probe_dir"])
         self.assertTrue(kept.is_dir())
         self.assertTrue((kept / "probe-ledger.jsonl").is_file())
-        self.assertEqual(kept.name[:9], "v91-probe-")
+        self.assertTrue(kept.name.startswith("v91-probe-"))
 
     def test_default_run_cleans_up(self):
         workdir = self.tmp_path / "probebase"
