@@ -11,6 +11,14 @@ fuer jedes Ereignis (crypto_receipts-Reuse), Sequenz-Floor je Autor
 gegen Replay ueber Neustarts. Die Ereignis- und Konfliktregeln sind
 deckungsgleich mit docs/V91-FORUM-TASKBOARD-KONVENTION.md Abschnitt 2.
 
+Phase 3 (VIBE-XLV), rueckwaertskompatible Zusatzschicht: Ein optionaler
+Author-Receipt (author_receipt_guard-Reuse) kann VOR jedem Schreiben
+fail-closed geprueft werden. AUTHOR_CLAIM != IDENTITY: Der author eines
+Ereignisses bleibt eine Selbstauskunft; erst ein verifizierter Receipt
+hebt die Identitaet auf VERIFIED. SIGNATURE != TRUTH, UNKNOWN != PASS.
+Ohne uebergebene ReceiptPolicy bleibt das Verhalten exakt wie in
+Phase 2 (bestehende Aufrufe und Tests unveraendert).
+
 Ereignisse (append-only, je gebunden an task_id, scope, author,
 expected_base_sha bzw. reason, issued_at):
 - CLAIM: belegt task_id UND scope ausschliesslich; Pflichtfelder sind
@@ -45,6 +53,12 @@ Ehrliche Grenzen (bewusst, nicht Luecken):
   Zeile, eine Leerzeile, eine gebrochene Hash-Kette oder eine
   ungueltige Signatur fuehren zum Load-Fehler; das Ledger kann
   nicht in einen scheinbar gesunden Zustand versetzt werden.
+- RECEIPT-GATE (Phase 3): Die Receipt-Bewertung (VERIFIED /
+  UNVERIFIED_CLAIM_ONLY / REJECTED mit reason) wird pro Append
+  geprueft und NUR bei REJECTED abgewiesen; sie wird bewusst NICHT
+  in den Ledger-Eintrag persistiert, damit das hash-gekettete,
+  signierte Eintragsschema stabil bleibt. Wer den Nachweis einer
+  Verifikation braucht, fuehrt ihn im aufrufenden Kontext.
 - Append-only mit Hash-Kette ist Manipulationserkennung, KEIN
   WORM-Speicher; wer die Datei ersetzen kann, kann sie neu
   schreiben. SCRIPTED != INSTALLED: kein laufender Dienst bindet
@@ -56,9 +70,16 @@ import hashlib
 import json
 import os
 import tempfile
+from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Dict, Mapping, Tuple
+from typing import Any, Callable, Dict, Mapping, Tuple
 
+from controller.author_receipt_guard import (
+    AuthorReceipt,
+    ClaimBindingContext,
+    ReceiptEvaluation,
+    evaluate_author_receipt,
+)
 from controller.crypto_receipts import (
     SIGNATURE_FIELD,
     canonical_record_bytes,
@@ -82,6 +103,39 @@ TMP_SUFFIX = ".jsonl-partial"
 
 class ClaimLedgerError(Exception):
     """Fail-closed Fehler des Claim-Ledgers."""
+
+
+class ReceiptVerificationError(ClaimLedgerError):
+    """Wird ausgeloest, wenn ein Author-Receipt fail-closed abgewiesen
+    wird. Ledgerschreibungen werden davor verweigert; die Datei bleibt
+    unveraendert (REJECTED != GESPEICHERT)."""
+
+    def __init__(self, evaluation: ReceiptEvaluation) -> None:
+        self.evaluation = evaluation
+        super().__init__(
+            "author receipt rejected ({}): {}".format(
+                evaluation.state.value, evaluation.reason
+            )
+        )
+
+
+@dataclass(frozen=True)
+class ReceiptPolicy:
+    """Optionale, pro Caller uebergebene Receipt-Pruefkonfiguration.
+
+    Fail-closed-Regeln: Widerrufene Signer/Schluessel, abgelaufene oder
+    in der Zukunft ausgestellte Receipts, unpassende Kontext-Bindung
+    und ungueltige Signaturen werden IMMER abgewiesen (REJECTED).
+    require_verified_receipt=True weist zusaetzlich fehlende Receipts
+    ab; mit False zaehlt der Claim nur als UNVERIFIED_CLAIM_ONLY.
+    """
+
+    trusted_keys: Mapping
+    verify_signature_fn: Callable[[str, str, str], bool]
+    now_epoch_fn: Callable[[], int]
+    revoked_signers: Tuple[str, ...] = ()
+    revoked_keys: Tuple[str, ...] = ()
+    require_verified_receipt: bool = True
 
 
 def _is_int(value: Any) -> bool:
@@ -178,6 +232,12 @@ class ClaimLedger:
     beim Laden UND beim Anhaengen geprueft: eine Ereignisfolge, die
     die Regeln verletzt, kann das Ledger nie in einen gueltigen
     Zustand bringen.
+
+    Phase 3: append_event akzeptiert optional receipt und
+    receipt_policy. Mit Policy wird vor jedem Schreiben ein
+    Author-Receipt geprueft (AUTHOR_CLAIM != IDENTITY); REJECTED wirft
+    ReceiptVerificationError, bevor irgendein Byte geschrieben wird.
+    Ohne Policy gilt unveraendert das Phase-2-Verhalten.
     """
 
     def __init__(
@@ -330,10 +390,52 @@ class ClaimLedger:
         """Verifizierte Ereignisse als Kopien, in Anhaengereihenfolge."""
         return tuple(dict(record) for record in self._records)
 
+    # -- Author-Receipt-Gate (Phase 3, optional) --
+
+    def _evaluate_receipt(
+        self,
+        record: Dict,
+        receipt: Any,
+        receipt_policy: ReceiptPolicy,
+    ) -> ReceiptEvaluation:
+        context = ClaimBindingContext(
+            task_id=record.get("task_id", ""),
+            scope=record.get("scope", ""),
+            event_type=record.get("event", ""),
+            expected_base_sha=record.get("expected_base_sha", ""),
+            author_claim=record.get("author", ""),
+            now_epoch=receipt_policy.now_epoch_fn(),
+        )
+        return evaluate_author_receipt(
+            context,
+            receipt,
+            trusted_keys=receipt_policy.trusted_keys,
+            revoked_signers=receipt_policy.revoked_signers,
+            revoked_keys=receipt_policy.revoked_keys,
+            verify_signature_fn=receipt_policy.verify_signature_fn,
+            require_verified_receipt=receipt_policy.require_verified_receipt,
+        )
+
     # -- Atomares Anhaengen (crash-sicher) --
 
-    def append_event(self, record: Dict) -> str:
-        """Haengt ein validiertes, signiertes Ereignis atomar an."""
+    def append_event(
+        self,
+        record: Dict,
+        receipt: "AuthorReceipt | None" = None,
+        receipt_policy: "ReceiptPolicy | None" = None,
+    ) -> str:
+        """Haengt ein validiertes, signiertes Ereignis atomar an.
+
+        Mit receipt_policy wird vor jeder Schreibung der (optionale)
+        Author-Receipt fail-closed geprueft; REJECTED wirft
+        ReceiptVerificationError, bevor irgendein Byte die Platte
+        beruehrt (permits_ledger_write == False). Ohne Policy bleibt
+        das Phase-2-Verhalten exakt erhalten.
+        """
+        if receipt_policy is not None:
+            evaluation = self._evaluate_receipt(record, receipt, receipt_policy)
+            if not evaluation.permits_ledger_write:
+                raise ReceiptVerificationError(evaluation)
         author = record.get("author") if isinstance(record, dict) else None
         public_key = self._keys.get(author)
         if public_key is None or not verify_claim_event(record, public_key):
