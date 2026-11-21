@@ -66,13 +66,6 @@ class HealthStatus(str, Enum):
     UNAVAILABLE = "UNAVAILABLE"
 
 
-_FAILURE_KINDS = frozenset({
-    HealthEventKind.TIMEOUT,
-    HealthEventKind.RATE_LIMITED,
-    HealthEventKind.PROVIDER_ERROR,
-})
-
-
 class ProviderHealthError(Exception):
     """Invalid use of the health policy (fail-closed)."""
 
