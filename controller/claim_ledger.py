@@ -277,6 +277,7 @@ class ClaimLedger:
             text = raw.decode("utf-8")
             for line in text.split(chr(10))[:-1]:
                 self._load_line(line)
+        self._raw = raw
 
     def _load_line(self, line: str) -> None:
         if not line.strip():
