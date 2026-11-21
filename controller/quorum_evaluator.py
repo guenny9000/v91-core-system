@@ -116,6 +116,9 @@ def evaluate_independent_quorum(
             invalid.append("malformed review envelope")
             continue
         vote = review.vote
+        if not isinstance(vote, agent_consensus.Vote):
+            invalid.append("review without a valid agent_consensus.Vote")
+            continue
         if (not isinstance(review.provider, str) or not review.provider.strip()
                 or not isinstance(review.model, str) or not review.model.strip()):
             invalid.append("%s: provider/model missing" % vote.agent_id)
