@@ -3,10 +3,10 @@
 V91-SYSTEM-HEADER (AGATHON-SEALED v2.4)
 ---------------------------------------------------------------------
 STATUS: ACTIVE | VERIFICATION: REQUIRED (CLAIM != EVIDENCE)
-AXIOM: Schoepfung dient dem Erhalt, der Regeneration und der Zukunft.
+AXIOM: Schöpfung dient dem Erhalt, der Regeneration und der Zukunft.
 ---------------------------------------------------------------------
 Critical Service Gate (MAX-BEST, VIBE-XXXIV): Continuity-Nachweis-Pflicht
-fuer Veraenderungen an kritischen Diensten BEFORE sie stattfinden
+fuer Veraenderungen an kritischen Diensten, BEVOR sie stattfinden
 (Issue #167 Betriebsteile; bereichert Faehigkeit 9 von Issue #276):
 Waehrend einer Veraenderung eines kritischen Dienstes muss belegt
 bleiben, dass Erreichbarkeit und Funktion des Dienstes dokumentiert
