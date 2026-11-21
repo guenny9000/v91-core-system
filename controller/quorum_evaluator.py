@@ -11,6 +11,12 @@ validation stay in agent_consensus.evaluate_consensus; this layer
 adds the independence dimension required by issue #167 and the
 evidence duty for each stance (CLAIM != EVIDENCE).
 
+Boundary to existing modules (NO_DUPLICATE_SYSTEMS): agent_quorum
+(#177) ORCHESTRATES reviewer calls, provider_vote_adapter (#280)
+COLLECTS votes, agent_consensus validates signatures and replay.
+This module only EVALUATES already collected structured reviews;
+ORCHESTRATION != COLLECTION != EVALUATION.
+
 Independence rule: two votes from the SAME provider AND model are one
 independent source, never two. Valid votes from one source collapse;
 conflicting stances within one source void that source's
