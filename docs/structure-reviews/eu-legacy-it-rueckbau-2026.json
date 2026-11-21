@@ -1,0 +1,50 @@
+{
+ "structure_id": "eu_legacy_it_rueckbau_2026",
+ "assessor": "v91_session_2026-11-22_quellenreview_max_best",
+ "assessed_at_structure": "2026-11-22T00:30:00Z",
+ "note": "Struktur-Datensatz (Thema Legacy-IT-Rueckbau / Digital-Altlasten, Saeule Digital/Oekologie). Dritter Rueckbau-Datensatz nach Inkohle-Rueckbau und Tagebau-Sanierung. Kernbefund: SOFTWARE-SUPPORT-ENDE != GERAET-KAPUTT; softwarebedingte Obsoleszenz macht funktionierende Hardware vorzeitig zu Abfall (RECYCLING != VERMEIDUNG). Belegte Rueckbau-Faelle: Windows-10-Supportende mit ESU-Bruecke (EU27) und SAP-ECC-Wartungsende (Wirtschaft). Ehrliche Gegenbewegungen: Sicherheitsrisiko der Restbestand-Geraete, knappe Migrationszeit beim Mittelstand, Herstellerinteresse an Neuverkauf (OBsoleszenz-ANREIZ != OBsoleszenz-ZWANG fuer alle Faelle; Zuschreibung NICHT_GEPRUEFT). Jede Einzelbehauptung gegen Primaer-/Sekundaerquelle geprueft (CLAIM != EVIDENCE); Unbestaetigtes bleibt NICHT_GEPRUEFT. REVIEW != ENTSCHEIDUNG, MODELLRECHNUNG != MESSUNG, ZUSAGE != VOLLZUG.",
+ "criteria": {
+  "gesellschaftlicher_nutzen": {
+   "status": "BELEGT",
+   "evidence": "Belegter Nutzen des ordnungsgemaessen Rueckbaus bzw. der geordneten UEberleitung: (1) Windows-10-ESU-Programm: sichere UEbergangsoperation nach Supportende 14.10.2025, Enrollment jederzeit moeglich bis Programmende 12.10.2027 (Microsoft-Konsumentenseite); reduziert Malware-/Cyberangriffsrisiko fuer Geraete, die noch nicht migriert sind. (2) Fraunhofer-Austria-Whitepaper (in Auftrag von refurbed, aktualisiert 16.09.2026): ein zusaetzliches Nutzungsjahr des Windows-10-Bestands vermeidet rund 0,32 Mio. t CO2 und ca. 1.172 t Elektroschrott in der EU27; Empfehlungen: refurbished- statt Neugeraete als Standard, abgesicherte Boot-Medien, laengere Sicherheitsunterstuetzung. (3) SAP-ECC-Wartungsende: geordnete Optionen (Extended Maintenance bis Ende 2030, Customer Specific Maintenance, S/4HANA-Umstieg) verhindern unkontrollierte Ausfall-Risiken in Kernprozessen des Mittelstands.",
+   "source": "https://www.microsoft.com/en-us/windows/extended-security-updates",
+   "assessed_at": "2026-11-22T00:30:00Z"
+  },
+  "menschenrechtsvertraeglichkeit": {
+   "status": "NICHT_GEPRUEFT",
+   "evidence": "",
+   "source": "",
+   "assessed_at": ""
+  },
+  "kosten_und_ressourcenverbrauch": {
+   "status": "BELEGT",
+   "evidence": "Fraunhofer Austria quantifiziert den Bestand methodisch nachvollziehbar (mehrstufiges Trichtermodell, oeffentliche Quellen, wo moeglich Zweitquelle): rund 74 Mio. Windows-10-Geraete in der EU27 (Stand 01.01.2026); rund 41 Mio. Geraete (ca. 55 Prozent des Bestands) werden voraussichtlich nicht auf Windows 11 umsteigen; betroffen ohne ESU-Bruecke: Deutschland rund 5,8 Mio., Oesterreich rund 0,7 Mio. Geraete. Gewerblich sind nur rund 2,8 Prozent technisch nicht upgradefaehig – Verzoegerung entsteht vor allem durch Beschaffungszyklen, Testphasen, knappe IT-Ressourcen (BESCHAFFUNG != TECHNIK als Hauptbremse ehrlich benannt). Privatanteil technisch inkompatibler Geraete deutlich hoeher; hinzu kommen bewusste Ablehnung (Datenschutz, KI-Integration) und fehlende Dringlichkeit wegen der ESU-Bruecke bis Oktober 2027. MODELLRECHNUNG != MESSUNG: alle Zahlen sind Schaetzungen auf Basis oeffentlicher Quellen, keine Messung des realen Ausmusterungsverhaltens.",
+   "source": "https://www.fraunhofer.at/de/presse/news/refurbed---whitepaper---vorzeitig-ausgemustert---auswirkungen-de.html",
+   "assessed_at": "2026-11-22T00:30:00Z"
+  },
+  "transparenz": {
+   "status": "BELEGT",
+   "evidence": "Alle Kernvorgaenge oeffentlich dokumentiert: Fraunhofer-Austria-Whitepaper als frei zugaengliche Publikation inklusive Methodik (Trichtermodell), Zitiervorschlag und deutsch/englischer Versionen (P. Rudorf, S. Thoeny, 2026); Microsoft-ESU-Seite mit Enrollment-Frist und Leistungsumfang (nur sicherheitsrelevante Updates, kein Support); SAP-Ankuendigung der ECC-Wartungsgrenzen seit Februar 2020 oeffentlich, Fachdossier W+W (Stand 20.11.2026) nennt Fristen: Mainstream-Wartung Ende 31.12.2027, Extended Maintenance bis Ende 2030 mit +2 Prozentpunkten Aufschlag.",
+   "source": "https://www.ww-cs.de/sap-ecc-wartungsende-2027/",
+   "assessed_at": "2026-11-22T00:30:00Z"
+  },
+  "nachhaltigkeit": {
+   "status": "BELEGT",
+   "evidence": "Softwarebedingte Obsoleszenz als NACHWEISBARER Vermeidungshebel: rund 41 Mio. funktionierende EU27-Geraete laufen Gefahr, vorzeitig ausgemustert zu werden, obwohl sie technisch einwandfrei funktionieren (SOFTWARE-SUPPORT-ENDE != GERAETEDEFEKT). Zusaetzliches Nutzungsjahr vermeidet rund 0,32 Mio. t CO2 (~ jaehrliche CO2-Speicherleistung von ueber 500 km2 Wald, etwa Flaeche des Bodensees) und ca. 1.172 t Elektroschrott. Whitepaper-Empfehlungen wirken direkt auf Kreislaufwirtschaft: refurbished- statt Neugeraete als Beschaffungsstandard, laengere Sicherheitsunterstuetzung fuer Geraete ohne TPM 2.0/Secure Boot. EHRLICHE GEGENBEWEGUNGEN: (a) Windows 11 setzt Hardware-Voraussetzungen (TPM 2.0, Secure Boot, unterstuetzte Prozessorgeneration) – verfruehter Austausch technisch einwandfreier Geraete wird so strukturell beguenstigt. (b) ESU-Bruecke endet 12.10.2027: danach bleibt der Rueckstand als Sicherheits- und Abfallrisiko bestehen. (c) SUPPORT-ENDE garantiert KEINE ordnungsgemaesse Entsorgung ausgemusterter Geraete; Anteil legal recycelter Geraete NICHT_GEPRUEFT.",
+   "source": "https://www.fraunhofer.at/content/dam/austria/documents/whitepapers/refurbed-vorzeitig-ausgemustert---auswirkungen-des-windows-10-supportendes-auf-den-geraetebestand-in-der-eu27/Refurbed_Fraunhofer%20Austria_Whitepaper%20Vorzeitig%20ausgemustert_de.pdf",
+   "assessed_at": "2026-11-22T00:30:00Z"
+  },
+  "missbrauchsrisiken": {
+   "status": "NICHT_GEPRUEFT",
+   "evidence": "",
+   "source": "",
+   "assessed_at": ""
+  },
+  "alternativen_und_verbesserbarkeit": {
+   "status": "BELEGT",
+   "evidence": "Belegte Alternativen und Verbesserungswege: (1) Nicht-Windows-Pfade: der Weiterbetrieb ausserhalb des Herstellerpfads (z. B. Linux-Migration) ist als Strukturalternative oeffentlich diskutiert – Zahl der realen Migrationen NICHT_GEPRUEFT. (2) Whitepaper-Empfehlungen: abgesichertes Windows-10-Boot-Medium fuer technisch nicht upgradefaehige Geraete, gezielte Migrationskampagnen mit klaren internen Fristen, refurbished-Standard in Beschaffungsrichtlinien, Politik/Hersteller-Aufruf: verlaengerte Sicherheitsunterstuetzung ueber 2027 hinaus (ZUSAGE != VOLLZUG). (3) Gewerbliche Rueckschluesse: Da nur 2,8 Prozent technisch blockiert, ist die Hauptbremse organisatorisch (Ressourcen/Beschaffung), d. h. durch Verfahren verbesserbar – technisches HEMMNIS und organisatorisches HAUPTHEMMNIS klar getrennt. (4) Systematik: Erkenntnis uebertragbar auf kuenftige Supportenden (STICHPROBE Windows/SAP != VOLLPRUEFUNG aller Software-Altlasten).",
+   "source": "https://www.fraunhofer.at/de/presse/news/refurbed---whitepaper---vorzeitig-ausgemustert---auswirkungen-de.html",
+   "assessed_at": "2026-11-22T00:30:00Z"
+  }
+ }
+}
