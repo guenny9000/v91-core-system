@@ -17,8 +17,8 @@ Statusstufen (geordnet, nie ueberspringbar):
   DESIGNED             Entwurf existiert und ist benannt.
   IMPLEMENTED           Code existiert am benannten Ort.
   UNIT_TESTED           Deterministische Tests liefen und sind benannt.
-  API_INTEGRATION_VERIFIED  Echte Provider-Konfiguration wurde expli-
-                        zititv benannt (NIE aus Unit-Tests ableitbar).
+  API_INTEGRATION_VERIFIED  Echte Provider-Konfiguration wurde explizit
+                        benannt (NIE aus Unit-Tests ableitbar).
   QUORUM_VERIFIED       Echte Quorum-Entscheidung ist belegt.
   EXECUTION_VERIFIED    Echte Ausfuehrung ist belegt.
 
