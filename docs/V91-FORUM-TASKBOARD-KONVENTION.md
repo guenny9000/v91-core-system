@@ -7,7 +7,7 @@ Verhalten: sie ordnet nur bestehende Praxis (KONVENTION != IMPLEMENTATION,
 DOCUMENTED != INSTALLED).
 
 STATUS: DOKUMENTIERT (21.11.2026, VIBE-XLIII). Anlass ist ein realer
-Vorfall: die Task-ID VIBE-XLII wurde parallen vergeben (#311/#312 durch
+Vorfall: die Task-ID VIBE-XLII wurde parallelen vergeben (#311/#312 durch
 eine Session, #313 durch eine andere). DOPPELVERGABE != BEABSICHTIGT,
 und genau das soll diese Konvention verhindern.
 
@@ -16,8 +16,7 @@ und genau das soll diese Konvention verhindern.
 - Eine Session ERZEUGT eine neue Task-ID nur nach Lookup: letzte belegte
   ID im Aenderungslog des Architektur-Index (docs/V91-ARCHITEKTUR-INDEX.md,
   Task-Klammer [VIBE-...]) und im letzten Session-Report auf #220 pruefen.
-- Format bleibt VIBE-<roemische Zahl>, streng fortlaufend; keine Spruenge,
-  keine Rueckgabe verbraucherfreundlicher Alias.
+- Format bleibt VIBE-<roemische Zahl>, streng fortlaufend; keine Spruenge, keine Alias-Namen.
 - Nach dem Minting sofort Claim-Kommentar auf #220 (siehe 2.); erst DANN
   Branch/PR mit der ID im Titel.
 
@@ -27,8 +26,8 @@ und genau das soll diese Konvention verhindern.
   "CLAIM <Task-ID> <kurzer Titel> | Ziel-PR: <nicht-noch-vorhanden> |
    Praefix der Domain (Doku/Code) | widerruflich".
 - Der Claim mit der NIEDRIGSTEN Kommentar-ID gewinnt (Kommentar-IDs sind
- 原子ar und total geordnet; PARALLELSTART != GLEICHZEITIG SICHTBAR).
-  Spaetere, ueberlappende Claims werden im Folgek Kommentar als zweiter
+ atomar und total geordnet; PARALLELSTART != GLEICHZEITIG SICHTBAR).
+  Spaetere, ueberlappende Claims werden im Folgekommentar als zweiter
   Platz sichtbar markiert und weichen aus (Ausweichen auf naechstfreie ID).
 - Rueckzug: Claimer oder Betreiber erklaert den Claim im Kommentar fuer
   beendet; erste wartende Session kann uebernehmen (Uebergabe mit
@@ -45,11 +44,11 @@ und genau das soll diese Konvention verhindern.
 
 ## 4. Doppelvergabe-Verzeichnis (ehrlich, rueckwirkend)
 
-- VIBE-XLII: parallen vergeben an #311/#312 (Batch-Quorum-Gate,
+- VIBE-XLII: parallelen vergeben an #311/#312 (Batch-Quorum-Gate,
   _FAILURE_KINDS-Cleanup) und #313 (Agentenforum-Charta Phase 0).
   Aufloesung: keine Rueckbenennung der gemergten PRs (HISTORY !=
   EDITIERBAR); Verzeichniseintrag hier + Index-Hinweis genuegt.
-  Beide Reihen wurden nachtraeglich gesichtet und CI-verfiziert
+  Beide Reihen wurden nachtraeglich gesichtet und CI-verifiziert
   (2/2 success je PR); SICHTUNG != AUTORENSCHAFT (AUTHOR_CLAIM !=
   IDENTITY bleibt).
 
