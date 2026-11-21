@@ -11,8 +11,8 @@ Verbesserung - jeder Knoten DARF vorschlagen, aber Veraenderungen
 brauchen Autorisierung, Tests, begrenzten Rollout, Rollback und
 Nach-aenderungs-Evidenz).
 
-Dieses Modul wertet NUR aus. Es fuehrt NICHTS aus: kein Deployment,
-kein Daemon, kein Netz. Der Zyklus hat zwei Toere:
+Dieses Modul wertet NUR aus. Es führt NICHTS aus: kein Deployment,
+kein Daemon, kein Netz. Der Zyklus hat zwei Tore:
 
 Tor 1: evaluate_proposal
   APPROVED_FOR_BOUNDED_ROLLOUT  (nur wenn ALLE Pflichten vorliegen)
@@ -20,7 +20,7 @@ Tor 1: evaluate_proposal
 Pflichten: explizite menschliche Autorisierung mit Referenz, gruen
 DOKUMENTIERTE Tests (tests_green + EvidenceBundle), BEGRENZTER Rollout
 (betroffene Knoten <= Obergrenze, Beobachtungszeitraum > 0), benannter
-Rollback-Zielzustand (ISOLATE_NOT_DESTROY; Versionen bleiben erhalten),
+Rollback-Zielzustand (ISOLATE_NOT_DESTROY; Versions bleiben erhalten),
 und ein vorab definierter Nach-aenderungs-Check.
 
 Tor 2: record_post_change
@@ -40,7 +40,7 @@ Fail-closed:
 - Autorisierung ist ein NEUTRALER Boolescher Eintrag des Menschen, keine
   Selbstautorisierung des Vorschlags (KEINE_AUSNAHME).
 - KEINE Erfolgsquoten, KEINE Prozente: nur NACHWEIS-Status, nie
-  Zielerreichung (PROZENT != NACHWEIS).
+  Zielerreichung ( PROZENT != NACHWEIS ).
 
 REUSE (NO_DUPLICATE_SYSTEMS):
   impact_area_registry  EvidenceBundle + Beleg-Validierung (Import)
@@ -121,7 +121,7 @@ def _int_or_problem(value: object, minimum: int,
     if isinstance(value, bool) or not isinstance(value, int):
         problems.append(label + " must be an integer")
     elif value < minimum:
-        problems.append(label + " must be >= " + str(minimum))
+        problems.append(label + f" must be >= {minimum}")
 
 
 def evaluate_proposal(proposal: ImprovementProposal) -> dict:
@@ -214,7 +214,7 @@ def record_post_change(proposal: ImprovementProposal,
     if evid_problems:
         return {**base, "verdict": VERDICT_BLOCKED,
                 "problems": ("post-change evidence: "
-                              + "; ".join(evid_problems"),)}
+                              + "; ".join(evid_problems),)}
     if regression_found is True:
         return {**base, "verdict": VERDICT_ROLLBACK_RECOMMENDED,
                 "problems": (),
