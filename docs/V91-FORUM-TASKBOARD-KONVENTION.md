@@ -7,7 +7,7 @@ Verhalten: sie ordnet nur bestehende Praxis (KONVENTION != IMPLEMENTATION,
 DOCUMENTED != INSTALLED).
 
 STATUS: DOKUMENTIERT (21.11.2026, VIBE-XLIII). Anlass ist ein realer
-Vorfall: die Task-ID VIBE-XLII wurde parallelen vergeben (#311/#312 durch
+Vorfall: die Task-ID VIBE-XLII wurde parallel vergeben (#311/#312 durch
 eine Session, #313 durch eine andere). DOPPELVERGABE != BEABSICHTIGT,
 und genau das soll diese Konvention verhindern.
 
