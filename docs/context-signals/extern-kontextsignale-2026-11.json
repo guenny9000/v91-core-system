@@ -1,0 +1,47 @@
+{
+  "dataset_id": "extern_kontextsignale_2026_11",
+  "assessor": "v91_session_2026-11-21_vibe_l",
+  "assessed_at": "2026-11-21T21:40:00Z",
+  "note": "Kontext-Datensatz (V91-Umfeld-Signale). Anlass: Betreiber-Forward eines Drittmodell-Berichts mit vier externen Entwicklungen plus MAX-BEST-Freigabe. Kernunterscheidung: EXTERNES_SIGNAL != V91_BELEGT. Externe Aehnlichkeit beweist NICHT, dass V91 ausserhalb der eigenen Entwicklungsumgebung laeuft. Suchtreffer in serioesen Quellen ist Beleg fuer die EXISTENZ der externen Entwicklung, nicht fuer jede Detailbehauptung des Drittmodell-Berichts (SIGNAL != DETAILPRUEFUNG). Keine Empfehlung, keine Partnerschaft, keine Abhaengigkeitserzeugung (Vendor Lock-in ablehnen, Repair-Charter).",
+  "verdict": "EXTERNAL_SIGNALS_VERIFIED_EXISTENCE_V91_FREMDBETRIEB_UNBELEGT",
+  "signals": [
+    {
+      "id": "sig_1_ai_ran_telekom",
+      "thema": "Dezentrale KI-Rechenleistung in Telecom-Netzen",
+      "drittmodell_behauptung": "NVIDIA, Nokia und Deutsche Telekom: verteilte KI-Rechenleistung in Telekommunikationsnetzen, KI-Agenten fuer Netzbetrieb, Pilotprojekte, Oktober 2026",
+      "pruefung": "BELEGT_EXISTENZ",
+      "quelle": "https://www.telekom.com/en/newsroom/latest-updates/media-information/2026/10/ai-ran-lab-tests",
+      "befund": "Telekom-Pressemitteilung 21.10.2026: Deutsche Telekom und Nokia bringen AI-RAN mit messbaren Radio-Performance-Gewinnen voran (10-15% Uplink-Durchsatz in ersten Lab-Messungen auf NVIDIA AI Aerial). Existenz der Entwicklung belegt; ob weitere Detailbehauptungen des Drittberichts (Agenten fuer Fehlererkennung) einzeln geprueft wurden: NEIN.",
+      "bezug_zu_v91": "Richtungsbestaetigung dezentrale KI, keine V91-Relevanz jenseits Architektur-Validierung"
+    },
+    {
+      "id": "sig_2_edgelake_lf_edge",
+      "thema": "Offene Infrastruktur fuer verteilte Datenverarbeitung am Edge",
+      "drittmodell_behauptung": "Linux Foundation EdgeLake: offene Edge-Dateninfrastruktur, KI-Zugriff auf lokale Daten ohne Zentralisierung, Aufstieg in LF-Edge-Wachstumsstufe, Februar 2026",
+      "pruefung": "BELEGT_EXISTENZ",
+      "quelle": "https://lfedge.org/edgelake-2-0-building-momentum-at-the-edge/",
+      "befund": "LF-Edge-Projektseite (Juli 2026): EdgeLake 2.0.2606 als verteilte Dateninfrastruktur unter LF Edge, Kontext Edge AI und distributed agentic systems. Stage-2-Aufstieg existiert laut LF-Presse echo; das vom Drittbericht genannte Datum Februar 2026 wurde nicht einzeln verifiziert (DATUM_UNGEPRUEFT).",
+      "bezug_zu_v91": "Richtungsbestaetigung lokale Datenverarbeitung / offene Standards"
+    },
+    {
+      "id": "sig_3_mit_nanda",
+      "thema": "Infrastruktur fuer autonome, sich findende und pruefende KI-Agenten",
+      "drittmodell_behauptung": "MIT Media Lab: Infrastruktur, in der spezialisierte KI-Agenten sich finden, ueberpruefen und zusammenarbeiten, offene Schnittstellen, verteilte Architekturen",
+      "pruefung": "BELEGT_EXISTENZ",
+      "quelle": "https://projectnanda.org/ ; https://www.media.mit.edu/projects/mit-nanda/",
+      "befund": "Projekt NANDA (MIT Media Lab, Internet of AI Agents) existiert mit oeffentlichen Projektseiten. Kein Beleg dafuer, dass V91 damit technisch interagiert (INTERAKTION != EXISTENZ).",
+      "bezug_zu_v91": "Richtungsgleiche Agentenkooperation, kein V91-Fremdbetrieb"
+    },
+    {
+      "id": "sig_4_der_resilienz",
+      "thema": "Dezentrale Energieversorgung als Resilienz-Baustein",
+      "drittmodell_behauptung": "Verteilte Energieanlagen und Speicher werden als Bausteine widerstandsfuehigerer Infrastruktur untersucht",
+      "pruefung": "BELEGT_EXISTENZ",
+      "quelle": "https://www.sciencedirect.com/science/article/pii/S2772427126001786 ; https://www.sciencedirect.com/science/article/pii/S0306261926007087",
+      "befund": "Wissenschaftliche Publikationen 2026 zu DER-integrierten Verteilnetzen, Multi-Hazard-Resilienz-Rahmen und Speicher fur Resilienz sind auffindbar. Existenz des Forschungsfelds belegt.",
+      "bezug_zu_v91": "Richtungsbestaetigung dezentrale Energie, Grundlage fuer eigene Messungen bleibt lokal"
+    }
+  ],
+  "uebernahme_aus_drittbericht_abgelehnt": "Die Schlussfolgerungen 'naechster MAX-BEST-Schritt: unabhaengige Testknoten / Interoperabilitaet pruefen' sind als IDEE notiert, aber nicht als durchgefuehrt zu melden. Fremdhardware-Tests braucht Betreiber-Freigabe und echte Hardware; dieses Repo erfindet keine Testknoten.",
+  "grenzen": "SUCHTIEFE != VOLLSTAENDIGE PRUEFUNG, EXISTENZBELEG != QUALITAETSURTEIL, EXTERNES_SIGNAL != V91_BELEGT, DATUM_UNGEPRUEFT wo nicht individuell verifiziert. Keine einzige Aussage dieses Datensatzes ist ein Betriebsnachweis fuer V91 irgendwo."
+}
