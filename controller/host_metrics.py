@@ -21,8 +21,7 @@ Messquellen (bewusst explizit, nie geraten):
   shutil.disk_usage (plattformunabhaengig).
 
 Nicht lesbare Groessen werden NICHT simuliert: Strom/Netz/Umgebung
-(VB-ENERGIE-01 etc.) brauchen echte Zaehler-Hardware oderoperator-
-seitige Erfassung; dieses Modul unternimmt dafuer nichts.
+(VB-ENERGIE-01 etc.) brauchen echte Zaehler-Hardware oder operatorseitige Erfassung; dieses Modul unternimmt dafuer nichts.
 
 Ehrliche Grenzen: READING != SENSORWERT (getloadavg = Kernel-Schnitt-
 stelle, kein Energiezaehler), SNAPSHOT != ZEITREIHE, SCRIPTED !=
@@ -125,7 +124,7 @@ def append_reading(log: PilotLog, source: str,
     """Haengt EINE ehrliche Lesung an das Pilot-Rohprotokoll an.
 
     Messbarer Wert -> Status OK; nicht messbar -> Status UNKNOWN ohne
-    Wert (Unknown bleibt sichtbar, nie PASS). Validierung, Range und
+    Wert (UNKNOWN bleibt sichtbar, nie PASS). Validierung, Range und
     Hash-Kette uebernimmt ausschliesslich PilotLog (#216).
     """
     if source not in SOURCES:
