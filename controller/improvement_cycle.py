@@ -3,7 +3,7 @@
 V91-SYSTEM-HEADER (AGATHON-SEALED v2.4)
 ---------------------------------------------------------------------
 STATUS: ACTIVE | VERIFICATION: REQUIRED (CLAIM != EVIDENCE)
-AXIOM: Schoepfung dient dem Erhalt, der Regeneration und der Zukunft.
+AXIOM: Schöpfung dient dem Erhalt, der Regeneration und der Zukunft.
 ---------------------------------------------------------------------
 Continuous improvement cycle (Issue #276, Faehigkeit 9, VIBE-XXXI).
 
