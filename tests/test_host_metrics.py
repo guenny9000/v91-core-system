@@ -93,11 +93,13 @@ class TestAppendReading(unittest.TestCase):
     def test_out_of_range_value_is_flagged_not_corrected(self):
         with tempfile.TemporaryDirectory() as tmp:
             log = self._log(tmp)
-            entry = hm.append_reading(log, "disk_used",
-                                      disk_usage=fake_disk_usage(1000, 1000 + 500, 0))
-            # >100 percent of a disk is implausible: range check flags it,
-            # the raw observation stays visible (never silently corrected).
+            entry = hm.append_reading(log, "cpu_load",
+                                      getloadavg=lambda: (9999.0, 0.0, 0.0))
+            # load above 100 percent of the CPUs is implausible but is a real
+            # observation: PilotLog flags it OUT_OF_RANGE, value stays visible,
+            # never silently corrected (REPAIR != LOESCHEN der Beobachtung).
             self.assertEqual(entry["status"], "OUT_OF_RANGE")
+            self.assertIsNotNone(entry["value"])
 
     def test_unknown_source_rejected(self):
         with tempfile.TemporaryDirectory() as tmp:
