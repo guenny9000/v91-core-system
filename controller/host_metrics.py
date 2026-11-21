@@ -67,13 +67,13 @@ def cpu_load_percent(getloadavg=None) -> Optional[float]:
     anbietet oder der Kernel-Aufruf fehlschlaegt — dann bleibt der
     Messwert UNKNOWN, er wird nie geraten.
     """
-    getter = getloadavg if getloadavg is not None else os.getloadavg
+    getter = getloadavg if getloadavg is not None else getattr(os, "getloadavg", None)
     cores = cpu_count()
-    if not cores or cores < 1:
+    if not cores or cores < 1 or not callable(getter):
         return None
     try:
         load1 = float(getter()[0])
-    except (NotImplementedError, OSError, ValueError, IndexError):
+    except (NotImplementedError, OSError, ValueError, IndexError, TypeError):
         return None
     if load1 < 0 or load1 != load1 or load1 == float("inf"):
         return None

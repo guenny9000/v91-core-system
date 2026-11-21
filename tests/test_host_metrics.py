@@ -1,6 +1,7 @@
 import json
 import tempfile
 import unittest
+from unittest.mock import patch
 from pathlib import Path
 
 from controller import host_metrics as hm
@@ -39,6 +40,10 @@ class TestReadSources(unittest.TestCase):
         def broken():
             raise OSError("kernel said no")
         self.assertIsNone(hm.cpu_load_percent(getloadavg=broken))
+
+    def test_cpu_load_percent_missing_os_api_is_none(self):
+        with patch.object(hm.os, "getloadavg", None, create=True):
+            self.assertIsNone(hm.cpu_load_percent())
 
     def test_cpu_load_percent_negative_is_none(self):
         self.assertIsNone(hm.cpu_load_percent(getloadavg=lambda: (-1.0, 0, 0)))
