@@ -123,10 +123,8 @@ class AppendWithReceiptTests(unittest.TestCase):
             ledger.append_event(done, receipt=receipt_for(done), receipt_policy=pol)
             self.assertEqual(2, ledger.entry_count())
             raw_after = path.read_bytes()
-            self.assertEqual(2, len(raw_after.strip().split(b"
-")))
-            self.assertTrue(raw_after.endswith(b"
-"))
+            self.assertEqual(2, len(raw_after.strip().split(bytes([10]))))
+            self.assertTrue(raw_after.endswith(bytes([10])))
             reloaded = ClaimLedger(path, PUBLIC, ["operator"])
             self.assertEqual(2, reloaded.entry_count())
 
