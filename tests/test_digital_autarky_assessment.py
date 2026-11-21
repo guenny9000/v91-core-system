@@ -1,4 +1,3 @@
-import dataclasses
 #!/usr/bin/env python3
 """Tests: controller/digital_autarky_assessment.py (Datensatz 7, VIBE-XXVIII).
 
@@ -6,6 +5,8 @@ SIMULATION_ONLY: Alle Tests pruefen reine Snapshots, fail-closed,
 UNKNOWN nie PASS, keine Erfolgsquoten.
 """
 from __future__ import annotations
+
+import dataclasses
 
 import pytest
 
