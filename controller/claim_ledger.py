@@ -2,8 +2,7 @@
 V91-SYSTEM-HEADER (AGATHON-SEALED v2.4)
 ---------------------------------------------------------------------
 STATUS: ACTIVE | VERIFICATION: REQUIRED (CLAIM != EVIDENCE)
-AXIOM: Schoepfung dient dem Erhalt, der Regeneration und der Zukunft.
-AXIOM (VERBINDLICHE ZEILE, SIEHE Header-Policy): Schöpfung dient dem Erhalt, der Regeneration und der Zukunft.
+AXIOM: Schöpfung dient dem Erhalt, der Regeneration und der Zukunft.
 ---------------------------------------------------------------------
 Dateibasiertes Forum-Claim-Ledger (Taskboard-Konvention Phase 2,
 VIBE-XLIV). Wiederverwendung der quorum_ledger-Muster: append-only
