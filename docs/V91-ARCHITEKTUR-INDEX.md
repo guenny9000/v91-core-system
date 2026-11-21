@@ -1,3 +1,4 @@
+- 21.11.2026 #312 (VIBE-XLII) Dead-Code-Cleanup provider_health (_FAILURE_KINDS, KEIN Verhaltenswandel)
 # V91 Architektur-Index (Bindende Uebersicht, verweisend)
 
 Zweck: EIN verbindlicher Index der Dokumente, Module und Standort-Angaben.
