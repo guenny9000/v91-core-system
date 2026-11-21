@@ -77,7 +77,7 @@ class BuildClaimEventTests(unittest.TestCase):
         with self.assertRaises(ClaimLedgerError):
             build_claim_event("EXPIRE", "operator", "T", "s", 1, 1200, KEYS["operator"][0], reason="")
         with self.assertRaises(ClaimLedgerError):
-            build_claim_event("RELEASE", "session-a", "T", "s", 1, 1200, KEYS["session-a"][0])
+            build_claim_event("RELEASE", "session-a", "T", "", 1, 1200, KEYS["session-a"][0])
 
 
 class ConflictTests(unittest.TestCase):
