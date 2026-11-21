@@ -83,7 +83,7 @@ def test_key_loss_open_without_rotation():
 def test_key_loss_open_when_revocations_not_preserved():
     r = probe_key_loss(_full().replace(recovery_preserves_revocations=False))
     assert r.status == IndicatorStatus.NICHT_GEPRUEFT
-    assert any("un kontrol" in p or "Revocations" not in p or "Rueck" in p or "Revoc" in p for p in r.problems)
+    assert any("kontrol" in p.lower() or "revoc" in p.lower() for p in r.problems)
 
 
 # ------------------------------------------------------------- Probe 3
@@ -142,7 +142,7 @@ def test_master_key_across_all_nodes_rejected():
         assert_no_master_key({"a": ("k1", "k2"), "b": ("k1", "k3"), "c": ("k1", "k4")})
 
 
-deftest_shared_but_not_total_key_allowed():
+def test_shared_but_not_total_key_allowed():
     assert_no_master_key({"a": ("k1", "k2"), "b": ("k1", "k3"), "c": ("k9", "k10")})
 
 
