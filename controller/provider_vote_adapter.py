@@ -30,6 +30,12 @@ from dataclasses import dataclass
 from typing import Callable, Iterable
 
 from controller.agent_consensus import Vote
+from controller.provider_health import (
+    CancelScope,
+    HealthEvent,
+    HealthEventKind,
+    ProviderHealthPolicy,
+)
 
 
 @dataclass(frozen=True)
@@ -60,12 +66,33 @@ class VoteBatch:
 
 
 def collect_provider_votes(
-    proposal: Proposal, providers: Iterable[Provider]
+    proposal: Proposal,
+    providers: Iterable[Provider],
+    *,
+    health: ProviderHealthPolicy | None = None,
+    cancel_scope: CancelScope | None = None,
+    now: int | None = None,
 ) -> VoteBatch:
     """Collect signed votes only; never evaluates quorum or executes actions.
 
     Calls are synchronous and sequential. A provider that can hang must be
     wrapped by the caller in a timeout-capable worker/process.
+
+    Optional health/cancellation wiring (VIBE-XL, Issue #167 point 8):
+
+    - With `health`, every outcome is recorded per agent_id (OK on a valid
+      accepted vote, PROVIDER_ERROR on exception or invalid response,
+      CANCELLED when the round is stopped; CANCELLED never blames the
+      provider). A blocked advisory skips the call: an outage stays a
+      MISSING VOTE, never a verdict (FAIL != APPROVE).
+    - With `cancel_scope`, the cooperative scope is checked before every
+      provider call; a cancelled round stops without contacting the
+      remaining providers.
+    - `now` is REQUIRED when `health` is given (UNKNOWN is never defaulted;
+      failing to pass a clock is a configuration error, not a guess).
+    - NO_QUORUM capacity enforcement stays with agent_consensus via
+      quorum_capacity (REUSE: COLLECTION != CONSENSUS); this adapter
+      surfaces missing votes, it does not evaluate them.
     """
     configured = tuple(providers)
     if not configured:
@@ -82,25 +109,58 @@ def collect_provider_votes(
         raise ValueError("duplicate independence_id is not independent")
     if any(not callable(item.invoke) for item in configured):
         raise ValueError("every provider requires an injected callable")
+    if health is not None and (not isinstance(now, int) or now < 0):
+        raise ValueError("now (clock) is required when health is given")
+
+    def record(agent_id, kind, detail=""):
+        if health is None:
+            return
+        health.record(agent_id, HealthEvent(kind, now=now, detail=detail), now=now)
 
     accepted: list[Vote] = []
     failures: list[str] = []
     for provider in configured:
+        if cancel_scope is not None and cancel_scope.cancelled:
+            reason = cancel_scope.cancellation.reason if cancel_scope.cancellation else ""
+            failures.append(
+                f"{provider.agent_id}: round cancelled: {reason}"
+            )
+            record(provider.agent_id, HealthEventKind.CANCELLED,
+                   "round cancelled before call")
+            continue
+
+        if health is not None:
+            adv = health.advisory(provider.agent_id, now=now)
+            if not adv.allow:
+                failures.append(
+                    f"{provider.agent_id}: health advisory: {adv.reason}"
+                )
+                continue
+
         try:
             vote = provider.invoke(proposal)
         except Exception as exc:  # provider failure is data, not approval
             failures.append(f"{provider.agent_id}: provider error: {type(exc).__name__}")
+            record(provider.agent_id, HealthEventKind.PROVIDER_ERROR,
+                   type(exc).__name__)
             continue
 
         if not isinstance(vote, Vote):
             failures.append(f"{provider.agent_id}: returned value is not a Vote")
+            record(provider.agent_id, HealthEventKind.PROVIDER_ERROR,
+                   "not a Vote")
             continue
         if vote.agent_id != provider.agent_id:
             failures.append(f"{provider.agent_id}: signed agent identity mismatch")
+            record(provider.agent_id, HealthEventKind.PROVIDER_ERROR,
+                   "agent identity mismatch")
             continue
         if vote.proposal_digest != proposal.digest or vote.epoch != proposal.epoch:
             failures.append(f"{provider.agent_id}: proposal identity mismatch")
+            record(provider.agent_id, HealthEventKind.PROVIDER_ERROR,
+                   "proposal identity mismatch")
             continue
         accepted.append(vote)
+        record(provider.agent_id, HealthEventKind.OK)
 
     return VoteBatch(tuple(accepted), tuple(failures))
