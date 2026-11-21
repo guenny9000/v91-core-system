@@ -247,7 +247,7 @@ def digital_autarky_report(snapshot: NodeSnapshot) -> dict:
             belegt() if restart.status == IndicatorStatus.BELEGT else open_(),
         "identity_revocation_independent":
             belegt() if ident.status == IndicatorStatus.BELEGT else open_(),
-        "software_supply_verification":
+        "software_supply_verifiable":
             belegt() if snapshot.software_supply_verification else open_(),
         "measured_restart_time":
             MeasurementClaim(float(snapshot.measured_recovery_seconds), "seconds", evidence)
