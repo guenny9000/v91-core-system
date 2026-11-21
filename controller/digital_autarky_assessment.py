@@ -229,29 +229,33 @@ def digital_autarky_report(snapshot: NodeSnapshot) -> dict:
     ident = probe_compromised_identity(snapshot)
     restart = probe_restart_integrity(snapshot)
 
-    def belegt() -> MeasurementClaim:
-        return MeasurementClaim(1.0, "boolean", evidence)
-    def open_() -> UnavailableClaim:
-        return UnavailableClaim("nicht simuliert-lieferbar; Pruefling fehlt")
+    unit_by_key = {definition.key: definition.unit
+                   for definition in DIGITAL_AUTARKY_REGISTRY}
+
+    def claim(key: str, condition: bool) -> object:
+        if not condition:
+            return None  # NICHT_GEPRUEFT, nicht NICHT_VERFUEGBAR (offen bleibt offen)
+        unit = unit_by_key[key]
+        value = 1.0 if unit in ("share_0_1", "boolean") else float(snapshot.measured_recovery_seconds)
+        return MeasurementClaim(value, unit, evidence)
 
     submissions = {
         "key_custody_independence_share":
-            belegt() if snapshot.owns_keys else open_(),
+            claim("key_custody_independence_share", snapshot.owns_keys),
         "key_loss_recovery_proven":
-            belegt() if keys.status == IndicatorStatus.BELEGT else open_(),
+            claim("key_loss_recovery_proven", keys.status == IndicatorStatus.BELEGT),
         "core_functions_without_cloud":
-            belegt() if cloud.status == IndicatorStatus.BELEGT else open_(),
+            claim("core_functions_without_cloud", cloud.status == IndicatorStatus.BELEGT),
         "alt_comm_availability":
-            belegt() if net.status == IndicatorStatus.BELEGT else open_(),
+            claim("alt_comm_availability", net.status == IndicatorStatus.BELEGT),
         "restored_backup_proven":
-            belegt() if restart.status == IndicatorStatus.BELEGT else open_(),
+            claim("restored_backup_proven", restart.status == IndicatorStatus.BELEGT),
         "identity_revocation_independent":
-            belegt() if ident.status == IndicatorStatus.BELEGT else open_(),
+            claim("identity_revocation_independent", ident.status == IndicatorStatus.BELEGT),
         "software_supply_verifiable":
-            belegt() if snapshot.software_supply_verification else open_(),
+            claim("software_supply_verifiable", snapshot.software_supply_verification),
         "measured_restart_time":
-            MeasurementClaim(float(snapshot.measured_recovery_seconds), "seconds", evidence)
-            if restart.status == IndicatorStatus.BELEGT else open_(),
+            claim("measured_restart_time", restart.status == IndicatorStatus.BELEGT),
     }
     report = registry_report(list(DIGITAL_AUTARKY_REGISTRY), submissions)
     report["probes"] = {
