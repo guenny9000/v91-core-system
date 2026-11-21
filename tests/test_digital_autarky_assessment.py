@@ -1,3 +1,4 @@
+import dataclasses
 #!/usr/bin/env python3
 """Tests: controller/digital_autarky_assessment.py (Datensatz 7, VIBE-XXVIII).
 
@@ -59,13 +60,13 @@ def test_cloud_outage_belegt_with_local_functions():
 
 
 def test_cloud_outage_open_without_local_functions():
-    r = probe_cloud_outage(_full().replace(offline_core_functions=()))
+    r = probe_cloud_outage(dataclasses.replace(_full(), offline_core_functions=()))
     assert r.status == IndicatorStatus.NICHT_GEPRUEFT
     assert any("offline" in p for p in r.problems)
 
 
 def test_cloud_outage_open_without_own_keys():
-    r = probe_cloud_outage(_full().replace(owns_keys=False))
+    r = probe_cloud_outage(dataclasses.replace(_full(), owns_keys=False))
     assert r.status == IndicatorStatus.NICHT_GEPRUEFT
 
 
@@ -75,13 +76,13 @@ def test_key_loss_belegt():
 
 
 def test_key_loss_open_without_rotation():
-    r = probe_key_loss(_full().replace(key_rotation_tested=False))
+    r = probe_key_loss(dataclasses.replace(_full(), key_rotation_tested=False))
     assert r.status == IndicatorStatus.NICHT_GEPRUEFT
     assert any("rotation" in p for p in r.problems)
 
 
 def test_key_loss_open_when_revocations_not_preserved():
-    r = probe_key_loss(_full().replace(recovery_preserves_revocations=False))
+    r = probe_key_loss(dataclasses.replace(_full(), recovery_preserves_revocations=False))
     assert r.status == IndicatorStatus.NICHT_GEPRUEFT
     assert any("kontrol" in p.lower() or "revoc" in p.lower() for p in r.problems)
 
@@ -94,7 +95,7 @@ def test_network_isolation_belegt():
 
 
 def test_network_isolation_open_without_alt_channels():
-    r = probe_network_isolation(_full().replace(alt_comm_channels=()))
+    r = probe_network_isolation(dataclasses.replace(_full(), alt_comm_channels=()))
     assert r.status == IndicatorStatus.NICHT_GEPRUEFT
 
 
@@ -104,12 +105,12 @@ def test_compromised_identity_belegt():
 
 
 def test_compromised_identity_open_without_revocation():
-    r = probe_compromised_identity(_full().replace(identity_revocation_path=False))
+    r = probe_compromised_identity(dataclasses.replace(_full(), identity_revocation_path=False))
     assert r.status == IndicatorStatus.NICHT_GEPRUEFT
 
 
 def test_compromised_identity_open_without_isolation():
-    r = probe_compromised_identity(_full().replace(node_isolation_possible=False))
+    r = probe_compromised_identity(dataclasses.replace(_full(), node_isolation_possible=False))
     assert r.status == IndicatorStatus.NICHT_GEPRUEFT
 
 
@@ -121,18 +122,18 @@ def test_restart_integrity_belegt():
 
 
 def test_restart_open_without_measured_time():
-    r = probe_restart_integrity(_full().replace(measured_recovery_seconds=None))
+    r = probe_restart_integrity(dataclasses.replace(_full(), measured_recovery_seconds=None))
     assert r.status == IndicatorStatus.NICHT_GEPRUEFT
     assert any("Wiederanlaufzeit" in p for p in r.problems)
 
 
 def test_restart_open_with_negative_time():
-    r = probe_restart_integrity(_full().replace(measured_recovery_seconds=-1.0))
+    r = probe_restart_integrity(dataclasses.replace(_full(), measured_recovery_seconds=-1.0))
     assert r.status == IndicatorStatus.NICHT_GEPRUEFT
 
 
 def test_restart_open_without_backup_evidence():
-    r = probe_restart_integrity(_full().replace(restored_backup_evidence=()))
+    r = probe_restart_integrity(dataclasses.replace(_full(), restored_backup_evidence=()))
     assert r.status == IndicatorStatus.NICHT_GEPRUEFT
 
 
