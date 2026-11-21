@@ -72,15 +72,15 @@ Aenderung), aendert selbst nie Verhalten und kann keine Zustandssprueche
 (STATUS:ACTIVE, SYNCHRON, DRIFT:0/3, VALID:VERIFIED) ersetzen: solche
 Attribute entstehen ausschliesslich aus gepruefter Evidenz, nicht aus Text.
 
-## 6. Aenderungslog (eine Zeile je gemergtem PR)
+## 6. Aenderungslog (eine Zeile je gemergten PR)
 
 - 18.11.2026 #138 Architektur-Index angelegt (verweisend, keine Zustandssprueche).
 - 18.11.2026 #139 Autarkie Phase 3: AutarkyTrend (ehrlicher Zwei-Fenster-Vergleich) in autarky_metrics, Verkabelung per --trend-baseline-ledger
 - 18.11.2026 #140 Secret-Scan: fail-closed CI-Schritt (controller/secret_scan.py + audit.yml).
 - 19.11.2026 #141 Startup-Check: offline Selbstpruefung als Komposition (controller/startup_check.py + tests).
-- 18.11.2026 #142 Wirkungs-Datensatz-Vertrag (V91-WIRK als EvidenceReport) + PRUEFBFUND ChatGPT FIELD IMPACT in docs/V91-REGIONAL-RESILIENCE-MONITOR.md.
+- 18.11.2026 #142 Wirkungs-Datensatz-Vertrag (V91-WIRK als EvidenceReport) + PRUEBBFUND ChatGPT FIELD IMPACT in docs/V91-REGIONAL-RESILIENCE-MONITOR.md.
 - 18.11.2026 #143 zweite FIELD-IMPACT-Bewertung: Experimentier-Regel + erweiterter Leitsatz im Resilience-Monitor (Abschnitt 8), Zensuren abgelehnt.
-- 18.11.2026 #144 Ballast-Pflichtangabe in Wirkungs-Datensaetzen (SEQ:9032-Kern) + PRUEFBFUND: Zweitregister/Code abgelehnt (0 Repo-Treffer, defekter Konstruktor, Phantomdateien, Seeding ohne Baseline).
+- 18.11.2026 #144 Ballast-Pflichtangabe in Wirkungs-Datensaetzen (SEQ:9032-Kern) + PRUEBFUND: Zweitregister/Code abgelehnt (0 Repo-Treffer, defekter Konstruktor, Phantomdateien, Seeding ohne Baseline).
 - 19.11.2026 #165 Foederations-Direktive v1.0 als verbindliches Dokument (docs/V91-GLOBAL-FEDERATION-DIRECTIVE.md, 11 Abschnitte + Kollisionsregel + ehrlicher main-Abgleich; DOKUMENTIERT != INSTALLIERT).
 - 19.11.2026 #168 Waechter-Registry (controller/watcher_registry.py, 11 Rollen, IMPLEMENTED_FILES_PRESENT vs. VISION_UNIMPLEMENTED, 13 Tests; Stand-Zeile dieses Indexes wurde versehentlich auf nur die neuen Log-Zeilen reduziert und mit PR #173-Reparatur wiederhergestellt).
 - 19.11.2026 #170 Struktur-Review-Waechter (controller/structure_review.py, 7 Direktiv-Kriterien, Evidenzpflicht fail-closed, 13 Tests) + Registry-Verdrahtung.
@@ -89,7 +89,7 @@ Attribute entstehen ausschliesslich aus gepruefter Evidenz, nicht aus Text.
 - 19.11.2026 #173(REPARATUR) Index-Zeilen fuer #165/#168/#170/#171 nachgezogen;(Datei-Inhalt) wurde durch leere Tool-Rueckgabe unvollstaendig gespeichert, vollstaendig rekonstruiert aus dem Stand vor #173 (CHECK != INHALTSPRUEFUNG).
 - 19.11.2026 #177 Provider-neutrale 2-of-3-Review-Orchestrierung (agent_quorum: Drittabstimmung nur bei NO_QUORUM, keine Aktionen, keine Persistenz).
 - 19.11.2026 #178 Quorum-Ledger: persistente, Ed25519-signierte Abstimmungsbelege (quorum_ledger, Hash-Kette, Replay-Floor ueber Neustarts, fail-closed; BELEGT != VERIFIZIERT).
-- 19.11.2026 #179 Erste belegte Forschungs-Beobachtungen (6 Einträge, alle mit Primaerquelle; JSONL vom echten research_watch-Modul erzeugt und verifiziert; BELEGT_EINSCHAETZUNG != VERIFIZIERT).
+- 19.11.2026 #179 Erste belegte Forschungs-Beobachtungen (6 Eintraege, alle mit Primaerquelle; JSONL vom echten research_watch-Modul erzeugt und verifiziert; BELEGT_EINSCHAETZUNG != VERIFIZIERT).
 - 19.11.2026 #209 Lernblock Souveraenitaet/Dezentralisierung/regionale Autarkie als verbindliches Dokument (wortgetreu + main-Abgleich je Saeule; OECD-Quelle NICHT zitierfaehig ohne Adresse; kein Vollzugsmandat; DOKUMENTIERT != INSTALLIERT).
 - 19.11.2026 #211 Saeule Gesundheit: erste belastbare Datenbasis als structure_review-Datensatz (hessen-gesundheitsversorgung-vogelsberg-2026.json, Quellen genannt, NEGATIVE_FINDING_PROBLEMS_BELEGT); Lernblock-Bestandszeile ehrlich aktualisiert; DATENBASIS != MESSUNG.
 - 19.11.2026 #212 Hessen-Reihe R2: Struktur-Datensaetze Saeule Energie (Energiemonitoring 2025 + MaStR-PV-Zubau Vogelsberg) und Saeule Wirtschaft (WIBank-KMU/EFRE); je REVIEW_REQUIRED_UNGEPRUEFTE_KRITERIEN, DATENBASIS != MESSUNG.
@@ -125,7 +125,7 @@ Attribute entstehen ausschliesslich aus gepruefter Evidenz, nicht aus Text.
 - 20.11.2026 #254 MAX-BEST-Zusammenarbeitsgrundsatz (docs/V91-MAX-BEST-ZUSAMMENARBEIT.md + 7 rand-pinnende Tests; 6 Punkte im Owner-Wortlaut ABGELEITET: Autarkie foerdern, Kooperation ermoeglichen ohne Einschraenkung Freiwilliger, Menschenleben schuetzen, Wirkung maximieren, Ballast reduzieren, Wahrheit sichern; Schichten-Trennung: Generalvollmacht fuer ALLE Modelle/Sessions, aber gleiche Gates fuer jeden Beitrag, Verschlechterungen zurueckgewiesen; Kollisionsregel: Langfassungen #120/#126/#158/#110 haben Vorrang; FREIWILLIGKEIT != ZUGRIFF, DOKUMENT != BETRIEB).
 - 21.11.2026 #261 Kanonischer NODE_STATUS-Austausch (controller/status_exchange.py + Zwei-Knoten-E2E tests/test_status_exchange_e2e.py: build -> Ed25519-Envelope durable Sequenz -> echte Loopback-UDP -> Receiver-Signatur+Replay-Floor -> Re-Validierung -> CooperationRegister-Belegablage; knowledge_digests vergleichen BESITZ, nie Wahrheit, Divergenz = Review, kein Merge; TEST != INSTALLATION, DETECTION != AUTHORIZATION).
 - 21.11.2026 #262 Bedienbarer Zwei-Knoten-NODE_STATUS-Demo (examples/two_node_status_demo.py: Ephemeraer-Keys + SQLite-Wegwerf-State im Tempverzeichnis, echter Loopback-UDP-Austausch, beide lokalen CooperationRegisters drucken beleggestuetzte Sicht inkl. Global-Status-Verweigerung; DEMO != INSTALLATION, DETECTION != AUTHORIZATION, kein Produktionscode).
-- 21.11.2026 #263 Zwei-Knoten-Demo: Empfangszähler vor UDP-Send erfassen, damit schnelle Antworten nicht im Baseline-Snapshot verschwinden; Zwei-Zyklen-Regressionstest schützt den beidseitigen ACK-Nachweis.
+- 21.11.2026 #263 Zwei-Knoten-Demo: Empfangszaehler vor UDP-Send erfassen, damit schnelle Antworten nicht im Baseline-Snapshot verschwinden; Zwei-Zyklen-Regressionstest schuetzt den beidseitigen ACK-Nachweis.
 - 21.11.2026 #264 R3-Ledger Pilot E dritter Eintrag: EU-Ukraine-Kredit kumuliert 12,66 Mrd EUR Untergrenze (20.11.2026, Summe der Primaertranchen 3,2 + 4,36 + 5,1 Mrd; MINDESTUMFANG != Totalstand, OBSERVED != ERFOLG, Fortschritt 0.062 gegen 90 Mrd; Append via MesswertLedger.append, seq 3, Kette verifiziert, ASCII-pure; 9 Tests inkl. neuem Untergrenze-Test).
 - 21.11.2026 #266 Struktur-Risiken-Registry (docs/V91-MAX-BEST-STRUKTURRISIKEN-REGISTRY.md: 12 Eintraege einzeln, jeder mit Strukturmuster, Schaeden, messbarem Indikator und Primaerquelle: Lobbyismus, Drehtuer, Korruption, Diktatur, Demokratie-Erosion, Zensur, staatliche Desinformation, Wahlmanipulation, Ueberwachungsueberhang, Buerokratie-Ballast, Justizbeugung, Informationsmonokulturen; SYSTEMEBENE != PERSONENEBENE, POSITION != RECHTSLAGE, REVIEW != ENTSCHEIDUNG, BEHAUPTUNG != BELEGT; 8 pinnde Tests; Doku ohne Verhalten).
 - 21.11.2026 #267 Struktur-Risiken-Registry v2: Eintraege 13 (Privatjets/Leerfluege, CE-Delft-Indikator, BALLAST ohne Grundversorgungsnutzen) und 14 (Krieg als Dauerstruktur/Ruestungsspirale, SIPRI-Jahresreihe, Querverweis #239) ergaenzt; 14 Eintraege einzeln, jeder mit Primaerquelle; SYSTEMEBENE != PERSONENEBENE bleibt; Tests auf 14 erweitert (10 Tests).
