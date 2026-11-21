@@ -50,6 +50,7 @@ from typing import Any, Mapping, Tuple
 from controller.quorum_ledger import QuorumLedger, QuorumLedgerError, vote_fields_valid
 from controller.receipt_store import ReceiptStore, ReceiptStoreError
 from controller.review_receipt import (
+    evaluate_ledger_reviews,
     receipt_binds_to_vote,
     receipt_fields_valid,
 )
@@ -184,3 +185,40 @@ class ConsensusArchive:
         if floor != self.store.replay_floor(agent_id):
             raise ConsensusArchiveError("replay floors diverged; fail closed")
         return floor
+
+    def evaluate_reviews(
+            self, *, proposal_digest: str, epoch: int, now: int,
+            expected_policy_version: str,
+            min_sequence_by_agent: Mapping[str, int],
+            independent_sources_required: int = 2,
+            allowed_clock_skew_seconds: int = 60) -> dict:
+        """Laedt das Archiv frisch, verifiziert die Paarung und bewertet es.
+
+        min_sequence_by_agent MUSS aus einem unabhaengig vertrauenswuerdigen
+        Sequenz-Floor-Kontext stammen. Nicht den aktuellen Archiv-Floor
+        einsetzen: damit wuerden die gerade zu pruefenden Stimmen als stale
+        verworfen. now bleibt explizit fuer reproduzierbare Zeitfenster-Tests.
+
+        Ergebnis ist eine Bewertung, keine Autorisierung oder Ausfuehrung.
+        Der Reload verifiziert beide Dateien und ihre Paarung; er stellt
+        keinen atomaren Snapshot gegen gleichzeitige externe Dateiaenderungen
+        oder einen Transaktions-Commit ueber zwei Dateien her.
+        """
+        fresh = ConsensusArchive(self._directory, self._keys)
+        result = evaluate_ledger_reviews(
+            fresh.votes(), fresh.receipts(), self._keys,
+            proposal_digest=proposal_digest,
+            epoch=epoch,
+            now=now,
+            expected_policy_version=expected_policy_version,
+            min_sequence_by_agent=min_sequence_by_agent,
+            independent_sources_required=independent_sources_required,
+            allowed_clock_skew_seconds=allowed_clock_skew_seconds)
+        result["archive_pairing"] = "VERIFIED_ON_RELOAD"
+        result["archive_entry_count"] = fresh.entry_count()
+        result["archive_limitations"] = [
+            "COMPENSATION != TRANSACTION",
+            "ARCHIVE != MERKLE-TREE",
+            "INDEPENDENCE != PROVEN",
+        ]
+        return result
