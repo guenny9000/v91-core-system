@@ -210,25 +210,29 @@ class ReceiptGateTests(CliHarness):
         super().setUp()
         self.receipt_file = self.tmp_path / "receipt.json"
         self.policy_file = self.tmp_path / "policy.json"
+        import time
         from controller.crypto_receipts import generate_signing_keypair
         from controller.author_receipt_guard import AuthorReceipt, ClaimBindingContext, canonical_receipt_payload
         from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PrivateKey
         r_priv, r_pub = generate_signing_keypair()
         task_id, scope = "VIBE-XLVI", "scripts/v91_claim_cli.py"
+        self.now_epoch = int(time.time())
+        issued_epoch = self.now_epoch - 100
+        expires_epoch = self.now_epoch - 100 + 3600
         body = AuthorReceipt(
             signer_id=self.author, key_id="k-1", signature="",
-            issued_at_epoch=900, expires_at_epoch=99999999,
+            issued_at_epoch=issued_epoch, expires_at_epoch=expires_epoch,
             claimed_author=self.author,
         )
         ctx = ClaimBindingContext(
             task_id=task_id, scope=scope, event_type="CLAIM",
-            expected_base_sha=BASE_SHA, author_claim=self.author, now_epoch=1000,
+            expected_base_sha=BASE_SHA, author_claim=self.author, now_epoch=self.now_epoch,
         )
         payload = canonical_receipt_payload(ctx, body)
         sig = Ed25519PrivateKey.from_private_bytes(r_priv).sign(payload.encode("utf-8")).hex()
         self.receipt_file.write_text(json.dumps({
             "signer_id": self.author, "key_id": "k-1", "signature": sig,
-            "issued_at_epoch": 900, "expires_at_epoch": 99999999,
+            "issued_at_epoch": issued_epoch, "expires_at_epoch": expires_epoch,
             "claimed_author": self.author,
         }), encoding="utf-8")
         self.policy_file.write_text(json.dumps({
