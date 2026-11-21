@@ -1,0 +1,50 @@
+{
+ "structure_id": "de_international_tagebau_sanierung_2026",
+ "assessor": "v91_session_2026-11-21_quellenreview_max_best",
+ "assessed_at_structure": "2026-11-21T23:30:00Z",
+ "note": "Struktur-Datensatz (Thema Bergbaufolgelandschaften / Gruben- und Tagebau-Sanierung, Saeule Energie/Umwelt). Folgeauftrag zum Inkohle-Rueckbau-Datensatz (Beantwortung der 'Grabenzeug'-Frage). Kernbefund: STILLGELEGT != SANIERT und STILLGELEGT != SICHER; Sanierung ist eigenstaendige Jahrzehnteaufgabe mit belegten Erfolgen (Rheinische Rekultivierung Sophienhoehe, Lausitzer Strukturwandel, US-AML-Programm) und ehrlichen Gegenbewegungen (Restloch-/Zeitrisiken: Seebefuellung Hambach erst ab 2030, Garzweiler ab 2036; USA: jahrzehntealter Abriss-berg-Hazard-Backlog trotz 6,5 Mrd. USD seit 1977). Jede Einzelbehauptung gegen Primaer-/Sekundaerquelle geprueft (CLAIM != EVIDENCE); Unbestaetigtes bleibt NICHT_GEPRUEFT. REVIEW != ENTSCHEIDUNG, PLANUNG != VOLLZOGEN, DATENBASIS != MESSUNG.",
+ "criteria": {
+  "gesellschaftlicher_nutzen": {
+   "status": "BELEGT",
+   "evidence": "Drei belegte Nutzendimensionen: (1) Rheinisches Revier: Rekultivierung ist laut RWE-Pressemitteilung vom 16.11.2026 (Jahresgespraeche der Forschungsstelle Rekultivierung, 12.11.2026 Schloss Paffendorf) 'Kernaufgabe' von RWE Power; auf der Sophienhoehe ist die fuer den Naturraum typische Spechtgemeinschaft vollstaendig vertreten, Wildkatzenpopulation nachgewiesen, Rebhuhn (Vogel des Jahres 2026) in Garzweiler und Hambach/Sophienhoehe nachgewiesen, stabile Grauammer-Population am Tagebau Garzweiler; Naturerleben und Freizeitwert (Grossbeweidungsprojekt Wildpferde) ausdruecklich mitgedacht. (2) Lausitz: Sprengung der Foerderbruecke F60 im Tagebau Jaenschwalde am 05.02.2026 (rbb24, 06.02.2026; 45 Jahre Einsatz, Bruecke 502 m lang, 204 m breit, 80 m hoch, galt als groesste bewegliche Arbeitsmaschine der Welt; laut LEAG kuenftig 'Seen und Erneuerbare Energien' fuer die Bergbaufolgelandschaft). (3) USA: OSMRE-Sicherheitsnutzen (offene Schaechte, instabile Highwalls, Subsidenz, verunreinigtes Wasser als konkrete Gefahren fuer Haeuser, Strassen und Infrastruktur).",
+   "source": "https://www.rwe.com/presse/rwe-power/2026-11-16-rekultivierung-ist-lebensraum-fuer-seltene-arten-und-anziehungspunkt-fuer-besucher/",
+   "assessed_at": "2026-11-21T23:30:00Z"
+  },
+  "menschenrechtsvertraeglichkeit": {
+   "status": "NICHT_GEPRUEFT",
+   "evidence": "",
+   "source": "",
+   "assessed_at": ""
+  },
+  "kosten_und_ressourcenverbrauch": {
+   "status": "BELEGT",
+   "evidence": "US-Programmdaten oeffentlich dokumentiert: OSMRE vergab am 09.02.2026 fuer das Finanzjahr 2026 fast 120 Mio. USD an AML-Reclamation-Fee-Grants an 24 Kohle-Bundesstaaten und zwei Stammesprogramme (obligatorische Sequestrierung 5,7 Prozent, Endbetrag ueber 113 Mio. USD); seit 1977 wurden mehr als 6,5 Mrd. USD an AML-Gebuehren an Staaten und tribes ausgeschuettet; Finanzierung aus Gebuehren auf Kohleproduktion, Verteilung nach Kongress-Formel. EHRLICHE GEGENBEWEGUNG: Trotz 6,5 Mrd. USD seit 1977 bestehen hazard-Backlogs weiter (Appalachian Voices-Karte vom 18.08.2026 zeigt flächendeckenden Finanzierungsbedarf; GELD_FLOWS_BELEGT, BACKLOG-RESTGROESSE NICHT_GEPRUEFT). Deutsche Rekultivierungskosten des Rheinischen Seesystems: Rheinwassertransportleitung als abschliessende Infrastruktur (RWE-Spatenstich 17.03.2026, ~10.000 Rohre, ~5 Jahre Bauzeit), Gesamtkostengroesse pro Hektar NICHT_GEPRUEFT.",
+   "source": "https://www.osmre.gov/news/2026/OSM-announces-120M-to-reclaim-abandoned-coal-mines",
+   "assessed_at": "2026-11-21T23:30:00Z"
+  },
+  "transparenz": {
+   "status": "BELEGT",
+   "evidence": "Alle Kernvorgaenge sind oeffentlich dokumentiert: RWE-Pressemitteilungen (Rekultivierungsmonitoring 16.11.2026; Rheinwassertransportleitung mit Genehmigungs- und Spatenstich-Pressemitteilungen 29.01./17.03.2026), Landesamt fuer Bergbau LBGR zur F60-Sprengung, rbb24 als unabhaengiges Medium, MUNV NRW zur Hambacher-Wald-Erklaerung vom 09.06.2026 (Oeffentliche Begleitung bis verbindlicher Vertrag bis Ende 2026 zugesagt), OSMRE-Pressemitteilung mit vollstaendiger FY2026-Grant-Verteilung.",
+   "source": "https://www.umwelt.nrw.de/dauerhafter-schutz-fuer-den-hambacher-wald-breite-allianz-unterzeichnet-erklaerung",
+   "assessed_at": "2026-11-21T23:30:00Z"
+  },
+  "nachhaltigkeit": {
+   "status": "BELEGT",
+   "evidence": "(1) Biodiversitaets-Erfolgsmonitoring belegt laut RWE-Forschungsstelle (16.11.2026): vollstaendige Spechtgemeinschaft der Sophienhoehe, Wildkatzenpopulation, Rebhuhn/Grauammer-Nachweise; RWE-Biodiversitaetsstrategie seit 2018 als roter Faden. (2) Dauerhafter Schutz: Hambacher Wald wird per Erklaerung vom 09.06.2026 (MUNV NRW, Allianz aus Ministerien, Kommunen, Naturschutz, Landwirtschaft, RWE) Wildnisentwicklungsgebiet, Waldflaechen in oeffentliches Eigentum, Vernetzung ueber neue Waldkorridore; Konkretisierung im oeffentlich-rechtlichen Vertrag bis Ende 2026 (ZUSAGE != VOLLZUG). (3) Wasserhaushalt: Rheinwassertransportleitung als Voraussetzung fuer das 'Rheinische Seenland' mit 'ausgeglichenem, sich selbst tragendem Wasserhaushalt' (PLANUNG != VOLLZOGEN: Befuellung Hambach ab 2030, Garzweiler ab 2036, Inden ab 2030 mit Rur-Wasser). STILLGELEGT != SANIERT: Zwischen Foerderende und fertigem See liegen Jahre bis Jahrzehnte.",
+   "source": "https://www.rwe.com/presse/rwe-power/2026-03-17-spatenstich-fuer-die-rheinwassertransportleitung/",
+   "assessed_at": "2026-11-21T23:30:00Z"
+  },
+  "missbrauchsrisiken": {
+   "status": "NICHT_GEPRUEFT",
+   "evidence": "",
+   "source": "",
+   "assessed_at": ""
+  },
+  "alternativen_und_verbesserbarkeit": {
+   "status": "BELEGT",
+   "evidence": "Strukturalternativen sind belegt und werden aktiv verfolgt: (a) Wildnisentwicklung statt Forstwirtschaft (Hambacher Wald, NRW-Erklaerung 09.06.2026) und Grossbeweidung (Wildpferde Sophienhoehe) statt Intensivnutzung. (b) Seen-Option mit Selbsttragendem Wasserhaushalt (Rheinisches Seenland) statt offener Restloecher. (c) Lausitz: 'Seen und Erneuerbare Energien' auf Bergbaufolgenflaechen (LEAG zur F60-Sprengung). (d) USA: staatliche Finanzierung nach Kongress-Formel mit Sequestrierung als dokumentierter Umverteilungsweg. VERBESSERUNGSPUNKT ehrlich: Rekultivierungszeitleisten bleiben lang (Seebefuellung 2030/2036), Zeitverzug ist der messbare Risikoindikator (MINE_CLOSED != LANDSCAPE_RESTORED); Restsee-/Grundwasserqualitaet einzeln NICHT_GEPRUEFT.",
+   "source": "https://www.leag.de/de/news/details/foerderbruecke-im-tagebau-jaenschwalde-wird-gesprengt-seen-und-erneuerbare-energien-praegen-kuenftig-bergbaufolgelandschaft/",
+   "assessed_at": "2026-11-21T23:30:00Z"
+  }
+ }
+}
