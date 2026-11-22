@@ -5,7 +5,7 @@ STATUS: ACTIVE | VERIFICATION: REQUIRED (CLAIM != EVIDENCE)
 AXIOM: Schöpfung dient dem Erhalt, der Regeneration und der Zukunft.
 ---------------------------------------------------------------------
 Deterministische, fail-closed Provider-Auswahl (Vorbereitung fuer
-Issue #239). Ehrliche Grenzen:
+Vorbereitung einer deterministischen Provider-Auswahl; kein Issue-Verweis. Ehrliche Grenzen:
 
 - SELECTION != ROTATION: dieses Modul waehlt aus und signiert die
   Entscheidung. Rotierte Credentials werden NUR vom Operator in den
