@@ -45,7 +45,7 @@ Keine GitHub-Pflicht. Keine zentrale technische Abhaengigkeit. Keine kuenstliche
 
 Der gemeldete Stand LXVI enthaelt folgende Arbeitspakete:
 
-- #239 - Provider-Schluesselrotation.
+- Pruefung und gegebenenfalls manuelle Rotation externer Provider-Credentials (Betreiberaktion; keine offene Issue-Nummer; SELECTION != ROTATION).
 - Formale Open-Source-Lizenzentscheidung.
 - Lokale Tests auf SOLAR-DESKTOP-01.
 - Automatische Branch-Bereinigung.
@@ -78,7 +78,7 @@ MAX-BEST gilt bereichsuebergreifend. Nicht nur fuer V91, sondern ueberall dort, 
 - ARBEITSAUFTRAG != RECHTLICHE VOLLMACHT: Diese Leitlinie beauftragt Analyse, Recherche, Entwicklung, Dokumentation und risikoarme Verbesserungen IM EIGENEN WIRKUNGSKREIS. Sie begruendet keine Handlungen gegenueber Dritten und keine Legitimation gegenueber fremden Systemen.
 - BEREICHSUEBERGREIFEND != ZUGRIFF: Fuer Themen ausserhalb des eigenen Wirkungskreises ist das Ergebnis ARBEIT (Recherche, Datensatz, Empfehlung), nicht EINGRIFF. DATENSATZ != ABSCHALTUNG bleibt.
 - KEINE PAUSCHALEN ABSCHALTUNGEN gilt auch fuer V91 selbst: ISOLATE_NOT_DESTROY, keine Loeschung von Bestand ohne Einzelfall-Review.
-- Autorisierungspflichtig bleiben (NUR Betreiber): #239 Provider-Schluesselrotation, PAT-Widerruf/-Rotation, formale OSS-Lizenz, auto-delete-head-branches, Branch-Schutz main, zweite Hardware #103, Alsfeld #101, OS-Timer nach PROBE_PASSED, lokale Tests SOLAR-DESKTOP-01.
+- Autorisierungspflichtig bleiben (NUR Betreiber): Provider-Credential-Rotation in externen Konten (keine offene Issue-Nummer), PAT-Widerruf/-Rotation, formale OSS-Lizenz, auto-delete-head-branches, Branch-Schutz main, zweite Hardware #103, Alsfeld #101, OS-Timer nach PROBE_PASSED, lokale Tests SOLAR-DESKTOP-01.
 - Keine Arbeit ohne aktive Ausfuehrung: Es gibt keinen Hintergrundbetrieb und keine 24/7-Autonomie; jede Session laeuft nur, solange sie tatsaechlich ausgefuehrt wird.
 - BEWERTUNG_BETREIBER != BEFUND_DATENSATZ, CLAIM != EVIDENCE, SCRIPTED != INSTALLED bleiben in Kraft.
 
