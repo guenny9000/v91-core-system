@@ -1,0 +1,50 @@
+{
+  "structure_id": "de_ruestungs_eskalationsleitung_2026",
+  "assessor": "v91_session_2026-11-22_vibe-lxii_max_best",
+  "assessed_at_structure": "2026-11-22",
+  "note": "Gebuendelter Querschnitt-Sachstand (Saeule Frieden/Transparenz/Exportkontrolle; VIBE-LXII). Keine neuen Primaerquellen, sondern belegte Zusammenschau der drei bereits gemergten Struktur-Reviews zur Ruestungsexport-Kette: (1) de-ruestungsfinanzen-2026.json (PR #341, BMWE 15.07.2026, BT-Drs. 21/9150), (2) de-ruestung-menschenrechte-due-diligence-2026.json (PR #345, ATT Art. 7, EU Common Position 2008/944/CFSP i.d.F. 15.04.2025, BT-Drs. 21/7590, hib 661/2026), (3) de-post-shipment-kontrollen-endverbleib-2017-2025.json (PR #347, BT-Drs. 20/14515, BT-Drs. 21/2847, BuReg_2025.pdf). Frage des Betreibers: Wo sitzt die Eskalationsleitung, die Krieg machenden Strukturen stoppt, und wo bricht sie ab? Kernbefund: Die Eskalationsleitung ist rechtlich existent, aber nach der Genehmigung faktisch offen: Genehmigung (13,87 Mrd. Euro 1H-2026, davon 12,8 Mrd. Einzelausfuhrgenehmigungen) -> Allgemeine Genehmigungen ersetzen fuer EU-/bestimmte NATO-Laender die Einzelfallpruefung (1,1 Mrd. Meldewerte) -> tatsaechliche Ausfuhren werden nicht systematisch oeffentlich gegenuebergestellt (GENEHMIGUNG != AUSFUHR) -> Post-Shipment-Kontrollen sind selektiv (Klein-/Leichtwaffen, Drittlaender; kumuliert 12 Vor-Ort-Kontrollen 2017-2023, alle ohne Beanstandung) und ohne oeffentlichen Nenner (COUNT != COVERAGE) -> eine menschenrechtliche Nachbeobachtung des Endverbleibs existiert nicht als oeffentlicher Berichtsstrang (PRUEFUNG_VORHER != KONTROLLE_NACHHER). GRENZEN DIESES DATENSATZES: (a) Keine Einzelfall-Entscheidungsdokumentation der Behoerden; (b) keine Behauptung tatsaechlicher Fehlinvestition je Empfaengerland; (c) die Bewertung der EU-Legitimation bleibt politische Bewertung des Betreibers bzw. der Verfassungsorgane, kein Befund dieses Datensatzes (BEWERTUNG_BETREIBER != BEFUND_DATENSATZ); (d) keine Zuschreibungen wie 'Kriegstreiber' oder 'Sklavenhalter', gezaehlt werden nur Verfahrens- und Berichtstatbestaende; (e) LEGITIMATION != AUTOMATISCHER BEFUND. Keine Eingaben, keine Kommunikation mit Dritten, keine Intervention. REVIEW != ENTSCHEIDUNG; DATENSATZ != ABSCHALTUNG.",
+  "criteria": {
+    "gesellschaftlicher_nutzen": {
+      "status": "BELEGT",
+      "evidence": "ESKALATIONSSCHRITT 1 GENEHMIGUNG ist dokumentiert und pruefgebunden: 1H-2026 rund 13,87 Mrd. Euro gesamt (ca. 9,6 Mrd. Kriegswaffen, ca. 4,3 Mrd. sonstige Ruestungsgueter), Ukraine Hauptempfaengerland Nr. 1 mit rund 2,5 Mrd. Euro; 2025: 13,3 Mrd. Euro (Ukraine 2,27 Mrd.; Kleinwaffen 94,7 Mio. vs. 161,3 Mio. 2024). Pruefungsexistenz belegt (Einzelfallpruefung Empfaengerland/Gut/Verwendungszweck), die Einzelfall-Anwendung bleibt oeffentlich nicht im Detail nachvollziehbar. Nutzen dieser Zusammenschau: Die Kette (Genehmigung - Verfahrensverschiebung - Selektivkontrolle - fehlende Nachbeobachtung) wird als ein pruefbarer Befund adressierbar statt als vier Einzelbefunde. QUELLE: BMWE 15.07.2026, BT-Drs. 21/9150, BT-Drs. 21/7590, hib 661/2026.",
+      "source": "https://www.bundeswirtschaftsministerium.de/Redaktion/DE/Pressemitteilungen/2026/07/20260715-ruestungsexportpolitik-1-halbjahr-2026.html",
+      "assessed_at": "2026-11-22"
+    },
+    "kosten_und_ressourcenverbrauch": {
+      "status": "BELEGT",
+      "evidence": "ESKALATIONSSCHRITT 2 VERFAHRENSSCHIEBUNG dokumentiert: Allgemeine Genehmigungen ersetzen fuer EU- und bestimmte NATO-Laender das Einzelfallverfahren; Meldewerte werden erst nachtraeglich erhoben (1H-2026 rund 1,1 Mrd. Euro). Verfahrensbeschleunigung reduziert dokumentierte Einzelfallpruef-Tiefe und verlagert Pruefressourcen (PROZESS-OPTIMIERUNG != PRUEF-OPTIMIERUNG; MELDEWERT != GENEHMIGUNGSWERT). Fuer Drittlaender bleiben Einzelfallpruefungen (2025 rund 4,6 Mrd. Euro). QUELLE: BMWE 15.07.2026, BT-Drs. 21/7590.",
+      "source": "https://www.bundeswirtschaftsministerium.de/Redaktion/DE/Pressemitteilungen/2026/07/20260715-ruestungsexportpolitik-1-halbjahr-2026.html",
+      "assessed_at": "2026-11-22"
+    },
+    "transparenz": {
+      "status": "BELEGT",
+      "evidence": "ESKALATIONSSCHRITT 3 KONTROLLE NACH LIEFERUNG dokumentiert und begrenzt: Post-Shipment-Kontrollen existieren, sind aber selektiv (Kleine/Leichte Waffen und bestimmte Schusswaffen bei staatlichen Empfaengern in Drittlaendern; kumuliert zwoelf Vor-Ort-Kontrollen 2017-2023, saemtlich ohne Beanstandungen; 2024 Kontrollen in sieben Laendern, 2025 in vier Laendern; eine bestaetigte VAE-Kontrolle laut BT-Drs. 21/2847). Kein oeffentlicher Nenner aller kontrollfaehigen Lieferungen (COUNT != COVERAGE), keine systematische Zahl je Berichtsjahr. Der Abbruchpunkt der Eskalationsleitung ist damit oeffentlich nicht durch Daten gedeckt: STRUKTUR-TRANSPARENZ hoch, KONTROLL-TRANSPARENZ begrenzt (BERICHTSPFLICHT != KONTROLL-BERICHT). QUELLE: BT-Drs. 20/14515, BuReg_2025.pdf, BT-Drs. 21/2847, EUR-Lex CELEX:02008E0944-20250415.",
+      "source": "https://dserver.bundestag.de/btd/20/145/2014515.pdf",
+      "assessed_at": "2026-11-22"
+    },
+    "missbrauchsrisiken": {
+      "status": "BELEGT",
+      "evidence": "Umfang des offenen Endes der Eskalationsleitung dokumentiert: Kontrollen pruefen den Verbleib beim staatlichen Endempfaenger, nicht die spaetere menschenrechtskonforme Verwendung (PRESENCE_CHECK != HUMAN_RIGHTS_OUTCOME; NO FINDING != NO RISK). ATT Art. 11 verpflichtet zur Diversion-Verhinderung, EU Common Position Kriterium 7 adressiert Umleitung/Re-Export - die oeffentliche Nachweisbarkeit der Anwendung im Einzelfall bleibt begrenzt (EINZELFALL != OEFFENTLICH NACHVOLLZIEHBAR). SIPRI Top-5-Empfaenger 2021-25 inkludiert Laender mit dokumentierten rechtsstaatlichen bzw. menschenrechtlichen Fragestellungen (Empfaenger-Kriterium). QUELLE: BT-Drs. 21/2847, SIPRI Trends 2025 (Maerz 2026).",
+      "source": "https://dserver.bundestag.de/btd/21/028/2102847.pdf",
+      "assessed_at": "2026-11-22"
+    },
+    "menschenrechtsvertraeglichkeit": {
+      "status": "NICHT_GEPRUEFT",
+      "evidence": "Offen bleibt aus #345/#347: eine menschenrechtliche Nachbeobachtung des Endverbleibs nach Lieferung existiert nicht als oeffentlicher Berichtsstrang; Einzelergebnisse der Vor-Ort-Kontrollen sind nicht veroeffentlicht.",
+      "source": "",
+      "assessed_at": ""
+    },
+    "nachhaltigkeit": {
+      "status": "NICHT_GEPRUEFT",
+      "evidence": "",
+      "source": "",
+      "assessed_at": ""
+    },
+    "alternativen_und_verbesserbarkeit": {
+      "status": "BELEGT",
+      "evidence": "Messbare Hebel, alle aus den drei Ausgangsdatensaetzen abgeleitet, ohne behoerdlichen Vollzug durch diese Session: (1) Oeffentliche Gegenueberstellung Genehmigungs- vs. Ausfuhrwerte je Empfaengerland (schliesst GENEHMIGUNG != AUSFUHR). (2) Jaehrliche Zahl der Post-Shipment-Kontrollen plus Nenner kontrollfaehiger Lieferungen plus Auswahlkriterien (schliesst COUNT != COVERAGE). (3) Berichtsstrang fuer menschenrechtliche Nachbeobachtung nach Lieferung (schliesst PRUEFUNG_VORHER != KONTROLLE_NACHHER). (4) Instrumente zur Endverwendungs-Ueberwachung sind laut Ruestungsexportbericht 2025 in die EU Common Position (i.d.F. 15.04.2025) aufgenommen - Umsetzung im Detail NICHT_GEPRUEFT (STANDARD != DURCHSETZUNG). QUEUE_FUER_BETREIBER: Petition oder Kleine Anfrage an den Bundestag als legitimer Eskalationsweg (Vorbereitung NICHT AUTOMATISIERT, Freigabe des Betreibers noetig; KEINE_AUTOMATISCHE_KOMMUNIKATION).",
+      "source": "https://www.ruestungsexport.info/de/info/BuReg_2025.pdf",
+      "assessed_at": "2026-11-22"
+    }
+  }
+}
