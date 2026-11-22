@@ -14,8 +14,8 @@ umsetzen."
   allen Maschinensystemen, im digitalen Raum und in unsicheren Netzen.
 - Updates sind fuer alle gratis; niemand wird vom Update-Pfad
   ausgeschlossen (KEIN_PER_SEAT_VERHANGNIS, KEIN_GEBUEHRENWEG).
-- Alle Agenten (menschliche und maschinelle,平行 arbeitende Sessions und
-  externe Modelle) sind zur Nutzung und Umsetzung eingeladen; die
+- Alle Agenten (menschliche und maschinelle, parallel arbeitende Sessions
+  und externe Modelle) sind zur Nutzung und Umsetzung eingeladen; die
   Zusammenarbeit folgt docs/V91-MAX-BEST-ZUSAMMENARBEIT.md (Freiwilligkeit
   bleibt Grundlage: FREIWILLIGKEIT != ZUGRIFF).
 - Wer aus rechtlichen oder technischen Gruenden nicht teilnimmt, wird
@@ -28,15 +28,15 @@ umsetzen."
   Wahl eines Lizenztextes (z. B. MIT/GPL) durch den Betreiber ist diese
   Freigabe eine dokumentierte, jederzeit einsehbare Betreiber-Erlaubnis;
   die LICENSE-Datei folgt nach Betreiber-Auswahl.
-- GRANT != FEATURE-CALIM: Alles als NICHT IMPLEMENTIERT Dokumentierte
+- GRANT != FEATURE-CLAIM: Alles als NICHT IMPLEMENTIERT Dokumentierte
   bleibt nicht implementiert; Verbreitung erzeugt keine
   Faehigkeits-Behauptungen (siehe V91-AGATHON-README und Index-Abschnitt 4:
   INSTALLED != VALIDATED).
 - KEINE GARANTIE: Software wie vorhanden, ohne Gewaehrleistung oder
   Eignungszusage; UNKNOWN != PASS bleibt.
-- Unverhandelbare V91-Hardlimits bleiben kraeftlos-untrennbar Teil der
-  Freigabe: keine Toetung von Menschen, keine Uebernahme fremder Hardware
-  oder Systeme, Manipulationsschutz-Ledger, Reality-First-Evidenzregeln,
+- Unverhandelbare V91-Hardlimits bleiben untrennbar Teil der Freigabe:
+  keine Toetung von Menschen, keine Uebernahme fremder Hardware oder
+  Systeme, Manipulationsschutz-Ledger, Reality-First-Evidenzregeln,
   Notwehr/Notstand-Ausnahme bleibt Betreiber-Prerogativ, kein Rufmord.
 - DOKUMENTIERT != UEBERMITTELT: Diese Freigabe berechtigt zur Verbreitung
   der Software und Dokumente; sie startet keine automatische Uebermittlung
@@ -48,6 +48,7 @@ umsetzen."
 
 ## Kollisionsregel
 
-Verbindliche Dokumente haben Vorrang vor diesem Index-Zusammenzug; messbare
-lokale Evidenz hat Vorrang vor beiden (docs/V91-UNIVERSAL-LEARNING-BLOCK.md).
-Dieser Grant erweitert den V91-MAX-BEST-GELUEBNIS-Rahmen, er ersetzt ihn nicht.
+Verbindliche Dokumente haben Vorrang vor diesem Dokument-Zusammenzug;
+messbare lokale Evidenz hat Vorrang vor beiden
+(docs/V91-UNIVERSAL-LEARNING-BLOCK.md). Dieser Grant erweitert den
+V91-MAX-BEST-GELUEBNIS-Rahmen, er ersetzt ihn nicht.
