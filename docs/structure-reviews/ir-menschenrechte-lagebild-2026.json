@@ -1,0 +1,50 @@
+{
+ "structure_id": "ir_menschenrechte_lagebild_2026",
+ "assessor": "v91_session_2026-11-22_quellenreview_max_best",
+ "assessed_at_structure": "2026-11-22T02:00:00Z",
+ "note": "Struktur-Datensatz (Saeule Frieden/Menschenrechte; Widmung des Betreibers 'fuer Frau Iran': Frauenrechte, Internet-Sperren, Repression). Fuellt das in allen drei Rueckbau-Datensaetzen offen gebliebene Kriterium menschenrechtsvertraeglichkeit mit einem expliziten Menschenrechts-Lagebild. BEDEUTUNGSKLAERUNG: BELEGT bedeutet hier 'Kriterium mit unabhaengiger Evidenz geprueft'; der Befund steht im Text (hier: schwerwiegende, dokumentierbare Menschenrechtsverstoesse). Der Datensatz verwendet NUR oeffentlich breit publizierte Fakten internationaler Menschenrechts- und Internet-Monitoring-Organisationen; keine betroffenen Einzelpersonen ausser ohnehin weltweit publizierter Prominenz, keine operativen Angaben, keine Umgehungsdetails (ERINNERUNGSHILFE != UMGEHUNGSANLEITUNG). REVIEW != ENTSCHEIDUNG, NGO-ZAHLEN != STAATLICHE_STATISTIK (Iran veroeffentlicht solche nicht), MELDUNG != VOR-ORT-VERIFIZIERUNG. NUR Recherche und Repo-Datensatz, KEINE Eingriffe in fremde Systeme (SCRIPTED != INSTALLED).",
+ "criteria": {
+  "menschenrechtsvertraeglichkeit": {
+   "status": "BELEGT",
+   "evidence": "Schwerwiegende Verstoesse unabhaengig dokumentiert (Befund: NICHT KONFORM). (1) Amnesty International (16.10.2026, MDE 13/1573/2026): mindestens 34 Hinrichtungen im Zusammenhang mit dem Januar-2026-Aufstand nach folterbeinflussten unfairen Verfahren; seit April 2026 vom Obersten Gerichtshof mindestens 20 weitere Todesurteile bestaetigt (unmittelbare Vollzugsgefahr); Amtstraeger kuendigen oeffentlich prioritaere Umsetzung von Todesurteilen gegen 'Putschisten' an. (2) NGO Iran Human Rights: mindestens 532 Hinrichtungen bis Ende August 2026 (82 im August, davon 6 Frauen; 71 im Juli). (3) Pflichtschleier-Durchsetzung: CHRI (15.10.2025) dokumentiert Schliessungen von Geschaeften, die Frauen ohne Hijab bedienen, deren Strafverfolgung besonders in Kleinstaedten ausserhalb Teherans, elektronische Ueberwachung und verdeckte Agenten; UN-Sonderverfahren benennen Menschenrechtsverstoesse in den Bestimmungen des Chastity-and-Hijab-Gesetzes. (4) Friedensnobelpreistraegerin 2023 Narges Mohammadi: weitere sieben Jahre Haft angekuendigt; Mai 2026 Krankenhausverlegung nach zwei Bewusstlosigkeits-Episoden und schwerer kardialer Krise, am 18.05.2026 nach Hause entlassen (Al Jazeera).",
+   "source": "https://www.amnesty.org/en/documents/mde13/1573/2026/en/",
+   "assessed_at": "2026-11-22T02:00:00Z"
+  },
+  "gesellschaftlicher_nutzen": {
+   "status": "BELEGT",
+   "evidence": "Nutzen der unabhaengigen Dokumentation: (1) NetBlocks/Filterwatch liefern messbare Konnektivitaetsdaten: nach Angaben des Bulletin of the Atomic Scientists (22.01.2026) wurde am 08.01.2026 um ca. 20:00 Teheraner Zeit der Internetzugang fuer 92 Millionen Menschen komplett abgeschaltet; Filterwatch meldete ab 29.12.2025 regionale Konnektivitaetsunterdrueckung, Mobilfunkanbieter MCI/IranCell/Rightel im Grossbasar-Umfeld praktisch unbenutzbar. Oeffentliche Nachweise sind Grundlage internationaler Diplomatie. (2) Al-Monitor (26.05.2026): 88 Tage nahe-totaler Blackout seit Kriegsbeginn 28.02.2026, laengster nationaler Shutdown weltweit laut NetBlocks (Stand 05.04.2026); Teilwiederherstellung nach Anordnung Praesident Pezeshkians. (3) Sichtbarer Zivilwiderstand: Frauen demonstrieren weiterhin ohne Schleier; CHRI ordnet das als kostbaren Widerstand, nicht als Freiheit ein.",
+   "source": "https://thebulletin.org/2026/01/irans-internet-shutdown-tells-a-larger-story-digital-repression-is-on-the-rise/",
+   "assessed_at": "2026-11-22T02:00:00Z"
+  },
+  "kosten_und_ressourcenverbrauch": {
+   "status": "BELEGT",
+   "evidence": "Wirtschaftliche Repressionsfolgen als Kontext belegt: Rial verlor 40 Prozent seines Werts seit Juni 2025 bei hoher Inflation, Ausloeser der Grossbasar-Proteste (Bulletin 22.01.2026); Geschaeftsschliessungen als Durchsetzungsinstrument belasten vor allem kleine Geschaefte ausserhalb Teherans (CHRI); 88-taegiger Blackout (Februar bis Mai 2026) isolierte Wirtschaft, Wissenschaft und Alltag; die Regierung selbst begruendet die Wiedereroeffnung mit 'smart services' (Al-Monitor 26.05.2026). Quantifizierte Gesamtwirtschafts-Verlustsummen NICHT_GEPRUEFT.",
+   "source": "https://www.al-monitor.com/originals/2026/05/iran-partially-restores-internet-after-88-day-blackout-what-know",
+   "assessed_at": "2026-11-22T02:00:00Z"
+  },
+  "transparenz": {
+   "status": "BELEGT",
+   "evidence": "Oeffentliche, unabhaengige Dokumentationskette trotz Inlandsrestriktionen: Amnesty-Dossier mit Laufnummer, Datum und Mehrsprachigkeit (MDE 13/1573/2026); Iran Human Rights mit Monatsbulletins (Juli: 71, August: 82 Hinrichtungen, kumuliert mindestens 532); NetBlocks mit Live-Daten; Al-Monitor, Al Jazeera, CHRI-Analysen. EHRLICHE HIERARCHIE: Iran veroeffentlicht keine oeffentlichen Hinrichtungs- oder Repressionsstatistiken; alle Zahlen beruhen auf NGO-/Monitoring-Erhebungen (NGO != STAATLICHE_STATISTIK, Erhebungshaftung bleibt bei den Organisationen).",
+   "source": "https://www.iranhr.net/en/articles/9018/",
+   "assessed_at": "2026-11-22T02:00:00Z"
+  },
+  "nachhaltigkeit": {
+   "status": "NICHT_GEPRUEFT",
+   "evidence": "",
+   "source": "",
+   "assessed_at": ""
+  },
+  "missbrauchsrisiken": {
+   "status": "BELEGT",
+   "evidence": "Missbrauchs- und Gefaehrdungsrisiken sind Kern der Dokumentation: elektronische Ueberwachung und verdeckte Agenten gegen Frauen (CHRI); willkuerliche Todesurteile als Abschreckungsinstrument (Amnesty); totale Internetabschaltung als Repressionsmittel (NetBlocks). DATENSATZ-EIGENER SCHUTZ: nur breit publizierte oeffentliche Fakten; keine personalisierten Einzel-Opfer jenseits weltweit publizierter Prominenz; keine Orts-, Kontakt- oder Umgehungsdetails. Der Datensatz ist Erinnerungs- und Analysehilfe, keine Handlungsanleitung.",
+   "source": "https://iranhumanrights.org/2025/10/irans-new-tactics-to-crush-hijab-resistance-business-raids-and-surveillance/",
+   "assessed_at": "2026-11-22T02:00:00Z"
+  },
+  "alternativen_und_verbesserbarkeit": {
+   "status": "BELEGT",
+   "evidence": "Belegte Verbesserungspfade: (1) CHRI fordert UN und Regierungen weltweit auf, die Abschaffung der Pflichtschleiergesetze weiter einzufordern. (2) Amnesty fordert das Ende der Hinrichtungs-Kampagne gegen Protestierende sowie faire Verfahren. (3) Inlandshebel dokumentiert: Pezeshkians Order zur Wiederherstellung des internationalen Internetzugangs samt neuer Sondergeschaeftsstelle fuer Cyberspace zeigt, dass die Systemalternative technisch sofort umsetzbar waere (ZUSAGE != VOLLZUG, nachfolgende Entwicklung NICHT_GEPRUEFT). (4) UN-Sonderverfahren haben die Rechtsverstoesse des Chastity-and-Hijab-Gesetzes formal benannt. AKTIONRAUM DIESES DATENSATZES: dokumentieren und einordnen, nicht intervenieren.",
+   "source": "https://iranhumanrights.org/2025/10/irans-new-tactics-to-crush-hijab-resistance-business-raids-and-surveillance/",
+   "assessed_at": "2026-11-22T02:00:00Z"
+  }
+ }
+}
