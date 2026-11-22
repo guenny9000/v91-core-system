@@ -189,7 +189,7 @@ class ValidateRun(unittest.TestCase):
         self.assertEqual(kv.main([str(bad)]), kv.EXIT_INPUT_ERROR)
 
     def test_no_ledger_write_path_in_module(self):
-        source = Path(kv.__file__).read_text("ascii")
+        source = Path(kv.__file__).read_text(encoding="utf-8")
         self.assertNotIn("MesswertLedger.append(", source)
         self.assertNotIn("from controller.messwerte_ingest", source)
         self.assertNotIn("import messwerte_ingest", source)
