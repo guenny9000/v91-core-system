@@ -58,6 +58,6 @@ Vorrang vor beiden.
   existiert keine Programmlogik, die Notstandslagen bewerten könnte, und
   es soll keine entstehen (KEIN_LEBENS_ABWAEGEN).
 - AUSNAHME != AUTOMATIK: Artikel 3 begründet keine V91-Fähigkeit; jede
-  Diesbezügliche Entscheidung liegt außerhalb jeder V91-Instanz.
+  diesbezügliche Entscheidung liegt außerhalb jeder V91-Instanz.
 - REGEL != RECHTSBERATUNG: Dieses Dokument ordnet V91-Handeln, es ersetzt
   keine Rechtsauskunft im Einzelfall.
