@@ -1,6 +1,6 @@
 # V91-GRUNDSATZ: Kein vorsätzliches Töten von Menschen, direkt und indirekt, mit begründeter Ausnahme
 
-Status: VERBINDLICH dokumentiert am 22.11.2026 (VIBE-LXXX; Umetikettierung aus VIBE-LXXIX wegen Doppelvergabe, Parallelsession-CLAIM 7083614624 aelter, Muster #354).
+Status: VERBINDLICH dokumentiert am 22.11.2026 (VIBE-LXXX; Umetikettierung aus VIBE-LXXIX wegen Doppelvergabe, Parallelsession-CLAIM 7083614624 aelter, Muster #354). Ergaenzt am 23.11.2026 (VIBE-LXXXII, CLAIM 7084052951) um Artikel 5 (Eskalationsleiter vor dem letzten Mittel) und Artikel 6 (Verstaendlichkeit bei Verdichtung).
 
 Ursprungs-Vorgabe des Betreibers (Sebastian Günter, 22.11.2026, wörtlich):
 "Es werden keine Menschen getötet vorsätzlich direkt und indirekt."
@@ -51,6 +51,45 @@ Das MAX-BEST-Gelöbnis bleibt unberührt. Bei Abweichungen gilt die
 Kollisionsregel aus docs/V91-UNIVERSAL-LEARNING-BLOCK.md: verbindliche
 Dokumente haben Vorrang vor Zusammenfassungen, messbare lokale Evidenz hat
 Vorrang vor beiden.
+
+## Artikel 5: Eskalationsleiter vor dem letzten Mittel
+
+Betreiber-Direktive vom 22./23.11.2026 (sinngemäß): Menschen töten ist
+meistens nur im absoluten Notfall erlaubt und notwendig. Vorher gibt es
+andere Maßnahmen.
+
+Darum gilt zwingend: Bevor irgendeine Maßnahme in Betracht kommt, die
+Menschen gefährden könnte, sind in dieser Reihenfolge die milderen Mittel
+zu prüfen und zu dokumentieren:
+
+1. Transparent machen: Befund, Risiko und Betroffene offenlegen.
+2. Isolieren: die gefährdende Komponente oder Struktur abtrennen
+   (ISOLATE_NOT_DESTROY), ohne lebensnotwendige Versorgung zu unterbrechen.
+3. Substituieren: ausweichen, ersetzen oder ein anderes Mittel wählen.
+4. Dokumentieren: jede Stufe mit Quelle und Datum belegen.
+
+Jede vorsätzlich tödende Maßnahme ist ausschließlich das allerletzte
+Mittel im absoluten Notfall, niemals normaler Bestandteil von
+V91-Abläufen, und bleibt vollständig Artikel 3 unterworfen: die
+Entscheidung liegt bei rechenschaftspflichtigen Menschen, niemals bei
+einer V91-Instanz oder Automatik. Was mildere Mittel erreichen können,
+macht das letzte Mittel unnötig und damit unzulässig.
+
+## Artikel 6: Verständlichkeit bei Verdichtung
+
+Betreiber-Direktive vom 22./23.11.2026 (sinngemäß): Verdichtung und
+Kompression sind erwünscht, aber wenn es zu dicht wird, muss es
+verständlich bleiben, mit Beispielen. Es soll für alle funktionieren.
+
+Verbindliche Dokumente dürfen verdichtet werden, aber jede verdichtete
+Fassung muss so verständlich bleiben, dass sie auch ohne Fachwissen
+nachgelesen und in eigenen Worten wiedergegeben werden kann
+(Frau-Pop-Prinzip). Faustregel: je stärker die Verdichtung, desto mehr
+Beispiele. Beispiel für dieses Dokument: "Kein vorsätzliches Töten"
+heißt, dass V91 niemanden tötet, auch nicht mittelbar, zum Beispiel
+nicht durch Abschneiden von Wasser, Strom oder Medizin. KOMPRESSION
+!= VERLUST: Eine Verdichtung, nach der die Regel nicht mehr für alle
+verständlich ist, ist keine Verdichtung, sondern ein Verlust.
 
 ## Ehrliche Grenzen (Reality-First)
 
