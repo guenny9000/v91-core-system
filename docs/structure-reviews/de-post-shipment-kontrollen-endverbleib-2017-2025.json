@@ -1,0 +1,50 @@
+{
+  "structure_id": "de_post_shipment_kontrollen_endverbleib_2017_2025",
+  "assessor": "v91_session_2026-11-22_max_best",
+  "assessed_at_structure": "2026-11-22",
+  "note": "Struktur-Datensatz (Saeule Frieden/Transparenz/Exportkontrolle; VIBE-LVII). Gegenstand ist die tatsaechliche deutsche Post-Shipment-Praxis bei bestimmten Klein- und Leichtwaffen sowie bestimmten Schusswaffen in Drittlaendern. Keine Wiederholung der allgemeinen Rechtsrahmenanalyse aus VIBE-LVI. Kernbefund: POST-SHIPMENT-KONTROLLE EXISTIERT UND WIRD DURCHGEFUEHRT, aber ihr Anwendungsbereich ist selektiv; oeffentliche Berichte nennen teils Empfaengerlaender, nicht durchgaengig die Zahl der Einzelkontrollen, den Nenner aller kontrollfaehigen Lieferungen, risikobasierte Auswahlkriterien oder fallbezogene Pruefergebnisse. 2023-Bericht: kumuliert zwoelf Kontrollen seit 2017, alle ohne Beanstandungen. 2024-Bericht: Kontrollen bei staatlichen Empfaengern in sieben Laendern. 2025-Bericht: Kontrollen in vier Laendern; der Bericht nennt keine exakte Gesamtzahl der einzelnen Kontrollen. Bundestagsdrucksache 21/2847: eine Vor-Ort-Kontrolle in den VAE bis zum Antwortzeitpunkt 22.10.2025, ohne Beanstandungen. Diese Kontrollen pruefen den Verbleib beim angegebenen staatlichen Endempfaenger; sie sind kein umfassender Nachweis der spaeteren Verwendung im Einklang mit Menschenrechten oder des Nicht-Einsatzes in Konflikten. Keine Verallgemeinerung auf alle Ruestungsexporte. COUNT != COVERAGE; NO FINDING != NO RISK; PRESENCE_CHECK != HUMAN_RIGHTS_OUTCOME; REVIEW != ENTSCHEIDUNG.",
+  "criteria": {
+    "menschenrechtsvertraeglichkeit": {
+      "status": "NICHT_GEPRUEFT",
+      "evidence": "",
+      "source": "",
+      "assessed_at": ""
+    },
+    "gesellschaftlicher_nutzen": {
+      "status": "BELEGT",
+      "evidence": "Der dokumentierte Zweck der Vor-Ort-Kontrollen ist, zu pruefen, ob gelieferte Klein- und Leichtwaffen tatsaechlich beim in der Endverbleibserklaerung genannten staatlichen Endempfaenger verbleiben. Bei festgestellten Verstoessen oder verweigerter Kontrolle kann das Empfaengerland grundsaetzlich bis zur Klaerung von weiteren Lieferungen bestimmter Kriegswaffen und kriegswaffennaher Gueter ausgeschlossen werden (Ruestungsexportbericht 2023, BT-Drs. 20/14515, S. 15-16). Das belegt einen realen Schutzmechanismus gegen unerlaubte Weitergabe; es belegt nicht, dass jede Umleitung verhindert wird oder die Waffen spaeter menschenrechtskonform eingesetzt werden.",
+      "source": "https://dserver.bundestag.de/btd/20/145/2014515.pdf",
+      "assessed_at": "2026-11-22"
+    },
+    "kosten_und_ressourcenverbrauch": {
+      "status": "NICHT_GEPRUEFT",
+      "evidence": "",
+      "source": "",
+      "assessed_at": ""
+    },
+    "transparenz": {
+      "status": "BELEGT",
+      "evidence": "Oeffentliche Primaerberichterstattung nennt die kumulierten Kontrollen seit 2017 und die Empfaengerlaender: bis zum Ende des Berichtszeitraums 2023 insgesamt zwoelf Vor-Ort-Kontrollen, saemtlich ohne Beanstandungen (BT-Drs. 20/14515); 2024 Kontrollen in Tunesien, Kuwait, Argentinien, Kosovo, Sri Lanka, Katar und Republik Korea (Ruestungsexportbericht 2024); 2025 Kontrollen in Indonesien, Indien, Singapur und Brasilien (Ruestungsexportbericht 2025). Der Bericht 2025 nennt dabei vier Laender, aber keine exakte Anzahl einzelner Kontrollen. Der Bericht 2024 nennt ebenfalls Laender, nicht eine Jahres-Gesamtzahl. In BT-Drs. 21/2847 bestaetigte die Bundesregierung eine Vor-Ort-Kontrolle in den VAE ohne Beanstandungen. Die Berichte schaffen damit nachvollziehbare Grundtransparenz, aber keine vollstaendige Falltransparenz zu Lieferdatum, konkretem Gut, Pruefumfang, Stichprobenauswahl und Einzelergebnis.",
+      "source": "https://www.ruestungsexport.info/de/info/BuReg_2025.pdf",
+      "assessed_at": "2026-11-22"
+    },
+    "nachhaltigkeit": {
+      "status": "NICHT_GEPRUEFT",
+      "evidence": "",
+      "source": "",
+      "assessed_at": ""
+    },
+    "missbrauchsrisiken": {
+      "status": "BELEGT",
+      "evidence": "Die Bundesregierung beschreibt den Anwendungsbereich als selektiv: Kleine und Leichte Waffen sowie bestimmte Schusswaffen (Pistolen, Revolver, Scharfschuetzengewehre) bei staatlichen Empfaengern in Drittlaendern; eine Zustimmung zur spaeteren Vor-Ort-Pruefung muss bereits bei Genehmigung vorliegen (Ruestungsexportbericht 2025). Der Bericht erklaert zudem, dass die Zahl der kontrollfaehigen Ausfuhren wegen der restriktiven Kleinwaffenpolitik begrenzt ist und dass Produktion, Auslieferung sowie eine angemessene Verbleibsdauer zu erheblichen zeitlichen Verzoegerungen fuehren koennen. In BT-Drs. 21/2847 bestaetigte die Bundesregierung eine Kontrolle in den VAE ohne Beanstandungen, waehrend sie keine Erkenntnisse bestaetigte, dass G3- oder G36-Gewehre im damaligen Sudan-Krieg eingesetzt wurden. Das ist weder ein Beleg fuer eine Umleitung noch ein umfassender Ausschluss eines Umleitungsrisikos. ATT Art. 11 verpflichtet Vertragsstaaten zur Verhinderung von Diversion und nennt Risikobewertung und Minderungsmassnahmen; EU Common Position Kriterium 7 adressiert Umleitung und unerwuenschten Re-Export.",
+      "source": "https://dserver.bundestag.de/btd/21/028/2102847.pdf",
+      "assessed_at": "2026-11-22"
+    },
+    "alternativen_und_verbesserbarkeit": {
+      "status": "BELEGT",
+      "evidence": "Der Gemeinsame Standpunkt der EU wurde am 15.04.2025 aktualisiert; Kriterium 7 behandelt weiterhin Umleitungs- und Re-Export-Risiken. Der deutsche Ruestungsexportbericht 2025 stellt ausdruecklich fest, dass Instrumente zur Ueberwachung der Endverwendung in die ueberarbeitete Fassung aufgenommen wurden. Der Bericht dokumentiert ausserdem, dass weitere EU-Staaten vergleichbare Verifikationsmassnahmen eingefuehrt haben. Messbare Verbesserungsoptionen sind eine jaehrliche Zahl der Kontrollen (nicht nur Laenderlisten), der Nenner der kontrollfaehigen bzw. tatsaechlich ausgelieferten Lieferungen, eine nachvollziehbare Beschreibung der risikobasierten Auswahl und aggregierte Angaben zu Beanstandungen, Verweigerungen, Nachpruefungen und Lieferstopps. Ob und in welchem Umfang diese Daten zusaetzlich veroeffentlicht werden koennen, ist nicht geprueft.",
+      "source": "https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:02008E0944-20250415",
+      "assessed_at": "2026-11-22"
+    }
+  }
+}
