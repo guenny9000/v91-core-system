@@ -38,4 +38,4 @@ Status: **ENTWURF – NICHT DEPLOYED.** Dieses Runbook beschreibt, was im Reposi
 
 - echte Multi-Node-Evidenz (Issue #103 bleibt offen bis mindestens zwei Knoten nachweisbar Envelopes austauschen),
 - Futter-/Wasser-/Arbeitszeit-Basismessungen in Alsfeld, sonst bleiben alle Bewertungen UNKNOWN,
-- Provider-Rotation (Aurelia #239, nur Sebastian autorisierbar).
+- Provider-Credential-Rotation in externen Provider-Konten (Betreiberaktion; keine offene Issue-Nummer; keine automatische Rotation durch dieses Repository).
