@@ -66,10 +66,8 @@ PRUEFUNG_FIELDS = ("method", "verifier", "period")
 
 EXIT_ALLE_BELEGT, EXIT_OFFENE_PHASEN, EXIT_INPUT_ERROR = 0, 1, 3
 
-
 class KreislaufInputError(ValueError):
     """Fail-closed fuer unbrauchbare Eingabedaten (SCRIPTED != GELESEN)."""
-
 
 def load_dataset(path: Path) -> Dict[str, Any]:
     """Laedt ein Messmatrix-Dataset; strikt fail-closed."""
@@ -90,7 +88,6 @@ def load_dataset(path: Path) -> Dict[str, Any]:
         if not isinstance(ind, dict):
             raise KreislaufInputError("indikator %d ist kein objekt" % idx)
     return data
-
 
 def load_ledger(path: Optional[Path],
                 initiative_id: str) -> List[Dict[str, Any]]:
@@ -123,7 +120,6 @@ def load_ledger(path: Optional[Path],
                 continue
             entries.append(entry)
     return entries
-
 
 def assess(dataset: Dict[str, Any],
            ledger_entries: List[Dict[str, Any]]) -> Dict[str, Any]:
@@ -248,7 +244,6 @@ def assess(dataset: Dict[str, Any],
                    "ENTSCHEIDUNG; SCRIPTED != INSTALLED",
     }
 
-
 def format_text_report(report: Dict[str, Any]) -> str:
     """Lesbarer, ASCII-purer, deterministischer Bericht."""
     lines = [
@@ -264,10 +259,7 @@ def format_text_report(report: Dict[str, Any]) -> str:
     lines.append("offene phasen  : %s"
                  % (", ".join(report["offene_phasen"]) or "keine"))
     lines.append("grenze        : %s" % report["grenzen"])
-    return "
-".join(lines) + "
-"
-
+    return "\n".join(lines) + "\n"
 
 def _write_reports(report: Dict[str, Any], out_dir: Path) -> None:
     out_dir.mkdir(parents=True, exist_ok=True)
@@ -275,11 +267,9 @@ def _write_reports(report: Dict[str, Any], out_dir: Path) -> None:
     (out_dir / ("kreislauf_%s.txt" % stem)).write_text(
         format_text_report(report), encoding="ascii")
     payload = json.dumps(report, indent=2, sort_keys=True,
-                         ensure_ascii=True) + "
-"
+                         ensure_ascii=True) + "\n"
     (out_dir / ("kreislauf_%s.json" % stem)).write_text(
         payload, encoding="ascii")
-
 
 def main(argv: Optional[List[str]] = None) -> int:
     parser = argparse.ArgumentParser(
@@ -297,8 +287,7 @@ def main(argv: Optional[List[str]] = None) -> int:
             dataset["initiative_id"])
         report = assess(dataset, eintraege)
     except KreislaufInputError as exc:
-        sys.stderr.write("INPUT_ERROR: %s
-" % exc)
+        sys.stderr.write("INPUT_ERROR: %s\n" % exc)
         return EXIT_INPUT_ERROR
     if args.report_dir:
         _write_reports(report, Path(args.report_dir))
