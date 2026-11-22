@@ -1,0 +1,50 @@
+{
+ "structure_id": "de_international_ruestung_menschenrechte_due_diligence_2026",
+ "assessor": "v91_session_2026-11-22_quellenreview_max_best",
+ "assessed_at_structure": "2026-11-22T04:00:00Z",
+ "note": "Struktur-Datensatz (Saeule Frieden/Menschenrechte/Transparenz; Parallelsessions-Priorisierung VIBE-LVI: Menschenrechts-Due-Diligence bei internationalen Ruestungsexporten). Fuellt das in #341 (Ruestungs-Finanzseiten) offen gebliebene Kriterium menschenrechtsvertraeglichkeit fuer die Rahmenseite des Pruefsystems. Keine pauschalen Schuldzuweisungen, nur ueberpruefbare Fakten. Kernbefund: NACHKONTROLLSCHLEIFE FEHLT – Rechtsrahmen (ATT Art. 7, EU Common Position, deutsche Einzelfallpruefung) verlangt menschenrechtliche Risikobewertung VOR der Genehmigung, aber die oeffentliche Berichterstattung erhebt Genehmigungs- und Meldewerte, nicht systematisch die tatsaechlichen Ausfuhren gegen die menschenrechtliche Lage im Empfaengerland danach (PRUEFUNG_VORHER != KONTROLLE_NACHHER). GENEHMIGUNG != AUSFUHR bleibt Wurzelbefund aus #341. REVIEW != ENTSCHEIDUNG, KRITIK_STIMME != BEWEIS, Unbestaetigtes bleibt NICHT_GEPRUEFT.",
+ "criteria": {
+  "menschenrechtsvertraeglichkeit": {
+   "status": "BELEGT",
+   "evidence": "Rechtlicher Pruefrahmen ist dokumentiert und menschenrechtsbezogen: (1) Arms Trade Treaty (2013, UN-Vertrag), Artikel 7: Jeder exportierende Vertragsstaat muss VOR der Exportautorisierung in objektiver, nicht-diskriminierender Weise beurteilen, ob die Waffen benutzt werden koennten, um schwere Verletzungen des humanitaeren Voelkerrechts (7.1.b.i) oder der internationalen Menschenrechte (7.1.b.ii) zu begehen oder zu ermoeglichen, einschliesslich Gewalt gegen Frauen und Kinder (ICRC-IHL-Datenbank, Volltext). (2) EU Common Position 2008/944/CFSP (EUR-Lex): Praembel benennt das Ziel, Ausfuhren zu verhindern, die zu interner Repression oder internationaler Aggression benutzt werden koennten; acht gemeinsame Kriterien als Mindeststandard. (3) Deutschland: BMWE-Pressemitteilungen zum Jahr 2025 und zum 1. Halbjahr 2026 (15.07.2026): Einzelfallpruefung im Hinblick auf das jeweilige Empfaengerland, die Art des Ruestungsgutes und den vorgesehenen Verwendungszweck. BEFUND: PRUEFMERKMALE EXISTIEREN; die oeffentliche Nachweisbarkeit ihrer Anwendung im Einzelfall bleibt begrenzt (EINZELFALL != OEFFENTLICH NACHVOLLZIEHBAR im Detail).",
+   "source": "https://ihl-databases.icrc.org/en/ihl-treaties/att-2013/article-7",
+   "assessed_at": "2026-11-22T04:00:00Z"
+  },
+  "gesellschaftlicher_nutzen": {
+   "status": "BELEGT",
+   "evidence": "Belegter beidseitiger Nutzen des Rahmens: (1) ATT Art. 7 bindet die Exportfreiheit an Friedens- und Sicherheitsbeitrag (7.1.a: contribute to or undermine peace and security). (2) Deutschlands Genehmigungen fuer die Ukraine sind ausdruecklich auf militaerische Unterstuetzung der Selbstverteidigung gegen den voelkerrechtswidrigen russischen Angriffskrieg gestuetzt (BMWE 15.07.2026); 2025 und 1. Halbjahr 2026 war die Ukraine jeweils das Empfaengerland Nr. 1 (2,27 Mrd. Euro 2025; rund 2,5 Mrd. Euro 1. Halbjahr 2026). (3) Kleinwaffen-Genehmigungswerte fielen 2025 auf 94,7 Mio. Euro (2024: 161,3 Mio. Euro) – dokumentierte Begrenzung der konflikttreibendsten Kategorie (Bundestags Hib 661/2026 vom 25.08.2026).",
+   "source": "https://www.bundestag.de/presse/hib/kurzmeldungen-1205974",
+   "assessed_at": "2026-11-22T04:00:00Z"
+  },
+  "kosten_und_ressourcenverbrauch": {
+   "status": "BELEGT",
+   "evidence": "Pruef-Oekonomie dokumentiert: Deutschland erteilte 2025 Genehmigungen im Gesamtwert von 13,3 Mrd. Euro (2024: 13,4 Mrd.; BMWE/Bundestags Hib 661/2026): ca. 8,57 Mrd. Euro Einzelgenehmigungen (2024: 12,83 Mrd.), rund 4,7 Mrd. Euro Meldewerte Allgemeiner Genehmigungen, 140 Sammelausfuhrgenehmigungen im Rahmen wehrtechnischer Kooperationen ueber 5,36 Mrd. Euro; EU/NATO/NATO-gleichgestellt 8,7 Mrd. Euro, Drittlaender rund 4,6 Mrd. Euro (Ukraine 2,27 Mrd., Singapur 759,8 Mio., Suedkorea 308 Mio.). SYSTEMATIK-BEFUND: die Aufteilung Einzel- vs. Allgemeine vs. Sammelgenehmigungen zeigt, wo Verwaltungsressourcen durch Typisierung gebunden bzw. freigesetzt werden.",
+   "source": "https://dserver.bundestag.de/btd/21/075/2107590.pdf",
+   "assessed_at": "2026-11-22T04:00:00Z"
+  },
+  "transparenz": {
+   "status": "BELEGT",
+   "evidence": "Nachpruefbare oeffentliche Berichtsstruktur: Jaehrlicher Ruestungsexportbericht als Bundestagsdrucksache (21/7590 fuer 2025), zusaetzlich Halbjahresberichte (21/9150), Begleitschaetzungen des Bundestags (hib 661/2026), SIPRI Arms Transfers Database als unabhaengiger Zweit- und Trendspiegel (frei seit 09.03.2026, Daten 1950-2025). BEFUND-DIFFERENZIERUNG: STRUKTUR-TRANSPARENZ ist hoch (Werte, Empfaengergruppen, Genehmigungstypen), KONTROLL-TRANSPARENZ begrenzt: tatsaechliche Ausfuhrwerte je Empfaengerland und die menschenrechtliche Nachbeobachtung nach Lieferung sind im oeffentlichen Lagebild nicht systematisch ausgewiesen (BERICHTSPFLICHT != KONTROLL-BERICHT).",
+   "source": "https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:32008E0944",
+   "assessed_at": "2026-11-22T04:00:00Z"
+  },
+  "nachhaltigkeit": {
+   "status": "NICHT_GEPRUEFT",
+   "evidence": "",
+   "source": "",
+   "assessed_at": ""
+  },
+  "missbrauchsrisiken": {
+   "status": "BELEGT",
+   "evidence": "Dokumentierte strukturelle Risiko- und Schutzfelder: (a) SCHUTZFAKTOREN: ATT-Risikobewertungs-Pflicht vor jeder Autorisierung; deutsche Einzelfallpruefung mit Empfaengerland-, Gueter- und Verwendungszweck-Bezug; dokumentierte Kleinwaffen-Wertreduktion 2025 gegenueber 2024. (b) RISIKOFELDER: Allgemeine Genehmigungen ersetzen das Einzelverfahren fuer EU- und bestimmte NATO-Laender (Meldewerte werden nachtraeglich erhoben, BMWE); fuer Drittländer gelten weiterhin Einzelfallpruefungen – die Drittlaender-Genehmigungen 2025 beliefen sich auf rund 4,6 Mrd. Euro. Die menschenrechtliche Nachkontrolle des tatsaechlichen Endverbleibs nach Lieferung ist im oeffentlichen Berichtssystem nicht als eigener Berichtsstrang nachweisbar (Endverbleibsdokumente im Detail NICHT_GEPRUEFT; bestehende Kritikstimmen von Friedensorganisationen als STIMME != BEWEIS eingeordnet).",
+   "source": "https://www.bundeswirtschaftsministerium.de/Redaktion/DE/Pressemitteilungen/2026/07/20260715-ruestungsexportpolitik-1-halbjahr-2026.html",
+   "assessed_at": "2026-11-22T04:00:00Z"
+  },
+  "alternativen_und_verbesserbarkeit": {
+   "status": "BELEGT",
+   "evidence": "Belegte Verbesserungs- und Alternativenpfade: (1) ATT Artikel 7 als international vereinheitlichter Prozess-Standard (objektive, nicht-diskriminierende Bewertung; Beruecksichtigung der Informationen des Importstaats gemaess Art. 8). (2) EU-Kriterienkonvergenz: Common Position als Mindeststandard mit Konvergenz-Ziel laut EUR-Lex-Praembel, zur Verstaerkung des Informationsaustauschs und Transparenz (STANDARD != DURCHSETZUNG). (3) Systemhebel sichtbar: Die Berichtsstruktur trennt bereits Genehmigungstypen und Empfaengergruppen – der naechste messbare Verbesserungsschritt waere die oeffentliche Gegenueberstellung von Genehmigungs- und Ausfuhrwerten je Empfaengerland (Wurzelbefund GENEHMIGUNG != AUSFUHR aus #341; konkrete organisatorische Umsetzung NICHT_GEPRUEFT). (4) Unabhaengige Zweitmessung: SIPRI-Datenbank als oeffentliches Kontroll-Instrument abseits staatlicher Statistik.",
+   "source": "https://ihl-databases.icrc.org/en/ihl-treaties/att-2013/article-7",
+   "assessed_at": "2026-11-22T04:00:00Z"
+  }
+ }
+}
