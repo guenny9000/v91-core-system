@@ -22,6 +22,8 @@ Fail-closed rules (UNKNOWN != PASS, CLAIM != EVIDENCE):
    repo head is marked STALE_HEAD, evidence for an older state.
 3. CI status is GREEN only if every check is 'success' AND matches
    the current head. No checks supplied means UNKNOWN, never GREEN.
+3a. GREEN additionally requires that NO check carries unknown_notes:
+    visible UNKNOWN fields demote the status to AMBER, never GREEN.
 4. The report labels itself: generated_by a script, no operating
    claims. No part of this report may be presented as a running
    system's output.
@@ -56,7 +58,13 @@ def _check_ok(check) -> bool:
         return False
     if not isinstance(head, str) or not head.strip():
         return False
-    return conclusion in ALLOWED_CHECK_CONCLUSIONS
+    if conclusion not in ALLOWED_CHECK_CONCLUSIONS:
+        return False
+    unknown_notes = check.get("unknown_notes")
+    if unknown_notes is not None and not (isinstance(unknown_notes, list) and all(
+            isinstance(note, str) and note.strip() for note in unknown_notes)):
+        return False
+    return True
 
 
 def assemble_daily_report(data) -> dict:
@@ -118,6 +126,9 @@ def assemble_daily_report(data) -> dict:
             "head_sha": check["head_sha"].strip(),
             "conclusion": check["conclusion"],
         }
+        unknown_notes = check.get("unknown_notes")
+        if isinstance(unknown_notes, list) and unknown_notes:
+            rendered["unknown_notes"] = [n for n in unknown_notes if isinstance(n, str) and n.strip()]
         if (
             isinstance(repo_head, str)
             and repo_head.strip()
@@ -133,11 +144,17 @@ def assemble_daily_report(data) -> dict:
     if not checks_rendered:
         ci_status = "UNKNOWN"
     else:
-        green = all(
+        all_green = all(
             chk["conclusion"] == "success" and not chk["stale_head"]
             for chk in checks_rendered
         )
-        ci_status = "GREEN" if green else "RED"
+        has_unknown_notes = any(chk.get("unknown_notes") for chk in checks_rendered)
+        if all_green and has_unknown_notes:
+            ci_status = "AMBER"  # lokale Checks ok, aber UNKNOWN-Felder bleiben offen
+        elif all_green:
+            ci_status = "GREEN"
+        else:
+            ci_status = "RED"
 
     result = {
         "report_id": report_id if isinstance(report_id, str) else None,
