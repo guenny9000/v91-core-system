@@ -46,12 +46,14 @@ from typing import Any, Dict, List, Optional
 from controller.kreislauf_status import KreislaufInputError
 
 FELDER = ("id", "redewendung", "formel", "erklaerung", "quelle",
-          "bereich", "grenzen")
+          "bereich", "status", "grenzen")
 BEREICHE = ("BIBEL", "ANTIKE", "SPRICHWORT", "MAERCHEN", "MYTHOS",
             "PSALM")
+STATUSSE = ("ORIGINAL", "VARIANTE", "PARAPHRASE", "SCHERZ", "ZITAT")
 
 VERDICT_REGISTRIERT = "REGISTRIERT"
 VERDICT_ABGELEHNT = "ABGELEHNT"
+VERDICT_GEPRUEFT_NICHT_GESPEICHERT = "GEPRUEFT_NICHT_GESPEICHERT"
 
 EXIT_REGISTRIERT, EXIT_ABGELEHNT, EXIT_INPUT_ERROR = 0, 1, 3
 
@@ -76,7 +78,10 @@ def _ascii_ok(text: str) -> bool:
 
 # --- Die Registry: strukturelle Einsichten aus Ueberlieferungen ------
 # Jede Zeile: id, redewendung (ueberliefert), formel (mathematische
-# Struktur in ASCII-Notation), erklaerung, quelle, bereich, grenzen.
+# Struktur in ASCII-Notation), erklaerung, quelle, bereich, status
+# (ORIGINAL/VARIANTE/PARAPHRASE/SCHERZ/ZITAT), grenzen.
+# STATUS != GEHALT: Paraphrasen und Scherzformeln sind ehrlich
+# gekennzeichnet, keine stillen Aufwertungen (KEINE_STUMME_KORREKTUR).
 
 DEFAULT_FORMELN: List[Dict[str, str]] = [
     {   # Betreiber-Beispiel 22.11.2026
@@ -95,6 +100,7 @@ DEFAULT_FORMELN: List[Dict[str, str]] = [
         "quelle":
             "Sprueche 26,27; Sirach 27,26; deutsches Sprichwort",
         "bereich": "BIBEL",
+        "status": "ZITAT",
         "grenzen": (
             "gilt nur bei wiederholter Interaktion und"
             " Reaktionsfaehigkeit der Gegenpartei; im anonymen"
@@ -114,8 +120,13 @@ DEFAULT_FORMELN: List[Dict[str, str]] = [
             "Aufgeschobene Problemsuche bleibt liegen und"
             " verteuert sich; V91-Analogon: der Morgen-Audit"
             " existiert, weil Verzug Kosten erzeugt"),
-        "quelle": "deutsches Sprichwort; Volksmund",
+        "quelle": (
+            "Betreiber-Formulierung 22.11.2026 (Aufschub-Kosten-"
+            "Idee); keine etablierte deutsche Redewendung in"
+            " dieser Wortform (PARAPHRASE, kein Sprichwort-"
+            "Anspruch)"),
         "bereich": "SPRICHWORT",
+        "status": "PARAPHRASE",
         "grenzen": (
             "mu darf 0 sein, wenn die Sorge wirklich entfaellt;"
             " blindes Sofort-Handeln ist die gegenlaeufige"
@@ -136,6 +147,7 @@ DEFAULT_FORMELN: List[Dict[str, str]] = [
             " sicher eintreten; Restrisiko != Risikofrei"),
         "quelle": "franzoesisches Sprichwort seit dem 16. Jh.",
         "bereich": "SPRICHWORT",
+        "status": "ORIGINAL",
         "grenzen": (
             "exakt nur bei unabhaengigen Ereignissen;"
             " Reparatur oder Risikominderung zwischen den Runden"
@@ -160,6 +172,7 @@ DEFAULT_FORMELN: List[Dict[str, str]] = [
             " Spieltheorie"),
         "quelle": "Tobit 4,16; Bergpredigt Mt 7,12; Hillel (Antike)",
         "bereich": "BIBEL",
+        "status": "ZITAT",
         "grenzen": (
             "ist nur eine formale Bedingung, keine vollstaendige"
             " Ethik; Grenzfaelle mit Befugnisfragen bleiben"
@@ -181,6 +194,7 @@ DEFAULT_FORMELN: List[Dict[str, str]] = [
             " (WAHRHEIT > MEINUNG, CLAIM != EVIDENCE)"),
         "quelle": "Sprueche 16,18; Sprichwort",
         "bereich": "BIBEL",
+        "status": "ZITAT",
         "grenzen": (
             "kein deterministisches Gesetz (MESSWERT != URSACHE);"
             " es gibt Ausreisser in beiden Richtungen, die Formel"
@@ -201,6 +215,7 @@ DEFAULT_FORMELN: List[Dict[str, str]] = [
             " Backups testen)"),
         "quelle": "deutsches Sprichwort",
         "bereich": "SPRICHWORT",
+        "status": "ORIGINAL",
         "grenzen": (
             "Zerfall nur ohne jegliche Restauration; schon kleine"
             " regelmaessige Reaktivierung haelt den Bestand"
@@ -219,8 +234,12 @@ DEFAULT_FORMELN: List[Dict[str, str]] = [
             "Teilbare Arbeit wird durch Beteiligung schneller oder"
             " leichter; die Aufteilbarkeit ist vorher zu messen und"
             " nicht nur anzunehmen"),
-        "quelle": "Erasmus von Rotterdam, Adagia (1508)",
-        "bereich": "ANTIKE",
+        "quelle": (
+            "Erasmus von Rotterdam, Adagia (1508, Renaissance);"
+            " Vorlaeufer in der Antike (Plutarch ueber viele"
+            " Haende)"),
+        "bereich": "SPRICHWORT",
+        "status": "ORIGINAL",
         "grenzen": (
             "die Koordinationskosten und die serialisierbare"
             " Restquote b koennen den Vorteil aufzehren"
@@ -229,7 +248,7 @@ DEFAULT_FORMELN: List[Dict[str, str]] = [
     {
         "id": "stille-wasser-tief",
         "redewendung":
-            "Stille Wasser laufen tief",
+            "Stille Wasser sind tief",
         "formel": (
             "Beobachtungsmodell: messbare_Aktivitaet(a) !="
             " Kapazitaet(a); Schaetzung wird nur mit zusaetzlicher"
@@ -239,8 +258,12 @@ DEFAULT_FORMELN: List[Dict[str, str]] = [
             "Ruhe ist ein schlechter Schaetzer fuer Kapazitaet;"
             " V91-Analogon: messen statt vermuten"
             " (CLAIM != EVIDENCE, UNKNOWN != PASS)"),
-        "quelle": "deutsches Sprichwort (seit dem 16. Jh.)",
+        "quelle": (
+            "deutsches Sprichwort (seit dem 16. Jh.); gebraeuch"
+            "liche Wortform ist STILLE WASSER SIND TIEF, die"
+            " Variante LAUFEN TIEF besteht als Abwandlung"),
         "bereich": "SPRICHWORT",
+        "status": "ORIGINAL",
         "grenzen": (
             "die Gegenprobe gilt: Ruhe ist auch als Nichtexistenz"
             " moeglich; nur eine Messung trennt beides"),
@@ -260,10 +283,13 @@ DEFAULT_FORMELN: List[Dict[str, str]] = [
             " und Kulturwandel"),
         "quelle": "deutsches Sprichwort",
         "bereich": "SPRICHWORT",
+        "status": "ORIGINAL",
         "grenzen": (
-            "kein Schicksal: Uebergangswahrscheinlichkeiten"
-            " aendern sich mit Umgebung und Entscheidung"
-            " (LERNEN > DOGMA)"),
+            "kein Schicksal und keine Vererbungsregel: die Markov-Struktur"
+            " ist eine Analogie, keine nachgewiesene Gleichung"
+            " fuer Charakter oder Verhalten; Uebergangs"
+            "wahrscheinlichkeiten aendern sich mit Umgebung"
+            " und Entscheidung (LERNEN > DOGMA)"),
     },
     {
         "id": "psalm-erholung",
@@ -280,6 +306,7 @@ DEFAULT_FORMELN: List[Dict[str, str]] = [
             " Ruhe- und Erneuerungsanteil des Dauerbetriebs"),
         "quelle": "Psalm 23,2-3",
         "bereich": "PSALM",
+        "status": "ZITAT",
         "grenzen": (
             "rho ist kontextabhaengig (Mensch, Tier, Technik"
             " unterschiedlich); die Struktur ist keine"
@@ -301,6 +328,7 @@ DEFAULT_FORMELN: List[Dict[str, str]] = [
         "quelle":
             "deutsches Sprichwort; vgl. lat. simile simili gaudet",
         "bereich": "SPRICHWORT",
+        "status": "ORIGINAL",
         "grenzen": (
             "Homophilie kann Vielfalt verringern"
             " (BLINDFLECK-Risiko); Diversitaet ist die"
@@ -319,6 +347,7 @@ DEFAULT_FORMELN: List[Dict[str, str]] = [
             " Erinnerung"),
         "quelle": "deutsches Sprichwort; vgl. frz. Sprichwort",
         "bereich": "SPRICHWORT",
+        "status": "ORIGINAL",
         "grenzen": (
             "gilt nicht fuer alle Wunden: manche Belastungen"
             " bleiben konstant oder wachsen; heilen ist kein"
@@ -337,6 +366,7 @@ DEFAULT_FORMELN: List[Dict[str, str]] = [
             " der Zustand sich zwischen Messungen bewegt"),
         "quelle": "Heraklit, panta rhei (Antike)",
         "bereich": "ANTIKE",
+        "status": "ZITAT",
         "grenzen": (
             "nicht alles aendert sich gleich schnell; schematische Ausnahmen gibt es (Stabilisierung durch Zyklen ist moeglich, Stillstand nicht)"),
     },
@@ -353,6 +383,7 @@ DEFAULT_FORMELN: List[Dict[str, str]] = [
             " (vgl. verzug-diskont)"),
         "quelle": "deutsches Sprichwort; vgl. nl. uitstel is afstel",
         "bereich": "SPRICHWORT",
+        "status": "ORIGINAL",
         "grenzen": (
             "manche Aufgaben entfallen wirklich durch"
             " Kontextaenderung; Pruefung noetig, sonst bleibt W(A)"
@@ -370,6 +401,7 @@ DEFAULT_FORMELN: List[Dict[str, str]] = [
             " moeglichen Ertrag; produktive Zyklen frueh anlegen"),
         "quelle": "deutsches Sprichwort seit dem 17. Jh.",
         "bereich": "SPRICHWORT",
+        "status": "ORIGINAL",
         "grenzen": (
             "w(t) ist personenabhaengig (Chronotyp); fuer"
             " Nachtmenschen ist die Funktion gespiegelt, das"
@@ -381,13 +413,14 @@ DEFAULT_FORMELN: List[Dict[str, str]] = [
         "formel": (
             "Loesungsmenge waechst mit Suchzeit:"
             " L(t) enthalten in L(t + 1); R(t) = |L(t)| monoton"
-            " nicht fallend, Solvabilitaet waechst mit t"),
+            " nicht fallend, die Zahl gangbarer Loesungen waechst mit t"),
         "erklaerung": (
             "Mit mehr Suchzeit waechst die Zahl gefundener"
             " Loesungsansaetze; Warten allein erzeugt aber keine"
             " Loesung ohne Suche"),
         "quelle": "deutsches Sprichwort",
         "bereich": "SPRICHWORT",
+        "status": "ORIGINAL",
         "grenzen": (
             "R(t) waechst nur bei aktiver Suche oder eintreffender"
             " Information; reines Warten haelt R konstant"
@@ -407,6 +440,7 @@ DEFAULT_FORMELN: List[Dict[str, str]] = [
             " deterministisch auf Eingaben"),
         "quelle": "deutsches Sprichwort",
         "bereich": "SPRICHWORT",
+        "status": "ORIGINAL",
         "grenzen": (
             "k > 0 gilt nur fuer reagierende Systeme; unbelebte"
             " oder ueberlastete Gegenparteien schwaechen die"
@@ -425,29 +459,34 @@ DEFAULT_FORMELN: List[Dict[str, str]] = [
             " uebersteigen den Ausloeser"),
         "quelle": "Hosea 8,7; deutsches Sprichwort",
         "bereich": "BIBEL",
+        "status": "ZITAT",
         "grenzen": (
-            "k > 1 nur bei kritischen Systemen (Resonanz); viele"
-            " Rueckkopplungen daempfen (k < 1) statt zu"
-            " verstaerken"),
+            "Analogie, keine allgemeingueltige Ursache-Wirkungs-Regel:"
+            " k > 1 nur bei kritischen Systemen (Resonanz), viele"
+            " Rueckkopplungen daempfen (k < 1) oder klingen"
+            " ohne Antwort aus"),
     },
     {
         "id": "rose-dornen",
         "redewendung": "Keine Rose ohne Dornen",
         "formel": (
-            "Nutzen-Nebenwirkung-Kopplung: fuer jeden Nutzen N > 0"
-            " existiert mindestens ein gekoppelter Nachteil"
-            " D >= 1; Paar (N, D) ist nicht entkoppelt"
+            "Nutzen-Nebenwirkung-Kopplung: haeufig tritt zu einem Nutzen"
+            " N >= 1 mindestens ein gekoppelter Nachteil D >= 0"
+            " auf (Beobachtungsregel, kein Existenzgesetz);"
+            " das Paar ist oft, aber nicht immer entkoppelt"
             " waehlbar"),
         "erklaerung": (
             "Jede Loesung bringt Nebenwirkungen; V91-Analogon:"
             " jede Erweiterung bringt Wartungslast"
-            " (Wartungslast ist die Copplung selbst)"),
+            " (Wartungslast ist die Kopplung selbst)"),
         "quelle": "deutsches Sprichwort; vgl. lat. nulla rosa sine" 
                   " spinis",
         "bereich": "SPRICHWORT",
+        "status": "ORIGINAL",
         "grenzen": (
-            "D ist nicht immer sichtbar; nicht jedes Paar ist"
-            " streng gekoppelt, manche Nachteile sind minimal"
+            "kein Existenzgesetz: D ist nicht immer sichtbar, manche"
+            " Paare sind gar nicht gekoppelt (dornenlose Rosen"
+            " existieren), manche Nachteile sind minimal"
             " (D nahe 0)"),
     },
     {
@@ -463,6 +502,7 @@ DEFAULT_FORMELN: List[Dict[str, str]] = [
             " Merge senken Fehlerwahrscheinlichkeit"),
         "quelle": "deutsches Sprichwort",
         "bereich": "SPRICHWORT",
+        "status": "ORIGINAL",
         "grenzen": (
             "Vorsicht hat Kosten (Zeit, Chance); uebertriebene"
             " Vorsicht ist Blockade (STABILITAET > AKTIONISMUS"
@@ -484,10 +524,13 @@ DEFAULT_FORMELN: List[Dict[str, str]] = [
             "deutsches Sprichwort; vgl. lat. exceptio firmat" 
             " regulam",
         "bereich": "SPRICHWORT",
+        "status": "ORIGINAL",
         "grenzen": (
-            "oft als Ausrede benutzt; eine Ausnahme allein beweist"
-            " keine Regel (BEHAUPTUNG != NACHWEIS), haeufige"
-            " Ausnahmen widerlegen sie"),
+            "oft als Ausrede benutzt; eine Ausnahme allein beweist keine"
+            " Regel (BEHAUPTUNG != NACHWEIS); haeufige Ausnahmen"
+            " widerlegen sie, eine einzelne kann die Regel aber"
+            " auch als unvollstaendig formuliert entlarven"
+            " (REVISION != WIDERLEGUNG)"),
     },
     {
         "id": "kleinvieh-mist",
@@ -502,6 +545,7 @@ DEFAULT_FORMELN: List[Dict[str, str]] = [
             " summieren sich zur Langzeit-Evidenz"),
         "quelle": "deutsches Sprichwort",
         "bereich": "SPRICHWORT",
+        "status": "ORIGINAL",
         "grenzen": (
             "lineare Summation gilt ohne Verlustraten; Verwaltung"
             " vieler kleiner Posten kann den Ertrag aufzehren"
@@ -520,6 +564,7 @@ DEFAULT_FORMELN: List[Dict[str, str]] = [
             " Wirkungsoptimum"),
         "quelle": "deutsches Sprichwort",
         "bereich": "SPRICHWORT",
+        "status": "ORIGINAL",
         "grenzen": (
             "x_opt muss gemessen werden, nicht geschaetzt; das"
             " Optimum verschiebt sich mit Kontext (CLAIM !="
@@ -539,10 +584,13 @@ DEFAULT_FORMELN: List[Dict[str, str]] = [
             " rational"),
         "quelle": "deutsches Sprichwort",
         "bereich": "SPRICHWORT",
+        "status": "ORIGINAL",
         "grenzen": (
             "Nachgeben ist kein Allheilmittel: gegen systematische"
             " Ausbeutung zahlt sich dauerhaftes Nachgeben nicht"
-            " aus (vgl. grube-reziprok)"),
+            " aus, der Ruecksichtslose kann gewinnen (vgl."
+            " grube-reziprok); klug ist Nachgeben nur nach"
+            " Kosten-Nutzen-Abwaegung"),
     },
     {
         "id": "doppelt-genaehaelt",
@@ -557,6 +605,7 @@ DEFAULT_FORMELN: List[Dict[str, str]] = [
             " gestaffelte Sicherungsebenen"),
         "quelle": "deutsches Sprichwort (Naehsprichwort)",
         "bereich": "SPRICHWORT",
+        "status": "ORIGINAL",
         "grenzen": (
             "gilt nur bei unabhaengigen Stufen; gemeinsame"
             " Fehlerursachen (Correlated Failure) zerstoeren"
@@ -576,6 +625,7 @@ DEFAULT_FORMELN: List[Dict[str, str]] = [
             " verspielt den Grosse-Ertrag"),
         "quelle": "deutsches Sprichwort",
         "bereich": "SPRICHWORT",
+        "status": "ORIGINAL",
         "grenzen": (
             "klein heisst nicht beliebig: Summation lohnt nur"
             " bei Perspektive (Zeitraum, Zins); ohne Ziel"
@@ -593,6 +643,7 @@ DEFAULT_FORMELN: List[Dict[str, str]] = [
             " V91-Analogon: CLAIM != EVIDENCE, UNKNOWN != PASS"),
         "quelle": "deutsches Sprichwort",
         "bereich": "SPRICHWORT",
+        "status": "ORIGINAL",
         "grenzen": (
             "nicht jede Beobachtung truegt; kalibrierte Messung"
             " reduziert b, bleibt aber mit messfehler"
@@ -611,6 +662,7 @@ DEFAULT_FORMELN: List[Dict[str, str]] = [
             " wieder her"),
         "quelle": "deutsches Sprichwort",
         "bereich": "SPRICHWORT",
+        "status": "ORIGINAL",
         "grenzen": (
             "Uebersicht schwaecht Detailkenntnis (Wahl der"
             " Skala ist abhaengig von der Fragestellung)"),
@@ -630,6 +682,7 @@ DEFAULT_FORMELN: List[Dict[str, str]] = [
             "deutsches Sprichwort; vgl. russ. doverjaj," 
             " no proverjaj",
         "bereich": "SPRICHWORT",
+        "status": "ORIGINAL",
         "grenzen": (
             "Kontrolle hat Kosten und kann Vertrauen zerstoeren;"
             " unbegrenzte Kontrolle ohne Vertrauen ist"
@@ -649,10 +702,13 @@ DEFAULT_FORMELN: List[Dict[str, str]] = [
             " bei Kettenbruch, egal wer es verursachte"),
         "quelle": "rechtlicher Grundsatz; deutsches Sprichwort",
         "bereich": "SPRICHWORT",
+        "status": "ORIGINAL",
         "grenzen": (
             "Rechtssysteme kennen Tatbestandsmerkmale wie"
-            " Fahrlaessigkeit; die Formel gilt strikt fuer"
-            " Naturgesetze, weniger strikt fuer Recht"),
+            " Fahrlaessigkeit und entschuldigten Irrtum"
+            " (Zivilrecht eher als Strafrecht); die Formel gilt"
+            " strikt fuer Naturgesetze, weniger strikt fuer"
+            " Recht (keine Rechtsberatung)"),
     },
     {
         "id": "uebung-meister",
@@ -667,6 +723,7 @@ DEFAULT_FORMELN: List[Dict[str, str]] = [
             " stabilisieren Systeme (vgl. rastet-rostet)"),
         "quelle": "deutsches Sprichwort",
         "bereich": "SPRICHWORT",
+        "status": "ORIGINAL",
         "grenzen": (
             "F_max ist individuell begrenzt; falsche Uebung"
             " festigt Fehler (QUALITAET der Uebung zaehlt, nicht"
@@ -687,6 +744,7 @@ DEFAULT_FORMELN: List[Dict[str, str]] = [
             " Teilbarkeit und Fuehrung)"),
         "quelle": "deutsches Sprichwort; vgl. engl. too many cooks",
         "bereich": "SPRICHWORT",
+        "status": "ORIGINAL",
         "grenzen": (
             "mit klarer Rollenteilung steigt m_opt stark;"
             " das Problem ist ungeklaerte Zustaendigkeit, nicht"
@@ -706,9 +764,13 @@ DEFAULT_FORMELN: List[Dict[str, str]] = [
             " konstant bleibt"),
         "quelle": "deutsches Sprichwort",
         "bereich": "SPRICHWORT",
+        "status": "ORIGINAL",
         "grenzen": (
-            "manche Lasten sind nicht teilbar (manche Krankheiten tragen Einzelne allein); schlechtes Zuhoeren vermehrt die Last"
-            " (QUALITAET des Teilens zaehlt)"),
+            "die Division ist ein Wahrnehmungsmodell, kein Gesetz fuer"
+            " menschliches Leid; manche Lasten sind nicht teilbar"
+            " (manche Krankheiten tragen Einzelne allein);"
+            " schlechtes Zuhoeren vermehrt die Last (QUALITAET"
+            " des Teilens zaehlt)"),
     },
     {
         "id": "wille-weg",
@@ -726,6 +788,7 @@ DEFAULT_FORMELN: List[Dict[str, str]] = [
             "deutsches Sprichwort; vgl. engl. where there is a" 
             " will",
         "bereich": "SPRICHWORT",
+        "status": "ORIGINAL",
         "grenzen": (
             "kein Naturgesetz: physische und Befugnisgrenzen"
             " bleiben; bei Unmoeglichem ist auch Wille"
@@ -737,15 +800,17 @@ DEFAULT_FORMELN: List[Dict[str, str]] = [
                        " bevor er erlegt ist",
         "formel": (
             "Unsicherer Ertrag X darf nicht wie sicher verplant"
-            " werden: verplanbar ist nur E[X] mit Risikomarge oder"
-            " nachgewiesene Werte; Budget B <= E[X] - Sicherheits-%"
-            " ist Leichtsinn"),
+            " werden: verplanbar ist nur E[X] minus absolute Risikomarge"
+            " M > 0 (Geldeinheiten) oder ein nachgewiesener"
+            " Wert (Budget B <= E[X] - M); ein Prozentwert ohne"
+            " Einheitenbezug ist keine Marge"),
         "erklaerung": (
             "Unsichere Ertraege sind keine verfuegbaren Groessen;"
             " V91-Analogon: SCRIPTED != INSTALLED, erwartete"
             " Wirkung bleibt UNKNOWN bis gemessen"),
         "quelle": "deutsches Sprichwort",
         "bereich": "SPRICHWORT",
+        "status": "ORIGINAL",
         "grenzen": (
             "vollstaendiger Verzicht auf Planung mit Erwartungs-"
             " werten lahmt; die Marge ist das Mass, nicht die"
@@ -766,6 +831,7 @@ DEFAULT_FORMELN: List[Dict[str, str]] = [
         "quelle":
             "deutsches Sprichwort; vgl. engl. like attracts like",
         "bereich": "SPRICHWORT",
+        "status": "ORIGINAL",
         "grenzen": (
             "kein kosmisches Gesetz, nur ein soziales Muster;"
             " Gegenbeispiele (komplementaere Paarung) existieren,"
@@ -785,6 +851,7 @@ DEFAULT_FORMELN: List[Dict[str, str]] = [
             " (Sprachwitzformel, kein Gesetz)"),
         "quelle": "deutsches Sprichwort (Scherzformel)",
         "bereich": "SPRICHWORT",
+        "status": "SCHERZ",
         "grenzen": (
             "Scherzformel: die Witz-Struktur darf nicht als"
             " Regelanwendung gelesen werden (EMOJI != GEHALT"
@@ -794,10 +861,11 @@ DEFAULT_FORMELN: List[Dict[str, str]] = [
         "id": "ton-musik",
         "redewendung": "Der Ton macht die Musik",
         "formel": (
-            "Wirkungsmodulation: Antwort y = alpha * x, wobei"
-            " alpha die Wirkung des Inhalts x verstaerkt (alpha"
-            " > 1), daempft (0 < alpha < 1) oder umkehrt"
-            " (alpha < 0)"),
+            "Wirkungsmodulation: Antwort y = alpha * x mit alpha > 0;"
+            " die Ausdrucksweise verstaerkt die Wirkung des"
+            " Inhalts x (alpha > 1) oder daempft sie (0 <"
+            " alpha < 1); ein Vorzeichenwechsel ist ein"
+            " Sonderfall (Ironie), nicht die Regel"),
         "erklaerung": (
             "Die Art der Vermittlung praegt die Wirkung des"
             " Inhalts; V91-Analogon: Meaning von Reports haengt"
@@ -805,6 +873,7 @@ DEFAULT_FORMELN: List[Dict[str, str]] = [
             " bewusste Tonwahl)"),
         "quelle": "deutsches Sprichwort",
         "bereich": "SPRICHWORT",
+        "status": "ORIGINAL",
         "grenzen": (
             "kein vollstaendiges Modell: Inhalt und Ton wirken"
             " zusammen, alpha wird vom Empfaenger"
@@ -824,6 +893,7 @@ DEFAULT_FORMELN: List[Dict[str, str]] = [
             " Pfade (Constraint-Driven Innovation)"),
         "quelle": "deutsches Sprichwort",
         "bereich": "SPRICHWORT",
+        "status": "ORIGINAL",
         "grenzen": (
             "uebertriebene Not blockiert statt zu befluegeln"
             " (Untergrenze beachten); Erfindung braucht"
@@ -845,6 +915,7 @@ DEFAULT_FORMELN: List[Dict[str, str]] = [
             " 2/2 statt Hoffnungsmerge"),
         "quelle": "deutsches Sprichwort",
         "bereich": "SPRICHWORT",
+        "status": "ORIGINAL",
         "grenzen": (
             "bei risikoneutralen Zielen oder grossem Portfolio"
             " kann p * G_g ueberwiegen; Punkt-Entscheidung,"
@@ -865,10 +936,13 @@ DEFAULT_FORMELN: List[Dict[str, str]] = [
             " (Post-Merge-Verify als Ritual)"),
         "quelle": "deutsches Sprichwort; vgl. Shakespeare-Ende",
         "bereich": "SPRICHWORT",
+        "status": "ORIGINAL",
         "grenzen": (
-            "Peak-End ist eine Bewertungsverzerrung, kein"
-            " Qualitaetsmass; ein schlechter Verlauf mit gutem"
-            " Ende bleibt ein schlechter Verlauf"
+            "die Peak-End-Formel ist eine psychologische Bewertungs"
+            "analogie und trennt sich von der Sprichwort-Bedeutung"
+            " (das Sprichwort troestet, die Bias-Analyse warnt);"
+            " ein schlechter Verlauf mit gutem Ende bleibt ein"
+            " schlechter Verlauf"
             " (BEWERTUNG != VERLAUF)"),
     },
 ]
@@ -882,6 +956,7 @@ def pruefe(formeln: List[Any]) -> Dict[str, Any]:
     ehrlich unvollstaendig (SPRICHWORT != GESETZ).
     """
     fehlerhafte: List[Dict[str, Any]] = []
+    gueltige_eintraege: List[Dict[str, Any]] = []
     gesehen: Dict[str, int] = {}
     for eintrag in formeln:
         if not isinstance(eintrag, dict):
@@ -913,12 +988,19 @@ def pruefe(formeln: List[Any]) -> Dict[str, Any]:
         if mid in doppelte:
             gruende.append("doppelte id %r (keine zweit-registrierung)"
                            % mid)
-        for feld in ("redewendung", "formel", "erklaerung", "grenzen"):
+        status = eintrag.get("status")
+        if _non_empty(status) and status not in STATUSSE:
+            gruende.append("status %r nicht zulaessig (%s)"
+                           % (status, "|".join(STATUSSE)))
+        for feld in FELDER:
             wert = eintrag.get(feld)
             if _non_empty(wert) and not _ascii_ok(wert):
                 gruende.append("feld %s ist nicht ascii-pure" % feld)
         if gruende:
             fehlerhafte.append({"id": mid, "gruende": gruende})
+        else:
+            gueltige_eintraege.append(
+                {feld: eintrag[feld] for feld in FELDER})
 
     gueltig = len(formeln) - len(fehlerhafte)
     verdict = (VERDICT_REGISTRIERT
@@ -928,6 +1010,7 @@ def pruefe(formeln: List[Any]) -> Dict[str, Any]:
         "formeln_gueltig": gueltig,
         "formeln_ungueltig": len(fehlerhafte),
         "fehlerhafte": fehlerhafte,
+        "eintraege": gueltige_eintraege,
         "verdict": verdict,
         "grenzen": GRENZEN,
     }
@@ -944,16 +1027,25 @@ def format_text_report(report: Dict[str, Any]) -> str:
         "",
     ]
     for eintrag in report.get("eintraege", []):
-        lines.append("id          : %s" % eintrag["id"])
-        lines.append("redewendung : %s" % eintrag["redewendung"])
-        lines.append("formel      : %s" % eintrag["formel"])
-        lines.append("erklaerung  : %s" % eintrag["erklaerung"])
-        lines.append("quelle      : %s" % eintrag["quelle"])
-        lines.append("bereich     : %s" % eintrag["bereich"])
-        lines.append("grenzen     : %s" % eintrag["grenzen"])
+        lines.append("id          : %s"
+                     % eintrag.get("id", "<fehlt>"))
+        lines.append("redewendung : %s"
+                     % eintrag.get("redewendung", "<fehlt>"))
+        lines.append("formel      : %s"
+                     % eintrag.get("formel", "<fehlt>"))
+        lines.append("erklaerung  : %s"
+                     % eintrag.get("erklaerung", "<fehlt>"))
+        lines.append("quelle      : %s"
+                     % eintrag.get("quelle", "<fehlt>"))
+        lines.append("bereich     : %s"
+                     % eintrag.get("bereich", "<fehlt>"))
+        lines.append("status      : %s"
+                     % eintrag.get("status", "<fehlt>"))
+        lines.append("grenzen     : %s"
+                     % eintrag.get("grenzen", "<fehlt>"))
         lines.append("")
-    for fehler in report["fehlerhafte"]:
-        lines.append("ABGELEHNT : %s" % fehler["id"])
+    for fehler in report.get("fehlerhafte", []):
+        lines.append("ABGELEHNT : %s" % fehler.get("id", "<ohne id>"))
         for grund in fehler["gruende"]:
             lines.append("  - %s" % grund)
         lines.append("")
@@ -1017,16 +1109,21 @@ def main(argv: Optional[List[str]] = None) -> int:
 
     formeln = list(DEFAULT_FORMELN) + zusaetzliche
     report = pruefe(formeln)
-    report["eintraege"] = [
-        {feld: eintrag[feld] for feld in FELDER if feld in eintrag}
-        for eintrag in formeln if isinstance(eintrag, dict)
-    ]
+    if report["verdict"] != VERDICT_REGISTRIERT:
+        if args.report_dir:
+            _write_reports(report, Path(args.report_dir))
+        sys.stdout.write(format_text_report(report))
+        return EXIT_ABGELEHNT
+    if args.ergaenzung:
+        report["verdict"] = VERDICT_GEPRUEFT_NICHT_GESPEICHERT
     if args.report_dir:
         _write_reports(report, Path(args.report_dir))
     sys.stdout.write(format_text_report(report))
-    if report["verdict"] == VERDICT_REGISTRIERT:
-        return EXIT_REGISTRIERT
-    return EXIT_ABGELEHNT
+    if args.ergaenzung:
+        sys.stdout.write(
+            "\nGATE != SPEICHER: die Registry bleibt unveraendert"
+            " bei %d Eintraegen\n" % len(DEFAULT_FORMELN))
+    return EXIT_REGISTRIERT
 
 
 if __name__ == "__main__":
