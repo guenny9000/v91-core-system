@@ -1,6 +1,6 @@
 # V91-GRUNDSATZ: Kein vorsätzliches Töten von Menschen, direkt und indirekt, mit begründeter Ausnahme
 
-Status: VERBINDLICH dokumentiert am 22.11.2026 (VIBE-LXXIX).
+Status: VERBINDLICH dokumentiert am 22.11.2026 (VIBE-LXXX; Umetikettierung aus VIBE-LXXIX wegen Doppelvergabe, Parallelsession-CLAIM 7083614624 aelter, Muster #354).
 
 Ursprungs-Vorgabe des Betreibers (Sebastian Günter, 22.11.2026, wörtlich):
 "Es werden keine Menschen getötet vorsätzlich direkt und indirekt."
