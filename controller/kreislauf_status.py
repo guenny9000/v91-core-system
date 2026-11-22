@@ -69,18 +69,29 @@ EXIT_ALLE_BELEGT, EXIT_OFFENE_PHASEN, EXIT_INPUT_ERROR = 0, 1, 3
 class KreislaufInputError(ValueError):
     """Fail-closed fuer unbrauchbare Eingabedaten (SCRIPTED != GELESEN)."""
 
+def _keine_json_konstante(name: str) -> Any:
+    """Bare NaN/Infinity/-Infinity im JSON sind keine Messwerte."""
+    raise KreislaufInputError(
+        "JSON-konstante %s unzulaessig (NaN/Infinity != MESSWERT)" % name)
+
 def load_dataset(path: Path) -> Dict[str, Any]:
     """Laedt ein Messmatrix-Dataset; strikt fail-closed."""
     if not path.is_file():
         raise KreislaufInputError("dataset fehlt: %s" % path)
     try:
         with path.open("r", encoding="ascii") as handle:
-            data = json.load(handle)
+            data = json.load(handle, parse_constant=_keine_json_konstante)
     except (json.JSONDecodeError, UnicodeDecodeError) as exc:
         raise KreislaufInputError("dataset kein gueltiges JSON: %s" % exc) from exc
+    if not isinstance(data, dict):
+        raise KreislaufInputError(
+            "dataset-wurzel ist kein objekt (LISTE != DATASET)")
     for field in ("initiative_id", "indicators"):
         if field not in data:
             raise KreislaufInputError("dataset fehlt feld %r" % field)
+    if not isinstance(data["initiative_id"], str) or not data["initiative_id"].strip():
+        raise KreislaufInputError(
+            "dataset initiative_id ist kein text / leer (LEER != ID)")
     if not isinstance(data["indicators"], list) or not data["indicators"]:
         raise KreislaufInputError(
             "dataset indicators leer: KEIN_INDIKATOR != MESSUNG_ERZWINGEN")
@@ -104,7 +115,7 @@ def load_ledger(path: Optional[Path],
             if not line:
                 continue
             try:
-                entry = json.loads(line)
+                entry = json.loads(line, parse_constant=_keine_json_konstante)
             except json.JSONDecodeError as exc:
                 raise KreislaufInputError(
                     "ledger zeile %d kaputt: %s" % (lineno, exc)) from exc

@@ -295,3 +295,46 @@ def test_offene_phasen_reihenfolge_deterministisch():
     report = assess(_load_dataset_via_dict(), [])
     assert report["offene_phasen"] == [
         "NACHWEIS", "NUTZEN", "MONITORING", "VERBESSERUNG"]
+
+
+# --- Regression VIBE-LXXII: JSON-Wurzeltyp + initiative_id (VIBE-LXXII) ----
+
+def test_regression_dataset_wurzel_liste_input_error(tmp_path):
+    path = tmp_path / "dataset.json"
+    path.write_text("[]", encoding="ascii")
+    with pytest.raises(KreislaufInputError, match="kein objekt"):
+        load_dataset(path)
+
+
+def test_regression_dataset_wurzel_text_input_error(tmp_path):
+    path = tmp_path / "dataset.json"
+    path.write_text('"nur text"', encoding="ascii")
+    with pytest.raises(KreislaufInputError, match="kein objekt"):
+        load_dataset(path)
+
+
+def test_regression_dataset_initiative_id_zahl_input_error(tmp_path):
+    path = tmp_path / "dataset.json"
+    path.write_text('{"initiative_id": 42, "indicators": []}',
+                    encoding="ascii")
+    with pytest.raises(KreislaufInputError, match="initiative_id"):
+        load_dataset(path)
+
+
+def test_regression_dataset_initiative_id_leer_input_error(tmp_path):
+    path = tmp_path / "dataset.json"
+    path.write_text('{"initiative_id": "  ", "indicators": []}',
+                    encoding="ascii")
+    with pytest.raises(KreislaufInputError, match="initiative_id"):
+        load_dataset(path)
+
+
+def test_regression_ledger_nan_zeile_input_error(tmp_path):
+    path = tmp_path / "ledger.jsonl"
+    path.write_text(
+        '{"initiative_id": "test-initiative-2026", "indicator": "x",'
+        ' "value": NaN, "measured_at": "2026-01-01T00:00:00Z",'
+        ' "source": "https://example.org/test"}\n',
+        encoding="ascii")
+    with pytest.raises(KreislaufInputError, match="JSON-konstante"):
+        load_ledger(path, "test-initiative-2026")

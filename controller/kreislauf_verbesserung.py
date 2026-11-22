@@ -37,6 +37,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import math
 import sys
 from pathlib import Path
 from typing import Any, Dict, List, Optional
@@ -67,13 +68,19 @@ def _non_empty(value: Any) -> bool:
     return isinstance(value, str) and value.strip() != ""
 
 
+def _keine_json_konstante(name: str) -> Any:
+    """Bare NaN/Infinity/-Infinity im JSON sind keine Messwerte."""
+    raise KreislaufInputError(
+        "JSON-konstante %s unzulaessig (NaN/Infinity != MESSWERT)" % name)
+
+
 def _load_json(path: Path, was: str) -> Any:
     """Laedt eine JSON-Datei; strikt fail-closed (SCRIPTED != GELESEN)."""
     if not path.is_file():
         raise KreislaufInputError("%s fehlt: %s" % (was, path))
     try:
         with path.open("r", encoding="ascii") as handle:
-            return json.load(handle)
+            return json.load(handle, parse_constant=_keine_json_konstante)
     except (json.JSONDecodeError, UnicodeDecodeError) as exc:
         raise KreislaufInputError(
             "%s kein gueltiges JSON: %s" % (was, exc)) from exc
@@ -166,8 +173,17 @@ def _pruefe_massnahme(idx: int,
     else:
         for feld in ZIEL_FIELDS:
             wert = ziel.get(feld)
-            if not (isinstance(wert, (int, float)) and not
-                    isinstance(wert, bool)) and not _non_empty(wert):
+            if feld == "zielwert":
+                # Ziel muss eine messbare, ENDLICHE Zahl sein:
+                # 'spaeter', NaN und Infinity sind keine Zielwerte
+                # (ZIELWERT != ERGEBNIS, NUMBER != TEXT, NaN != MESSWERT).
+                gueltig = (
+                    type(wert) is int
+                    or (type(wert) is float and math.isfinite(wert))
+                )
+            else:
+                gueltig = _non_empty(wert)
+            if not gueltig:
                 gruende.append("%s ziel ohne %s (ZIELWERT != ERGEBNIS)"
                                % (mid, feld))
 
