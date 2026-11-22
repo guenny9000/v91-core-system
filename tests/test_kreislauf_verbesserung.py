@@ -19,6 +19,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from controller.kreislauf_status import (  # noqa: E402
     BELEGT,
     NICHT_GEPRUEFT,
+    PHASEN,
     KreislaufInputError,
 )
 from controller.kreislauf_verbesserung import (  # noqa: E402
@@ -318,3 +319,89 @@ def test_main_report_dir_schreibt_txt_json(tmp_path):
     text.read_text(encoding="ascii")
     daten = json.loads(jsonpfad.read_text(encoding="ascii"))
     assert daten["verdict"] == VERDICT_AKZEPTIERT
+
+
+# --- Regression VIBE-LXXII: zielwert-Eingabegrenze (unabhaengige Pruefung) --
+
+def _status(tmp_path):
+    return status_report(tmp_path)
+
+
+def test_regression_zielwert_text_abgelehnt(tmp_path):
+    m = massnahme()
+    m["ziel"]["zielwert"] = "spaeter"
+    report = assess(load_plan(plan_file(tmp_path, [m])),
+                    load_status_report(_status(tmp_path)))
+    assert report["massnahmen"][0]["status"] == ABGELEHNT
+    assert any("zielwert" in g
+               for g in report["massnahmen"][0]["gruende"])
+
+
+def test_regression_zielwert_nan_abgelehnt(tmp_path):
+    # NaN erreicht assess nie ueber Dateien (Loader lehnt JSON-Konstante
+    # ab); der Assess-Pfad bleibt zusaetzlich selbst hart:
+    plan = {"initiative_id": "pil-x-2026",
+            "measures": [massnahme()]}
+    plan["measures"][0]["ziel"]["zielwert"] = float("nan")
+    report = assess(plan, {"initiative_id": "pil-x-2026", "phasen": {
+        ph: {"verdict": NICHT_GEPRUEFT, "grund": "t"} for ph in PHASEN}})
+    assert report["massnahmen"][0]["status"] == ABGELEHNT
+    assert any("zielwert" in g
+               for g in report["massnahmen"][0]["gruende"])
+
+
+def test_regression_zielwert_infinity_abgelehnt(tmp_path):
+    plan = {"initiative_id": "pil-x-2026",
+            "measures": [massnahme()]}
+    plan["measures"][0]["ziel"]["zielwert"] = float("inf")
+    report = assess(plan, {"initiative_id": "pil-x-2026", "phasen": {
+        ph: {"verdict": NICHT_GEPRUEFT, "grund": "t"} for ph in PHASEN}})
+    assert report["massnahmen"][0]["status"] == ABGELEHNT
+    assert any("zielwert" in g
+               for g in report["massnahmen"][0]["gruende"])
+
+
+def test_regression_zielwert_bool_abgelehnt(tmp_path):
+    m = massnahme()
+    m["ziel"]["zielwert"] = True
+    report = assess(load_plan(plan_file(tmp_path, [m])),
+                    load_status_report(_status(tmp_path)))
+    assert report["massnahmen"][0]["status"] == ABGELEHNT
+    assert any("zielwert" in g
+               for g in report["massnahmen"][0]["gruende"])
+
+
+def test_regression_zielwert_endliche_zahlen_erlaubt(tmp_path):
+    for wert in (7, 10.5, 0, -3):
+        m = massnahme(mid="m-%r" % wert)
+        m["ziel"]["zielwert"] = wert
+        report = assess(load_plan(plan_file(tmp_path, [m])),
+                        load_status_report(_status(tmp_path)))
+        assert report["massnahmen"][0]["status"] == ANGENOMMEN, wert
+
+
+def test_regression_json_nan_in_plan_input_error(tmp_path):
+    # Python json parst bare NaN; der Loader muss fail-closed sein.
+    path = tmp_path / "nan_plan.json"
+    path.write_text(
+        '{"initiative_id": "pil-x-2026", "measures": ['
+        '{"id": "m1", "phase": "NUTZEN", "befund": {"quelle": "q",'
+        ' "datum": "d"}, "ziel": {"indikator": "i", "zielwert": NaN,'
+        ' "messfenster": "f", "methode": "m"}, "verantwortung": "op"}]}'
+        .replace('"initiative_id": "pil-x-2026"',
+                 '"initiative_id": "pil-x-2026"'),
+        encoding="ascii")
+    with pytest.raises(KreislaufInputError, match="JSON-konstante"):
+        load_plan(path)
+
+
+def test_regression_json_infinity_in_plan_input_error(tmp_path):
+    path = tmp_path / "inf_plan.json"
+    path.write_text(
+        '{"initiative_id": "pil-x-2026", "measures": ['
+        '{"id": "m1", "phase": "NUTZEN", "befund": {"quelle": "q",'
+        ' "datum": "d"}, "ziel": {"indikator": "i", "zielwert": Infinity,'
+        ' "messfenster": "f", "methode": "m"}, "verantwortung": "op"}]}',
+        encoding="ascii")
+    with pytest.raises(KreislaufInputError, match="JSON-konstante"):
+        load_plan(path)
