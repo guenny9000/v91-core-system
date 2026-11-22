@@ -161,3 +161,29 @@ def prepare_execution(
         "worker_handoff": False,
         "honest_limits": HONEST_LIMITS,
     }
+
+
+def prepare_worker_execution(
+    candidate: ExecutionCandidate,
+    *,
+    predeclared: Sequence[ActionGrant],
+) -> dict[str, Any]:
+    """Validate a plan with the real local worker envelope validator.
+
+    This adapter stops at the authorization plan: it does not call
+    worker.execute_task, enqueue a task, or perform filesystem operations.
+    """
+    try:
+        from controller.worker import validate_task_envelope
+    except Exception as exc:
+        task_id = getattr(candidate, "task_id", "")
+        return _blocked(
+            task_id if isinstance(task_id, str) else "",
+            "existing worker validator unavailable: " + type(exc).__name__,
+        )
+
+    return prepare_execution(
+        candidate,
+        validator=validate_task_envelope,
+        predeclared=predeclared,
+    )
