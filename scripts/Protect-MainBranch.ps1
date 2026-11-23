@@ -40,22 +40,37 @@ function Invoke-GhApiWithStatus {
  }
  [PSCustomObject]@{ExitCode=$exitCode;StatusCode=$statusCode;Body=$body}
 }
+function Get-ObjectValue {
+ param($Object,[string]$Name)
+ if($null -eq $Object){return $null}
+ $property=$Object.PSObject.Properties[$Name]
+ if($null -eq $property){return $null}
+ return $property.Value
+}
 function Test-Protection {
  param($Protection,[string[]]$Checks,[int]$Approvals)
  $failures=[System.Collections.Generic.List[string]]::new()
- if($Protection.enforce_admins.enabled -ne $true){$failures.Add("enforce_admins")}
- if($Protection.allow_force_pushes.enabled -ne $false){$failures.Add("allow_force_pushes")}
- if($Protection.allow_deletions.enabled -ne $false){$failures.Add("allow_deletions")}
- if($Protection.required_conversation_resolution.enabled -ne $true){$failures.Add("required_conversation_resolution")}
- $actualApprovals=$Protection.required_pull_request_reviews.required_approving_review_count
+ $enforce=Get-ObjectValue $Protection "enforce_admins"
+ $force=Get-ObjectValue $Protection "allow_force_pushes"
+ $deletions=Get-ObjectValue $Protection "allow_deletions"
+ $resolution=Get-ObjectValue $Protection "required_conversation_resolution"
+ $reviews=Get-ObjectValue $Protection "required_pull_request_reviews"
+ if((Get-ObjectValue $enforce "enabled") -ne $true){$failures.Add("enforce_admins")}
+ if((Get-ObjectValue $force "enabled") -ne $false){$failures.Add("allow_force_pushes")}
+ if((Get-ObjectValue $deletions "enabled") -ne $false){$failures.Add("allow_deletions")}
+ if((Get-ObjectValue $resolution "enabled") -ne $true){$failures.Add("required_conversation_resolution")}
+ $actualApprovals=Get-ObjectValue $reviews "required_approving_review_count"
  if($null -eq $actualApprovals -or [int]$actualApprovals -ne $Approvals){$failures.Add("required_approving_review_count")}
+ $statusChecks=Get-ObjectValue $Protection "required_status_checks"
  if($Checks.Count -eq 0){
-  if($null -ne $Protection.required_status_checks){$failures.Add("required_status_checks_expected_null")}
+  if($null -ne $statusChecks){$failures.Add("required_status_checks_expected_null")}
+ }elseif($null -eq $statusChecks){
+  $failures.Add("required_status_checks_missing")
  }else{
-  $actualChecks=@($Protection.required_status_checks.contexts | Sort-Object)
+  $actualChecks=@((Get-ObjectValue $statusChecks "contexts") | Sort-Object)
   $expectedChecks=@($Checks | Sort-Object)
   if(($actualChecks -join [Environment]::NewLine) -ne ($expectedChecks -join [Environment]::NewLine)){$failures.Add("required_status_checks")}
-  if($Protection.required_status_checks.strict -ne $true){$failures.Add("required_status_checks_strict")}
+  if((Get-ObjectValue $statusChecks "strict") -ne $true){$failures.Add("required_status_checks_strict")}
  }
  [PSCustomObject]@{Matches=($failures.Count -eq 0);Differences=@($failures)}
 }
