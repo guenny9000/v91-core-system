@@ -17,7 +17,9 @@ explicit emission factor. A claimed saving is only VALID when
   - enough samples exist,
   - data quality (DQI) >= 0.85,
   - the difference exceeds measurement noise (otherwise NOT_SIGNIFICANT).
-Only VALID records count towards verified totals.
+Only VALID records count towards verified totals. VALID means
+calculation-validated; INDEPENDENTLY_VERIFIED requires a separate
+reviewer and is never assigned by this module.
 """
 
 import csv
@@ -149,9 +151,13 @@ def record_impact(ledger: HashChainLedger, impact: dict[str, Any]) -> dict[str, 
         {"type": "impact", **impact}, time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
     )
 
-
 def verified_summary(ledger_path: str) -> dict[str, Any]:
-    """Totals over VALID impacts only (call verify_chain first)."""
+    """Totals over calculation-VALID impacts only (call verify_chain first).
+
+    VALID means the calculation passed its own gates. It does NOT mean
+    independently verified: INDEPENDENTLY_VERIFIED requires a separate
+    reviewer (protocol section 6) and is never assigned here.
+    """
     total = valid = 0
     co2 = 0.0
     with open(ledger_path, encoding="utf-8") as fh:
@@ -167,5 +173,11 @@ def verified_summary(ledger_path: str) -> dict[str, Any]:
         "impacts_total": total,
         "impacts_valid": valid,
         "verification_rate": round(valid / total, 4) if total else None,
+        # legacy key (kept for existing callers): totals over VALID impacts;
+        # "verified" here means calculation-validated, NOT independently reviewed.
         "verified_co2_saved_kg_per_sample": round(co2, 6),
+        # protocol section 6 separation: explicit calculation-vs-review statuses
+        "valid_impacts_co2_saved_kg_per_sample": round(co2, 6),
+        "verified_impacts_count_independently_reviewed": 0,
+        "review_status": "NOT_INDEPENDENTLY_VERIFIED",
     }
