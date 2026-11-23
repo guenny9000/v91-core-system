@@ -11,6 +11,7 @@ from controller.execution_agent import (
     STATUS_HUMAN_APPROVAL_REQUIRED,
     STATUS_READY_FOR_EXECUTOR,
     prepare_execution,
+    prepare_worker_execution,
 )
 from controller.quorum_execution_gate import ActionGrant
 
@@ -122,6 +123,39 @@ class ExecutionAgentTests(unittest.TestCase):
             candidate(task=task), validator=strict_validator,
             predeclared=(GRANT,))
         self.assertEqual(plan["status"], STATUS_BLOCKED)
+
+    def test_real_worker_validator_accepts_supported_read_only_task(self):
+        task = {
+            "task_id": "task-worker-001",
+            "action": "health_snapshot",
+            "purpose": "inspect local worker health",
+            "expected_effect": "return a read-only health snapshot",
+        }
+        grant = ActionGrant(
+            action_id="health_snapshot", category="inventory_read")
+        plan = prepare_worker_execution(
+            candidate(task_id="task-worker-001", task=task, grant=grant),
+            predeclared=(grant,),
+        )
+        self.assertEqual(plan["status"], STATUS_READY_FOR_EXECUTOR)
+        self.assertEqual(plan["action"], "health_snapshot")
+        self.assertFalse(plan["executed"])
+        self.assertFalse(plan["worker_handoff"])
+
+    def test_real_worker_validator_rejects_unsupported_action(self):
+        task = dict(TASK, action="shell")
+        plan = prepare_worker_execution(
+            candidate(task=task), predeclared=(GRANT,))
+        self.assertEqual(plan["status"], STATUS_BLOCKED)
+        self.assertFalse(plan["executed"])
+        self.assertFalse(plan["worker_handoff"])
+
+    def test_real_worker_validator_rejects_unknown_task_fields(self):
+        task = dict(TASK, unexpected="must be rejected")
+        plan = prepare_worker_execution(
+            candidate(task=task), predeclared=(GRANT,))
+        self.assertEqual(plan["status"], STATUS_BLOCKED)
+        self.assertFalse(plan["executed"])
 
     def test_missing_validator_blocks(self):
         plan = prepare_execution(candidate(), validator=None, predeclared=(GRANT,))
