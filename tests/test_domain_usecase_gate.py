@@ -177,7 +177,7 @@ def test_assessment_for_untouched_domain_rejected():
 def test_valid_evidence_with_honest_status_allowed():
     claim = _base_claim(
         ["D6"],
-        {"D6": {"status": "VORSCHLAG", "evidence": "sha256:" + "a" * 58}},
+        {"D6": {"status": "VORSCHLAG", "evidence": "ledger::speicher-katalog-430"}},
     )
     result = evaluate_domain_claim(claim)
     assert result["verdict"] == VERDICT_ERFUELLT

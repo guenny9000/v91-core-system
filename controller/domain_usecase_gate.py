@@ -26,9 +26,9 @@ Ehrliche Grenzen:
 - Evidenz-Referenzpruefung wird aus v99/filter/source_quality.py
   (Evidenz-Vertrag v2, Issue #51 / PR #53) wiederverwendet, nicht
   dupliziert (NO_DUPLICATE_SYSTEMS).
-- Status-Vokabular bewusst ASCII ('NICHT GEPRUEFT' statt 'NICHT
-  GEPRUEFöT'-Varianten); Schema nicht-live, kein Daemon, kein
-  Netzwerk. SCRIPTED != RUNNING.
+- Status-Vokabular bewusst ASCII ('NICHT GEPRUEFT' anstatt
+  umlautierter Varianten); dieses Modul ist Registrierung und Pruefung,
+  kein Daemon, kein Netzwerk. SCRIPTED != RUNNING.
 """
 from __future__ import annotations
 
