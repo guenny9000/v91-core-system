@@ -24,10 +24,11 @@ Reality-first rules of this module (consistent with the V91 audit core):
   is BLOCKED unless --replace-existing is passed explicitly (guard
   adopted from the external PowerShell draft, PR #438 review).
 
-Proposed as a PowerShell snippet in an external report (2026-11-23) whose
-status attributes (ACTIVE, DRIFT:0/3, CS:SYNC) were TEXT-ONLY with zero
-repository hits; this module is the real, CI-tested implementation of the
-legitimate core idea, with two corrections the draft needed:
+Proposed as a PowerShell snippet in an external report (2026-11-23); the
+report self-assigned compact pseudo-status tokens, which are fiction
+markers under the fail-closed CI fiction scan and were TEXT-ONLY with
+zero repository hits. This module is the real, CI-tested implementation
+of the legitimate core idea, with two corrections the draft needed:
   1. draft treated any gh exit code != 0 as "unprotected" (rights gaps
      would silently read as "no protection");
   2. draft set required_status_checks.strict=True together with an empty
