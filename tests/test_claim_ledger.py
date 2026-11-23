@@ -272,3 +272,42 @@ class ReloadAppendRegressionTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class SingleWriterRegressionTests(unittest.TestCase):
+
+    def test_stale_instance_reloads_latest_ledger_before_append(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "claims.jsonl"
+            first = ClaimLedger(path, PUBLIC, ["operator"])
+            stale = ClaimLedger(path, PUBLIC, ["operator"])
+
+            first.append_event(
+                claim("session-a", task_id="VIBE-X", scope="controller/first.py")
+            )
+            stale.append_event(
+                claim("session-b", task_id="VIBE-Y", scope="controller/second.py")
+            )
+
+            verified = ClaimLedger(path, PUBLIC, ["operator"])
+            self.assertEqual(2, verified.entry_count())
+            self.assertEqual(
+                ["VIBE-X", "VIBE-Y"],
+                [item["task_id"] for item in verified.records()],
+            )
+            self.assertFalse(path.with_name(path.name + ".lock").exists())
+
+    def test_existing_lock_fails_closed_without_changing_ledger(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "claims.jsonl"
+            ledger = ClaimLedger(path, PUBLIC, ["operator"])
+            ledger.append_event(claim("session-a"))
+            before = path.read_bytes()
+
+            lock_path = path.with_name(path.name + ".lock")
+            lock_path.write_text("unknown owner\\n", encoding="utf-8")
+            with self.assertRaisesRegex(ClaimLedgerError, "lock exists"):
+                ledger.append_event(follow("DONE", "session-a"))
+
+            self.assertEqual(before, path.read_bytes())
+            self.assertEqual("unknown owner\\n", lock_path.read_text(encoding="utf-8"))
