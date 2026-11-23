@@ -95,6 +95,12 @@ A baseline or after observation should contain at least:
 
 This is a shape example, not a claim that any such data exists. The raw artifact must remain retrievable to an authorized reviewer. A digest without accessible evidence is insufficient for audit.
 
+### Implemented metadata subset (PR proposal; not a storage or truth guarantee)
+
+The impact calculator may accept separate baseline and after-period evidence references, each paired with a lowercase SHA-256 digest. The pair is recorded in the calculation result only when both reference and digest are supplied for that period. A missing pair is reported as `evidence_status: MISSING`; a malformed or incomplete pair is rejected.
+
+`evidence_status: REFERENCES_PRESENT` means only that reference strings and digest syntax were supplied. It does not prove that the artifact is retrievable, access-controlled, authentic, complete, calibrated, truthful, immutable, or independently reviewed. Reviewers must retrieve the referenced bytes through an authorized channel and recompute the digest. The calculator's `VALID` status remains calculation validity only; evidence presence does not promote Impact to `INDEPENDENTLY_VERIFIED`.
+
 ## 4. Comparability and causal attribution
 
 A simple before/after difference is descriptive, not automatically causal. Before accepting an impact:
