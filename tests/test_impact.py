@@ -72,3 +72,16 @@ def test_only_valid_counts_in_summary(tmp_path):
     s = verified_summary(path)
     assert s["impacts_total"] == 2 and s["impacts_valid"] == 1
     assert s["verified_co2_saved_kg_per_sample"] == 10.0
+
+
+
+def test_summary_names_calculation_validity_separately_from_independent_review(tmp_path):
+    path = str(tmp_path / "review-status.jsonl")
+    ledger = HashChainLedger(path)
+    record_impact(ledger, compute_impact("a", BASE, AFTER, "u"))
+    assert verify_chain(path)["chain_valid"]
+    summary = verified_summary(path)
+    assert summary["calculation_validity_rate"] == 1.0
+    assert summary["independent_review_rate"] is None
+    assert summary["independently_reviewed_impacts_count"] == 0
+    assert summary["review_status"] == "NOT_INDEPENDENTLY_VERIFIED"
