@@ -20,11 +20,19 @@ explicit emission factor. A claimed saving is only VALID when
 Only VALID records count towards verified totals. VALID means
 calculation-validated; INDEPENDENTLY_VERIFIED requires a separate
 reviewer and is never assigned by this module.
+
+Optional evidence_refs bind a result to its raw artifacts by reference
+plus SHA-256 digest. A digest proves byte identity only; it never proves
+source truth, calibration, or that the artifact is still retrievable
+(protocol section 3: a digest without accessible evidence is insufficient
+for audit; the raw artifact must remain retrievable to an authorized
+reviewer).
 """
 
 import csv
 import json
 import math
+import re
 import statistics
 import time
 from datetime import datetime
@@ -42,6 +50,8 @@ MIN_SAMPLES = 5
 DQI_MIN = 0.85
 NOISE_FACTOR = 2.0
 
+_SHA256_RE = re.compile(r"^[0-9a-f]{64}$")
+
 
 def load_csv(path: str) -> list[dict[str, Any]]:
     rows = []
@@ -49,6 +59,34 @@ def load_csv(path: str) -> list[dict[str, Any]]:
         for row in csv.DictReader(fh):
             rows.append(row)
     return rows
+
+
+def _validate_evidence_refs(evidence_refs: Any) -> list[dict[str, str]]:
+    """Fail-closed validation of raw-artifact references (protocol section 3).
+
+    Each entry must be a dict with a non-empty 'raw_artifact_ref' (opaque,
+    access-controlled reference string; never a secret or personal data)
+    and a lowercase 64-hex 'raw_artifact_sha256'. Anything else raises
+    ValueError instead of being silently dropped or auto-repaired.
+    """
+    if not isinstance(evidence_refs, list) or not evidence_refs:
+        raise ValueError("evidence_refs must be a non-empty list when provided")
+    validated: list[dict[str, str]] = []
+    for entry in evidence_refs:
+        if not isinstance(entry, dict):
+            raise ValueError("evidence ref must be a dict with raw_artifact_ref and raw_artifact_sha256")
+        artifact_ref = entry.get("raw_artifact_ref")
+        digest = entry.get("raw_artifact_sha256")
+        if not isinstance(artifact_ref, str) or not artifact_ref.strip():
+            raise ValueError("raw_artifact_ref must be a non-empty string reference")
+        if not isinstance(digest, str) or not _SHA256_RE.match(digest):
+            raise ValueError(
+                "raw_artifact_sha256 must be a lowercase 64-character hex SHA-256 digest"
+            )
+        validated.append(
+            {"raw_artifact_ref": artifact_ref, "raw_artifact_sha256": digest}
+        )
+    return validated
 
 
 def _parse(rows: list[dict[str, Any]]) -> tuple[list[tuple[datetime, float, str]], int]:
@@ -88,6 +126,7 @@ def compute_impact(
     co2_factor_kg_per_unit: float | None = None,
     higher_is_worse: bool = True,
     co2_source: str | None = None,
+    evidence_refs: list[dict[str, Any]] | None = None,
 ) -> dict[str, Any]:
     """Compare two real measurement periods. saved > 0 means improvement."""
     if co2_factor_kg_per_unit is not None and not (co2_source and co2_source.strip()):
@@ -117,6 +156,8 @@ def compute_impact(
         "rejected_rows": base_bad + after_bad,
         "dqi": dqi,
     }
+    if evidence_refs is not None:
+        result["evidence_refs"] = _validate_evidence_refs(evidence_refs)
     if len(base) >= 2 and len(after) >= 2:
         b_vals = [s[1] for s in base]
         a_vals = [s[1] for s in after]
@@ -150,6 +191,7 @@ def record_impact(ledger: HashChainLedger, impact: dict[str, Any]) -> dict[str, 
     return ledger.append(
         {"type": "impact", **impact}, time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
     )
+
 
 def verified_summary(ledger_path: str) -> dict[str, Any]:
     """Totals over calculation-VALID impacts only (call verify_chain first).
