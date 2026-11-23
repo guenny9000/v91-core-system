@@ -169,15 +169,18 @@ def verified_summary(ledger_path: str) -> dict[str, Any]:
             if payload["status"] == "VALID":
                 valid += 1
                 co2 += payload.get("co2_saved_kg_per_sample", 0.0)
+    calculation_rate = round(valid / total, 4) if total else None
     return {
         "impacts_total": total,
         "impacts_valid": valid,
-        "verification_rate": round(valid / total, 4) if total else None,
-        # legacy key (kept for existing callers): totals over VALID impacts;
-        # "verified" here means calculation-validated, NOT independently reviewed.
+        # Explicit name: this is calculation validity, not independent verification.
+        "calculation_validity_rate": calculation_rate,
+        # Legacy compatibility only; do not interpret this as independent verification.
+        "verification_rate": calculation_rate,
         "verified_co2_saved_kg_per_sample": round(co2, 6),
-        # protocol section 6 separation: explicit calculation-vs-review statuses
         "valid_impacts_co2_saved_kg_per_sample": round(co2, 6),
-        "verified_impacts_count_independently_reviewed": 0,
+        # No independent reviewer evidence is represented by this ledger schema yet.
+        "independently_reviewed_impacts_count": 0,
+        "independent_review_rate": None,
         "review_status": "NOT_INDEPENDENTLY_VERIFIED",
     }
