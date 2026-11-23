@@ -14,6 +14,7 @@ from v91_main_branch_protection import (  # noqa: E402
     STATUS_APPLY_FAILED,
     STATUS_APPLY_MISMATCH,
     STATUS_APPLY_REFUSED_CHECK_ONLY,
+    STATUS_BLOCKED_EXISTING_PROTECTION,
     STATUS_GH_CLI_MISSING,
     STATUS_NOT_PROTECTED_OR_NOT_VISIBLE,
     STATUS_PROTECTED,
@@ -66,7 +67,8 @@ def test_check_403_access_denied_unknown():
 
 
 def test_check_gh_missing():
-    def missing(cmd):
+    def missing(
+cmd):
         raise FileNotFoundError("gh")
     r = check_protection("guenny9000", "v91-core-system", "main", runner=missing)
     assert r["status"] == STATUS_GH_CLI_MISSING and r["exit_code"] == 2
@@ -99,32 +101,51 @@ def test_payload_blocks_force_push_and_deletions():
     assert p2["required_status_checks"]["strict"] is True and p2["required_status_checks"]["contexts"] == ["audit-checks"]
 
 
+NOT_FOUND = (1, "", "gh: Not Found (HTTP 404)")
+
+
 def test_apply_success_verified_with_recheck():
-    run = fake_runner([(0, "{}", ""), (0, OK_BODY, "")])
+    run = fake_runner([NOT_FOUND, (0, "{}", ""), (0, OK_BODY, "")])
     r = apply_protection("guenny9000", "v91-core-system", "main", allow_apply=True, runner=run)
     assert r["status"] == STATUS_PROTECTED_VERIFIED and r["exit_code"] == 0
-    assert len(run.calls) == 2
-    assert run.calls[0][2] == "--method" and run.calls[0][3] == "PUT"  # PUT first...
-    assert "--input" in run.calls[0]  # payload via temp file, not via argv
-    assert run.calls[1][1] == "api" and "--method" not in run.calls[1]  # ...then honest GET verify
+    assert len(run.calls) == 3
+    assert run.calls[0][1] == "api" and "--method" not in run.calls[0]  # pre-check GET first (replace guard)
+    assert run.calls[1][2] == "--method" and run.calls[1][3] == "PUT"  # ...then PUT...
+    assert "--input" in run.calls[1]  # payload via temp file, not via argv
+    assert run.calls[2][1] == "api" and "--method" not in run.calls[2]  # ...then honest GET verify
 
 
-def test_apply_put_failure_reported_honestly():
-    run = fake_runner([(1, "", "gh: Forbidden (HTTP 403)"), (0, OK_BODY, "")])
+def test_apply_blocked_when_protection_already_exists():
+    run = fake_runner([(0, OK_BODY, "")])
+    r = apply_protection("guenny9000", "v91-core-system", "main", allow_apply=True, runner=run)
+    assert r["status"] == STATUS_BLOCKED_EXISTING_PROTECTION and r["exit_code"] == 1
+    assert len(run.calls) == 1  # pre-check only: NO PUT, existing rule never touched
+
+
+def test_apply_replace_requires_explicit_optin_and_recheck():
+    run = fake_runner([(0, OK_BODY, ""), (0, "{}", ""), (0, OK_BODY, "")])
+    r = apply_protection("guenny9000", "v91-core-system", "main", allow_apply=True, allow_replace=True, runner=run)
+    assert r["status"] == STATUS_PROTECTED_VERIFIED and r["exit_code"] == 0
+    assert len(run.calls) == 3  # pre-check, PUT, verify: replacement still fully audited
+
+
+def 
+test_apply_put_failure_reported_honestly():
+    run = fake_runner([NOT_FOUND, (1, "", "gh: Forbidden (HTTP 403)"), (0, OK_BODY, "")])
     r = apply_protection("guenny9000", "v91-core-system", "main", allow_apply=True, runner=run)
     assert r["status"] == STATUS_APPLY_FAILED and r["exit_code"] == 1
 
 
 def test_apply_with_mismatch_never_smoothed_over():
     inconsistent = json.dumps({"allow_force_pushes": {"enabled": True}, "allow_deletions": {"enabled": False}, "enforce_admins": {"enabled": True}})
-    run = fake_runner([(0, "{}", ""), (0, inconsistent, "")])
+    run = fake_runner([NOT_FOUND, (0, "{}", ""), (0, inconsistent, "")])
     r = apply_protection("guenny9000", "v91-core-system", "main", allow_apply=True, runner=run)
     assert r["status"] == STATUS_APPLY_MISMATCH and r["exit_code"] == 1
     assert "allow_force_pushes" in r["mismatch_fields"]
 
 
 def test_gh_audit_trail_records_only_commands():
-    run = fake_runner([(0, "{}", ""), (0, OK_BODY, "")])
+    run = fake_runner([NOT_FOUND, (0, "{}", ""), (0, OK_BODY, "")])
     r = apply_protection("guenny9000", "v91-core-system", "main", allow_apply=True, runner=run)
     trail = json.dumps(r["gh_calls"])
     assert "PUT" in trail

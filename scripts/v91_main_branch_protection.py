@@ -40,7 +40,8 @@ import time
 from typing import Any, Callable
 
 # Exit codes (same convention as domain_usecase_gate): 0 verified
-# protected / applied+verified, 1 concrete failure, 2 unknown.
+# protected / applied+verifie
+d, 1 concrete failure, 2 unknown.
 EXIT_OK = 0
 EXIT_FAIL = 1
 EXIT_UNKNOWN = 2
@@ -53,6 +54,7 @@ STATUS_GH_CLI_MISSING = "UNKNOWN_GH_CLI_MISSING"
 STATUS_APPLY_REFUSED_CHECK_ONLY = "APPLY_REFUSED_CHECK_ONLY"
 STATUS_APPLY_FAILED = "APPLY_FAILED"
 STATUS_APPLY_MISMATCH = "APPLY_MISMATCH"
+STATUS_BLOCKED_EXISTING_PROTECTION = "BLOCKED_EXISTING_PROTECTION"
 
 _ACCEPT_HEADER = "application/vnd.github+json"
 
@@ -86,7 +88,8 @@ def _classify_get(returncode: int, stderr: str) -> str:
 
 
 def build_apply_payload(required_checks: list[str] | None = None) -> dict[str, Any]:
-    """Clean baseline protection rule (protocol: block force-push/deletion)."""
+    """Clean baseline protection rule (protocol: block forc
+e-push/deletion)."""
     checks = [str(c).strip() for c in (required_checks or []) if str(c).strip()]
     return {
         "required_status_checks": {
@@ -139,11 +142,20 @@ def apply_protection(
     branch: str,
     required_checks: list[str] | None = None,
     allow_apply: bool = False,
+    allow_replace: bool = False,
     runner: Callable[[list[str]], tuple[int, str, str]] | None = None,
 ) -> dict[str, Any]:
-    """Check -> (opt-in apply) -> re-check -> verify core fields."""
+    """Pre-check -> (opt-in apply) -> re-check -> verify core fields.
+
+    A PUT to the protection endpoint REPLACES the whole rule. Overwriting
+    an existing rule silently would destroy operator configuration, so
+    an apply on an already-protected branch is BLOCKED unless the caller
+    explicitly passes allow_replace=True after reviewing the existing
+    rule (mirrors the -ReplaceExisting guard of the external draft).
+    """
     o, r, b = _validate_target(owner, repo, branch)
     if not allow_apply:
+
         return {
             "timestamp_utc": _utc_now(),
             "repository": f"{o}/{r}",
@@ -161,6 +173,21 @@ def apply_protection(
     def rec(cmd: list[str]) -> tuple[int, str, str]:
         calls.append(cmd)
         return runner(cmd)
+
+    # Pre-check: never silently replace an existing protection rule.
+    rc0, out0, err0 = rec(["gh", "api", endpoint])
+    if rc0 == 0 and not allow_replace:
+        return {
+            "timestamp_utc": _utc_now(),
+            "repository": f"{o}/{r}",
+            "branch": b,
+            "mode": "APPLY",
+            "status": STATUS_BLOCKED_EXISTING_PROTECTION,
+            "exit_code": EXIT_FAIL,
+            "apply_status": "SKIPPED_EXISTING_PROTECTION",
+            "gh_calls": calls,
+            "note": "a protection rule already exists on this branch; a PUT would replace it whole. Review it and pass allow_replace=True / --replace-existing only if replacement is intended",
+        }
 
     payload = build_apply_payload(required_checks)
     fd, payload_path = tempfile.mkstemp(suffix=".json", prefix="v91_protection_payload_")
@@ -191,7 +218,8 @@ def apply_protection(
         status = STATUS_APPLY_FAILED
         exit_code = EXIT_FAIL
     elif rc2 != 0:
-        status = _classify_get(rc2, err2)  # apply reported ok but verify failed: honest re-read state
+        status = _cl
+assify_get(rc2, err2)  # apply reported ok but verify failed: honest re-read state
         exit_code = EXIT_UNKNOWN
     elif mismatch:
         status = STATUS_APPLY_MISMATCH
@@ -239,7 +267,9 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--branch", default="main")
     parser.add_argument("--apply", action="store_true", help="explicit opt-in; default is check-only")
     parser.add_argument("--required-checks", nargs="*", default=[], help="required status check context names")
-    parser.add_argument("--report-dir", default=None)
+    parser.add_argument("--replace-existing", action="store_true", help="explicit opt-in to replace an existing protection rule; default blocks")
+    parser.add_argument("--
+report-dir", default=None)
     args = parser.parse_args(argv)
 
     def run_gh(cmd: list[str]) -> tuple[int, str, str]:
@@ -254,7 +284,7 @@ def main(argv: list[str] | None = None) -> int:
         report = apply_protection(
             args.owner, args.repo, args.branch,
             required_checks=list(args.required_checks),
-            allow_apply=True, runner=run_gh,
+            allow_apply=True, allow_replace=bool(args.replace_existing), runner=run_gh,
         )
     else:
         report = check_protection(args.owner, args.repo, args.branch, runner=run_gh)
