@@ -55,3 +55,12 @@ Thumbs.db
 runtime/v91-observer.json
 
 ledger.jsonl
+
+# v91 runtime SQLite state (init via data/init_listener_db.sql, never commit DB files)
+data/*.db
+data/*.db-journal
+data/*.db-wal
+data/*.db-shm
+
+# Third-party tool pollution (VSCode "Snapshots for AI" extension)
+.snapshots/
