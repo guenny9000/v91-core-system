@@ -15,11 +15,19 @@ explicit emission factor. A claimed saving is only VALID when
     the V91 Resource Savings Verification Protocol),
   - baseline ends before the after-period starts,
   - enough samples exist,
-  - data quality (DQI) >= 0.85,
+  - data quality (DQI) >= the configured minimum,
   - the difference exceeds measurement noise (otherwise NOT_SIGNIFICANT).
 Only VALID records count towards verified totals. VALID means
 calculation-validated; INDEPENDENTLY_VERIFIED requires a separate
 reviewer and is never assigned by this module.
+
+Thresholds (min_samples, dqi_min, noise_factor) are caller parameters
+with documented module defaults; the protocol (section 4) forbids
+universal fixed thresholds as a validity proof. The effective
+thresholds are recorded in every result ("thresholds") so each validity
+claim stays bound to the gates that produced it. All threshold inputs
+are validated fail-closed: invalid values raise instead of falling
+back silently to defaults.
 
 Optional evidence_refs bind a result to its raw artifacts by reference
 plus SHA-256 digest. A digest proves byte identity only; it never proves
@@ -46,11 +54,51 @@ SOURCE_CONFIDENCE = {
     "estimated": 0.70,
     "manual_entry": 0.60,
 }
+# Documented defaults only; callers MUST justify and set their own
+# thresholds per use case (protocol section 4). Never treat these as
+# universal validity criteria.
 MIN_SAMPLES = 5
 DQI_MIN = 0.85
 NOISE_FACTOR = 2.0
 
 _SHA256_RE = re.compile(r"^[0-9a-f]{64}$")
+
+
+def _validate_thresholds(
+    min_samples: Any, dqi_min: Any, noise_factor: Any
+) -> dict[str, Any]:
+    """Fail-closed threshold resolution (protocol section 4).
+
+    None selects the documented default for that threshold. Anything
+    else must be a valid value: min_samples an integer >= 2 (a mean and
+    variance need at least two samples), dqi_min a finite number in
+    (0, 1], noise_factor a finite number > 0. Invalid inputs raise
+    ValueError; silent fallback to defaults would hide the caller's
+    intent and turn a misconfiguration into a false validity claim.
+    """
+    if min_samples is None:
+        ms = MIN_SAMPLES
+    elif isinstance(min_samples, bool) or not isinstance(min_samples, int) or min_samples < 2:
+        raise ValueError("min_samples must be an integer >= 2 when provided")
+    else:
+        ms = min_samples
+    if dqi_min is None:
+        dq = DQI_MIN
+    elif isinstance(dqi_min, bool) or not isinstance(dqi_min, (int, float)):
+        raise ValueError("dqi_min must be a number when provided")
+    elif not math.isfinite(dqi_min) or not 0.0 < float(dqi_min) <= 1.0:
+        raise ValueError("dqi_min must be finite and in (0, 1]")
+    else:
+        dq = float(dqi_min)
+    if noise_factor is None:
+        nf = NOISE_FACTOR
+    elif isinstance(noise_factor, bool) or not isinstance(noise_factor, (int, float)):
+        raise ValueError("noise_factor must be a number when provided")
+    elif not math.isfinite(noise_factor) or noise_factor <= 0:
+        raise ValueError("noise_factor must be finite and > 0")
+    else:
+        nf = float(noise_factor)
+    return {"min_samples": ms, "dqi_min": dq, "noise_factor": nf}
 
 
 def load_csv(path: str) -> list[dict[str, Any]]:
@@ -127,8 +175,19 @@ def compute_impact(
     higher_is_worse: bool = True,
     co2_source: str | None = None,
     evidence_refs: list[dict[str, Any]] | None = None,
+    min_samples: int | None = None,
+    dqi_min: float | None = None,
+    noise_factor: float | None = None,
 ) -> dict[str, Any]:
-    """Compare two real measurement periods. saved > 0 means improvement."""
+    """Compare two real measurement periods. saved > 0 means improvement.
+
+    Thresholds are per-call parameters with fail-closed validation; the
+    module-level MIN_SAMPLES / DQI_MIN / NOISE_FACTOR are documented
+    defaults, not universal validity criteria (protocol section 4).
+    The effective thresholds are recorded in the result so the claim
+    "VALID" is always auditable against the gates actually applied.
+    """
+    thresholds = _validate_thresholds(min_samples, dqi_min, noise_factor)
     if co2_factor_kg_per_unit is not None and not (co2_source and co2_source.strip()):
         raise ValueError("co2_source is required when a CO2 factor is given")
     if co2_factor_kg_per_unit is not None and (
@@ -139,13 +198,13 @@ def compute_impact(
     after, after_bad = _parse(after_rows)
     errors: list[str] = []
 
-    if len(base) < MIN_SAMPLES or len(after) < MIN_SAMPLES:
+    if len(base) < thresholds["min_samples"] or len(after) < thresholds["min_samples"]:
         errors.append("TOO_FEW_SAMPLES")
     if base and after and max(s[0] for s in base) >= min(s[0] for s in after):
         errors.append("TEMPORAL_ERROR")
 
     dqi = round(min(_dqi(base, base_bad), _dqi(after, after_bad)), 4)
-    if dqi < DQI_MIN:
+    if dqi < thresholds["dqi_min"]:
         errors.append("LOW_DQI")
 
     result: dict[str, Any] = {
@@ -155,6 +214,7 @@ def compute_impact(
         "n_after": len(after),
         "rejected_rows": base_bad + after_bad,
         "dqi": dqi,
+        "thresholds": thresholds,
     }
     if evidence_refs is not None:
         result["evidence_refs"] = _validate_evidence_refs(evidence_refs)
@@ -172,7 +232,7 @@ def compute_impact(
             saved_per_sample=round(diff, 6),
             noise_stderr=round(noise, 6),
         )
-        if abs(diff) <= NOISE_FACTOR * noise:
+        if abs(diff) <= thresholds["noise_factor"] * noise:
             errors.append("NOT_SIGNIFICANT")
         if co2_factor_kg_per_unit is not None:
             result["co2_saved_kg_per_sample"] = round(diff * co2_factor_kg_per_unit, 6)
