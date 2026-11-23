@@ -72,3 +72,39 @@ def test_only_valid_counts_in_summary(tmp_path):
     s = verified_summary(path)
     assert s["impacts_total"] == 2 and s["impacts_valid"] == 1
     assert s["verified_co2_saved_kg_per_sample"] == 10.0
+
+
+def test_evidence_references_and_digests_are_recorded_separately_from_calculation_status():
+    digest = "a" * 64
+    result = compute_impact(
+        "kwh", BASE, AFTER, "kWh",
+        baseline_evidence_ref="evidence://case-1/baseline.csv",
+        baseline_evidence_sha256=digest,
+        after_evidence_ref="evidence://case-1/after.csv",
+        after_evidence_sha256="b" * 64,
+    )
+    assert result["status"] == "VALID"
+    assert result["evidence_status"] == "REFERENCES_PRESENT"
+    assert result["evidence_refs"]["baseline"]["sha256"] == digest
+    assert result["evidence_refs"]["after"]["sha256"] == "b" * 64
+
+
+def test_missing_evidence_is_explicit_and_does_not_claim_verification():
+    result = compute_impact("kwh", BASE, AFTER, "kWh")
+    assert result["evidence_status"] == "MISSING"
+    assert "evidence_refs" not in result
+
+
+def test_evidence_reference_requires_valid_sha256_pair():
+    import pytest
+    with pytest.raises(ValueError):
+        compute_impact(
+            "kwh", BASE, AFTER, "kWh",
+            baseline_evidence_ref="evidence://case-1/baseline.csv",
+        )
+    with pytest.raises(ValueError):
+        compute_impact(
+            "kwh", BASE, AFTER, "kWh",
+            baseline_evidence_ref="evidence://case-1/baseline.csv",
+            baseline_evidence_sha256="not-a-digest",
+        )
