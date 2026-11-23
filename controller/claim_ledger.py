@@ -416,7 +416,7 @@ class ClaimLedger:
             require_verified_receipt=receipt_policy.require_verified_receipt,
         )
 
-    # -- Atomares Anhaengen (crash-sicher) --
+    # -- Atomares Anhaengen (crash-sicher, single-writer) --
 
     def append_event(
         self,
@@ -424,14 +424,76 @@ class ClaimLedger:
         receipt: "AuthorReceipt | None" = None,
         receipt_policy: "ReceiptPolicy | None" = None,
     ) -> str:
-        """Haengt ein validiertes, signiertes Ereignis atomar an.
+        """Haengt ein validiertes Ereignis unter exklusivem Dateilock an.
 
-        Mit receipt_policy wird vor jeder Schreibung der (optionale)
-        Author-Receipt fail-closed geprueft; REJECTED wirft
-        ReceiptVerificationError, bevor irgendein Byte die Platte
-        beruehrt (permits_ledger_write == False). Ohne Policy bleibt
-        das Phase-2-Verhalten exakt erhalten.
+        Jeder Writer laedt NACH Lock-Erwerb die aktuelle Ledger-Version neu.
+        So kann ein vorab erzeugtes ClaimLedger-Objekt keine neueren Appends
+        mit einem veralteten self._raw ueberschreiben. Ein vorhandenes Lock
+        (auch nach einem Crash) wird nicht automatisch entfernt: fail-closed.
         """
+        self._path.parent.mkdir(parents=True, exist_ok=True)
+        lock_path = self._path.with_name(self._path.name + ".lock")
+        try:
+            lock_fd = os.open(
+                str(lock_path), os.O_CREAT | os.O_EXCL | os.O_WRONLY, 0o600
+            )
+        except FileExistsError as exc:
+            raise ClaimLedgerError(
+                "claim ledger lock exists; inspect it and fail closed rather than deleting it blindly"
+            ) from exc
+
+        lock_stat = None
+        try:
+            lock_stat = os.fstat(lock_fd)
+            lock_payload = (
+                f"pid={os.getpid()} token={uuid.uuid4().hex}\n".encode("ascii")
+            )
+            with os.fdopen(lock_fd, "wb", closefd=False) as lock_stream:
+                lock_stream.write(lock_payload)
+                lock_stream.flush()
+                os.fsync(lock_stream.fileno())
+
+            if self._path.is_symlink():
+                raise ClaimLedgerError("claim ledger path must not be a symbolic link")
+
+            # Reload the ledger only after obtaining the exclusive lock.
+            latest = ClaimLedger(
+                self._path, self._keys, self._expire_authorities
+            )
+            entry_hash = latest._append_event_locked(
+                record, receipt=receipt, receipt_policy=receipt_policy
+            )
+
+            # Refresh this instance after the durable append.
+            self._floors = latest._floors
+            self._prev_hash = latest._prev_hash
+            self._entries = latest._entries
+            self._records = latest._records
+            self._active_claims = latest._active_claims
+            self._scopes = latest._scopes
+            self._raw = latest._raw
+            return entry_hash
+        finally:
+            os.close(lock_fd)
+            if lock_stat is not None:
+                try:
+                    current = os.stat(lock_path, follow_symlinks=False)
+                    if (current.st_dev, current.st_ino) == (
+                        lock_stat.st_dev, lock_stat.st_ino
+                    ):
+                        lock_path.unlink()
+                except FileNotFoundError:
+                    pass
+
+    def _append_event_locked(
+        self,
+        record: Dict,
+        receipt: "AuthorReceipt | None" = None,
+        receipt_policy: "ReceiptPolicy | None" = None,
+    ) -> str:
+        """Interner Append-Pfad; Aufruf nur mit gehaltenem Dateilock."""
+        if self._path.is_symlink():
+            raise ClaimLedgerError("claim ledger path must not be a symbolic link")
         if receipt_policy is not None:
             evaluation = self._evaluate_receipt(record, receipt, receipt_policy)
             if not evaluation.permits_ledger_write:
