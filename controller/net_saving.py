@@ -3,7 +3,7 @@
 V91-SYSTEM-HEADER (AGATHON-SEALED v2.4)
 ---------------------------------------------------------------------
 STATUS: ACTIVE | VERIFICATION: REQUIRED (CLAIM != EVIDENCE)
-AXIOM: Schoepfung dient dem Erhalt, der Regeneration und der Zukunft.
+AXIOM: Schöpfung dient dem Erhalt, der Regeneration und der Zukunft.
 ---------------------------------------------------------------------
 
 Deterministic net-saving accounting with explicit lifecycle costs
@@ -25,8 +25,9 @@ Fail-closed rules enforced here:
 import math
 
 GROSS_TERM = "gross_monetary_benefit"
-META_KEYS = frozenset({"currency", "horizon", "price_basis", "notes"
-                       , "extrapolated_from"})
+META_KEYS = frozenset({
+    "currency", "horizon", "price_basis", "notes", "extrapolated_from",
+})
 ALLOWED_COST_TERMS = (
     "implementation_cost",
     "migration_cost",
