@@ -87,6 +87,11 @@ if($LASTEXITCODE -ne 0){
  Write-AuditLog "STATUS=UNKNOWN REASON=gh_auth_unavailable"
  Write-Report @{Repository=$repository;Branch=$Branch;Mode=$mode;Status="UNKNOWN";Reason="GitHub CLI authentication unavailable.";LogDirectory=$logDir}; exit 2
 }
+$branchState=Invoke-GhApiWithStatus -Endpoint "repos/$Owner/$Repo/branches/$Branch"
+if($branchState.ExitCode -ne 0 -or $branchState.StatusCode -ne 200){
+ Write-AuditLog "STATUS=UNKNOWN REASON=branch_or_repository_not_verified"
+ Write-Report @{Repository=$repository;Branch=$Branch;Mode=$mode;Status="UNKNOWN";Reason="Branch existence/access could not be verified; protection is not inferred.";HttpStatus=$branchState.StatusCode;ExitCode=$branchState.ExitCode;LogDirectory=$logDir};exit 2
+}
 $before=Invoke-GhApiWithStatus -Endpoint $endpoint
 $beforeProtected=$false; $beforeProtection=$null
 if($before.ExitCode -eq 0 -and $before.StatusCode -eq 200){
