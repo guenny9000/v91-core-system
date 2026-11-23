@@ -194,7 +194,7 @@ def test_cli_roundtrip_exit_codes(tmp_path):
     missing = tmp_path / "missing.json"
     missing.write_text(json.dumps(_base_claim(["D1", "D2"], {"D1": {"status": "UNKNOWN"}})), encoding="utf-8")
     module_path = ROOT / "controller" / "domain_usecase_gate.py"
-    rc_good = subprocess.run([sys.executable, str(module_path), "--claim-json", str(good)]).returncode
-    rc_missing = subprocess.run([sys.executable, str(module_path), "--claim-json", str(missing)]).returncode
+    rc_good = subprocess.run([sys.executable, str(module_path), "--claim-json", str(good)], cwd=str(ROOT)).returncode
+    rc_missing = subprocess.run([sys.executable, str(module_path), "--claim-json", str(missing)], cwd=str(ROOT)).returncode
     assert rc_good == 0
     assert rc_missing == 1
