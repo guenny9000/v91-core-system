@@ -25,6 +25,7 @@ reviewer and is never assigned by this module.
 import csv
 import json
 import math
+import re
 import statistics
 import time
 from datetime import datetime
@@ -88,6 +89,10 @@ def compute_impact(
     co2_factor_kg_per_unit: float | None = None,
     higher_is_worse: bool = True,
     co2_source: str | None = None,
+    baseline_evidence_ref: str | None = None,
+    baseline_evidence_sha256: str | None = None,
+    after_evidence_ref: str | None = None,
+    after_evidence_sha256: str | None = None,
 ) -> dict[str, Any]:
     """Compare two real measurement periods. saved > 0 means improvement."""
     if co2_factor_kg_per_unit is not None and not (co2_source and co2_source.strip()):
@@ -96,6 +101,18 @@ def compute_impact(
         not math.isfinite(co2_factor_kg_per_unit) or co2_factor_kg_per_unit < 0
     ):
         raise ValueError("co2 factor must be a finite non-negative number")
+    evidence_pairs = (
+        ("baseline", baseline_evidence_ref, baseline_evidence_sha256),
+        ("after", after_evidence_ref, after_evidence_sha256),
+    )
+    for label, evidence_ref, evidence_digest in evidence_pairs:
+        if (evidence_ref is None) != (evidence_digest is None):
+            raise ValueError(f"{label} evidence reference and SHA-256 must be supplied together")
+        if evidence_ref is not None:
+            if not isinstance(evidence_ref, str) or not evidence_ref.strip():
+                raise ValueError(f"{label} evidence reference must be a non-empty string")
+            if not isinstance(evidence_digest, str) or re.fullmatch(r"[0-9a-f]{64}", evidence_digest) is None:
+                raise ValueError(f"{label} evidence SHA-256 must be 64 lowercase hexadecimal characters")
     base, base_bad = _parse(baseline_rows)
     after, after_bad = _parse(after_rows)
     errors: list[str] = []
@@ -117,6 +134,13 @@ def compute_impact(
         "rejected_rows": base_bad + after_bad,
         "dqi": dqi,
     }
+    evidence_refs_present = baseline_evidence_ref is not None and after_evidence_ref is not None
+    result["evidence_status"] = "REFERENCES_PRESENT" if evidence_refs_present else "MISSING"
+    if evidence_refs_present:
+        result["evidence_refs"] = {
+            "baseline": {"ref": baseline_evidence_ref, "sha256": baseline_evidence_sha256},
+            "after": {"ref": after_evidence_ref, "sha256": after_evidence_sha256},
+        }
     if len(base) >= 2 and len(after) >= 2:
         b_vals = [s[1] for s in base]
         a_vals = [s[1] for s in after]
