@@ -181,6 +181,8 @@ def verified_summary(ledger_path: str) -> dict[str, Any]:
         "valid_impacts_co2_saved_kg_per_sample": round(co2, 6),
         # No independent reviewer evidence is represented by this ledger schema yet.
         "independently_reviewed_impacts_count": 0,
+        # Deprecated compatibility alias; same meaning and value, not a verification claim.
+        "verified_impacts_count_independently_reviewed": 0,
         "independent_review_rate": None,
         "review_status": "NOT_INDEPENDENTLY_VERIFIED",
     }
