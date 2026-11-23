@@ -45,6 +45,8 @@ OK_BODY = json.dumps({
     "enforce_admins": {"enabled": True},
 })
 
+NOT_FOUND = (1, "", "gh: Not Found (HTTP 404)")
+
 
 def test_check_protected_reads_only():
     run = fake_runner([(0, OK_BODY, "")])
@@ -54,7 +56,7 @@ def test_check_protected_reads_only():
 
 
 def test_check_404_is_not_claimed_as_verified_evidence():
-    run = fake_runner([(1, "", "gh: Not Found (HTTP 404)")])
+    run = fake_runner([NOT_FOUND])
     r = check_protection("guenny9000", "v91-core-system", "main", runner=run)
     assert r["status"] == STATUS_NOT_PROTECTED_OR_NOT_VISIBLE
     assert r["status"].startswith("UNKNOWN")  # 404 can also mean: no right to see the rule
@@ -67,8 +69,7 @@ def test_check_403_access_denied_unknown():
 
 
 def test_check_gh_missing():
-    def missing(
-cmd):
+    def missing(cmd):
         raise FileNotFoundError("gh")
     r = check_protection("guenny9000", "v91-core-system", "main", runner=missing)
     assert r["status"] == STATUS_GH_CLI_MISSING and r["exit_code"] == 2
@@ -101,9 +102,6 @@ def test_payload_blocks_force_push_and_deletions():
     assert p2["required_status_checks"]["strict"] is True and p2["required_status_checks"]["contexts"] == ["audit-checks"]
 
 
-NOT_FOUND = (1, "", "gh: Not Found (HTTP 404)")
-
-
 def test_apply_success_verified_with_recheck():
     run = fake_runner([NOT_FOUND, (0, "{}", ""), (0, OK_BODY, "")])
     r = apply_protection("guenny9000", "v91-core-system", "main", allow_apply=True, runner=run)
@@ -129,8 +127,7 @@ def test_apply_replace_requires_explicit_optin_and_recheck():
     assert len(run.calls) == 3  # pre-check, PUT, verify: replacement still fully audited
 
 
-def 
-test_apply_put_failure_reported_honestly():
+def test_apply_put_failure_reported_honestly():
     run = fake_runner([NOT_FOUND, (1, "", "gh: Forbidden (HTTP 403)"), (0, OK_BODY, "")])
     r = apply_protection("guenny9000", "v91-core-system", "main", allow_apply=True, runner=run)
     assert r["status"] == STATUS_APPLY_FAILED and r["exit_code"] == 1

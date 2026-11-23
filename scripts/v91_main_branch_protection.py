@@ -20,6 +20,9 @@ Reality-first rules of this module (consistent with the V91 audit core):
   --apply flag (same opt-in principle as V91_ENABLE_REAL_ACTIONS).
 - After an apply, the rule is re-read and the core fields are compared
   against the requested state; a mismatch is reported, never smoothed over.
+- A PUT replaces the whole rule: an apply on an already-protected branch
+  is BLOCKED unless --replace-existing is passed explicitly (guard
+  adopted from the external PowerShell draft, PR #438 review).
 
 Proposed as a PowerShell snippet in an external report (2026-11-23) whose
 status attributes (ACTIVE, DRIFT:0/3, CS:SYNC) were TEXT-ONLY with zero
@@ -40,8 +43,7 @@ import time
 from typing import Any, Callable
 
 # Exit codes (same convention as domain_usecase_gate): 0 verified
-# protected / applied+verifie
-d, 1 concrete failure, 2 unknown.
+# protected / applied+verified, 1 concrete failure, 2 unknown.
 EXIT_OK = 0
 EXIT_FAIL = 1
 EXIT_UNKNOWN = 2
@@ -88,8 +90,7 @@ def _classify_get(returncode: int, stderr: str) -> str:
 
 
 def build_apply_payload(required_checks: list[str] | None = None) -> dict[str, Any]:
-    """Clean baseline protection rule (protocol: block forc
-e-push/deletion)."""
+    """Clean baseline protection rule (protocol: block force-push/deletion)."""
     checks = [str(c).strip() for c in (required_checks or []) if str(c).strip()]
     return {
         "required_status_checks": {
@@ -155,7 +156,6 @@ def apply_protection(
     """
     o, r, b = _validate_target(owner, repo, branch)
     if not allow_apply:
-
         return {
             "timestamp_utc": _utc_now(),
             "repository": f"{o}/{r}",
@@ -218,8 +218,7 @@ def apply_protection(
         status = STATUS_APPLY_FAILED
         exit_code = EXIT_FAIL
     elif rc2 != 0:
-        status = _cl
-assify_get(rc2, err2)  # apply reported ok but verify failed: honest re-read state
+        status = _classify_get(rc2, err2)  # apply reported ok but verify failed: honest re-read state
         exit_code = EXIT_UNKNOWN
     elif mismatch:
         status = STATUS_APPLY_MISMATCH
@@ -268,8 +267,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--apply", action="store_true", help="explicit opt-in; default is check-only")
     parser.add_argument("--required-checks", nargs="*", default=[], help="required status check context names")
     parser.add_argument("--replace-existing", action="store_true", help="explicit opt-in to replace an existing protection rule; default blocks")
-    parser.add_argument("--
-report-dir", default=None)
+    parser.add_argument("--report-dir", default=None)
     args = parser.parse_args(argv)
 
     def run_gh(cmd: list[str]) -> tuple[int, str, str]:
