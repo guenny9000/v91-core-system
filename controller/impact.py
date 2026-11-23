@@ -10,6 +10,9 @@ Impact measurement from REAL measurements (CSV: timestamp,value,source_type).
 
 No value is invented: the caller supplies measurements and, for CO2, an
 explicit emission factor. A claimed saving is only VALID when
+  - timestamps are timezone-aware (naive timestamps are rejected,
+    never silently assumed UTC; consistent with measurement_ingest and
+    the V91 Resource Savings Verification Protocol),
   - baseline ends before the after-period starts,
   - enough samples exist,
   - data quality (DQI) >= 0.85,
@@ -52,6 +55,10 @@ def _parse(rows: list[dict[str, Any]]) -> tuple[list[tuple[datetime, float, str]
     for row in rows:
         try:
             ts = datetime.fromisoformat(str(row["timestamp"]).replace("Z", "+00:00"))
+            if ts.tzinfo is None or ts.utcoffset() is None:
+                # Timezone-naive timestamps are ambiguous; rejecting is the
+                # only fail-closed choice (never guess UTC, never impute).
+                raise ValueError
             value = float(row["value"])
             source = str(row.get("source_type", "")).strip()
             if not math.isfinite(value) or source not in SOURCE_CONFIDENCE:
