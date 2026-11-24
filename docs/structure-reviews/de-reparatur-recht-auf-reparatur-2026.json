@@ -1,0 +1,65 @@
+{
+  "structure_id": "de_reparatur_aufnahmenutzung_recht_auf_reparatur_2026",
+  "assessor": "vibe_session_2026-11-24_max_best_vollautonomie_lauf",
+  "assessed_at_structure": "2026-11-24T13:55:00Z",
+  "note": "Struktur-Einschaetzung fuer den Struktur-Review-Waechter (controller/structure_review.py, PR #170): Recht auf Reparatur (EU-Richtlinie (EU) 2024/1799 und deutsche Umsetzung, in Kraft seit 31.07.2026) als Instrument gegen vorzeitige Entsorgung brauchbarer Waren. Anlass: offener Entdeckungs- und Umsetzungsauftrag des Betreibers 24.11.2026 (Feld 'Reparatur / Materialrueckgewinnung'). Alle Angaben sind FREMDQUELLEN-Angaben, keine V91-Messung; DATENBASIS != MESSUNG, BELEGT_EINSCHAETZUNG != VERIFIZIERT, REVIEW != ENTSCHEIDUNG. Keine Abschaltliste, keine Handlungsempfehlung an Dritte.",
+  "criteria": {
+    "gesellschaftlicher_nutzen": {
+      "status": "BELEGT",
+      "evidence": "Reparaturpflicht der Hersteller gegenueber Verbrauchern fuer die uebliche Lebensdauer der Produkte, ausserhalb der Gewaehrleistung, weder durch AGB noch Individualabreden abdingbar (deutsche Umsetzung der Richtlinie (EU) 2024/1799; die finale Normzitatierung im BGBl ist aus den einsehbaren Quellen nicht exakt zitiierfaehig und bleibt UNKNOWN). Erfasste Produktgruppen laut Anhang II der Richtlinie: u.a. Haushaltswaschmaschinen, Geschirrspueler, Kuehlgeraete, Displays, Staubsauger, Smartphones/Tablets (mit jeweiligen Oekodesign-Verordnungen). Neue Regeln gelten in Deutschland seit dem 31.07.2026 (Umsetzungsgesetz vom 23.07.2026).",
+      "source": "https://cms.law/de/deu/legal-updates/eu-recht-auf-reparatur-neue-pflichten-fuer-hersteller-und-haendler ; https://www.ihk.de/schwaben/produktmarken/recht-und-steuern/vertragrecht/recht-auf-reparatur-7105520",
+      "assessed_at": "2026-11-24T13:55:00Z"
+    },
+    "menschenrechtsvertraeglichkeit": {
+      "status": "BELEGT",
+      "evidence": "Das Recht staerkt Verbraucherrechte ohne erkennbaren Eingriff in Grundrechte; in den einsehbaren Quellen kein Anhaltspunkt fuer diskriminierende Wirkung; Verstoesse sind durch Mitbewerber oder Verbaende abmahn-/klagefaehig. Direkte menschenrechtliche Auswirkungen wurden nicht gemessen und bleiben UNKNOWN.",
+      "source": "https://cms.law/de/deu/legal-updates/eu-recht-auf-reparatur-neue-pflichten-fuer-hersteller-und-haendler",
+      "assessed_at": "2026-11-24T13:55:00Z"
+    },
+    "kosten_und_ressourcenverbrauch": {
+      "status": "PROBLEM_BELEGT",
+      "evidence": "Belegte Verschwendung: Eurobarometer-Umfrage zufolge wuerden 77 Prozent der EU-Buerger ihre Elektrogeraete lieber reparieren als wegwerfen; die Richtlinien-Begruendung selbst nennt die Praxis, 'Produkte bereits bei geringfuegigen Defekten zu ersetzen, obwohl sie technisch reparierbar und weiterhin nutzbar waeren', als Regelungsanlass. Die Luecke zwischen Reparaturwunsch (77 %) und Wegwerfpraxis ist der belastete Befund; eine Reparaturquote wurde in den einsehbaren Quellen nicht beziffert und bleibt UNKNOWN.",
+      "source": "https://www.evz.de/themen/einkaufen-digitales/reparaturrecht/recht-auf-reparatur/ ; https://www.fgvw.de/de/aktuelles/reparieren-statt-ersetzen-wie-das-europaeische-right-to-repair-das-deutsche-kaufrecht-veraendert/",
+      "assessed_at": "2026-11-24T13:55:00Z"
+    },
+    "transparenz": {
+      "status": "BELEGT",
+      "evidence": "Europaeisches Reparaturformular als rechtsverbindliche Erklaerung des Reparaturbetriebs; Informationspflichten vor Diagnose/Reparatur; europaeische Online-Plattform fuer Reparaturstellen (von Mitgliedstaaten bis 31.07.2027 einzurichten, Links zu nationalen Plattformen).",
+      "source": "https://cms.law/de/deu/legal-updates/eu-recht-auf-reparatur-neue-pflichten-fuer-hersteller-und-haendler ; https://www.evz.de/themen/einkaufen-digitales/reparaturrecht/recht-auf-reparatur/",
+      "assessed_at": "2026-11-24T13:55:00Z"
+    },
+    "nachhaltigkeit": {
+      "status": "BELEGT",
+      "evidence": "Veroeffentliches Ziel: Reparaturen gegenueber Neukauf attraktiver machen, Lebensdauer von Produkten verlaengern, 'vorzeitige Entsorgung brauchbarer Waren' verringern (Kreislauforientierung als Green-Deal-Baustein). Konkrete CO2- oder Abfallmengen wurden in den einsehbaren Quellen NICHT beziffert und bleiben UNKNOWN; keine Wirkungs-Zahl von V91 berechnet (WIRKUNG_NUR_AUS_MESSUNG).",
+      "source": "https://www.pkf.de/pkf-magazin/ausgaben/2026/ausgabe-9-26/eeg-2027-1 ; https://www.fgvw.de/de/aktuelles/reparieren-statt-ersetzen-wie-das-europaeische-right-to-repair-das-deutsche-kaufrecht-veraendert/",
+      "assessed_at": "2026-11-24T13:55:00Z"
+    },
+    "missbrauchsrisiken": {
+      "status": "NICHT_GEPRUEFT",
+      "evidence": "",
+      "source": "",
+      "assessed_at": "2026-11-24T13:55:00Z"
+    },
+    "alternativen_und_verbesserbarkeit": {
+      "status": "BELEGT",
+      "evidence": "Verbesserungspfade sind bereits Gesetz: Reparaturpflicht in Kraft seit 31.07.2026, Produktgruppenliste wird durch die EU-Kommission dynamisch erweitert, nationale Reparatur-Online-Plattform bis 31.07.2027 vorgesehen, Gewaehrleistungsfrist verlaengert sich bei durchgef\u00fchrter Reparatur. Fuer Altvertraege (vor 31.07.2026) gilt Uebergangsrecht.",
+      "source": "https://www.ihk.de/schwaben/produktmarken/recht-und-steuern/vertragrecht/recht-auf-reparatur-7105520 ; https://cms.law/de/deu/legal-updates/eu-recht-auf-reparatur-neue-pflichten-fuer-hersteller-und-haendler",
+      "assessed_at": "2026-11-24T13:55:00Z"
+    }
+  },
+  "review_result": {
+    "verdict": "NEGATIVE_FINDING_PROBLEMS_BELEGT",
+    "criteria_belegt": 5,
+    "criteria_problem_belegt": 1,
+    "criteria_ungeprueft": 1,
+    "problems": [
+      "kosten_und_ressourcenverbrauch"
+    ],
+    "ungeprueft": [
+      "missbrauchsrisiken"
+    ],
+    "tool": "controller/structure_review.py @ main f3f80478 (PR #170-Linie)",
+    "run_at": "2026-11-24T13:55:00Z",
+    "reproduce": "python3 controller/structure_review.py --report-json docs/structure-reviews/de-reparatur-recht-auf-reparatur-2026.json"
+  }
+}
