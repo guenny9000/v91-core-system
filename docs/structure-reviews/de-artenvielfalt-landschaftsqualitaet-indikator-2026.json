@@ -1,0 +1,65 @@
+{
+  "structure_id": "de_artenvielfalt_landschaftsqualitaet_indikator_2026",
+  "assessor": "vibe_session_2026-11-24_max_best_vollautonomie_lauf_5",
+  "assessed_at_structure": "2026-11-24T17:45:00Z",
+  "note": "Struktur-Einschaetzung fuer den Struktur-Review-Waechter (controller/structure_review.py, PR #170): Tierschutz/Artenvielfalt - Indikator 'Artenvielfalt und Landschaftsqualitaet' (Bestand repraesentativer Vogelarten je Landschafts-/Nutzungstyp; UBA-Fortschreibung Stand 17.11.2026, Datenbasis BfN/DDA-Monitoring; BfN-Pressemitteilung 27.10.2026). Anlass: offener Entdeckungs- und Umgebungsauftrag des Betreibers 24.11.2026 (offener Suchraum #454, Feld 'Tierschutz/Artenvielfalt'). Alle Zahlen sind FREMDQUELLEN-Angaben, keine V91-Messung; DATENBASIS != MESSUNG, BELEGT_EINSCHAETZUNG != VERIFIZIERT, REVIEW != ENTSCHEIDUNG, INDEX != ABSCHALTLISTE. Keine Handlungsempfehlung an Dritte.",
+  "criteria": {
+    "nachhaltigkeit": {
+      "status": "PROBLEM_BELEGT",
+      "evidence": "Belegtes Problem: Der Gesamtindikator liegt 2024 bei 81 Prozent des auf 100 Prozent normierten Zielwerts 2030 und damit zwar in der Naehe des Zielbereichs, aber der Teilindikator Agrarland liegt laut UBA noch WEIT vom Zielbereich entfernt; das Bundesziel 100 Prozent bis 2030 ist laut UBA 'nur mit erheblichen zusaetzlichen Anstrengungen zu erreichen'. Positive Gegenbewegung erstmals belegt: ueber die letzten zehn Berichtsjahre (2014 bis 2024) ist ein statistisch signifikanter Trend hin zum Ziel feststellbar; bei der Fortschreibung bis 2023 war noch KEIN Trend feststellbar, Ursachen der Trendwende (Nutzungsaenderungen vs. Klimawandelfolgen) bleiben laut UBA offen. Wichtigste Ursachen der Belastung laut UBA: intensive landwirtschaftliche Nutzung, Zerschneidung und Zersiedelung der Landschaft, Bodenversiegelung, grossraeumige Stoffeintraege (Saeurebildner, Naehrstoffe). Keine V91-Zwischenrechnung.",
+      "source": "https://www.umweltbundesamt.de/indikator-artenvielfalt-landschaftsqualitaet (Stand 17.11.2026) ; https://www.bfn.de/aktuelles/indikator-artenvielfalt-und-landschaftsqualitaet-aktuelle-daten (27.10.2026)",
+      "assessed_at": "2026-11-24T17:45:00Z"
+    },
+    "gesellschaftlicher_nutzen": {
+      "status": "BELEGT",
+      "evidence": "Artenvielfalt ist laut UBA wesentliche Voraussetzung fuer einen leistungsfahigen Naturhaushalt und Lebensgrundlage des Menschen; der Indikator ist Schluesselindikator der Nationalen Strategie zur Biologischen Vielfalt (seit 2004) und bildet indirekt die Entwicklung zahlreicher weiterer Arten und die Nachhaltigkeit der Landnutzung ab. Nutzen fuer nicht erfasste Artengruppen bleibt UNKNOWN (Vogel-Stellvertreter-Annahme ist methodische Setzung, keine gemessene Generalisierung).",
+      "source": "https://www.umweltbundesamt.de/indikator-artenvielfalt-landschaftsqualitaet",
+      "assessed_at": "2026-11-24T17:45:00Z"
+    },
+    "menschenrechtsvertraeglichkeit": {
+      "status": "BELEGT",
+      "evidence": "Datengrundlage ist fachliches Standard-Monitoring (Bestandserfassung repraesentativer Vogelarten durch BfN/DDA-Netzwerk); kein Personenbezug, keine diskriminierende Wirkung erkennbar. Auswirkungen von Eingriffsregelungen auf Einzelne wurden nicht gemessen und bleiben UNKNOWN.",
+      "source": "https://www.umweltbundesamt.de/indikator-artenvielfalt-landschaftsqualitaet",
+      "assessed_at": "2026-11-24T17:45:00Z"
+    },
+    "kosten_und_ressourcenverbrauch": {
+      "status": "BELEGT",
+      "evidence": "Indikator auf Basis repraesentativer Bestandserfassungen haeufiger Brutvoegel (Monitoring haeufiger Brutvoegel, DDA; jaehrliche Aktualisierung; Methodik Achtziger et al. 2004, Ueberarbeitung Droeschmeister et al. 2025). Zielwerte je Vogelart von Expertengremium normiert (2030 = 100 Prozent): ZIELWERT == FACHSETZUNG != GEMESSENER ZUSTAND. Veraeusserungs- oder Massnahmenkosten werden in den Quellen nicht beziffert und bleiben UNKNOWN.",
+      "source": "https://www.umweltbundesamt.de/indikator-artenvielfalt-landschaftsqualitaet",
+      "assessed_at": "2026-11-24T17:45:00Z"
+    },
+    "transparenz": {
+      "status": "BELEGT",
+      "evidence": "Oeffentliche Primaerdaten: UBA-Indikatorseite mit Diagramm und Daten-Downloads (Stand 17.11.2026), BfN-Pressemitteilung 27.10.2026, Methodikpublikationen genannt (Achtziger et al. 2004; Droeschmeister et al. 2025), DDA-Publikationsliste zum Monitoring haeufiger Brutvoegel. Teilindikatoren-Werte je Landschaftstyp sind in den Downloads verfuegbar; hier nicht einzeln uebernommen (bleibt der Quelle vorbehalten).",
+      "source": "https://www.umweltbundesamt.de/indikator-artenvielfalt-landschaftsqualitaet ; https://www.dda-web.de/monitoring/mhb/publikationen",
+      "assessed_at": "2026-11-24T17:45:00Z"
+    },
+    "missbrauchsrisiken": {
+      "status": "NICHT_GEPRUEFT",
+      "evidence": "",
+      "source": "",
+      "assessed_at": "2026-11-24T17:45:00Z"
+    },
+    "alternativen_und_verbesserbarkeit": {
+      "status": "BELEGT",
+      "evidence": "Bekannte Hebel laut Quellen: Nationale Strategie zur Biologischen Vielfalt 2030 und Nachhaltigkeitsstrategie Deutschland; UBA nennt als Massnahmefelder Anstrengungen von Bund, Laendern und Kommunen in allen relevanten Politikfeldern (u. a. landwirtschaftliche Nutzung, Landschaftszerschneidung, Versiegelung, Stoffeintraege). Bewertung der Alternativen bleibt politische Arbeit ausserhalb dieses Datensatzes.",
+      "source": "https://www.umweltbundesamt.de/indikator-artenvielfalt-landschaftsqualitaet",
+      "assessed_at": "2026-11-24T17:45:00Z"
+    }
+  },
+  "review_result": {
+    "verdict": "NEGATIVE_FINDING_PROBLEMS_BELEGT",
+    "criteria_belegt": 5,
+    "criteria_problem_belegt": 1,
+    "criteria_ungeprueft": 1,
+    "problems": [
+      "nachhaltigkeit"
+    ],
+    "ungeprueft": [
+      "missbrauchsrisiken"
+    ],
+    "tool": "controller/structure_review.py @ main 9209fe6 (PR #170-Linie)",
+    "run_at": "2026-11-24T17:45:00Z",
+    "reproduce": "python3 controller/structure_review.py --report-json docs/structure-reviews/de-artenvielfalt-landschaftsqualitaet-indikator-2026.json"
+  }
+}
