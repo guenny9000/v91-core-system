@@ -159,13 +159,20 @@ def _read_cgroup_v2_cpu_quota_cores(
         except FileNotFoundError:
             return None
         relative_path = None
+        has_v1_cpu_controller = False
         for entry in entries:
             fields = entry.split(":", 2)
-            if len(fields) == 3 and fields[0] == "0" and fields[1] == "":
+            if len(fields) != 3:
+                continue
+            if fields[0] == "0" and fields[1] == "":
                 relative_path = fields[2].strip("/")
                 break
+            if "cpu" in fields[1].split(","):
+                has_v1_cpu_controller = True
         if relative_path is None:
-            return None  # cgroup v2 is not exposed in this process namespace
+            if has_v1_cpu_controller:
+                raise ValueError("cgroup v1 CPU quota is unsupported; CPU capacity is UNKNOWN")
+            return None  # no cgroup v2 or v1 CPU controller is exposed
         components = [part for part in relative_path.split("/") if part]
         paths = [
             os.path.join(mount_root, *components[:depth], "cpu.max")
