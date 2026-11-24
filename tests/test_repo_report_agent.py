@@ -111,7 +111,20 @@ class TestRepoReportAgent(unittest.TestCase):
         # ECHTER Repostand: gegen den echten Index und echte docs/ im Checkout.
         report, exit_code = rra.build_report(str(REPO_ROOT))
         self.assertEqual(exit_code, rra.EXIT_OK, msg=json.dumps(report.get("violations"), indent=2))
-        self.assertGreaterEqual(report["index_lint"]["entries"], 30)
+        # #532: Session-Historie verlustfrei ins Archiv ausgelagert.
+        # Der schlanke Index darf 0 Session-Eintraege haben; der
+        # Bestandsschutz wandert zum Archiv (AENDERUNGSLOG), das hier
+        # fuer den ECHTEN Repostand mitgeprueft wird (SKIP != PASS).
+        self.assertEqual(report["index_lint"]["errors"], 0)
+        archive = REPO_ROOT / "docs" / "archive" / "V91-ARCHITEKTUR-AENDERUNGSLOG.md"
+        self.assertTrue(archive.is_file(), "Archiv fehlt: " + str(archive))
+        from controller.index_lint import build_report as lint_build_report
+        from controller.index_lint import check_file as lint_check_file
+        arch_result, arch_code = lint_check_file(str(archive))
+        self.assertNotEqual(arch_code, 3, "Archiv nicht lesbar")
+        arch_report = lint_build_report(arch_result, str(archive))
+        self.assertEqual(arch_report["errors"], 0)
+        self.assertGreaterEqual(arch_report["entries"], 100)
         self.assertGreaterEqual(report["docs_inventory"]["docs_md_total"], 40)
         self.assertEqual(report["docs_inventory"]["status"], "OK")
         dump = json.dumps(report)
