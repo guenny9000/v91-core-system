@@ -11,6 +11,7 @@ from pathlib import Path
 
 from controller.emergency_supply import (
     DEFAULT_REQUIRED_ITEMS,
+    MAX_MANIFEST_BYTES,
     ManifestError,
     SCHEMA_VERSION,
     evaluate_manifest,
@@ -130,10 +131,17 @@ class EmergencySupplyAssessmentTests(unittest.TestCase):
         with self.assertRaises(ManifestError):
             evaluate_manifest(_manifest(), now=datetime(2026, 11, 24, 19, 0))
 
-    def test_manifest_size_limit_and_duplicate_keys(self):
+    def test_duplicate_json_keys_rejected(self):
         with tempfile.TemporaryDirectory() as tmp:
             path = Path(tmp) / "manifest.json"
             path.write_text('{"schema_version":"x","schema_version":"y"}', encoding="utf-8")
+            with self.assertRaises(ManifestError):
+                load_manifest(path)
+
+    def test_manifest_size_limit_enforced(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "manifest.json"
+            path.write_bytes(b"x" * (MAX_MANIFEST_BYTES + 1))
             with self.assertRaises(ManifestError):
                 load_manifest(path)
 
