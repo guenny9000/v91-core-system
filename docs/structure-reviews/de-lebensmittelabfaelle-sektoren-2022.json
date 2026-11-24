@@ -59,8 +59,7 @@
       "missbrauchsrisiken"
     ],
     "tool": "controller/structure_review.py @ main f3f80478 (PR #170-Linie)",
-    "run_at": "2026-11-24T12:10:00Z",
-    "reproduce": "python3 controller/structure_review.py --report-json docs/structure-reviews/de-lebensmittelabfaelle-sektoren-2022.json",
-    "verification_pending": "review_result wird nach Lauf des echten structure_review-Moduls gegen die GEPUSHTE raw-Datei ersetzt (Vorab-Eintrag vor PR-Oeffnung)."
+    "run_at": "2026-11-24T12:12:00Z",
+    "reproduce": "python3 controller/structure_review.py --report-json docs/structure-reviews/de-lebensmittelabfaelle-sektoren-2022.json (Lauf gegen die GEPUSHTE raw-Datei: verdict bestaetigt, exit code 1 = NEGATIVE_FINDING fail-closed korrekt, SHA-256 Uebereinstimmung raw-Datei vs. Branch-Kopie verifiziert)"
   }
 }
