@@ -138,7 +138,9 @@ def test_real_index_lint_clean():
     """Integration: der echte Index auf main muss fehlerfrei sein.
 
     SKIP != PASS: Fehlt die Datei (z. B. Ausfuerung ausserhalb des
-    Repos), wird ehrlich uebersprungen.
+    Repos), wird ehrlich uebersprungen. Seit der Archiv-Ueberfuehrung
+    (#521-Nachfolge) zaehlt der Bestandsschutz gegen die leere
+    Rekonstruktion aus #173 Index PLUS Archiv-Datei zusammen.
     """
     repo_root = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
     index_path = os.path.join(repo_root, "docs", "V91-ARCHITEKTUR-INDEX.md")
@@ -148,7 +150,18 @@ def test_real_index_lint_clean():
     text = open(index_path, encoding="utf-8").read()
     result = lint_text(text)
     assert result.ok, "Index-Verstoesse: %s" % result.errors
-    assert len(result.entries) > 20, "Unerwartet wenige Session-Eintraege"
+    archive_path = os.path.join(
+        repo_root, "docs", "archive", "V91-ARCHITEKTUR-AENDERUNGSLOG.md"
+    )
+    if not os.path.isfile(archive_path):
+        assert len(result.entries) > 20, "Unerwartet wenige Session-Eintraege"
+        return
+    archive_result = lint_text(open(archive_path, encoding="utf-8").read())
+    assert archive_result.ok, "Archiv-Verstoesse: %s" % archive_result.errors
+    combined = len(result.entries) + len(archive_result.entries)
+    assert combined > 20, (
+        "Unerwartet wenige Session-Eintraege (Index + Archiv): %d" % combined
+    )
 
 
 def _run_all():
