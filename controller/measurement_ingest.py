@@ -62,6 +62,8 @@ class RawMeasurement:
     unit: str
     timestamp: str
     source: str = "unknown"
+    # Opaque reference to calibration evidence; presence is not proof of validity.
+    calibration_ref: str | None = None
 
 
 @dataclass(frozen=True)
@@ -78,6 +80,8 @@ class ValidationResult:
     warnings: list[str] = field(default_factory=list)
     normalized_value: float | None = None
     timestamp_utc: str | None = None
+    # Reference presence is tracked separately from measurement validation.
+    calibration_status: str = "UNKNOWN"
 
 
 # Common sentinel values are rejected before range checks. A sensor-specific
@@ -121,6 +125,18 @@ def validate_measurement(
     if not isinstance(specs, Mapping):
         raise TypeError("specs must be a mapping")
 
+    calibration_ref = measurement.calibration_ref
+    if calibration_ref is None:
+        calibration_status = "MISSING_REFERENCE"
+        warnings.append(
+            "calibration reference missing; measurement validity does not establish calibration"
+        )
+    elif not isinstance(calibration_ref, str) or not calibration_ref.strip():
+        calibration_status = "INVALID_REFERENCE"
+        errors.append("calibration_ref must be a non-empty opaque reference when provided")
+    else:
+        calibration_status = "REFERENCE_PRESENT_NOT_VERIFIED"
+
     if not isinstance(measurement.sensor_id, str) or not measurement.sensor_id.strip():
         errors.append("sensor_id missing or invalid")
     if not isinstance(measurement.metric, str) or not measurement.metric.strip():
@@ -146,6 +162,8 @@ def validate_measurement(
             MeasurementStatus.REJECTED,
             measurement,
             errors=errors + ["value must be a numeric int or float; booleans and strings are rejected"],
+            warnings=warnings,
+            calibration_status=calibration_status,
         )
     elif numeric is None:
         errors.append("value is not finite or cannot be represented safely")
@@ -187,11 +205,18 @@ def validate_measurement(
                         )
 
     if errors:
-        return ValidationResult(MeasurementStatus.QUARANTINE, measurement, errors, warnings)
+        return ValidationResult(
+            MeasurementStatus.QUARANTINE,
+            measurement,
+            errors,
+            warnings,
+            calibration_status=calibration_status,
+        )
     return ValidationResult(
         MeasurementStatus.VALID,
         measurement,
         warnings=warnings,
         normalized_value=numeric,
         timestamp_utc=timestamp.isoformat().replace("+00:00", "Z") if timestamp else None,
+        calibration_status=calibration_status,
     )
