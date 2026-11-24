@@ -57,7 +57,10 @@ class RecordTests(OperatorEntryTestBase):
     def test_record_valid_measurement(self) -> None:
         result = self.record(timestamp="2026-11-18T19:00:00+01:00")
         self.assertEqual(result["status"], "RECORDED")
-        self.assertEqual(result["warnings"], [])
+        self.assertEqual(
+            result["warnings"],
+            ["calibration reference missing; measurement validity does not establish calibration"],
+        )
         self.assertTrue(self.store.verify_chain())
         self.assertEqual(self.store.count(), 1)
         entry = self.entries()[0]
