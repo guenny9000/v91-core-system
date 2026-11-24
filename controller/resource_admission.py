@@ -126,15 +126,9 @@ def _linux_ram_available_mb() -> Optional[int]:
     return None
 
 
-def _read_cgroup_v2_cpu_quota_cores(
-    path: str = "/sys/fs/cgroup/cpu.max",
-) -> Optional[float]:
-    """Read a cgroup v2 CPU quota in cores; None means no quota file/limit."""
-    try:
-        with open(path, "r", encoding="utf-8") as handle:
-            fields = handle.read().strip().split()
-    except FileNotFoundError:
-        return None
+def _parse_cgroup_v2_cpu_max(content: str) -> Optional[float]:
+    """Parse one cgroup v2 cpu.max value; None means that level has no quota."""
+    fields = content.strip().split()
     if len(fields) != 2:
         raise ValueError("Malformed cgroup v2 cpu.max")
     quota_text, period_text = fields
@@ -148,6 +142,46 @@ def _read_cgroup_v2_cpu_quota_cores(
     if quota < 0 or period <= 0:
         raise ValueError("Invalid cgroup v2 CPU quota or period")
     return quota / period
+
+
+def _read_cgroup_v2_cpu_quota_cores(
+    path: Optional[str] = None,
+    cgroup_file: str = "/proc/self/cgroup",
+    mount_root: str = "/sys/fs/cgroup",
+) -> Optional[float]:
+    """Read the tightest cgroup v2 quota from the process cgroup to its root."""
+    if path is not None:
+        paths = [path]
+    else:
+        try:
+            with open(cgroup_file, "r", encoding="utf-8") as handle:
+                entries = handle.read().splitlines()
+        except FileNotFoundError:
+            return None
+        relative_path = None
+        for entry in entries:
+            fields = entry.split(":", 2)
+            if len(fields) == 3 and fields[0] == "0" and fields[1] == "":
+                relative_path = fields[2].strip("/")
+                break
+        if relative_path is None:
+            return None  # cgroup v2 is not exposed in this process namespace
+        components = [part for part in relative_path.split("/") if part]
+        paths = [
+            os.path.join(mount_root, *components[:depth], "cpu.max")
+            for depth in range(len(components), -1, -1)
+        ]
+
+    quotas = []
+    for candidate in paths:
+        try:
+            with open(candidate, "r", encoding="utf-8") as handle:
+                quota = _parse_cgroup_v2_cpu_max(handle.read())
+        except FileNotFoundError:
+            continue
+        if quota is not None:
+            quotas.append(quota)
+    return min(quotas) if quotas else None
 
 
 def _effective_cpu_capacity_cores(
