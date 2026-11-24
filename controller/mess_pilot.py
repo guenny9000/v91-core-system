@@ -32,6 +32,8 @@ from contextlib import contextmanager
 from pathlib import Path
 from typing import Any, Dict, Iterator, List, Optional, Tuple
 
+from controller.ledger_lock import exclusive_ledger_lock
+
 if __package__ in (None, ""):  # direkter CLI-Aufruf: sys.path erweitern
     sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
@@ -118,46 +120,13 @@ def validate_reading(metric_id: str, status: str, value: Any,
 def _exclusive_log_lock(log_path: Path) -> Iterator[None]:
     """Prozessuebergreifender Schreibschutz fuer EINE Log-Datei.
 
-    Anlass: reproduzierte TOCTOU-Race in PilotLog.append (8 parallele
-    Threads am selben Log: ohne Lock torn writes, Duplikat-Seq und
-    'prev_hash falsch' -> Kette ungueltig; Probe 25.11.2026, mit Lock
-    seq 1..8 eindeutig, Kette gueltig). _read_last -> append ist ein
-    kritischer Abschnitt (Lesen + Schreiben), nicht nur das Schreiben.
-    POSIX: fcntl.flock(LOCK_EX) ueber eine Begleit-Lockdatei; Windows:
-    msvcrt.locking falls verfuegbar. Ehrliche Grenzen: LOCK_DATEI !=
-    LOG_DATEI (enthaelt keine Daten, ISOLATE_NOT_DESTROY), Fallback
-    ohne msvcrt bleibt prozesslokal schwach, NETZWEIT wird gar nichts
-    gesperrt (das Protokoll ist lokal, SINGLE_HOST == ANNAHME).
+    Muster-Heimat seit PR #517 (hier reproduzierte TOCTOU-Race);
+    der Baustein wurde als controller/ledger_lock.py gehoben und
+    diese Stelle DELEGIERT seither (REUSE != COPY, keine zweite
+    Lock-Implementierung im System [NO_DUPLICATE_SYSTEMS]).
     """
-    lock_path = log_path.with_suffix(log_path.suffix + ".lock")
-    lock_path.parent.mkdir(parents=True, exist_ok=True)
-    fh = open(lock_path, "a+", encoding="utf-8")
-    locked = None
-    try:
-        if os.name == "posix":
-            import fcntl
-            fcntl.flock(fh.fileno(), fcntl.LOCK_EX)
-            locked = "fcntl"
-        else:
-            try:
-                import msvcrt
-                fh.seek(0)
-                msvcrt.locking(msvcrt.LK_LOCK, 1, 1)
-                locked = "msvcrt"
-            except (ImportError, OSError):
-                locked = None  # schwacher Fallback, ehrlich dokumentiert
+    with exclusive_ledger_lock(log_path):
         yield
-    finally:
-        try:
-            if locked == "fcntl":
-                import fcntl
-                fcntl.flock(fh.fileno(), fcntl.LOCK_UN)
-            elif locked == "msvcrt":
-                import msvcrt
-                fh.seek(0)
-                msvcrt.locking(msvcrt.LK_UNLCK, 1, 1)
-        finally:
-            fh.close()
 
 
 class PilotLog:
