@@ -37,7 +37,7 @@ Vertrag:
   KEINEN fremden Code und fuehrt ihn NIEMALS aus.
 - Ledger: append-only JSONL, eine Zeile pro Kern, sha256 ueber den
   Rohtext, Dedup gegen vorhandene SHA-Werte, fsync nach jedem
-  Schreiben. Schreibfehler brechen fail-closed ab.
+  Schreiben. Schreibfehler brechen fail-closed ab. Dedup-Lesen UND Append stehen gemeinsam unter dem exklusiven Datei-Lock aus controller/ledger_lock.py (REUSE aus #529, der dort ehrlich offen dokumentierte Rest); der Netz-Abruf bleibt bewusst AUSSERHALB des Locks (kein Netz im kritischen Abschnitt). LOCK != BEWEIS: der Lock verhindert Interleaving, die Verifikation bleibt Massstab.
 - KEIN Daemon, KEIN Timer, KEIN automatischer Lauf: der Abruf ist
   ein geplanter Schritt des Betreibers (SCRIPTED != RUNNING).
 
@@ -45,6 +45,8 @@ Ehrliche Grenzen:
 - ABGEHOLT != GEPRUEFT: der Ledger beweist nur Aufnahme und Hash,
   niemals Korrektheit, Lauffaehigkeit oder Wahrheit des Inhalts
   (AUFGENOMMEN != VERIFIZIERT).
+- Auf Systemen ohne fcntl/msvcrt gilt wie beim Lock-Baustein der
+  prozesslokale schwache Fallback (ehrlich dokumentiert, KEIN stiller Erfolg).
 - Der GitHub-Abruf selbst liegt ausserhalb dieser Messung: er
   liefert, was die API liefert; Ausfaelle brechen fail-closed ab
   (UNKNOWN != PASS).
@@ -64,6 +66,8 @@ import sys
 import urllib.request
 from datetime import datetime, timezone
 from typing import Any, Callable
+
+from controller.ledger_lock import exclusive_ledger_lock
 
 _SCRIPT_DIR = str(pathlib.Path(__file__).resolve().parent)
 while _SCRIPT_DIR in sys.path:
@@ -162,7 +166,6 @@ def collect_kerns(
     if not isinstance(issues, list):
         raise ValueError("Abruf-Ergebnis ist keine Liste (FAIL-CLOSED)")
 
-    known = _existing_hashes(ledger_path)
     report: dict[str, Any] = {
         "repo": repo,
         "label": label,
@@ -173,37 +176,43 @@ def collect_kerns(
         "honesty_limits": HONESTY_LIMITS,
     }
 
-    new_records: list[dict[str, Any]] = []
-    for issue in issues:
-        if not isinstance(issue, dict):
-            continue
-        body = issue.get("body")
-        body = body if isinstance(body, str) else ""
-        digest = hashlib.sha256(body.encode("utf-8")).hexdigest()
-        if digest in known:
-            report["records_known"] += 1
-            continue
-        known.add(digest)
-        status = gate_payload(body)
-        new_records.append({
-            "timestamp_utc": datetime.now(timezone.utc).isoformat(),
-            "issue_number": issue.get("number"),
-            "title": issue.get("title"),
-            "repo": repo,
-            "sha256": digest,
-            "gate_status": status,
-            "payload": body,
-        })
-        report["gate_counts"][status] = report["gate_counts"].get(status, 0) + 1
+    # Dedup-Lesen und Append bilden EINEN kritischen Abschnitt unter dem
+    # exklusiven Datei-Lock (REUSE controller/ledger_lock.py; der in #529
+    # ehrlich offen dokumentierte Rest ist damit geschlossen). Der
+    # Netz-Abruf bleibt bewusst AUSSERHALB des Locks.
+    with exclusive_ledger_lock(ledger_path):
+        known = _existing_hashes(ledger_path)
+        new_records: list[dict[str, Any]] = []
+        for issue in issues:
+            if not isinstance(issue, dict):
+                continue
+            body = issue.get("body")
+            body = body if isinstance(body, str) else ""
+            digest = hashlib.sha256(body.encode("utf-8")).hexdigest()
+            if digest in known:
+                report["records_known"] += 1
+                continue
+            known.add(digest)
+            status = gate_payload(body)
+            new_records.append({
+                "timestamp_utc": datetime.now(timezone.utc).isoformat(),
+                "issue_number": issue.get("number"),
+                "title": issue.get("title"),
+                "repo": repo,
+                "sha256": digest,
+                "gate_status": status,
+                "payload": body,
+            })
+            report["gate_counts"][status] = report["gate_counts"].get(status, 0) + 1
 
-    if new_records:
-        ledger_path.parent.mkdir(parents=True, exist_ok=True)
-        with open(ledger_path, "a", encoding="utf-8") as handle:
-            for record in new_records:
-                handle.write(json.dumps(record, ensure_ascii=False) + "\n")
-                handle.flush()
-                import os as _os
-                _os.fsync(handle.fileno())
+        if new_records:
+            ledger_path.parent.mkdir(parents=True, exist_ok=True)
+            with open(ledger_path, "a", encoding="utf-8") as handle:
+                for record in new_records:
+                    handle.write(json.dumps(record, ensure_ascii=False) + "\n")
+                    handle.flush()
+                    import os as _os
+                    _os.fsync(handle.fileno())
     report["records_new"] = len(new_records)
     return report
 

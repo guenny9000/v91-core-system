@@ -6,8 +6,8 @@ AXIOM: Schöpfung dient dem Erhalt, der Regeneration und der Zukunft.
 ---------------------------------------------------------------------
 
 Ledger-Lock: prozessuebergreifender Schreibschutz fuer append-only
-Ledger-/JSONL-Dateien (Issue LEDGER-LOCK-REST fuer quorum_ledger,
-receipt_store, research_watch).
+Ledger-/JSONL-Dateien (LEDGER-LOCK fuer quorum_ledger,
+receipt_store, research_watch, kern_bridge).
 
 Anlass (PR #517): reproduzierte TOCTOU-Race im Mess-Piloten (8
 parallele Threads am selben Log: ohne Lock torn writes, Duplikat-seq

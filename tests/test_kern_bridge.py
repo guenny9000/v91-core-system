@@ -175,6 +175,73 @@ class CollectKernsTest(unittest.TestCase):
         self.assertIn("ABGEHOLT != GEPRUEFT", report["honesty_limits"])
 
 
+class KernBridgeLockTest(unittest.TestCase):
+    """REUSE #529/#530: Dedup-Lesen + Append unter exklusivem Ledger-Lock."""
+
+    def setUp(self):
+        self.tmp = tempfile.TemporaryDirectory()
+        self.ledger = Path(self.tmp.name) / "v91_bridge_inbox.jsonl"
+
+    def tearDown(self):
+        self.tmp.cleanup()
+
+    def test_parallel_same_issues_no_duplicates(self):
+        # 6 parallele Laeufe mit identischen Issues: jede Zeile exakt einmal.
+        import threading
+        issues = [_issue(i, _valid_body("value = %d" % i)) for i in range(1, 4)]
+        bodies = {i: _valid_body("value = %d" % i) for i in range(1, 4)}
+        fetch, _ = _make_fetch(issues)
+        reports = []
+
+        def run():
+            reports.append(collect_kerns(self.ledger, "o/r", BRIDGE_LABEL, fetch=fetch))
+
+        threads = [threading.Thread(target=run) for _ in range(6)]
+        for t in threads:
+            t.start()
+        for t in threads:
+            t.join()
+        total_new = sum(r["records_new"] for r in reports)
+        self.assertEqual(3, total_new, "paralleles Dedup muss exakt 3 Neuaufnahmen lassen")
+        lines = [ln for ln in self.ledger.read_text(encoding="utf-8").splitlines() if ln.strip()]
+        self.assertEqual(3, len(lines))
+        for ln in lines:
+            rec = json.loads(ln)  # jede Zeile allein-parsebar: KEINE torn writes
+            self.assertEqual(bodies[rec["issue_number"]], rec["payload"])
+
+    def test_parallel_distinct_issues_all_appended_once(self):
+        import threading
+        per_thread = [[_issue(100 + n, _valid_body("x = %d" % n))] for n in range(8)]
+        fetches = [_make_fetch(iss) for iss in per_thread]
+        reports = []
+
+        def run(idx):
+            reports.append(collect_kerns(self.ledger, "o/r", BRIDGE_LABEL, fetch=fetches[idx][0]))
+
+        threads = [threading.Thread(target=run, args=(i,)) for i in range(8)]
+        for t in threads:
+            t.start()
+        for t in threads:
+            t.join()
+        self.assertEqual(8, sum(r["records_new"] for r in reports))
+        lines = [ln for ln in self.ledger.read_text(encoding="utf-8").splitlines() if ln.strip()]
+        self.assertEqual(8, len(lines))
+        numbers = sorted(json.loads(ln)["issue_number"] for ln in lines)
+        self.assertEqual(list(range(100, 108)), numbers)
+
+    def test_existing_records_untouched_under_parallel(self):
+        import threading
+        self.ledger.write_text('{"sha256":"keepersha","payload":"alt"}\n', encoding="utf-8")
+        fetch, _ = _make_fetch([_issue(9, _valid_body())])
+        threads = [threading.Thread(
+            target=lambda: collect_kerns(self.ledger, fetch=fetch)) for _ in range(4)]
+        for t in threads:
+            t.start()
+        for t in threads:
+            t.join()
+        lines = self.ledger.read_text(encoding="utf-8").splitlines()
+        self.assertEqual("keepersha", json.loads(lines[0])["sha256"])
+        self.assertEqual(2, len(lines))  # append-only: Vorhandenes unangetastet
 class CliTest(unittest.TestCase):
     def setUp(self):
         self.tmp = tempfile.TemporaryDirectory()
