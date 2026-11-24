@@ -14,11 +14,12 @@ sufficient, and within the locally configured quota.
 
 What is real here:
 - HostResourceAdapter measures what the standard library can honestly
-  measure LOCALLY: CPU cores (os.cpu_count), free disk space
-  (shutil.disk_usage), and RAM available from /proc/meminfo on Linux.
-  On non-Linux platforms RAM stays None (UNKNOWN), and VRAM is never
-  guessed (None) - a GPU is required to self-report via a real adapter
-  later.
+  measure LOCALLY: effective process CPU capacity (affinity plus Linux
+  cgroup v2 CPU quota when present), free disk space (shutil.disk_usage),
+  and RAM available from /proc/meminfo on Linux. On platforms without
+  process-affinity APIs, system logical CPUs are the available topology
+  fallback, not idle CPU. On non-Linux platforms RAM stays None (UNKNOWN),
+  and VRAM is never guessed (None).
 - ResourceAdmissionGate is deterministic: injected clock, explicit
   freshness window, explicit quota, fail-closed on every gap.
 - DETECTION != AUTHORIZATION: an ALLOWED_LOCAL admission is permission
@@ -26,8 +27,8 @@ What is real here:
 
 Honest limits:
 - No load sampling, no trend prediction: a single measurement is a
-  snapshot, not a capacity forecast.
-- os.cpu_count reports configured cores, not idle cores.
+  snapshot, not a capacity forecast. CPU affinity/cgroup quota describes
+  the process's schedulable ceiling, not currently idle CPU.
 """
 from __future__ import annotations
 
@@ -125,16 +126,70 @@ def _linux_ram_available_mb() -> Optional[int]:
     return None
 
 
+def _read_cgroup_v2_cpu_quota_cores(
+    path: str = "/sys/fs/cgroup/cpu.max",
+) -> Optional[float]:
+    """Read a cgroup v2 CPU quota in cores; None means no quota file/limit."""
+    try:
+        with open(path, "r", encoding="utf-8") as handle:
+            fields = handle.read().strip().split()
+    except FileNotFoundError:
+        return None
+    if len(fields) != 2:
+        raise ValueError("Malformed cgroup v2 cpu.max")
+    quota_text, period_text = fields
+    if quota_text == "max":
+        return None
+    try:
+        quota = int(quota_text)
+        period = int(period_text)
+    except ValueError as exc:
+        raise ValueError("Malformed cgroup v2 cpu.max") from exc
+    if quota < 0 or period <= 0:
+        raise ValueError("Invalid cgroup v2 CPU quota or period")
+    return quota / period
+
+
+def _effective_cpu_capacity_cores(
+    affinity_count: Optional[int], quota_cores: Optional[float],
+) -> Optional[float]:
+    """Bound process CPU capacity by affinity and any cgroup v2 quota."""
+    if isinstance(affinity_count, bool) or not isinstance(affinity_count, int) or affinity_count <= 0:
+        return None
+    capacity = float(affinity_count)
+    if quota_cores is not None:
+        if not _is_finite_number(quota_cores) or quota_cores <= 0:
+            return None
+        capacity = min(capacity, float(quota_cores))
+    return capacity
+
+
+def _available_cpu_capacity_cores() -> Optional[float]:
+    """Return process schedulable CPU ceiling, never a claim about idle CPU."""
+    try:
+        if hasattr(os, "sched_getaffinity"):
+            affinity_count = len(os.sched_getaffinity(0))
+        else:
+            affinity_count = os.cpu_count()
+        quota_cores = _read_cgroup_v2_cpu_quota_cores()
+        return _effective_cpu_capacity_cores(affinity_count, quota_cores)
+    except (OSError, ValueError, TypeError):
+        # A present but unreadable/malformed limit must not inflate capacity.
+        return None
+
+
 class HostResourceAdapter:
     """Measures locally available resources with stdlib means, honestly bounded."""
 
     def __init__(self, clock: Optional[Callable[[], float]] = None,
-                 ram_reader: Callable[[], Optional[int]] = _linux_ram_available_mb) -> None:
+                 ram_reader: Callable[[], Optional[int]] = _linux_ram_available_mb,
+                 cpu_capacity_reader: Callable[[], Optional[float]] = _available_cpu_capacity_cores) -> None:
         self._clock = clock if clock is not None else time.monotonic
         self._ram_reader = ram_reader
+        self._cpu_capacity_reader = cpu_capacity_reader
 
     def measure(self) -> ResourceMeasurements:
-        cores = os.cpu_count()
+        cores = self._cpu_capacity_reader()
         disk = None
         try:
             disk = shutil.disk_usage(os.getcwd()).free // (1024 * 1024)
