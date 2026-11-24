@@ -1,0 +1,65 @@
+{
+  "structure_id": "de_rechtsstaatlichkeit_ziviljustiz_verfahrensdauer_2026",
+  "assessor": "vibe_session_2026-11-24_max_best_vollautonomie_lauf_5",
+  "assessed_at_structure": "2026-11-24T20:50:00Z",
+  "note": "Struktur-Einschaetzung fuer den Struktur-Review-Waechter (controller/structure_review.py, PR #170): Rechtsstaatlichkeit - Verfahrensdauer vor den deutschen Zivilgerichten (Justizstatistik 2024, Destatis; ZPO-Reform zum 01.01.2026). Anlass: offener Entdeckungs- und Umsetzungsauftrag des Betreibers 24.11.2026 (offener Suchraum #454, Feld 'Rechtsstaatlichkeit'). Alle Zahlen sind FREMDQUELLEN-Angaben, keine V91-Messung; DATENBASIS != MESSUNG, BELEGT_EINSCHAETZUNG != VERIFIZIERT, REVIEW != ENTSCHEIDUNG. Keine Abschaltliste, keine Handlungsempfehlung an Dritte.",
+  "criteria": {
+    "gesellschaftlicher_nutzen": {
+      "status": "PROBLEM_BELEGT",
+      "evidence": "Belegtes Problem: Effektiver Rechtsschutz setzt Verfahren in angemessener Zeit voraus ('Justice delayed is justice denied'). Die durchschnittliche Verfahrensdauer bis zum streitigen Urteil bei den Landgerichten stieg laut Justizstatistik 2024 auf 17,5 Monate (2023: 16,7; 2022: 14,1 Monate), kumuliert +24,1 Prozent in zwei Jahren - deutlich ueber dem Anstieg des Fallaufkommens (+10,8 Prozent). Das Ueberlastungsparadoxon bleibt: eine im Wesentlichen gleichbleibende Zahl Richterinnen und Richter braucht im Trend laenger, um weniger Faelle zu bearbeiten. Amtsgerichte: 8,8 Monate (2022: 9,0; leichte Verbesserung zweimal in Folge, auch weil standardisierte Fluggastrechtefaelle mit 4,4 Monaten Dauer die Quote druecken). Die Ursachen des Paradoxons sind laut Quelle nicht abschliessend analysiert; Wirkung auf die tatsaechliche Rechtsdurchsetzung bleibt UNKNOWN; keine V91-Zwischenrechnung.",
+      "source": "https://www.beck-aktuell.de/rechtsbranche/justiz-behoerden/justizstatistik-2024-eingangszahlen-steigen-verfahrensdauer-fluggastrechte-2025-08-11 ; https://www.destatis.de/DE/Themen/Staat/Justiz-Rechtspflege/Publikationen/Downloads-Gerichte/statistischer-bericht-zivilgerichte-2100210247005.html",
+      "assessed_at": "2026-11-24T20:50:00Z"
+    },
+    "menschenrechtsvertraeglichkeit": {
+      "status": "BELEGT",
+      "evidence": "Art. 6 EMRK und Art. 19 GG verlangen Rechtsschutz innerhalb angemessener Frist; die belegte Verfahrensverlaengerung bei den Landgerichten beruehrt diesen Anspruch unmittelbar. In den einsehbaren Quellen kein Anhaltspunkt fuer diskriminierende Wirkung einzelner Verfahrensarten; personenschutzspezifische Auswirkungen wurden nicht gemessen und bleiben UNKNOWN.",
+      "source": "https://www.beck-aktuell.de/rechtsbranche/justiz-behoerden/justizstatistik-2024-eingangszahlen-steigen-verfahrensdauer-fluggastrechte-2025-08-11",
+      "assessed_at": "2026-11-24T20:50:00Z"
+    },
+    "kosten_und_ressourcenverbrauch": {
+      "status": "BELEGT",
+      "evidence": "Neueingaenge 2024: Amtsgerichte 801.351 (+4,2 Prozent gg. 773.365 in 2023; nach Herausrechnen der Fluggastrechte nur +0,8 Prozent); Landgerichte 317.295 (+5,4 Prozent). Fluggastrechteverfahren: 134.496 in 2024 (2023: 108.092; 2021: 28.514 bei Erfassungsbeginn, mehr als +370 Prozent), konzentriert auf sechs Amtsgerichte (Koeln, Frankfurt, Koenigs Wusterhausen, Erding, Duesseldorf, Hamburg), Anteil ~17 Prozent am Gesamtaufkommen. Gegenkonto langfristig: -44,5 Prozent gg. 1.443.584 Neueingaenge 2002 bei Amtsgerichten, -23 Prozent bei Landgerichten. Bestand: unerledigt anhaengige LG-Verfahren 321.259 zum Jahresende (Abbau 324.839 -> 321.259); AG leicht +1,1 Prozent auf 392.524.",
+      "source": "https://www.beck-aktuell.de/rechtsbranche/justiz-behoerden/justizstatistik-2024-eingangszahlen-steigen-verfahrensdauer-fluggastrechte-2025-08-11",
+      "assessed_at": "2026-11-24T20:50:00Z"
+    },
+    "transparenz": {
+      "status": "BELEGT",
+      "evidence": "Oeffentliche Datenbasis: Statistischer Bericht Zivilgerichte 2024 (Destatis, August 2025) mit Geschaefteanfall- und -erledigung; ausfuehrliche Fachauswertung (beck-aktuell, Peter Bert, 11.08.2025); Geschaeftsentwicklung Staatsanwaltschaften (Bundesjustizamt); Justizstatistiken je Sachgebiet und Instanz. Die Kausalursachen der Verfahrensverlaengerung sind darin NICHT quantifiziert (bleibt UNKNOWN).",
+      "source": "https://www.destatis.de/DE/Themen/Staat/Justiz-Rechtspflege/Publikationen/Downloads-Gerichte/statistischer-bericht-zivilgerichte-2100210247005.html ; https://www.bundesjustizamt.de/SharedDocs/Downloads/DE/Justizstatistiken/Geschaeftsentwicklung_Staatsanwaltschaften.pdf",
+      "assessed_at": "2026-11-24T20:50:00Z"
+    },
+    "nachhaltigkeit": {
+      "status": "BELEGT",
+      "evidence": "Justizreform in Kraft seit 01.01.2026 (umfassende ZPO-Aenderungen: Verschlankung und Beschleunigung von Verfahrensablaeufen, BMJV 'Pakt fuer den Rechtsstaat'); die Reform wirkt auf Verfahrensdauer, ihre Effektivitaet ist bislang NICHT belegt (Wirkungsmessung der Reform bleibt UNKNOWN bis zur naechsten Justizstatistik). Quelle analysiert: Solange die Mechanismen hinter dem Langtrend nicht verstanden sind, laufen Reformen Gefahr zu verpuffen (Fremdmeinung, benannt, nicht V91-Befund).",
+      "source": "https://www.bmjv.de/DE/themen/pakt_fuer_den_rechtsstaat/beschleunigung_von_verfahrensablaeufen/beschleunigung_verfahren.html ; https://www.ra-kotz.de/die-grosse-justizreform-2026-neue-spielregeln-fuer-zivilprozesse.htm",
+      "assessed_at": "2026-11-24T20:50:00Z"
+    },
+    "missbrauchsrisiken": {
+      "status": "NICHT_GEPRUEFT",
+      "evidence": "",
+      "source": "",
+      "assessed_at": "2026-11-24T20:50:00Z"
+    },
+    "alternativen_und_verbesserbarkeit": {
+      "status": "BELEGT",
+      "evidence": "Bekannte Hebel: ZPO-Reform 2026 (Beschleunigung, Verschlankung), Standardisierungserfahrung aus Fluggastrechten (4,4 Monate Durchschnitt zeigen Machbarkeit schneller Verfahren in Massensachgebieten), EU-Reformdebatte um Entschaedigungsansaetze in der Fluggastrechteverordnung (Verbraucherzentrale: rund 85 Prozent der Ansaetze koennten kuenftig entfallen - Fremdangabe). Bewertungsfragen (personelle Ausstattung, Mediation, Gerichtsentlastung) bleiben politische Arbeit ausserhalb dieses Datensatzes.",
+      "source": "https://www.bmjv.de/DE/themen/pakt_fuer_den_rechtsstaat/beschleunigung_von_verfahrensablaeufen/beschleunigung_verfahren.html ; https://www.beck-aktuell.de/rechtsbranche/justiz-behoerden/justizstatistik-2024-eingangszahlen-steigen-verfahrensdauer-fluggastrechte-2025-08-11",
+      "assessed_at": "2026-11-24T20:50:00Z"
+    }
+  },
+  "review_result": {
+    "verdict": "NEGATIVE_FINDING_PROBLEMS_BELEGT",
+    "criteria_belegt": 5,
+    "criteria_problem_belegt": 1,
+    "criteria_ungeprueft": 1,
+    "problems": [
+      "gesellschaftlicher_nutzen"
+    ],
+    "ungeprueft": [
+      "missbrauchsrisiken"
+    ],
+    "tool": "controller/structure_review.py @ main 1165408 (PR #170-Linie)",
+    "run_at": "2026-11-24T20:50:00Z",
+    "reproduce": "python3 controller/structure_review.py --report-json docs/structure-reviews/de-rechtsstaatlichkeit-ziviljustiz-verfahrensdauer-2026.json"
+  }
+}
