@@ -65,6 +65,15 @@ def _safe_label(value: Any, limit: int = 120) -> str:
     return cleaned[:limit] if cleaned else "UNKNOWN"
 
 
+def _valid_nonnegative_number(value: Any) -> bool:
+    if isinstance(value, bool) or not isinstance(value, (int, float)):
+        return False
+    try:
+        return math.isfinite(float(value)) and value >= 0
+    except OverflowError:
+        return False
+
+
 def _valid_item_name(value: Any) -> bool:
     return isinstance(value, str) and ITEM_NAME_RE.fullmatch(value) is not None
 
@@ -147,10 +156,8 @@ def _evaluate_item(
     if quantity is not None or minimum is not None:
         unit = entry.get("unit")
         valid_numbers = (
-            isinstance(quantity, (int, float)) and not isinstance(quantity, bool)
-            and math.isfinite(float(quantity)) and quantity >= 0
-            and isinstance(minimum, (int, float)) and not isinstance(minimum, bool)
-            and math.isfinite(float(minimum)) and minimum >= 0
+            _valid_nonnegative_number(quantity)
+            and _valid_nonnegative_number(minimum)
             and isinstance(unit, str) and bool(unit.strip())
         )
         if not valid_numbers:
@@ -187,8 +194,12 @@ def evaluate_manifest(
         raise ManifestError("duplicate_required_item")
     if isinstance(max_age_seconds, bool) or not isinstance(max_age_seconds, int) or max_age_seconds < 1:
         raise ManifestError("max_age_seconds_must_be_positive_integer")
+    if isinstance(max_age_seconds, int) and max_age_seconds > 31_536_000:
+        raise ManifestError("max_age_seconds_exceeds_one_year")
     if isinstance(future_skew_seconds, bool) or not isinstance(future_skew_seconds, int) or future_skew_seconds < 0:
         raise ManifestError("future_skew_seconds_must_be_nonnegative_integer")
+    if future_skew_seconds > 86_400:
+        raise ManifestError("future_skew_seconds_exceeds_one_day")
 
     current = now or datetime.now(timezone.utc)
     if current.tzinfo is None or current.utcoffset() is None:
