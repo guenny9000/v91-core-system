@@ -17,9 +17,9 @@ explicit emission factor. A claimed saving is only VALID when
   - enough samples exist,
   - data quality (DQI) >= the configured minimum,
   - the difference exceeds measurement noise (otherwise NOT_SIGNIFICANT).
-Only VALID records count towards verified totals. VALID means
-calculation-validated; INDEPENDENTLY_VERIFIED requires a separate
-reviewer and is never assigned by this module.
+Only VALID records count towards calculation-valid counts. VALID means
+calculation-validated, not independently reviewed. Per-sample changes are
+not aggregate resource or emissions savings; the summary never sums them.
 
 Thresholds (min_samples, dqi_min, noise_factor) are caller parameters
 with documented module defaults; the protocol (section 4) forbids
@@ -235,7 +235,10 @@ def compute_impact(
         if abs(diff) <= thresholds["noise_factor"] * noise:
             errors.append("NOT_SIGNIFICANT")
         if co2_factor_kg_per_unit is not None:
-            result["co2_saved_kg_per_sample"] = round(diff * co2_factor_kg_per_unit, 6)
+            co2_change = round(diff * co2_factor_kg_per_unit, 6)
+            result["co2_change_kg_per_sample"] = co2_change
+            # Deprecated compatibility alias: this is a per-sample change, not a total saving.
+            result["co2_saved_kg_per_sample"] = co2_change
             result["co2_factor_kg_per_unit"] = co2_factor_kg_per_unit
             result["co2_factor_source"] = co2_source.strip()  # type: ignore[union-attr]
 
@@ -254,23 +257,33 @@ def record_impact(ledger: HashChainLedger, impact: dict[str, Any]) -> dict[str, 
 
 
 def verified_summary(ledger_path: str) -> dict[str, Any]:
-    """Totals over calculation-VALID impacts only (call verify_chain first).
+    """Summarize calculation-VALID records only (call verify_chain first).
 
-    VALID means the calculation passed its own gates. It does NOT mean
-    independently verified: INDEPENDENTLY_VERIFIED requires a separate
-    reviewer (protocol section 6) and is never assigned here.
+    VALID means the calculation passed its own gates, not independent review.
+    Per-sample CO2 changes are listed individually and never summed: without
+    comparable workload/output denominators and a shared system boundary, a
+    cross-record total would be dimensionally and scientifically misleading.
+    Legacy aggregate keys remain present as None so callers cannot mistake a
+    sum of per-sample differences for total emissions saved.
     """
     total = valid = 0
-    co2 = 0.0
+    co2_change_values: list[float] = []
+    co2_values_missing = co2_values_invalid = 0
     with open(ledger_path, encoding="utf-8") as fh:
         for line in fh:
             payload = json.loads(line)["payload"]
             if payload.get("type") != "impact":
                 continue
             total += 1
-            if payload["status"] == "VALID":
+            if payload.get("status") == "VALID":
                 valid += 1
-                co2 += payload.get("co2_saved_kg_per_sample", 0.0)
+                value = payload.get("co2_change_kg_per_sample", payload.get("co2_saved_kg_per_sample"))
+                if value is None:
+                    co2_values_missing += 1
+                elif isinstance(value, bool) or not isinstance(value, (int, float)) or not math.isfinite(value):
+                    co2_values_invalid += 1
+                else:
+                    co2_change_values.append(round(float(value), 6))
     calculation_rate = round(valid / total, 4) if total else None
     return {
         "impacts_total": total,
@@ -279,8 +292,13 @@ def verified_summary(ledger_path: str) -> dict[str, Any]:
         "calculation_validity_rate": calculation_rate,
         # Legacy compatibility only; do not interpret this as independent verification.
         "verification_rate": calculation_rate,
-        "verified_co2_saved_kg_per_sample": round(co2, 6),
-        "valid_impacts_co2_saved_kg_per_sample": round(co2, 6),
+        "co2_change_kg_per_sample_records": co2_change_values,
+        "co2_change_values_missing_count": co2_values_missing,
+        "co2_change_values_invalid_count": co2_values_invalid,
+        "co2_aggregation_status": "NOT_AGGREGATED_REQUIRES_WORKLOAD_DENOMINATOR_AND_SYSTEM_BOUNDARY",
+        # Deprecated summary keys: no valid aggregate exists without normalized workload data.
+        "verified_co2_saved_kg_per_sample": None,
+        "valid_impacts_co2_saved_kg_per_sample": None,
         # No independent reviewer evidence is represented by this ledger schema yet.
         "independently_reviewed_impacts_count": 0,
         # Deprecated compatibility alias; same meaning and value, not a verification claim.
