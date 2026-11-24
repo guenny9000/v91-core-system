@@ -1,50 +1,50 @@
 {
   "structure_id": "de_trinkwasserverluste_oeffentliche_wasserversorgung_2022_2026",
   "assessor": "max_best_github_session_2026-11-24",
-  "assessed_at_structure": "2026-11-24T13:25:00Z",
+  "assessed_at_structure": "2026-11-24T12:18:00Z",
   "note": "Struktur-Einschaetzung zur Datenlage und Bewertung von Wasserverlusten in der oeffentlichen Trinkwasserverteilung Deutschlands. Primaerquelle ist der UBA-Abschlussbericht Umwelt & Gesundheit 03/2026 (Abschlussdatum Dezember 2025, Veroeffentlichung September 2026), der die Destatis-Routineerhebung 2023 fuer das Bewertungsjahr 2022 und eine freiwillige Zusatzumfrage 2025 (Bewertungsjahre 2022-2024) auswertet. Zahlen sind Fremdquellen-Angaben, keine V91-Messung. Wichtig: 469 Mio. m3 umfassen reale UND scheinbare Wasserverluste/Messdifferenzen; sie duerfen nicht als reine Leckagemenge ausgegeben werden. UBA bewertet die nationalen Verluste als gering und sieht keinen allgemeinen nationalen Reduzierungsbedarf; individueller Bedarf einzelner Versorger und lokale Wasserknappheit bleiben moeglich. DATENBASIS != MESSUNG, REVIEW != ENTSCHEIDUNG, KEINE ABSCHALTLISTE.",
   "criteria": {
     "gesellschaftlicher_nutzen": {
       "status": "BELEGT",
       "evidence": "Die oeffentliche Wasserversorgung stellte 2022 nahezu der gesamten Bevoelkerung Trinkwasser bereit; die durchschnittliche Nutzung lag bei 126 Litern pro Person und Tag. Die UBA-Auswertung umfasst die verpflichtende Routineerhebung aller 5.599 deutschen Wasserversorger. Die Datenbasis ermoeglicht eine nationale und regionale Einordnung der Versorgung und der Wasserverluste.",
       "source": "https://www.umweltbundesamt.de/daten/umweltzustand-trends/wasser/wasserwirtschaft/oeffentliche-wasserversorgung ; https://www.umweltbundesamt.de/system/files/medien/11850/publikationen/2026-09/03_2026_UuG_0.pdf",
-      "assessed_at": "2026-11-24T13:25:00Z"
+      "assessed_at": "2026-11-24T12:18:00Z"
     },
     "menschenrechtsvertraeglichkeit": {
       "status": "NICHT_GEPRUEFT",
       "evidence": "",
       "source": "",
-      "assessed_at": "2026-11-24T13:25:00Z"
+      "assessed_at": "2026-11-24T12:18:00Z"
     },
     "kosten_und_ressourcenverbrauch": {
       "status": "BELEGT",
       "evidence": "Destatis/UBA weisen fuer 2022 insgesamt 469 Mio. m3 Wasserverluste bzw. Messdifferenzen aus. Diese Groesse umfasst reale und scheinbare Verluste und ist deshalb keine reine Leckagemenge. Der UBA-Bericht bewertet die nationalen Verluste anhand der verfuegbaren ILI- und qVR-Kennzahlen insgesamt als gering; 91 % der gemeldeten ILI-Werte der 208 berichtspflichtigen groesseren Versorger lagen 2022 im Bereich geringer Verluste. Aus diesen Daten wird kein nationaler allgemeiner Sanierungs- oder Reduzierungsbedarf abgeleitet.",
       "source": "https://www.destatis.de/DE/Presse/Pressemitteilungen/2024/08/PD24_304_32311.html ; https://www.umweltbundesamt.de/system/files/medien/11850/publikationen/2026-09/03_2026_UuG_0.pdf",
-      "assessed_at": "2026-11-24T13:25:00Z"
+      "assessed_at": "2026-11-24T12:18:00Z"
     },
     "transparenz": {
       "status": "BELEGT",
       "evidence": "Methodik und Grenzen sind im UBA-Abschlussbericht dokumentiert. Die verpflichtende Routineerhebung erfasste alle 5.599 Versorger; fuer ILI wurden 208 grosse Versorger ausgewertet, deren Netzeinspeisung rund 51 % der nationalen Netzeinspeisung abdeckte. Die freiwillige Zusatzumfrage 2025 lieferte 77 auswertbare Ruecklaeufe (37 % der 208 angeschriebenen Versorger; rund 31 % der nationalen Netzeinspeisung). Die Rohdaten einzelner Versorger sind aus Datenschutzgruenden nicht oeffentlich. Die Datenanforderungen der EU-Berichtsvorlage konnten 2025 noch nicht vollstaendig erfuellt werden.",
       "source": "https://www.umweltbundesamt.de/system/files/medien/11850/publikationen/2026-09/03_2026_UuG_0.pdf ; https://www.umweltbundesamt.de/publikationen/bewertung-reduzierung-von-wasserverlusten-bei-der",
-      "assessed_at": "2026-11-24T13:25:00Z"
+      "assessed_at": "2026-11-24T12:18:00Z"
     },
     "nachhaltigkeit": {
       "status": "BELEGT",
       "evidence": "Der UBA-Bericht bewertet die Wasserverluste unter oekologischen, technischen und wirtschaftlichen Gesichtspunkten. National wird kein allgemeiner weiterer Reduzierungsbedarf gesehen; lokal oder temporaer knappe Wasserressourcen koennen auch bei technisch niedrigen Verlusten eine weitere Reduzierung begruenden. Konkrete durch V91 erzielte Wasser-, Energie- oder CO2-Einsparungen liegen nicht vor und werden nicht behauptet.",
       "source": "https://www.umweltbundesamt.de/system/files/medien/11850/publikationen/2026-09/03_2026_UuG_0.pdf",
-      "assessed_at": "2026-11-24T13:25:00Z"
+      "assessed_at": "2026-11-24T12:18:00Z"
     },
     "missbrauchsrisiken": {
       "status": "NICHT_GEPRUEFT",
       "evidence": "",
       "source": "",
-      "assessed_at": "2026-11-24T13:25:00Z"
+      "assessed_at": "2026-11-24T12:18:00Z"
     },
     "alternativen_und_verbesserbarkeit": {
       "status": "BELEGT",
       "evidence": "Der UBA-Bericht empfiehlt eine vollstaendigere Wasserbilanz, einheitliche Begriffe nach DVGW W 392, bessere Erfassung und Bewertung von Unsicherheiten, das Schliessen von Datenluecken bei kleineren Versorgern sowie Verbesserungen beim Wasserverlustmanagement. Genannt werden unter anderem auditgestuetzte Wasserbilanzen und Druckmanagement. Massnahmen sind vom jeweiligen Versorger anhand seiner lokalen Ressourcenlage, Technik und Kosten zu beurteilen; der Bericht ist keine pauschale Eingriffs- oder Sanierungsanordnung.",
       "source": "https://www.umweltbundesamt.de/system/files/medien/11850/publikationen/2026-09/03_2026_UuG_0.pdf ; https://www.gesetze-im-internet.de/ustatg_2005/__7.html",
-      "assessed_at": "2026-11-24T13:25:00Z"
+      "assessed_at": "2026-11-24T12:18:00Z"
     }
   },
   "review_result": {
@@ -58,7 +58,7 @@
       "missbrauchsrisiken"
     ],
     "tool": "controller/structure_review.py @ main 2d52e9e (GitHub-Quelle; lokaler Lauf in dieser Session nicht verfuegbar)",
-    "run_at": "2026-11-24T13:25:00Z",
+    "run_at": "2026-11-24T12:18:00Z",
     "reproduce": "python3 controller/structure_review.py --report-json docs/structure-reviews/de-trinkwasserverluste-oeffentliche-wasserversorgung-2022-2026.json"
   }
 }
