@@ -280,10 +280,18 @@ def verified_summary(ledger_path: str) -> dict[str, Any]:
                 value = payload.get("co2_change_kg_per_sample", payload.get("co2_saved_kg_per_sample"))
                 if value is None:
                     co2_values_missing += 1
-                elif isinstance(value, bool) or not isinstance(value, (int, float)) or not math.isfinite(value):
+                elif isinstance(value, bool) or not isinstance(value, (int, float)):
                     co2_values_invalid += 1
                 else:
-                    co2_change_values.append(round(float(value), 6))
+                    try:
+                        numeric_value = float(value)
+                    except (OverflowError, ValueError):
+                        co2_values_invalid += 1
+                    else:
+                        if not math.isfinite(numeric_value):
+                            co2_values_invalid += 1
+                        else:
+                            co2_change_values.append(round(numeric_value, 6))
     calculation_rate = round(valid / total, 4) if total else None
     return {
         "impacts_total": total,
