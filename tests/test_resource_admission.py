@@ -6,6 +6,7 @@ from controller.resource_admission import (
     HostResourceAdapter,
     ResourceAdmissionGate,
     _effective_cpu_capacity_cores,
+    _parse_cgroup_v2_cpu_max,
     _read_cgroup_v2_cpu_quota_cores,
     ResourceMeasurements,
 )
@@ -207,13 +208,13 @@ def test_non_finite_optional_vram_measurement_is_denied(clock, bad_value):
 def test_cgroup_v2_cpu_quota_is_parsed_as_cores(tmp_path):
     cpu_max = tmp_path / "cpu.max"
     cpu_max.write_text("150000 100000", encoding="utf-8")
-    assert _read_cgroup_v2_cpu_quota_cores(str(cpu_max)) == 1.5
+    assert _read_cgroup_v2_cpu_quota_cores(path=str(cpu_max)) == 1.5
 
 
 def test_cgroup_v2_max_means_no_quota(tmp_path):
     cpu_max = tmp_path / "cpu.max"
     cpu_max.write_text("max 100000", encoding="utf-8")
-    assert _read_cgroup_v2_cpu_quota_cores(str(cpu_max)) is None
+    assert _read_cgroup_v2_cpu_quota_cores(path=str(cpu_max)) is None
 
 
 @pytest.mark.parametrize("content", ["", "broken", "100000 0", "-1 100000", "x 100000"])
@@ -221,7 +222,7 @@ def test_malformed_cgroup_cpu_quota_is_rejected(tmp_path, content):
     cpu_max = tmp_path / "cpu.max"
     cpu_max.write_text(content, encoding="utf-8")
     with pytest.raises(ValueError):
-        _read_cgroup_v2_cpu_quota_cores(str(cpu_max))
+        _read_cgroup_v2_cpu_quota_cores(path=str(cpu_max))
 
 
 def test_effective_cpu_capacity_uses_the_lower_affinity_or_quota():
@@ -241,3 +242,25 @@ def test_host_adapter_uses_injected_effective_cpu_capacity(clock):
         cpu_capacity_reader=lambda: 1.5,
     )
     assert adapter.measure().cpu_cores == 1.5
+
+
+
+def test_cgroup_v2_uses_tightest_quota_across_ancestors(tmp_path):
+    cgroup_file = tmp_path / "proc-cgroup"
+    cgroup_file.write_text("0::/tenant.slice/container.scope", encoding="utf-8")
+    mount = tmp_path / "cgroup"
+    leaf = mount / "tenant.slice" / "container.scope"
+    parent = mount / "tenant.slice"
+    leaf.mkdir(parents=True)
+    parent.mkdir(parents=True, exist_ok=True)
+    (leaf / "cpu.max").write_text("300000 100000", encoding="utf-8")
+    (parent / "cpu.max").write_text("200000 100000", encoding="utf-8")
+    (mount / "cpu.max").write_text("max 100000", encoding="utf-8")
+    assert _read_cgroup_v2_cpu_quota_cores(
+        cgroup_file=str(cgroup_file), mount_root=str(mount)
+    ) == 2.0
+
+
+def test_cgroup_v2_parser_rejects_malformed_content():
+    with pytest.raises(ValueError):
+        _parse_cgroup_v2_cpu_max("bad quota")
