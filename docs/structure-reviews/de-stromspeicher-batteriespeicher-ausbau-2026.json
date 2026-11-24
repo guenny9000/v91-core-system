@@ -1,0 +1,65 @@
+{
+  "structure_id": "de_stromspeicher_batteriespeicher_ausbau_2026",
+  "assessor": "vibe_session_2026-11-24_max_best_vollautonomie_lauf_5",
+  "assessed_at_structure": "2026-11-24T17:05:00Z",
+  "note": "Struktur-Einschaetzung fuer den Struktur-Review-Waechter (controller/structure_review.py, PR #170): Speicher - Ausbau grosser Batteriespeicher und netzdienlicher Stromspeicher in Deutschland 2026 (IWR-Auswertung des Marktstammdatenregisters der Bundesnetzagentur 1. Halbjahr 2026; BSW-Angaben 3. Quartal auf BNetzA-Datenbasis; StromVKG-Kapazitaetsmarkt; BNetzA-AgNes-Zwischenstand 27.05.2026). Anlass: offener Entdeckungs- und Umgebungsauftrag des Betreibers 24.11.2026 (offener Suchraum #454, Feld 'Speicher / dezentrale Energie / Netzstabilitaet'). Alle Zahlen sind FREMDQUELLEN-Angaben, keine V91-Messung; DATENBASIS != MESSUNG, BELEGT_EINSCHAETZUNG != VERIFIZIERT, REVIEW != ENTSCHEIDUNG, INDEX != ABSCHALTLISTE. Verbandsangaben (BSW, BVES) sind als CLAIM benannt, nicht als Befund. Keine Handlungsempfehlung an Dritte.",
+  "criteria": {
+    "gesellschaftlicher_nutzen": {
+      "status": "PROBLEM_BELEGT",
+      "evidence": "Belegtes Problem: Der Speichermarkt waechst deutlich schneller, als die energiepolitische Rahmung ihn abbildet. Zubau 1. Halbjahr 2026 laut IWR-Auswertung des Marktstammdatenregisters: 2.482,7 MW neu installierte Leistung (+ rund ein Drittel gg. 1.872,5 MW im Vorjahreszeitraum), rund 5.642 MWh neue Kapazitaet (+ knapp 76 Prozent gg. 3.206,4 MWh), 286.060 neue Anlagen; bundesweit danach rund 2,6 Millionen Batteriespeicher mit 18.483,5 MW und 31.485,1 MWh am Netz. BSW-Angabe (22.10.2026, auf BNetzA-Daten): ueber eine halbe Million neue Batteriespeicher mit rund 8,2 GWh in den ersten neun Monaten 2026, +91 Prozent gg. Vorjahr, Zubau grosser Speicher mehr als vervierfacht; fuer das Gesamtjahr deutlich ueber zehn GWh erwartet (VERBANDS-CLAIM, benannt). Gleichzeitig: StromVKG (Bundestag/Bundesrat 9./10.07.2026) vergibt die ersten 9 GW Langzeitkapazitaet ab September 2026 vorwiegend an neue Gaskraftwerke, eigene Ausschreibungsrunden fuer Batteriespeicher folgen erst 2027 und 2029; BVES haelt den Ausschluss fuer europarechtswidrig und hat im Juni 2026 eine EU-Beschwerde gegen das StromVKG angekuendigt (Fremdposition, benannt). Netzentgelt-Befreiung nach Paragraph 118 Abs. 6 EnWG stand Anfang 2026 zur Disposition, BNetzA legte 27.05.2026 einen vorlaeufigen AgNes-Zwischenstand mit Bestandsschutz vor (Investitionsentscheidung vor Inkrafttreten, Anlage bis 04.08.2029 in Betrieb), Festlegung nach foermlicher Konsultation Ende 2026 geplant. Systemischer Nutzen (Redispatch-Vermeidung, Netzentlastung) ist in den Quellen NICHT quantifiziert und bleibt UNKNOWN; keine V91-Zwischenrechnung.",
+      "source": "https://www.iwr.de/news/speicherzubau-im-ersten-halbjahr-2026-in-deutschland-auf-rekordkurs-news39878 ; https://www.solarwirtschaft.de (BSW-Angabe 22.10.2026 via AFP, auf Daten der Bundesnetzagentur)",
+      "assessed_at": "2026-11-24T17:05:00Z"
+    },
+    "menschenrechtsvertraeglichkeit": {
+      "status": "BELEGT",
+      "evidence": "Netzdienliche Speicher betreffen die Grundversorgung mit elektrischer Energie (Resilienz, Ueberbrueckung von Dunkelflauten). In den einsehbaren Quellen kein Anhaltspunkt fuer diskriminierende oder personenschaedigende Wirkung des Speicherausbaus; Verteilwirkungen (Netzentgelte, regionale Belastung) wurden nicht gemessen und bleiben UNKNOWN.",
+      "source": "https://www.iwr.de/news/speicherzubau-im-ersten-halbjahr-2026-in-deutschland-auf-rekordkurs-news39878",
+      "assessed_at": "2026-11-24T17:05:00Z"
+    },
+    "kosten_und_ressourcenverbrauch": {
+      "status": "BELEGT",
+      "evidence": "Zubauzahlen 1. Halbjahr 2026 (IWR/MaStR): Bayern 520,3 MW (Vorjahr 382,4); NRW 419,9 MW (385,1); Niedersachsen 386,6 MW (mehr als verdoppelt gg. 189,1); Kapazitaet NRW 1.179,3 MWh, Bayern 1.061,3 MWh, Niedersachsen 848,3 MWh; Sachsen-Anhalt Leistung 34,6 auf 277,8 MW, Kapazitaet 63,6 auf 632,6 MWh, in Bau: 716-MWh-Speicher Foerderstedt (Eco Stor) und 1.000-MW/bis-5.700-MWh-Projekt Klostermansfeld (BW ESS, Baubeginn Anfang Juli 2026). Grossspeicher-Projekte: Hamburg-Bergedorf 100 MW/400 MWh (seit Mai 2026 baureif, Inbetriebnahme Ende 2028 geplant, Flower), Doellnitz 63 MW/257 MWh (Vier-Stunden-Projekt, von Flower uebernommen). Gesamtstromkosten- oder Brennstoffeinsparung durch Speicher NICHT quantifiziert (bleibt UNKNOWN, keine V91-Schaetzung).",
+      "source": "https://www.iwr.de/news/speicherzubau-im-ersten-halbjahr-2026-in-deutschland-auf-rekordkurs-news39878",
+      "assessed_at": "2026-11-24T17:05:00Z"
+    },
+    "transparenz": {
+      "status": "BELEGT",
+      "evidence": "Oeffentliche Datenbasis: Marktstammdatenregister der Bundesnetzagentur fuer alle Inbetriebnahmen; Fachauswertung IWR 17.07.2026; BSW-Berichterstattung auf BNetzA-Daten (22.10.2026); StromVKG-Gesetzgebung Bundestag/Bundesrat 9./10.07.2026 oeffentlich; BNetzA-AgNes-Zwischenstand vom 27.05.2026 oeffentlich. Die Kausalwirkung der regulatorischen Weichenstellungen auf den Zubau ist darin NICHT quantifiziert (bleibt UNKNOWN).",
+      "source": "https://www.iwr.de/news/speicherzubau-im-ersten-halbjahr-2026-in-deutschland-auf-rekordkurs-news39878 ; https://www.bundesnetzagentur.de (AgNes-Zwischenstand 27.05.2026)",
+      "assessed_at": "2026-11-24T17:05:00Z"
+    },
+    "nachhaltigkeit": {
+      "status": "BELEGT",
+      "evidence": "Durchschnittliche Speicherdauer neu installierter Anlagen stieg im Halbjahresvergleich von 1,7 auf 2,3 Stunden; Trend zu Hybridanlagen (Wind- und Solarparks direkt mit Batteriespeichern kombiniert) und netzdienlichen Speichern (Netzengpaesse entschaerfen, Redispatch reduzieren); Haupttreiber sind sinkende System- und Batteriekosten, die laengere Speicherlaufzeiten wirtschaftlich attraktiver machen. Netto-CO2-Effekt oder primaerenenergetische Wirkung NICHT beziffert (Quellen nennen keine, WIRKUNG_NUR_AUS_MESSUNG, bleibt UNKNOWN); keine V91-Messung.",
+      "source": "https://www.iwr.de/news/speicherzubau-im-ersten-halbjahr-2026-in-deutschland-auf-rekordkurs-news39878",
+      "assessed_at": "2026-11-24T17:05:00Z"
+    },
+    "missbrauchsrisiken": {
+      "status": "NICHT_GEPRUEFT",
+      "evidence": "",
+      "source": "",
+      "assessed_at": "2026-11-24T17:05:00Z"
+    },
+    "alternativen_und_verbesserbarkeit": {
+      "status": "BELEGT",
+      "evidence": "Bekannte Hebel im Registrierungsbild: eigene Kapazitaetsmarkt-Runden fuer Batteriespeicher ab 2027/2029 im StromVKG (bis dahin vorwiegend Gaskraftwerke), AgNes-Bestandsschutz-Fenster (Investitionsentscheidung vor Inkrafttreten, Betrieb bis 04.08.2029, Festlegung Ende 2026), Hybridprojekte zur besseren Netzanschluss-Auslastung, laengere Speicherdauern (Vier-Stunden-Klasse, Doellnitz). Bewertung der Alternativen (Gas vs. Batterie, Dauer vs. Leistung) bleibt politische Arbeit ausserhalb dieses Datensatzes.",
+      "source": "https://www.iwr.de/news/speicherzubau-im-ersten-halbjahr-2026-in-deutschland-auf-rekordkurs-news39878",
+      "assessed_at": "2026-11-24T17:05:00Z"
+    }
+  },
+  "review_result": {
+    "verdict": "NEGATIVE_FINDING_PROBLEMS_BELEGT",
+    "criteria_belegt": 5,
+    "criteria_problem_belegt": 1,
+    "criteria_ungeprueft": 1,
+    "problems": [
+      "gesellschaftlicher_nutzen"
+    ],
+    "ungeprueft": [
+      "missbrauchsrisiken"
+    ],
+    "tool": "controller/structure_review.py @ main c6371f3 (PR #170-Linie)",
+    "run_at": "2026-11-24T17:05:00Z",
+    "reproduce": "python3 controller/structure_review.py --report-json docs/structure-reviews/de-stromspeicher-batteriespeicher-ausbau-2026.json"
+  }
+}
