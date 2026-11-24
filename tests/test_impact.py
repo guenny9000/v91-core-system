@@ -33,7 +33,8 @@ def test_co2_factor_requires_source():
 def test_real_improvement_is_valid_with_co2():
     r = compute_impact("kwh", BASE, AFTER, "kWh", co2_factor_kg_per_unit=0.4, co2_source="t")
     assert r["status"] == "VALID" and r["saved_per_sample"] == 20.0
-    assert r["co2_saved_kg_per_sample"] == 8.0
+    assert r["co2_change_kg_per_sample"] == 8.0
+    assert r["co2_saved_kg_per_sample"] == 8.0  # deprecated per-sample alias
 
 
 def test_noise_only_is_not_significant():
@@ -71,7 +72,10 @@ def test_only_valid_counts_in_summary(tmp_path):
     assert verify_chain(path)["chain_valid"]
     s = verified_summary(path)
     assert s["impacts_total"] == 2 and s["impacts_valid"] == 1
-    assert s["verified_co2_saved_kg_per_sample"] == 10.0
+    assert s["verified_co2_saved_kg_per_sample"] is None
+    assert s["valid_impacts_co2_saved_kg_per_sample"] is None
+    assert s["co2_change_kg_per_sample_records"] == [10.0]
+    assert s["co2_aggregation_status"] == "NOT_AGGREGATED_REQUIRES_WORKLOAD_DENOMINATOR_AND_SYSTEM_BOUNDARY"
 
 
 
@@ -85,3 +89,19 @@ def test_summary_names_calculation_validity_separately_from_independent_review(t
     assert summary["independent_review_rate"] is None
     assert summary["independently_reviewed_impacts_count"] == 0
     assert summary["review_status"] == "NOT_INDEPENDENTLY_VERIFIED"
+
+
+
+def test_summary_never_sums_per_sample_co2_changes_across_records(tmp_path):
+    path = str(tmp_path / "multiple-valid-impacts.jsonl")
+    ledger = HashChainLedger(path)
+    lower = rows([60, 61, 59, 60, 62, 58], 3)
+    record_impact(ledger, compute_impact("a", BASE, AFTER, "kWh", 0.5, co2_source="test"))
+    record_impact(ledger, compute_impact("b", BASE, lower, "kWh", 0.5, co2_source="test"))
+    assert verify_chain(path)["chain_valid"]
+    summary = verified_summary(path)
+    assert summary["impacts_valid"] == 2
+    assert summary["co2_change_kg_per_sample_records"] == [10.0, 20.0]
+    assert summary["verified_co2_saved_kg_per_sample"] is None
+    assert summary["valid_impacts_co2_saved_kg_per_sample"] is None
+    assert summary["co2_aggregation_status"] == "NOT_AGGREGATED_REQUIRES_WORKLOAD_DENOMINATOR_AND_SYSTEM_BOUNDARY"
