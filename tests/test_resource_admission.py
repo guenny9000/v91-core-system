@@ -76,14 +76,14 @@ def test_insufficient_cpu_is_denied_with_deficit(clock):
     gate = make_gate(clock, GOOD)
     decision = gate.request_admission(AdmissionRequest(cpu_cores=16, ram_mb=8000))
     assert decision.verdict == VERDICT_DENIED
-    assert 'cpu_cores 16.0 > 8.0' in decision.reason
+    assert 'cpu_cores 16.0 > local_cap 8.0' in decision.reason
 
 
 def test_insufficient_ram_is_denied(clock):
     gate = make_gate(clock, GOOD)
     decision = gate.request_admission(AdmissionRequest(cpu_cores=4, ram_mb=32000))
     assert decision.verdict == VERDICT_DENIED
-    assert 'ram_mb 32000 > 16000' in decision.reason
+    assert 'ram_mb 32000 > local_cap 16000' in decision.reason
 
 
 def test_quota_caps_capacity_and_allows_work_below_cap(clock):
