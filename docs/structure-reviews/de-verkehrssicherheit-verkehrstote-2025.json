@@ -1,0 +1,67 @@
+{
+  "structure_id": "de_verkehrssicherheit_verkehrstote_2025",
+  "assessor": "vibe_session_2026-11-24_max_best_vollautonomie_lauf_6",
+  "assessed_at_structure": "2026-11-25T11:30:00Z",
+  "note": "Struktur-Einschaetzung fuer den Struktur-Review-Waechter (controller/structure_review.py, PR #170): Verkehrssicherheit in Staedten und auf Landstrassen - endgueltige Unfallbilanz 2025 des Statistischen Bundesamts (Destatis Pressemitteilung Nr. 238 vom 7. Juli 2026, Fachserie 8 Reihe 3). Anlass: offener Entdeckungs- und Umgebungsauftrag des Betreibers 24.11.2026 (offener Suchraum #454, Feld 'Stadtentwicklung/Verkehr/wohnraum'). Alle Zahlen sind FREMDQUELLEN-Angaben auf Basis polizeilicher Erfassung, keine V91-Messung; polizeilich nicht erfasste Unfaelle (Dunkelziffer) sind in den Zahlen nicht enthalten und bleiben UNKNOWN; DATENBASIS != MESSUNG, BELEGT_EINSCHAETZUNG != VERIFIZIERT, REVIEW != ENTSCHEIDUNG, INDEX != ABSCHALTLISTE. Keine Handlungsempfehlung an Dritte.",
+  "criteria": {
+    "gesellschaftlicher_nutzen": {
+      "status": "PROBLEM_BELEGT",
+      "evidence": "Belegtes Problem: Im Jahr 2025 starben in Deutschland 2 832 Menschen bei Strassenverkehrsunfaellen, 62 mehr als 2024 (2 770) und in etwa so viele wie 2023 (2 839); durchschnittlich 8 Tote und mehr als 1 000 Verletzte pro Tag. Rund 371 000 Verletzte (+1,7 Prozent gegenueber Vorjahr), davon rund 322 000 leicht (+2,4 Prozent) und rund 49 200 schwer (-2,9 Prozent, niedrigster Stand seit Beginn der getrennten Erfassung 1991). Haeufigste Unfallursache toedlicher Unfaelle bleibt ueberhoehte oder nicht angepasste Geschwindigkeit; auf Autobahnen kamen 42 Prozent der Getoeteten bei Geschwindigkeitsunfaellen ums Leben (124 Getoetete). Ungeschuetzte im Stadtverkehr: 63 Prozent der innerorts Getoeteten waren zu Fuss (317) oder mit dem Fahrrad (285) unterwegs. Landstrassen tragen 56 Prozent aller Getoeteten; als Risikofaktoren nennt Destatis die fehlende Trennung zum Gegenverkehr, schlechte Ueberholmoeglichkeiten und ungeschuetzte Hindernisse wie Baeume neben der Fahrbahn. 119 Getoetete waren auf dem Pedelec unterwegs, 166 auf dem Fahrrad ohne Elektroantrieb (58 Prozent der Fahrradtoten). Alkohol: 34 800 Unfaelle (-1,0 Prozent), 170 Tote, 17 900 Verletzte, rechnerisch ein Alkoholunfall alle 15 Minuten. Kinder: 31 als Pkw-Insassen, 22 zu Fuss, 13 mit dem Fahrrad ums Leben gekommen. Vermeidbarkeits-Anteil der Einzelfaelle bleibt UNKNOWN (keine kausale Einzelpruefung in der Statistik). Keine V91-Zwischenrechnung.",
+      "source": "https://www.destatis.de/DE/Presse/Pressemitteilungen/2026/07/PD26_238_46241.html",
+      "assessed_at": "2026-11-25T11:30:00Z"
+    },
+    "menschenrechtsvertraeglichkeit": {
+      "status": "BELEGT",
+      "evidence": "Datengrundlage ist die amtliche Strassenverkehrsunfallstatistik (polizeiliche Erfassung; in den veroeffentlichten Aggregaten keine Personenidentifizierung); kein diskriminierender Erhebungsansatz erkennbar. Leid-Betroffenheit von Menschen ist Kern der Kennzahl selbst (Getoetete, Verletzte) und wird gezaehlt, nicht geschaetzt. Belastungen einzelner Personengruppen durch konkrete Massnahmen wurden nicht gemessen und bleiben UNKNOWN.",
+      "source": "https://www.destatis.de/DE/Presse/Pressemitteilungen/2026/07/PD26_238_46241.html",
+      "assessed_at": "2026-11-25T11:30:00Z"
+    },
+    "kosten_und_ressourcenverbrauch": {
+      "status": "NICHT_GEPRUEFT",
+      "evidence": "",
+      "source": "",
+      "assessed_at": "2026-11-25T11:30:00Z"
+    },
+    "nachhaltigkeit": {
+      "status": "NICHT_GEPRUEFT",
+      "evidence": "",
+      "source": "",
+      "assessed_at": "2026-11-25T11:30:00Z"
+    },
+    "transparenz": {
+      "status": "BELEGT",
+      "evidence": "Oeffentliche Primaerquelle: Destatis-Pressemitteilung Nr. 238 vom 07.07.2026 mit endgueltigen Ergebnissen fuer 2025, Zeitreihen-Diagramm der Getoeteten seit 1970 inklusive markierter Regulierungsereignisse (0,8-Promille-Grenze, Gurtanlegepflicht, Richtgeschwindigkeit 130 km/h auf Autobahnen, Hoechstgeschwindigkeit 50 km/h innerorts bzw. 100 km/h auf Landstrassen, Helmtragepflicht); zugehoerige Fachserie (Reihe 8, Reihe 3) und Detailtabellen sind als Downloads erhaeltlich, hier nicht einzeln uebernommen (bleibt der Quelle vorbehalten). Dunkelziffer-Hinweis: polizeilich nicht erfasste Unfaelle sind nicht enthalten.",
+      "source": "https://www.destatis.de/DE/Presse/Pressemitteilungen/2026/07/PD26_238_46241.html",
+      "assessed_at": "2026-11-25T11:30:00Z"
+    },
+    "missbrauchsrisiken": {
+      "status": "NICHT_GEPRUEFT",
+      "evidence": "",
+      "source": "",
+      "assessed_at": "2026-11-25T11:30:00Z"
+    },
+    "alternativen_und_verbesserbarkeit": {
+      "status": "BELEGT",
+      "evidence": "Die Quelle benennt Struktur-Risikofaktoren direkt (Geschwindigkeit als haeufigste Ursache toedlicher Unfaelle; auf Landstrassen fehlende Trennung zum Gegenverkehr, schlechte Ueberholmoeglichkeiten, ungeschuetzte Hindernisse neben der Fahrbahn) und weist mit der Zeitreihe historische Regulierungsereignisse aus (u. a. Promille-Grenzen, Gurt- und Helmpflicht, Geschwindigkeitsbegrenzungen), an denen sich die langfristige Entwicklung der Getoetetenzahl ablesen laesst. Die Bewertung konkreter politischer Alternativen (z. B. Temporegeln, Infrastrukturumbau) ist ausserhalb dieses Datensatzes als politische Arbeit verblieben und nicht Gegenstand der Einschaetzung. Wirksamkeit einzelner Massnahmen fuer 2025 bleibt UNKNOWN.",
+      "source": "https://www.destatis.de/DE/Presse/Pressemitteilungen/2026/07/PD26_238_46241.html",
+      "assessed_at": "2026-11-25T11:30:00Z"
+    }
+  },
+  "review_result": {
+    "verdict": "NEGATIVE_FINDING_PROBLEMS_BELEGT",
+    "criteria_belegt": 3,
+    "criteria_problem_belegt": 1,
+    "criteria_ungeprueft": 3,
+    "problems": [
+      "gesellschaftlicher_nutzen"
+    ],
+    "ungeprueft": [
+      "kosten_und_ressourcenverbrauch",
+      "missbrauchsrisiken",
+      "nachhaltigkeit"
+    ],
+    "tool": "controller/structure_review.py @ main c38fc52 (PR #170-Linie)",
+    "run_at": "2026-11-25T11:30:00Z",
+    "reproduce": "python3 controller/structure_review.py --report-json docs/structure-reviews/de-verkehrssicherheit-verkehrstote-2025.json"
+  }
+}
