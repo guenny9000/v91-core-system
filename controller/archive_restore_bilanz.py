@@ -299,13 +299,9 @@ def append_markdown_log(log_path, timestamp, lines):
     if parent:
         os.makedirs(parent, exist_ok=True)
     with open(log_path, "a", encoding="utf-8") as fh:
-        fh.write("
-### Bilanz %s
-
-" % timestamp)
+        fh.write("\n### Bilanz %s\n\n" % timestamp)
         for line in lines:
-            fh.write("- %s
-" % line)
+            fh.write("- %s\n" % line)
 
 
 def positive_finite_float(raw_value):
