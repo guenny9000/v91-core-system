@@ -12,12 +12,13 @@ Rueckwaertskompatibilitaet): zusaetzliche optionale Felder origin
 (Herkunft/Urheber), authorization (mutmassliche Berechtigung als
 ANGABE, nie als Zugang), risk_level und rollback. Zusaetzliche
 Zyklenstufen INPUT/AUTHORIZATION/EXECUTION/FEEDBACK. Drei fail-closed
-Gates nur fuer 113.0.0: RECOVERY_FIRST (HIGH/CRITICAL verlangt einen
-verfuegbaren, beschriebenen Wiederherstellungsweg),
-KEINE_AUSFUEHRUNG_OHNE_AUTORISIERUNG (Stufen ab AUTHORIZATION verlangen
-auth_verified, SYNTAX_ERTEILT_KEINE_BERECHTIGUNG) und
-EVIDENCE_BEFORE_COMMITMENT (COMMIT/LEDGER verlangen CI-PASS und mind.
-einen Beleg). 112.0.0-Datensaetze bleiben unveraendert gueltig; eine
+Gates nur fuer 113.0.0 (Wiederherstellung zunaechst, Autorisierung
+vor Ausfuehrung, Beleg vor Commit). Zusaetzlich ein optionales
+creation_and_life_protection-Objekt (Schopfungs- und Lebensschutz:
+Energie, CO2, Wasser, Material, Elektroschrott je Zahl >= 0 oder
+UNKNOWN, habitats-Liste, long_term_restoration; Werte sind
+AUFRUFER_ANGABEN, der Validator misst keinen realen Verbrauch).
+112.0.0-Datensaetze bleiben unveraendert gueltig; eine
 unbekannte schema_version wird abgelehnt (bisherige Luecke: jede
 beliebige Versionsangabe wurde akzeptiert).
 
@@ -144,6 +145,54 @@ def _reject_unknown_fields(obj: dict[str, Any], allowed: set[str], errors: list[
         errors.append("unbekannte Felder in " + src + ": " + ", ".join(sorted(extra)))
 
 
+CLP_METRIC_KEYS = ("energy_kwh", "co2_kg", "water_l", "material_kg", "e_waste_kg")
+CLP_REQUIRED_KEYS = CLP_METRIC_KEYS + ("habitats", "long_term_restoration")
+
+
+def _validate_creation_and_life_protection(data: dict[str, Any], errors: list[str]) -> None:
+    """Erweiterung 113.0.0: Schopfungs- und Lebensschutz-Angaben.
+
+    Anlass: externer Tagesbericht-Abschnitt (24.11.2026) mit dem Vorschlag,
+    oekologische Wirkungen als eigenen Bereich zu erfassen (Energie,
+    CO2, Wasser, Material, Elektroschrott, Lebensraeume, langfristige
+    Wiederherstellbarkeit). FREMDBEFUND hier als VERTRAG nachgemessen:
+    ein optionales Objekt, das pro Metrik Zahl >= 0 oder UNKNOWN
+    verlangt. UNKNOWN ist ein ehrlicher Wert; erfundene Zahlen sind
+    es nie. Die Angaben sind AUFRUFER_ANGABEN: der Validator misst
+    KEINEN realen Verbrauch (WERT == ANGABE != BEWEIS,
+    CREATION_FELD != MESSUNG, NATUR_IST_KEIN_SEKTOR).
+    """
+    clp = data.get("creation_and_life_protection")
+    if clp is None:
+        return
+    if not isinstance(clp, dict):
+        errors.append("root.creation_and_life_protection muss ein Objekt sein")
+        return
+    for key in CLP_REQUIRED_KEYS:
+        if key not in clp:
+            errors.append("creation_and_life_protection." + key + " fehlt (keine stillen Auslassungen)")
+    for key in CLP_METRIC_KEYS:
+        if key not in clp:
+            continue
+        value = clp.get(key)
+        if value == "UNKNOWN":
+            continue
+        if isinstance(value, bool) or not isinstance(value, (int, float)) or value < 0:
+            errors.append("creation_and_life_protection." + key + " muss Zahl >= 0 oder UNKNOWN sein")
+    habitats = clp.get("habitats")
+    if not isinstance(habitats, list) or len(habitats) == 0:
+        errors.append("creation_and_life_protection.habitats muss eine nicht-leere Liste sein")
+    elif not all(_is_str(x, non_empty=True) for x in habitats):
+        errors.append("creation_and_life_protection.habitats enthaelt leere oder nicht-string Eintraege")
+    _check_str(clp, "long_term_restoration", errors, "creation_and_life_protection", non_empty=True)
+    _reject_unknown_fields(
+        clp,
+        set(CLP_REQUIRED_KEYS),
+        errors,
+        "creation_and_life_protection",
+    )
+
+
 def _validate_v113_fields(data: dict[str, Any], errors: list[str]) -> None:
     """Erweiterungen 113.0.0: Herkunft, Autorisierung, Risiko, Rueckweg.
 
@@ -202,6 +251,8 @@ def _validate_v113_fields(data: dict[str, Any], errors: list[str]) -> None:
         _check_str(rollback, "procedure", errors, "rollback", non_empty=True)
         _reject_unknown_fields(rollback, {"available", "procedure"}, errors, "rollback")
 
+    _validate_creation_and_life_protection(data, errors)
+
     if risk in ("HIGH", "CRITICAL"):
         has_recovery = (
             isinstance(rollback, dict)
@@ -254,7 +305,7 @@ def validate_record(data: Any) -> tuple[bool, list[str]]:
     allowed_top = set(_REQUIRED_TOP)
     allowed_stages = ALLOWED_STAGES
     if is_v113:
-        allowed_top |= {"origin", "authorization", "risk_level", "rollback"}
+        allowed_top |= {"origin", "authorization", "risk_level", "rollback", "creation_and_life_protection"}
         allowed_stages = ALLOWED_STAGES + V113_EXTRA_STAGES
     _reject_unknown_fields(data, allowed_top, errors, "root")
 
