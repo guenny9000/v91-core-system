@@ -2,7 +2,6 @@
 from __future__ import annotations
 
 import json
-import os
 import subprocess
 import sys
 import tempfile
@@ -103,10 +102,11 @@ class EmergencySupplyAssessmentTests(unittest.TestCase):
         self.assertEqual(report["items"][0]["state"], "MISSING")
 
     def test_invalid_quantity_does_not_pass(self):
-        items = {item: _entry() for item in DEFAULT_REQUIRED_ITEMS}
-        items["water"] = _entry(quantity=True, minimum_quantity=5, unit="L")
-        report = evaluate_manifest(_manifest(items), now=NOW)
-        self.assertEqual(report["items"][0]["state"], "UNKNOWN")
+        for quantity in (True, 10 ** 1000):
+            items = {item: _entry() for item in DEFAULT_REQUIRED_ITEMS}
+            items["water"] = _entry(quantity=quantity, minimum_quantity=5, unit="L")
+            report = evaluate_manifest(_manifest(items), now=NOW)
+            self.assertEqual(report["items"][0]["state"], "UNKNOWN")
 
     def test_unknown_status_does_not_pass(self):
         items = {item: _entry("ready") for item in DEFAULT_REQUIRED_ITEMS}
@@ -121,9 +121,10 @@ class EmergencySupplyAssessmentTests(unittest.TestCase):
         with self.assertRaises(ManifestError):
             evaluate_manifest(_manifest(), ["water", "water"], now=NOW)
 
-    def test_bool_age_rejected(self):
-        with self.assertRaises(ManifestError):
-            evaluate_manifest(_manifest(), now=NOW, max_age_seconds=True)
+    def test_bool_and_excessive_age_rejected(self):
+        for age in (True, 31_536_001):
+            with self.assertRaises(ManifestError):
+                evaluate_manifest(_manifest(), now=NOW, max_age_seconds=age)
 
     def test_naive_assessment_clock_rejected(self):
         with self.assertRaises(ManifestError):
