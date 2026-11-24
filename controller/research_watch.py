@@ -22,6 +22,8 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
+from controller.ledger_lock import exclusive_ledger_lock
+
 
 class ResearchWatchError(Exception):
     """Fail-closed Fehler des Forschungs-Beobachtungslogs."""
@@ -100,8 +102,6 @@ class ResearchObservationLog:
         now: Optional[datetime] = None,
     ) -> Dict:
         """Verzeichnet EINE Forschungsbeobachtung; Manipulation verweigert Append."""
-        if self._path.exists() and not self.verify_chain():
-            raise ResearchWatchError("log chain invalid; append refused")
         if not isinstance(claim, str) or not claim.strip():
             raise ResearchWatchError("claim must be a non-empty string")
         if not isinstance(claim_kind, str) or not claim_kind.strip():
@@ -114,28 +114,33 @@ class ResearchObservationLog:
             raise ResearchWatchError("note must be a string")
         timestamp = (now or datetime.now(timezone.utc)).isoformat()
         status = "BELEGT_EINSCHAETZUNG" if evidence_reference else "UNKNOWN"
-        entries = self._read_entries()
-        record: Dict = {
-            "seq": len(entries) + 1,
-            "recorded_at_utc": timestamp,
-            "claim": claim.strip(),
-            "claim_kind": claim_kind.strip(),
-            "status": status,
-            "evidence_reference": evidence_reference,
-            "note": note,
-        }
-        record["prev_hash"] = self._prev_hash
-        record["entry_hash"] = hashlib.sha256(
-            json.dumps(record, sort_keys=True, separators=(",", ":"), ensure_ascii=False)
-            .encode("utf-8")
-        ).hexdigest()
+        # Kritischer Abschnitt (Ledger-Lock, siehe controller/ledger_lock.py):
+        # Kettenpruefung + seq-Ableitung + append gehoeren zusammen.
         self._path.parent.mkdir(parents=True, exist_ok=True)
-        mode = "a" if self._path.exists() else "w"
-        with open(self._path, mode, encoding="utf-8") as handle:
-            handle.write(json.dumps(record, ensure_ascii=False) + "\n")
-            handle.flush()
-            os.fsync(handle.fileno())
-        self._prev_hash = record["entry_hash"]
+        with exclusive_ledger_lock(self._path):
+            if self._path.exists() and not self.verify_chain():
+                raise ResearchWatchError("log chain invalid; append refused")
+            entries = self._read_entries()
+            record: Dict = {
+                "seq": len(entries) + 1,
+                "recorded_at_utc": timestamp,
+                "claim": claim.strip(),
+                "claim_kind": claim_kind.strip(),
+                "status": status,
+                "evidence_reference": evidence_reference,
+                "note": note,
+            }
+            record["prev_hash"] = self._prev_hash
+            record["entry_hash"] = hashlib.sha256(
+                json.dumps(record, sort_keys=True, separators=(",", ":"), ensure_ascii=False)
+                .encode("utf-8")
+            ).hexdigest()
+            mode = "a" if self._path.exists() else "w"
+            with open(self._path, mode, encoding="utf-8") as handle:
+                handle.write(json.dumps(record, ensure_ascii=False) + "\n")
+                handle.flush()
+                os.fsync(handle.fileno())
+            self._prev_hash = record["entry_hash"]
         return record
 
     def list_entries(self) -> List:

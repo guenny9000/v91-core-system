@@ -57,6 +57,7 @@ from pathlib import Path
 from typing import Any, Dict, List, Mapping, Tuple
 
 from controller.crypto_receipts import canonical_record_bytes
+from controller.ledger_lock import exclusive_ledger_lock
 from controller.review_receipt import (
     receipt_binds_to_vote,
     receipt_fields_valid,
@@ -138,6 +139,32 @@ class ReceiptStore:
             self._entries += 1
             self._records.append(dict(record))
 
+    def _reset_state(self) -> None:
+        """Zustandszuruecksetzung fuer den Neuabgleich gegen die Datei."""
+        self._floors = {}
+        self._prev_hash = GENESIS
+        self._entries = 0
+        self._records = []
+
+    def _sync_from_disk_locked(self) -> None:
+        """Erneuert den Kettenzustand aus der Datei (im kritischen Abschnitt).
+
+        Analog QuorumLedger: Schrumpfen/verschwinden fail-closed,
+        fremde Eintraege werden vollstaendig neu verifiziert.
+        """
+        if self._entries and not self._path.exists():
+            raise ReceiptStoreError("store file vanished while state loaded; fail closed")
+        if not self._path.exists():
+            return
+        raw = self._path.read_text(encoding="utf-8")
+        lines = [ln for ln in raw.split("\n") if ln.strip()] if raw else []
+        if len(lines) < self._entries:
+            raise ReceiptStoreError("store shrank below known entries; fail closed")
+        if len(lines) == self._entries:
+            return
+        self._reset_state()
+        self._load_and_verify()
+
     def replay_floor(self, agent_id: str) -> int:
         """Aktueller Sequenz-Floor (Persistenz ueber Neustarts)."""
         return self._floors.get(agent_id, 0)
@@ -172,20 +199,22 @@ class ReceiptStore:
         if not receipt_binds_to_vote(receipt, vote_record):
             raise ReceiptStoreError("receipt does not bind to vote; fail closed")
         sequence = receipt["sequence"]
-        if sequence <= self._floors.get(agent_id, 0):
-            raise ReceiptStoreError("replay or stale sequence refused; fail closed")
-        record = dict(receipt)
-        entry_hash = self._entry_hash(self._prev_hash, record)
-        entry = {"prev": self._prev_hash, "entry": record, "entry_hash": entry_hash}
-        line = json.dumps(entry, sort_keys=True, separators=(",", ":"), ensure_ascii=False)
         self._path.parent.mkdir(parents=True, exist_ok=True)
-        with open(self._path, "a", encoding="utf-8") as fh:
-            fh.write(line)
-            fh.write("\n")
-            fh.flush()
-            os.fsync(fh.fileno())
-        self._floors[agent_id] = sequence
-        self._prev_hash = entry_hash
-        self._entries += 1
-        self._records.append(record)
+        with exclusive_ledger_lock(self._path):
+            self._sync_from_disk_locked()
+            if sequence <= self._floors.get(agent_id, 0):
+                raise ReceiptStoreError("replay or stale sequence refused; fail closed")
+            record = dict(receipt)
+            entry_hash = self._entry_hash(self._prev_hash, record)
+            entry = {"prev": self._prev_hash, "entry": record, "entry_hash": entry_hash}
+            line = json.dumps(entry, sort_keys=True, separators=(",", ":"), ensure_ascii=False)
+            with open(self._path, "a", encoding="utf-8") as fh:
+                fh.write(line)
+                fh.write("\n")
+                fh.flush()
+                os.fsync(fh.fileno())
+            self._floors[agent_id] = sequence
+            self._prev_hash = entry_hash
+            self._entries += 1
+            self._records.append(record)
         return entry_hash

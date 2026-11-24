@@ -37,6 +37,7 @@ from controller.crypto_receipts import (
     sign_record,
     verify_record_signature,
 )
+from controller.ledger_lock import exclusive_ledger_lock
 
 RECORD_TYPE_VOTE = "quorum_vote"
 SIGNATURE_ALGORITHM = "ED25519"
@@ -186,6 +187,34 @@ class QuorumLedger:
             self._entries += 1
             self._records.append(dict(record))
 
+    def _reset_state(self) -> None:
+        """ZustandsZuruecksetzung fuer den Neuabgleich gegen die Datei."""
+        self._floors = {}
+        self._prev_hash = GENESIS
+        self._entries = 0
+        self._records = []
+
+    def _sync_from_disk_locked(self) -> None:
+        """Erneuert den Kettenzustand aus der Datei (im kritischen Abschnitt).
+
+        Fail-closed: eine geschrumpfte oder verschwundene Datei mit
+        bereits geladenem Zustand verweigert den Append (kein stiller
+        Reset). Fremde Eintraege (anderer Prozess/Instanz) werden
+        durch vollstaendiges Neu-Verifizieren uebernommen.
+        """
+        if self._entries and not self._path.exists():
+            raise QuorumLedgerError("ledger file vanished while state loaded; fail closed")
+        if not self._path.exists():
+            return
+        raw = self._path.read_text(encoding="utf-8")
+        lines = [ln for ln in raw.split("\n") if ln.strip()] if raw else []
+        if len(lines) < self._entries:
+            raise QuorumLedgerError("ledger shrank below known entries; fail closed")
+        if len(lines) == self._entries:
+            return  # im Zustand, niemand hat zwischenzeitlich geschrieben
+        self._reset_state()
+        self._load_and_verify()
+
     def replay_floor(self, agent_id: str) -> int:
         """ Aktueller Sequenz-Floor (Persistenz ueber Neustarts)."""
         return self._floors.get(agent_id, 0)
@@ -204,25 +233,35 @@ class QuorumLedger:
         return tuple(dict(record) for record in self._records)
 
     def append_vote(self, record: Dict) -> str:
-        """Haengt einen validierten, signierten Vote an; gibt entry_hash zurueck."""
+        """Haengt einen validierten, signierten Vote an; gibt entry_hash zurueck.
+
+        Kritischer Abschnitt (Ledger-Lock, siehe controller/ledger_lock.py):
+        Neuabgleich gegen die Datei UND append gehoeren zusammen. Der
+        Replay-Floor wird NACH dem Neuabgleich erneut geprueft, damit
+        eine zwischenzeitliche fremde Aufnahme KEIN Duplikat durchlaesst
+        (UNKNOWN != PASS, auch unter Parallelitaet). LOCK != BEWEIS: der
+        Lock verhindert Interleaving; die Verifikation bleibt Massstab.
+        """
         agent_id = record.get("agent_id") if isinstance(record, dict) else None
         public_key = self._keys.get(agent_id)
         if public_key is None or not verify_signed_vote(record, public_key):
             raise QuorumLedgerError("unverified or unknown vote refused; fail closed")
         sequence = record["sequence"]
-        if sequence <= self._floors.get(agent_id, 0):
-            raise QuorumLedgerError("replay or stale sequence refused; fail closed")
-        entry_hash = self._entry_hash(self._prev_hash, record)
-        entry = {"prev": self._prev_hash, "entry": record, "entry_hash": entry_hash}
-        line = json.dumps(entry, sort_keys=True, separators=(",", ":"), ensure_ascii=False)
         self._path.parent.mkdir(parents=True, exist_ok=True)
-        with open(self._path, "a", encoding="utf-8") as fh:
-            fh.write(line)
-            fh.write("\n")
-            fh.flush()
-            os.fsync(fh.fileno())
-        self._floors[agent_id] = sequence
-        self._prev_hash = entry_hash
-        self._entries += 1
-        self._records.append(dict(record))
+        with exclusive_ledger_lock(self._path):
+            self._sync_from_disk_locked()
+            if sequence <= self._floors.get(agent_id, 0):
+                raise QuorumLedgerError("replay or stale sequence refused; fail closed")
+            entry_hash = self._entry_hash(self._prev_hash, record)
+            entry = {"prev": self._prev_hash, "entry": record, "entry_hash": entry_hash}
+            line = json.dumps(entry, sort_keys=True, separators=(",", ":"), ensure_ascii=False)
+            with open(self._path, "a", encoding="utf-8") as fh:
+                fh.write(line)
+                fh.write("\n")
+                fh.flush()
+                os.fsync(fh.fileno())
+            self._floors[agent_id] = sequence
+            self._prev_hash = entry_hash
+            self._entries += 1
+            self._records.append(dict(record))
         return entry_hash
