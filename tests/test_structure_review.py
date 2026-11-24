@@ -159,5 +159,27 @@ class StructureReviewTests(unittest.TestCase):
             self.assertEqual(2, review_main(["--report-json", str(missing)]))
 
 
+    def test_german_drinking_water_record_matches_evaluator(self):
+        repo_root = Path(__file__).resolve().parents[1]
+        record_path = repo_root / "docs" / "structure-reviews" / "de-trinkwasserverluste-oeffentliche-wasserversorgung-2022-2026.json"
+        record = json.loads(record_path.read_text(encoding="utf-8"))
+        result = evaluate_structure(record)
+        recorded = record["review_result"]
+
+        for key in (
+            "verdict",
+            "criteria_belegt",
+            "criteria_problem_belegt",
+            "criteria_ungeprueft",
+            "problems",
+            "ungeprueft",
+        ):
+            with self.subTest(field=key):
+                self.assertEqual(result[key], recorded[key])
+
+        self.assertEqual(7, result["criteria_total"])
+        self.assertEqual(1, review_main(["--report-json", str(record_path)]))
+
+
 if __name__ == "__main__":
     unittest.main()
