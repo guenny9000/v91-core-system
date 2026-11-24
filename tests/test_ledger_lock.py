@@ -233,22 +233,26 @@ class SourcePins(unittest.TestCase):
             ("controller/receipt_store.py", "with exclusive_ledger_lock(self._path):"),
             ("controller/research_watch.py", "with exclusive_ledger_lock(self._path):"),
             ("controller/mess_pilot.py", "with exclusive_ledger_lock(log_path):"),
+            ("controller/kern_bridge.py", "with exclusive_ledger_lock(ledger_path):"),
         ):
             text = (REPO / rel).read_text(encoding="utf-8")
             self.assertIn(needle, text, rel + " fehlt die Lock-Nutzung")
             self.assertIn("ledger_lock", text, rel + " importiert den Baustein nicht")
 
-    def test_kern_bridge_remains_honestly_open(self):
-        """kern_bridge bleibt bewusst OFFEN (read-modify-write-Restrukturierung)."""
+    def test_kern_bridge_uses_the_lock_with_fetch_outside(self):
+        """#530-Rest: kern_bridge verriegelt Dedup+Append; der Abruf bleibt davor."""
         text = (REPO / "controller" / "ledger_lock.py").read_text(encoding="utf-8")
         self.assertIn("quorum_ledger", text)
         self.assertIn("receipt_store", text)
         self.assertIn("research_watch", text)
+        self.assertIn("kern_bridge", text)
         kern = (REPO / "controller" / "kern_bridge.py").read_text(encoding="utf-8")
-        self.assertNotIn(
-            "with exclusive_ledger_lock(",
-            kern.replace("ledger_lock.py", "X"),  # keine Fehlalarme durch Kommentare
-            "kern_bridge-Nutzung duerfte noch NICHT behauptet werden (Rest)",
+        self.assertIn("with exclusive_ledger_lock(ledger_path):", kern,
+                      "kern_bridge fehlt die Lock-Nutzung (#530-Rest)")
+        self.assertLess(
+            kern.index("issues = fetch_fn(repo, label)"),
+            kern.index("with exclusive_ledger_lock("),
+            "Netz-Abruf darf NICHT im kritischen Abschnitt stehen",
         )
 
 
