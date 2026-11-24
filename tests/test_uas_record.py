@@ -156,12 +156,9 @@ class BatchReportTest(unittest.TestCase):
             tmp_path = Path(tmp)
             (tmp_path / "a.json").write_text(json.dumps(_record()), encoding="utf-8")
             with open(tmp_path / "b.jsonl", "w", encoding="utf-8") as handle:
-                handle.write(json.dumps(_record(action_id="B-1")) + "
-")
-                handle.write("
-")  # Leerzeile wird uebersprungen
-                handle.write(json.dumps(_record(action_id="B-2")) + "
-")
+                handle.write(json.dumps(_record(action_id="B-1")) + "\n")
+                handle.write("\n")  # Leerzeile wird uebersprungen
+                handle.write(json.dumps(_record(action_id="B-2")) + "\n")
             code, report = batch_report(tmp_path)
             self.assertEqual(code, 0)
             self.assertEqual(report["files_scanned"], 2)
