@@ -1,0 +1,65 @@
+{
+  "structure_id": "de_elektroaltgeraete_sammelquote_rohstoffkreislauf_2024",
+  "assessor": "vibe_session_2026-11-24_max_best_vollautonomie_lauf_2",
+  "assessed_at_structure": "2026-11-24T16:05:00Z",
+  "note": "Struktur-Einschaetzung fuer den Struktur-Review-Waechter (controller/structure_review.py, PR #170): Elektro- und Elektronikaltgeraete in Deutschland - Sammelquote, Verwertung, Rohstoffkreislauf. Anlass: offener Entdeckungs- und Umsetzungsauftrag des Betreibers 24.11.2026 (Feld 'Elektronikschrott/Rohstoffkreislaeufe'). Alle Zahlen sind FREMDQUELLEN-Angaben, keine V91-Messung; DATENBASIS != MESSUNG, BELEGT_EINSCHAETZUNG != VERIFIZIERT, REVIEW != ENTSCHEIDUNG. Keine Abschaltliste, keine Handlungsempfehlung an Dritte.",
+  "criteria": {
+    "gesellschaftlicher_nutzen": {
+      "status": "BELEGT",
+      "evidence": "Kostenfreie Rueckgabemoeglichkeiten fuer Verbraucher: kommunale Sammelstellen/Wertstoffhoefe und Abholung bei grossen Elektrogeraetehaendlern sowie Ruecknahme an vielen Supermaerkten (UBA). Sammlung und Verwertung schadstoffhaltiger Altgeraete schuetzt die Umwelt und erschliesst Rohstoffe; die Verwertungsinfrastruktur ist vorhanden und wurde 2024 genutzt.",
+      "source": "https://www.umweltbundesamt.de/daten/umweltzustand-trends/ressourcen-abfall/verwertung-entsorgung-ausgewaehlter-abfallarten/elektro-elektronikaltgeraete",
+      "assessed_at": "2026-11-24T16:05:00Z"
+    },
+    "menschenrechtsvertraeglichkeit": {
+      "status": "BELEGT",
+      "evidence": "Geordnete Erfassung und Behandlung von Elektroaltgeraeten dient der Gesundheitsvorsorge (Schadstoffeintrag in Altausstattungen wird begrenzt) und verhindert unsachgemaesse Verwertung; in den einsehbaren Quellen kein Anhaltspunkt fuer diskriminierende Wirkung. Direkte menschenrechtliche Auswirkungen wurden nicht gemessen und bleiben UNKNOWN.",
+      "source": "https://www.umweltbundesamt.de/daten/umweltzustand-trends/ressourcen-abfall/verwertung-entsorgung-ausgewaehlter-abfallarten/elektro-elektronikaltgeraete",
+      "assessed_at": "2026-11-24T16:05:00Z"
+    },
+    "kosten_und_ressourcenverbrauch": {
+      "status": "PROBLEM_BELEGT",
+      "evidence": "Belegte Verschwendung: Die Sammelquote bei Elektroaltgeraeten lag laut UBA-Datenreihe zuletzt um 29-32 Prozent (2022: 31,7 %, 2023: 29,5 %) - d.h. der groesste Teil der Inverkehrbringung (ueber 3 Mio. t im Jahr 2023 laut UBA-Mengendiagramm) erreicht das geordnete Sammelsystem (Sammelmenge 2023: 919.734 t) nicht; viele Geraete mit Rohstoff- und Weiterverwendungspotenzial verlassen das System unkontrolliert (privater Kreislauf/Export/Restmuell, in den einsehbaren Quellen nicht quantifiziert, bleibt UNKNOWN). Die Groessenordnung der Luecke (Sammelquote unter einem Drittel) ist der belastete Befund.",
+      "source": "https://www.umweltbundesamt.de/system/files/medien/384/bilder/dateien/2_Abb_Mengen-Sammelmengen-quoten_2026-09-24.pdf ; https://www.umweltbundesamt.de/daten/umweltzustand-trends/ressourcen-abfall/verwertung-entsorgung-ausgewaehlter-abfallarten/elektro-elektronikaltgeraete",
+      "assessed_at": "2026-11-24T16:05:00Z"
+    },
+    "transparenz": {
+      "status": "BELEGT",
+      "evidence": "Oeffentliche Datenbasis: UBA-Datenblatt Elektro- und Elektronikaltgeraete, KOM-Tabelle 1 mit Inverkehrbringung/Sammelmenge/Sammelquote je Produktkategorie fuer das Berichtsjahr 2024 (Datenstand 24.09.2026), Mengendiagramm fuer 2013-2023; Destatis-Erhebungen und Pressemitteilung Nr. 58 vom 24.02.2026.",
+      "source": "https://www.umweltbundesamt.de/daten/umweltzustand-trends/ressourcen-abfall/verwertung-entsorgung-ausgewaehlter-abfallarten/elektro-elektronikaltgeraete ; https://www.umweltbundesamt.de/system/files/medien/384/bilder/dateien/4_Tab_Daten-EAG-BJ2024-KOM-1_2026-09-24.pdf ; https://www.destatis.de/DE/Presse/Pressemitteilungen/2026/02/PD26_058_32.html",
+      "assessed_at": "2026-11-24T16:05:00Z"
+    },
+    "nachhaltigkeit": {
+      "status": "BELEGT",
+      "evidence": "Recycling effektiv, wo erfasst: 2024 wurden laut Destatis 758.000 t Elektroaltgeraete recycelt (+1,5 % gg. Vorjahr), Recyclingquote erneut ueber 84 %. Konkrete CO2- oder Rohstoff-Einsparmengen (z.B. seltene Erden) wurden in den einsehbaren Quellen NICHT beziffert und bleiben UNKNOWN; keine Wirkungs-Zahl von V91 berechnet (WIRKUNG_NUR_AUS_MESSUNG).",
+      "source": "https://www.destatis.de/DE/Presse/Pressemitteilungen/2026/02/PD26_058_32.html",
+      "assessed_at": "2026-11-24T16:05:00Z"
+    },
+    "missbrauchsrisiken": {
+      "status": "NICHT_GEPRUEFT",
+      "evidence": "",
+      "source": "",
+      "assessed_at": "2026-11-24T16:05:00Z"
+    },
+    "alternativen_und_verbesserbarkeit": {
+      "status": "BELEGT",
+      "evidence": "Bestehende Instrumente sind etabliert und werden weiterentwickelt: ElektroG-Regelung mit gesetzlicher Ruecknahmepflicht, KOM-Berichtspflichten an die EU-Kommission (Berichtsjahr 2024), Separierung der Sammelquoten nach Methode A je Produktkategorie. Die Verwertungsquote (ueber 84 % Recyc.) zeigt, dass die Verwertungskapazitaet gross ist - der Hebel liegt bei der Sammelquote (Zugang, Aufklaerung, Rueckgabekomfort); der Verbesserungsbedarf ausserhalb dieses Datensatzes bleibt politische Arbeit (Bewertung, kein Auftrag).",
+      "source": "https://www.umweltbundesamt.de/system/files/medien/384/bilder/dateien/4_Tab_Daten-EAG-BJ2024-KOM-1_2026-09-24.pdf ; https://www.destatis.de/DE/Presse/Pressemitteilungen/2026/02/PD26_058_32.html",
+      "assessed_at": "2026-11-24T16:05:00Z"
+    }
+  },
+  "review_result": {
+    "verdict": "NEGATIVE_FINDING_PROBLEMS_BELEGT",
+    "criteria_belegt": 5,
+    "criteria_problem_belegt": 1,
+    "criteria_ungeprueft": 1,
+    "problems": [
+      "kosten_und_ressourcenverbrauch"
+    ],
+    "ungeprueft": [
+      "missbrauchsrisiken"
+    ],
+    "tool": "controller/structure_review.py @ main 02701c8 (PR #170-Linie)",
+    "run_at": "2026-11-24T16:05:00Z",
+    "reproduce": "python3 controller/structure_review.py --report-json docs/structure-reviews/de-elektroaltgeraete-sammelquote-2024.json"
+  }
+}
