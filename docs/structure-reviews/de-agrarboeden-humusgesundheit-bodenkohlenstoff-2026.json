@@ -1,0 +1,65 @@
+{
+  "structure_id": "de_agrarboeden_humusgesundheit_bodenkohlenstoff_2026",
+  "assessor": "vibe_session_2026-11-24_max_best_vollautonomie_lauf_3",
+  "assessed_at_structure": "2026-11-24T18:10:00Z",
+  "note": "Struktur-Einschaetzung fuer den Struktur-Review-Waechter (controller/structure_review.py, PR #170): Humusvorraete und Bodengesundheit landwirtschaftlich genutzter Boeden Deutschlands (Bodenzustandserhebung Landwirtschaft, Thuenen-Institut). Anlass: offener Entdeckungs- und Umsetzungsauftrag des Betreibers 24.11.2026 (offener Suchraum #454, Feld 'Bodengesundheit'). Alle Zahlen sind FREMDQUELLEN-Angaben, keine V91-Messung; DATENBASIS != MESSUNG, BELEGT_EINSCHAETZUNG != VERIFIZIERT, REVIEW != ENTSCHEIDUNG. Keine Abschaltliste, keine Handlungsempfehlung an Dritte.",
+  "criteria": {
+    "gesellschaftlicher_nutzen": {
+      "status": "BELEGT",
+      "evidence": "Humus ist Grundlage der Bodenfruchtbarkeit: sie foerdert Ertraege, mindert Erosionsgefaehrdung, speichert Wasser und Naehrstoffe; landwirtschaftliche Boeden sind mit 2,5 Mrd. t Kohlenstoff (0-100 cm) ein bedeutender Kohlenstoffspeicher. Die Bodenzustandserhebung schafft erstmals eine bundesweit konsistente Datenbasis fuer Bodenschutz- und Klimapolitik (Bericht am 05.12.2018 an das Bundeslandwirtschaftsministerium uebergeben); zweite Erhebung laeuft 2023-2027.",
+      "source": "https://www.bmleh.de/DE/themen/landwirtschaft/pflanzenbau/bodenschutz/bodenzustandserhebung.html ; https://www.praxis-agrar.de/pflanze/ackerbau/bodenzustandserhebung-humus/",
+      "assessed_at": "2026-11-24T18:10:00Z"
+    },
+    "menschenrechtsvertraeglichkeit": {
+      "status": "BELEGT",
+      "evidence": "Erhalt fruchtbarer Boeden sichert die heimische Ernaehrungsgrundlage; in den einsehbaren Quellen kein Anhaltspunkt fuer diskriminierende Wirkung. Direkte menschenrechtliche Auswirkungen wurden nicht gemessen und bleiben UNKNOWN.",
+      "source": "https://www.bmleh.de/DE/themen/landwirtschaft/pflanzenbau/bodenschutz/bodenzustandserhebung.html",
+      "assessed_at": "2026-11-24T18:10:00Z"
+    },
+    "kosten_und_ressourcenverbrauch": {
+      "status": "BELEGT",
+      "evidence": "Grosse Streuung der Vorraete: sandige oder flachgruendige Boeden in Brandenburg und Mecklenburg-Vorpommern speichern nur rund 30 t Kohlenstoff je Hektar, grundwasserbeeinflusste Boeden der Altmoraenenlandschaften bis zu 400 t je Hektar (Thuenen); in Aeckern 1,3 Mrd. t, unter Gruenland 1,2 Mrd. t Kohlenstoff (0-100 cm). Sandige, humusarme Standorte sind die verwundbarste Ressource.",
+      "source": "https://www.praxis-agrar.de/pflanze/ackerbau/bodenzustandserhebung-humus/ ; https://www.bmleh.de/DE/themen/landwirtschaft/pflanzenbau/bodenschutz/bodenzustandserhebung.html",
+      "assessed_at": "2026-11-24T18:10:00Z"
+    },
+    "transparenz": {
+      "status": "BELEGT",
+      "evidence": "Oeffentliche Datenbasis der BZE-LW: mehr als 3.100 detailliert beprobte und kartierte Standorte, ueber 120.000 Bodenproben im Thuenen-Bodenlabor (2012-2018); Berichte (Thuenen Report, Kurzfassung), Kerndatensatz und BMLEH-Beitraege offen verfuegbar. Ehrliche Grenze: weil die Ersterhebung die erste ist, liegen noch keine Zeitreihen-Vergleichswerte vor (Studie Dez. 2025 greift auf zwei Erhebungen zurueck).",
+      "source": "https://www.bmleh.de/DE/themen/landwirtschaft/pflanzenbau/bodenschutz/bodenzustandserhebung.html ; https://www.thuenen.de/de/newsroom/presse/pressemitteilungen/detailansicht/humus",
+      "assessed_at": "2026-11-24T18:10:00Z"
+    },
+    "nachhaltigkeit": {
+      "status": "PROBLEM_BELEGT",
+      "evidence": "Belegtes Problem: Thuenen-Modelle sagen fuer Gesamtdeutschland einen Verlust an organischem Bodenkohlenstoff von jaehrlich rund 0,19 Tonnen je Hektar fuer die naechsten zehn Jahre voraus; Risikofaktoren sind geringer Eintrag organischen Kohlenstoffs (Pflanzenreste, organische Duengung), geringe Ton- und hohe Sandgehalte. Zusaetzlicher Befund: Ein erhoehter Humusvorrat laesst sich nicht allein ueber die Bewirtschaftungsform erreichen - eine Thuenen-Auswertung (Geoderma, Dez. 2025) fand keinen messbar erhoehten Bodenkohlenstoff unter oekologischer gegenueber konventioneller Bewirtschaftung auf deutschen Ackerbaeoeden. Menge und Folgekosten des Verlusts auf Flaechenebene wurden in den einsehbaren Quellen nicht beziffert und bleiben UNKNOWN; keine V91-Zwischenrechnung.",
+      "source": "https://www.praxis-agrar.de/pflanze/ackerbau/bodenzustandserhebung-humus/ ; https://www.thuenen.de/de/newsroom/presse/pressemitteilungen/detailansicht/humus",
+      "assessed_at": "2026-11-24T18:10:00Z"
+    },
+    "missbrauchsrisiken": {
+      "status": "NICHT_GEPRUEFT",
+      "evidence": "",
+      "source": "",
+      "assessed_at": "2026-11-24T18:10:00Z"
+    },
+    "alternativen_und_verbesserbarkeit": {
+      "status": "BELEGT",
+      "evidence": "Bekannte Hebel aus dem Bodenzustandsbericht: langjaehriger Anbau von Zwischenfruechten kann Kohlenstoffvorraete in Ackerbaeoeden innerhalb von 20 Jahren um rund 8 Tonnen je Hektar erhoehen; organische Duengung mit Mist oder Kompost sowie Klee- oder Luzernegras wirken positiv; Erhalt von Dauergruenland schuetzt besonders humusreiche Standorte. Wichtig ehrliche Grenze: konservierende Bodenbearbeitung/Direktsaat reichert Humus oberflaechlich an, kann darunter aber Verluste verursachen (Schichtverschiebung != Nettoaufbau). Umsetzung und Bewertung bleiben politische Arbeit ausserhalb dieses Datensatzes.",
+      "source": "https://www.praxis-agrar.de/pflanze/ackerbau/bodenzustandserhebung-humus/",
+      "assessed_at": "2026-11-24T18:10:00Z"
+    }
+  },
+  "review_result": {
+    "verdict": "NEGATIVE_FINDING_PROBLEMS_BELEGT",
+    "criteria_belegt": 5,
+    "criteria_problem_belegt": 1,
+    "criteria_ungeprueft": 1,
+    "problems": [
+      "nachhaltigkeit"
+    ],
+    "ungeprueft": [
+      "missbrauchsrisiken"
+    ],
+    "tool": "controller/structure_review.py @ main b55702c (PR #170-Linie)",
+    "run_at": "2026-11-24T18:10:00Z",
+    "reproduce": "python3 controller/structure_review.py --report-json docs/structure-reviews/de-agrarboeden-humusgesundheit-bodenkohlenstoff-2026.json"
+  }
+}
