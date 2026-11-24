@@ -40,8 +40,10 @@ import sys
 from pathlib import Path
 
 _REPO_ROOT = Path(__file__).resolve().parents[1]
-if str(_REPO_ROOT) not in sys.path:
-    sys.path.insert(0, str(_REPO_ROOT))
+# Beim direkten Skriptstart steht das Unterverzeichnis controller/ an sys.path[0].
+# Es enthaelt controller.py und kann dadurch das Paket controller ueberdecken.
+# Der Repository-Root muss deshalb unbedingt Vorrang haben.
+sys.path.insert(0, str(_REPO_ROOT))
 
 from controller.daily_report import _entry_ok  # REUSE, PR #130 Vertrag
 from controller.nachrichten_lagebild import (  # REUSE, VIBE-LXXXCIV #411
