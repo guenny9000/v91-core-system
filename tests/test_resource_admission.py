@@ -86,11 +86,24 @@ def test_insufficient_ram_is_denied(clock):
     assert 'ram_mb 32000 > 16000' in decision.reason
 
 
-def test_quota_bounds_admission(clock):
+def test_quota_caps_capacity_and_allows_work_below_cap(clock):
     gate = make_gate(clock, GOOD, quota={'cpu_cores': 4, 'ram_mb': 8000})
     decision = gate.request_admission(AdmissionRequest(cpu_cores=2, ram_mb=4000))
+    assert decision.verdict == VERDICT_ALLOWED
+
+
+def test_request_above_local_quota_is_denied(clock):
+    gate = make_gate(clock, GOOD, quota={'cpu_cores': 4, 'ram_mb': 8000})
+    decision = gate.request_admission(AdmissionRequest(cpu_cores=5, ram_mb=4000))
     assert decision.verdict == VERDICT_DENIED
-    assert 'quota' in decision.reason
+    assert 'cpu_cores 5.0 > local_cap 4' in decision.reason
+
+
+def test_measured_capacity_remains_upper_bound_when_quota_is_higher(clock):
+    gate = make_gate(clock, GOOD, quota={'cpu_cores': 16, 'ram_mb': 32000})
+    decision = gate.request_admission(AdmissionRequest(cpu_cores=9, ram_mb=4000))
+    assert decision.verdict == VERDICT_DENIED
+    assert 'cpu_cores 9.0 > local_cap 8.0' in decision.reason
 
 
 def test_malformed_request_is_denied(clock):
