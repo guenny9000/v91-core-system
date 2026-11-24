@@ -1,0 +1,66 @@
+{
+  "structure_id": "de_lebensmittelabfaelle_sektoren_2022_2026",
+  "assessor": "vibe_session_2026-11-24_max_best_entdeckungslauf_2",
+  "assessed_at_structure": "2026-11-24T12:10:00Z",
+  "note": "Struktur-Einschaetzung fuer den Struktur-Review-Waechter (controller/structure_review.py, PR #170): Hoehe und Verteilung der Lebensmittelabfaelle in Deutschland nach Sektoren. Anlass: offener Entdeckungs- und Umsetzungsauftrag des Betreibers 24.11.2026 (Feld 'Verschwendung/Nahrung'). Alle Zahlen sind FREMDQUELLEN-Angaben (UBA/BMLEH-Bericht an die EU-Kommission, Berichtsjahr 2022), keine V91-Messung; DATENBASIS != MESSUNG, BELEGT_EINSCHAETZUNG != VERIFIZIERT, REVIEW != ENTSCHEIDUNG. Keine Abschaltliste, keine Handlungsempfehlung an Dritte.",
+  "criteria": {
+    "gesellschaftlicher_nutzen": {
+      "status": "BELEGT",
+      "evidence": "Amtlich erhobene, EU-berichtspflichtige Datenbasis (Abfallrahmenrichtlinie, jaehrliche Erhebung, Uebermittlung an Eurostat): 2022 wurden 10,8 Mio. Tonnen Lebensmittelabfaelle (Frischmasse) an die EU-Kommission berichtet; 6,3 Mio. t davon (58 %) in privaten Haushalten, je 74,5 kg pro Kopf und Jahr; ferner Primärproduktion 0,2 Mio. t (2 %), Verarbeitung 1,6 Mio. t (15 %), Handel 0,8 Mio. t (7 %), Ausser-Haus-Verpflegung 2,0 Mio. t (18 %). Die Die bundesweit vergleichbare Datenbasis selbst ist der gesellschaftliche Nutzen: prioritaere Ansatzpunkte werden sichtbar.",
+      "source": "https://www.bmleh.de/DE/themen/ernaehrung/lebensmittelverschwendung/studie-lebensmittelabfaelle-deutschland.html",
+      "assessed_at": "2026-11-24T12:10:00Z"
+    },
+    "menschenrechtsvertraeglichkeit": {
+      "status": "BELEGT",
+      "evidence": "Die Erhebung greift in keine Grundrechte ein und beruht auf amtlichen Abfallstatistiken; Datenerhebung ist gesetzlich verankert und methodisch dokumentiert. Direkte menschenrechtliche Auswirkungen (z. B. Verteilungswirkungen von Massnahmen) wurden nicht gemessen und bleiben UNKNOWN.",
+      "source": "https://www.bmleh.de/DE/themen/ernaehrung/lebensmittelverschwendung/studie-lebensmittelabfaelle-deutschland.html",
+      "assessed_at": "2026-11-24T12:10:00Z"
+    },
+    "kosten_und_ressourcenverbrauch": {
+      "status": "PROBLEM_BELEGT",
+      "evidence": "Belegte Verschwendung: 10,8 Mio. t/a Lebensmittelabfaelle (Frischmasse, Berichtsjahr 2022), davon vermeidbare (u. a. uebrig gebliebene Speisereste, nicht verkaufte Lebensmittel) und nicht essbare Bestandteile; der Groesstanteil (58 %) entsteht in privaten Haushalten, je 74,5 kg/Kopf/a. Verantwortlich dafuer sind laut Quelle alle Beteiligten entlang der Kette. Verluste vor/waehrend Ernte und Schlachtung sind rechtlich NICHT als Lebensmittelabfall erfasst (ehrliche Abgrenzungsluecke). Die Groessenordnung, nicht die exakte Zahl, ist der belastete Befund.",
+      "source": "https://www.bmleh.de/DE/themen/ernaehrung/lebensmittelverschwendung/studie-lebensmittelabfaelle-deutschland.html",
+      "assessed_at": "2026-11-24T12:10:00Z"
+    },
+    "transparenz": {
+      "status": "BELEGT",
+      "evidence": "Methodik oeffentlich dokumentiert: Entsorgungsseiten-Ansatz auf Basis jaehrlich amtlich erhobener Abfallstatistiken (Abfallkoeffizienten zum Herausrechnen der Nicht-Lebensmittelabfaelle), initiale Ermittlung des Anteils per Sortieranalysen fuer 2020, gruendliche Erhebung (Sortieranalysen) alle vier Jahre, zwischenzeitliche Hochrechnung; verantwortlich BMUKN und UBA (Erhebung/Uebermittlung) mit BMLEH-Begleitung.",
+      "source": "https://www.bmleh.de/DE/themen/ernaehrung/lebensmittelverschwendung/studie-lebensmittelabfaelle-deutschland.html",
+      "assessed_at": "2026-11-24T12:10:00Z"
+    },
+    "nachhaltigkeit": {
+      "status": "BELEGT",
+      "evidence": "Reduzierung der Lebensmittelabfaelle senkt Ressourcenverbrauch entlang der gesamten Versorgungskette (Produktion, Verarbeitung, Transport, Entsorgung); die Quelle nennt kleine Veraenderungen in Unternehmen, zwischen Lieferkettenpartnern und in Haushalten als wirksam und fordert zusaetzlich eine unterstuetzende Ernaehrungsumgebung (Handel, Ausser-Haus-Verpflegung). Konkrete CO2-/Ressourcen-Einsparmengen wurden in der einsehbaren Quelle NICHT beziffert und bleiben UNKNOWN; keine Wirkungs-Zahl von V91 berechnet (WIRKUNG_NUR_AUS_MESSUNG).",
+      "source": "https://www.bmleh.de/DE/themen/ernaehrung/lebensmittelverschwendung/studie-lebensmittelabfaelle-deutschland.html",
+      "assessed_at": "2026-11-24T12:10:00Z"
+    },
+    "missbrauchsrisiken": {
+      "status": "NICHT_GEPRUEFT",
+      "evidence": "",
+      "source": "",
+      "assessed_at": "2026-11-24T12:10:00Z"
+    },
+    "alternativen_und_verbesserbarkeit": {
+      "status": "BELEGT",
+      "evidence": "Bestehender Verbesserungspfad: Nationale Strategie zur Reduzierung der Lebensmittelverschwendung; Massnahmenentwicklung darin erfolgt laut Quelle fuer Unternehmen, Lieferkettenpartner und Haushalte; Verhaltensaenderung allein reicht laut Quelle nicht, Ernaehrungsumgebung (Handel, Ausser-Haus-Gastronomie) muss unterstuetzen. Damit existieren belegte, bereits laufende Verbesserungspfade.",
+      "source": "https://www.bmleh.de/DE/themen/ernaehrung/lebensmittelverschwendung/studie-lebensmittelabfaelle-deutschland.html ; https://www.bmleh.de/DE/themen/ernaehrung/lebensmittelverschwendung/strategie-lebensmittelverschwendung.html",
+      "assessed_at": "2026-11-24T12:10:00Z"
+    }
+  },
+  "review_result": {
+    "verdict": "NEGATIVE_FINDING_PROBLEMS_BELEGT",
+    "criteria_belegt": 5,
+    "criteria_problem_belegt": 1,
+    "criteria_ungeprueft": 1,
+    "problems": [
+      "kosten_und_ressourcenverbrauch"
+    ],
+    "ungeprueft": [
+      "missbrauchsrisiken"
+    ],
+    "tool": "controller/structure_review.py @ main f3f80478 (PR #170-Linie)",
+    "run_at": "2026-11-24T12:10:00Z",
+    "reproduce": "python3 controller/structure_review.py --report-json docs/structure-reviews/de-lebensmittelabfaelle-sektoren-2022.json",
+    "verification_pending": "review_result wird nach Lauf des echten structure_review-Moduls gegen die GEPUSHTE raw-Datei ersetzt (Vorab-Eintrag vor PR-Oeffnung)."
+  }
+}
