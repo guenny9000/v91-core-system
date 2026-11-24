@@ -5,7 +5,21 @@ STATUS: ACTIVE | VERIFICATION: REQUIRED (CLAIM != EVIDENCE)
 AXIOM: Schöpfung dient dem Erhalt, der Regeneration und der Zukunft.
 ---------------------------------------------------------------------
 UAS-Record: Validierung universeller Aktions-Datensaetze
-(V91CycleActionSchema 112.0.0) als exekutierbarer Vertrag.
+(V91CycleActionSchema 112.0.0 und 113.0.0) als exekutierbarer Vertrag.
+
+Erweiterung 113.0.0 (externe fuenfte/sechste Welle, Versionierung mit
+Rueckwaertskompatibilitaet): zusaetzliche optionale Felder origin
+(Herkunft/Urheber), authorization (mutmassliche Berechtigung als
+ANGABE, nie als Zugang), risk_level und rollback. Zusaetzliche
+Zyklenstufen INPUT/AUTHORIZATION/EXECUTION/FEEDBACK. Drei fail-closed
+Gates nur fuer 113.0.0: RECOVERY_FIRST (HIGH/CRITICAL verlangt einen
+verfuegbaren, beschriebenen Wiederherstellungsweg),
+KEINE_AUSFUEHRUNG_OHNE_AUTORISIERUNG (Stufen ab AUTHORIZATION verlangen
+auth_verified, SYNTAX_ERTEILT_KEINE_BERECHTIGUNG) und
+EVIDENCE_BEFORE_COMMITMENT (COMMIT/LEDGER verlangen CI-PASS und mind.
+einen Beleg). 112.0.0-Datensaetze bleiben unveraendert gueltig; eine
+unbekannte schema_version wird abgelehnt (bisherige Luecke: jede
+beliebige Versionsangabe wurde akzeptiert).
 
 Anlass ist der externe Bericht V112.0.0 'THE UNIVERSAL ACTION
 SCHEMA' vom 24.11.2026 (fuenfte Welle). Tragfaehige Kernidee:
@@ -69,8 +83,15 @@ if _ROOT not in sys.path:
     sys.path.insert(0, _ROOT)
 
 SCHEMA_VERSION = "112.0.0"
+SCHEMA_VERSION_V113 = "113.0.0"
+SUPPORTED_SCHEMA_VERSIONS = (SCHEMA_VERSION, SCHEMA_VERSION_V113)
 
 ALLOWED_STAGES = ("HYPOTHESIS", "SCHEMA", "CODE", "TEST", "COMMIT", "LEDGER")
+V113_EXTRA_STAGES = ("INPUT", "AUTHORIZATION", "EXECUTION", "FEEDBACK")
+ALLOWED_ACTOR_TYPES = ("HUMAN", "AGENT", "SYSTEM", "PIPELINE")
+ALLOWED_RISK_LEVELS = ("LOW", "MEDIUM", "HIGH", "CRITICAL")
+ALLOWED_ISOLATION_POLICY = ("ISOLATE_NOT_DESTROY", "HALT_STAGE", "RETRY_ISOLATED")
+V113_AUTH_GATED_STAGES = ("AUTHORIZATION", "EXECUTION", "TEST", "COMMIT", "LEDGER")
 ALLOWED_CI_OVERALL = ("PASS", "FAIL", "PARTIAL", "PENDING", "UNKNOWN")
 ALLOWED_CHECK_STATUS = ("PASS", "FAIL", "SKIPPED", "UNKNOWN")
 ALLOWED_DRIFT_STATUS = ("NONE", "DETECTED", "ISOLATED", "UNKNOWN")
@@ -123,6 +144,98 @@ def _reject_unknown_fields(obj: dict[str, Any], allowed: set[str], errors: list[
         errors.append("unbekannte Felder in " + src + ": " + ", ".join(sorted(extra)))
 
 
+def _validate_v113_fields(data: dict[str, Any], errors: list[str]) -> None:
+    """Erweiterungen 113.0.0: Herkunft, Autorisierung, Risiko, Rueckweg.
+
+    Gates (fail-closed, nur fuer 113.0.0-Datensaetze):
+    - RECOVERY_FIRST: risk_level HIGH/CRITICAL verlangt einen
+      verfuegbaren, beschriebenen Wiederherstellungsweg.
+    - KEINE_AUSFUEHRUNG_OHNE_AUTORISIERUNG: die Stufen ab AUTHORIZATION
+      verlangen authorization.auth_verified == true (die Form eines
+      Feldes erteilt keine Rechte, SYNTAX_ERTEILT_KEINE_BERECHTIGUNG;
+      der Wert bleibt AUFRUFER_ANGABE, das Modul prueft keine echten
+      Zugriffe).
+    - EVIDENCE_BEFORE_COMMITMENT: COMMIT/LEDGER verlangen
+      ci_checks.overall_status == PASS und mind. einen evidence-Eintrag
+      (UNKNOWN_BLEIBT_UNBELEGT, kein Commit-Status ohne Beleg).
+    """
+    origin = data.get("origin")
+    if origin is not None:
+        if not isinstance(origin, dict):
+            errors.append("root.origin muss ein Objekt sein")
+        else:
+            _check_str(origin, "actor_id", errors, "origin", non_empty=True)
+            if origin.get("actor_type") not in ALLOWED_ACTOR_TYPES:
+                errors.append("origin.actor_type ungueltig: " + repr(origin.get("actor_type")))
+            _check_str(origin, "source", errors, "origin", non_empty=True)
+            if "timestamp_utc" in origin:
+                _check_str(origin, "timestamp_utc", errors, "origin", non_empty=True)
+            _reject_unknown_fields(origin, {"actor_id", "actor_type", "source", "timestamp_utc"}, errors, "origin")
+
+    auth = data.get("authorization")
+    if auth is not None and not isinstance(auth, dict):
+        errors.append("root.authorization muss ein Objekt sein")
+        auth = None
+    auth_verified = None
+    if isinstance(auth, dict):
+        auth_verified = auth.get("auth_verified")
+        if not isinstance(auth_verified, bool):
+            errors.append("authorization.auth_verified muss ein bool sein")
+            auth_verified = None
+        _check_str(auth, "scope", errors, "authorization", non_empty=True)
+        _check_str(auth, "credential_ref", errors, "authorization", non_empty=True)
+        if "isolation_policy" in auth and auth.get("isolation_policy") not in ALLOWED_ISOLATION_POLICY:
+            errors.append("authorization.isolation_policy ungueltig: " + repr(auth.get("isolation_policy")))
+        _reject_unknown_fields(auth, {"auth_verified", "scope", "credential_ref", "isolation_policy"}, errors, "authorization")
+
+    risk = data.get("risk_level")
+    if risk is not None and risk not in ALLOWED_RISK_LEVELS:
+        errors.append("root.risk_level ungueltig: " + repr(risk))
+
+    rollback = data.get("rollback")
+    if rollback is not None and not isinstance(rollback, dict):
+        errors.append("root.rollback muss ein Objekt sein")
+        rollback = None
+    if isinstance(rollback, dict):
+        if not isinstance(rollback.get("available"), bool):
+            errors.append("rollback.available muss ein bool sein")
+        _check_str(rollback, "procedure", errors, "rollback", non_empty=True)
+        _reject_unknown_fields(rollback, {"available", "procedure"}, errors, "rollback")
+
+    if risk in ("HIGH", "CRITICAL"):
+        has_recovery = (
+            isinstance(rollback, dict)
+            and rollback.get("available") is True
+            and _is_str(rollback.get("procedure"), non_empty=True)
+        )
+        if not has_recovery:
+            errors.append(
+                "RECOVERY_FIRST: risk_level " + repr(risk) +
+                " verlangt rollback.available == true und eine nicht-leere procedure")
+
+    stage = data.get("cycle_stage")
+    if stage in V113_AUTH_GATED_STAGES:
+        if not isinstance(auth, dict):
+            errors.append(
+                "KEINE_AUSFUEHRUNG_OHNE_AUTORISIERUNG: Stufe " + repr(stage) +
+                " verlangt ein authorization-Objekt")
+        elif auth_verified is not True:
+            errors.append(
+                "SYNTAX_ERTEILT_KEINE_BERECHTIGUNG: Stufe " + repr(stage) +
+                " verlangt authorization.auth_verified == true")
+    if stage in ("COMMIT", "LEDGER"):
+        ci = data.get("ci_checks") if isinstance(data.get("ci_checks"), dict) else {}
+        if ci.get("overall_status") != "PASS":
+            errors.append(
+                "EVIDENCE_BEFORE_COMMITMENT: Stufe " + repr(stage) +
+                " verlangt ci_checks.overall_status == PASS (UNKNOWN_BLEIBT_UNBELEGT)")
+        evidence = data.get("evidence")
+        if not isinstance(evidence, list) or len(evidence) == 0:
+            errors.append(
+                "EVIDENCE_BEFORE_COMMITMENT: Stufe " + repr(stage) +
+                " verlangt mindestens einen evidence-Eintrag")
+
+
 def validate_record(data: Any) -> tuple[bool, list[str]]:
     """Validiert EINEN UAS-Datensatz gegen das V91CycleActionSchema."""
     errors: list[str] = []
@@ -132,13 +245,25 @@ def validate_record(data: Any) -> tuple[bool, list[str]]:
     for field in _REQUIRED_TOP:
         if field not in data:
             errors.append("Pflichtfeld fehlt: " + field)
-    _reject_unknown_fields(data, set(_REQUIRED_TOP), errors, "root")
 
     _check_str(data, "schema_version", errors, "root", non_empty=True)
+    schema_version = data.get("schema_version")
+    is_v113 = schema_version == SCHEMA_VERSION_V113
+    if schema_version not in SUPPORTED_SCHEMA_VERSIONS:
+        errors.append("root.schema_version ungueltig (nur 112.0.0/113.0.0): " + repr(schema_version))
+    allowed_top = set(_REQUIRED_TOP)
+    allowed_stages = ALLOWED_STAGES
+    if is_v113:
+        allowed_top |= {"origin", "authorization", "risk_level", "rollback"}
+        allowed_stages = ALLOWED_STAGES + V113_EXTRA_STAGES
+    _reject_unknown_fields(data, allowed_top, errors, "root")
+
     _check_str(data, "action_id", errors, "root", non_empty=True)
     _check_str(data, "hypothesis", errors, "root", non_empty=True)
-    if data.get("cycle_stage") not in ALLOWED_STAGES:
+    if data.get("cycle_stage") not in allowed_stages:
         errors.append("root.cycle_stage ungueltig: " + repr(data.get("cycle_stage")))
+    if is_v113:
+        _validate_v113_fields(data, errors)
 
     prv = data.get("pr_and_vibe")
     if not isinstance(prv, dict):
@@ -305,7 +430,7 @@ def batch_report(target: pathlib.Path) -> tuple[int, dict[str, Any]]:
 
 
 def _cli() -> int:
-    parser = argparse.ArgumentParser(description="Validiert UAS-Datensaetze (V91CycleActionSchema 112.0.0), fail-closed.")
+    parser = argparse.ArgumentParser(description="Validiert UAS-Datensaetze (V91CycleActionSchema 112.0.0/113.0.0), fail-closed.")
     parser.add_argument("target", help="Pfad zu .json, .jsonl oder einem Verzeichnis")
     parser.add_argument("--output", default=None, help="Optionaler JSON-Bericht-Ausgabepfad")
     args = parser.parse_args()
