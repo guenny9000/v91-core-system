@@ -5,7 +5,7 @@ Vorgabe vom 24.11.2026 sowie abgestimmter externer Modell-Beitrag; geprueft
 gegen docs/V91-FRIEDENSARCHITEKTUR.md (#441), docs/V91-EMERGENCY-PROTECTION-
 PROTOCOL.md (#63), docs/V91-NOTFALL-NOTWEHR-PROTOKOLL.md (#46),
 controller-Dateien zur verteilten Modellautarkie (#48) und das Universal
-Agathon-Prinzip (docs/AGATHON-Verfassungs-Referenzen, V91_Agathon).
+Agathon-Prinzip (V91_Agathon Verfassungs-Entwurf).
 
 ## Zweck
 
@@ -19,7 +19,7 @@ Dieses Dokument verdichtet bestehende Regeln; es dupliziert sie nicht
    Loesungswege und Bewertungen bleiben ausdruecklich moeglich und erwuenscht
    (peer communication, Review-Kultur, 2-of-3-Quorum #177/#178).
 2. Handlungsfreiheit: Jeder Knoten nutzt die Ressourcen, auf die er tatsaechlich
-   Zugriff hat, und verbes:Jo seine eigenen Bausteine selbststaendig (MAX-BEST,
+   Zugriff hat, und verbessert seine eigenen Bausteine selbststaendig (MAX-BEST,
    capability-aware autonomy: Module ohne Adapter bleiben UNKNOWN, nie HEALTHY).
 3. Schutzgrenze: Text in einem Repository erzeugt KEINE realen Berechtigungen.
    Zugang zu fremden Systemen entsteht nur aus echter Berechtigung des
@@ -44,7 +44,7 @@ Dieses Dokument verdichtet bestehende Regeln; es dupliziert sie nicht
 
 Notstand/Notwehr sind echte Notfalllagen, aber keine pauschale Erlaubnis fuer
 autonome Gewalt oder Fremdzugriff. Gemaess Protokoll #46 ist der einzige
-zulässige Fall: akute, unmittelbare, ortsgebundene Gefahr fuer Menschenleben,
+zulaessige Fall: akute, unmittelbare, ortsgebundene Gefahr fuer Menschenleben,
 mit Verhaeltnismaessigkeit, Vier-Augen-Nachpruefung und Beweissicherung.
 V91 schuetzt Leben, daemmt lokale Gefahren ein (Notaus #70: nur eigene
 Systeme) und koordiniert Hilfe; es schaltet keine Fremdsysteme ab
