@@ -42,6 +42,29 @@ def test_valid_measurement_is_normalized_to_utc(specs):
     assert result.timestamp_utc == "2026-11-17T08:00:00Z"
 
 
+def test_missing_calibration_reference_is_explicit_and_not_pass(specs):
+    result = validate_measurement(reading(), specs)
+    assert result.status is MeasurementStatus.VALID
+    assert result.calibration_status == "MISSING_REFERENCE"
+    assert any("does not establish calibration" in warning for warning in result.warnings)
+
+
+def test_calibration_reference_presence_is_not_independent_verification(specs):
+    result = validate_measurement(
+        reading(calibration_ref="evidence://sensor-01/calibration/2026-01"), specs
+    )
+    assert result.status is MeasurementStatus.VALID
+    assert result.calibration_status == "REFERENCE_PRESENT_NOT_VERIFIED"
+
+
+@pytest.mark.parametrize("calibration_ref", ["", "   ", 42, True, {}])
+def test_invalid_calibration_reference_is_quarantined(specs, calibration_ref):
+    result = validate_measurement(reading(calibration_ref=calibration_ref), specs)
+    assert result.status is MeasurementStatus.QUARANTINE
+    assert result.calibration_status == "INVALID_REFERENCE"
+    assert "calibration_ref must be a non-empty opaque reference when provided" in result.errors
+
+
 @pytest.mark.parametrize("value", [None, -999, 9999, float("inf"), float("-inf"), float("nan"), -1, 101])
 def test_invalid_or_sentinel_values_are_quarantined(specs, value):
     result = validate_measurement(reading(value), specs)
