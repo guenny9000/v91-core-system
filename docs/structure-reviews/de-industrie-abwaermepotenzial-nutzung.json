@@ -1,0 +1,65 @@
+{
+  "structure_id": "de_industrie_abwaermepotenzial_und_nutzungsstand_2021_2026",
+  "assessor": "vibe_session_2026-11-24_max_best_entdeckungslauf",
+  "assessed_at_structure": "2026-11-24T11:07:00Z",
+  "note": "Struktur-Einschaetzung fuer den Struktur-Review-Waechter (controller/structure_review.py, PR #170): Datengrundlage und Nutzungsstand industrieller Abwaerme in Deutschland. Anlass: offener Entdeckungs- und Umsetzungsauftrag des Betreibers 24.11.2026 (Feld 'Industrielle Abwaerme'). Alle Zahlen sind FREMDQUELLEN-Angaben, keine V91-Messung; DATENBASIS != MESSUNG, BELEGT_EINSCHAETZUNG != VERIFIZIERT, REVIEW != ENTSCHEIDUNG. Keine Abschaltliste, keine Handlungsempfehlung an Dritte.",
+  "criteria": {
+    "gesellschaftlicher_nutzen": {
+      "status": "BELEGT",
+      "evidence": "Technisch zurueckgewinnbares industrielles Abwaermepotenzial in Deutschland 2021: rund 67 TWh, etwa 15 % des industriellen Waermeverbrauchs (insgesamt ca. 460 TWh; Fraunhofer-ISI-Methode, Odyssee-Mure-EI-Werte, Blog vom 14.06.2024). Stahlindustrie allein: zusaetzlich nutzbares Abwaermepotenzial von 0,322 GJ/t Rohstahl, hochgerechnet rund 9,45 PJ/a (ueber 2,6 Mrd. kWh), unter Beruecksichtigung von Hemmnissen (UBA-Gutachten, 01.02.2019). Waermeplanungsgesetz (in Kraft 01.01.2024) foerdert ausdruecklich die Wiederverwendung von Abwaerme.",
+      "source": "https://www.fraunhofer-zukunftsfabrik.de/abschaetzung-des-industriellen-abwaermepotenzials-in-deutschland/ ; https://www.umweltbundesamt.de/themen/stahlindustrie-deutlich-mehr-abwaermenutzung",
+      "assessed_at": "2026-11-24T11:07:00Z"
+    },
+    "menschenrechtsvertraeglichkeit": {
+      "status": "BELEGT",
+      "evidence": "Abwaermenutzung reduziert den Prim\u00e4renergiebedarf ohne Eingriff in Grundrechte; in den einsehbaren Quellen kein Anhaltspunkt fuer diskriminierende Wirkung. Indirekter Nutzen: geringere Energiekosten und geringere Abhaengigkeit (Waermeloesungen fuer Gemeinden als Ziel des Waermeplanungsgesetzes). Direkte menschenrechtliche Auswirkungen wurden nicht gemessen und bleiben UNKNOWN.",
+      "source": "https://www.fraunhofer-zukunftsfabrik.de/abschaetzung-des-industriellen-abwaermepotenzials-in-deutschland/",
+      "assessed_at": "2026-11-24T11:07:00Z"
+    },
+    "kosten_und_ressourcenverbrauch": {
+      "status": "PROBLEM_BELEGT",
+      "evidence": "Belegte Verschwendung: rund 67 TWh/a technisch zurueckgewinnbare industrielle Abwaerme (15 % des industriellen Waermeverbrauchs 2021) bleibt ungenutzt; die Quelle selbst weist darauf hin, dass Abwaerme 'nicht mit absoluter Praezision bewertet werden kann' (Schaetzung, keine Messung). UBA stellt fest, dass bisher 'nennenswerte Abwaermemengen ungenutzt' bleiben. Die Groessenordnung, nicht die exakte Zahl, ist der belastete Befund.",
+      "source": "https://www.fraunhofer-zukunftsfabrik.de/abschaetzung-des-industriellen-abwaermepotenzials-in-deutschland/ ; https://www.umweltbundesamt.de/themen/stahlindustrie-deutlich-mehr-abwaermenutzung",
+      "assessed_at": "2026-11-24T11:07:00Z"
+    },
+    "transparenz": {
+      "status": "BELEGT",
+      "evidence": "Methodik oeffentlich dokumentiert: Energiebilanzen je Hauptanlage (Sinteranlage bis Warmwalzwerk), Sankey-Diagramme (UBA), EI-Werte aus Odyssee-Mure-Datenbank (Fraunhofer). BfEE betreibt die 'Plattform fuer Abwaerme' als erste Uebersicht gewerblicher Abwaerme; digitaler Abwaermekataster mit Datenstand 18.06.2025 modelliert Nahwaerme-Versorgungsbereiche.",
+      "source": "https://www.umweltbundesamt.de/themen/stahlindustrie-deutlich-mehr-abwaermenutzung ; https://www.bfee-online.de/BfEE/DE/Effizienzpolitik/Plattform_fuer_Abwaerme/plattform_fuer_abwaerme_node.html ; https://storymaps.arcgis.com/stories/9a7493cb39e742339a8337a7278a2b54",
+      "assessed_at": "2026-11-24T11:07:00Z"
+    },
+    "nachhaltigkeit": {
+      "status": "BELEGT",
+      "evidence": "Abwaermenutzung ersetzt Prim\u00e4renergieerzeugung und senkt damit den Ressourcenverbrauch (logisch aus den Energiebilanzen; die einsehbaren Quellen nennen die technische Nutzung 'grosses Potenzial fuer die Energiewende'). Konkrete CO2-Einsparmengen wurden in den einsehbaren Quellen NICHT beziffert und bleiben UNKNOWN; keine Wirkungs-Zahl von V91 berechnet (WIRKUNG_NUR_AUS_MESSUNG).",
+      "source": "https://www.fraunhofer-zukunftsfabrik.de/abschaetzung-des-industriellen-abwaermepotenzials-in-deutschland/ ; https://www.umweltbundesamt.de/themen/stahlindustrie-deutlich-mehr-abwaermenutzung",
+      "assessed_at": "2026-11-24T11:07:00Z"
+    },
+    "missbrauchsrisiken": {
+      "status": "NICHT_GEPRUEFT",
+      "evidence": "",
+      "source": "",
+      "assessed_at": "2026-11-24T11:07:00Z"
+    },
+    "alternativen_und_verbesserbarkeit": {
+      "status": "BELEGT",
+      "evidence": "Nutzung haengt laut Quellen an Temperaturstufe, Traegermedium und Kontinuitaet; Eisen-/Stahlindustrie weist Potenzial ueberwiegend >200 Grad auf, andere Sektoren 100-200 Grad. UBA-Gutachten identifiziert konkrete Hemmnisse und beziffert das Potenzial trotz Hemmnissen; Waermeplanungsgesetz und BfEE-Plattform/Abwaermekataster sind bestehende Instrumente zur Erschliessung. Es existieren also belegte, bereits laufende Verbesserungspfade.",
+      "source": "https://www.fraunhofer-zukunftsfabrik.de/abschaetzung-des-industriellen-abwaermepotenzials-in-deutschland/ ; https://www.umweltbundesamt.de/themen/stahlindustrie-deutlich-mehr-abwaermenutzung ; https://www.bfee-online.de/BfEE/DE/Effizienzpolitik/Plattform_fuer_Abwaerme/plattform_fuer_abwaerme_node.html",
+      "assessed_at": "2026-11-24T11:07:00Z"
+    }
+  },
+  "review_result": {
+    "verdict": "NEGATIVE_FINDING_PROBLEMS_BELEGT",
+    "criteria_belegt": 5,
+    "criteria_problem_belegt": 1,
+    "criteria_ungeprueft": 1,
+    "problems": [
+      "kosten_und_ressourcenverbrauch"
+    ],
+    "ungeprueft": [
+      "missbrauchsrisiken"
+    ],
+    "tool": "controller/structure_review.py @ main 5d304738 (PR #170-Linie)",
+    "run_at": "2026-11-24T11:07:00Z",
+    "reproduce": "python3 controller/structure_review.py --report-json docs/structure-reviews/de-industrie-abwaermepotenzial-nutzung.json"
+  }
+}
