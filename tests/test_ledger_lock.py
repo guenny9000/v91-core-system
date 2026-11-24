@@ -142,7 +142,8 @@ class QuorumLedgerLockTests(unittest.TestCase):
             self.assertEqual(2, two.entry_count())  # two kennt nur NEUABGLEICH, keine Allwissenheit
             reloaded = QuorumLedger(path, public)
             self.assertEqual(3, reloaded.entry_count())
-            self.assertEqual(2, reloaded.relayed_floor() if False else reloaded.replay_floor("agent-b"))
+            # agent-b hoechste Sequenz im File: 3 (dritter Vote agent-b seq 3)
+            self.assertEqual(3, reloaded.replay_floor("agent-b"))
 
     def test_parallel_appends_chain_valid_and_floors_intact(self):
         from controller.quorum_ledger import QuorumLedger, build_signed_vote
