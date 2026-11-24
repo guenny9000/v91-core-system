@@ -236,3 +236,130 @@ class CliTest(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class ValidateRecord113Test(unittest.TestCase):
+    """Erweiterung 113.0.0: Herkunft/Autorisierung/Risiko/Rueckweg + Gates."""
+
+    def _record113(self, **overrides):
+        base = _record(
+            schema_version="113.0.0",
+            cycle_stage="EXECUTION",
+            origin={
+                "actor_id": "peer-model-omega",
+                "actor_type": "AGENT",
+                "source": "conversation handover text (no repo access)",
+            },
+            authorization={
+                "auth_verified": True,
+                "scope": "docs-only review, no repo write",
+                "credential_ref": "operator-approved chat session",
+                "isolation_policy": "ISOLATE_NOT_DESTROY",
+            },
+            risk_level="LOW",
+        )
+        base.update(overrides)
+        return base
+
+    def test_v113_full_record_passes(self):
+        ok, errors = validate_record(self._record113())
+        self.assertTrue(ok, errors)
+
+    def test_v113_input_and_schema_pass_without_authorization(self):
+        for stage in ("INPUT", "SCHEMA"):
+            ok, errors = validate_record(self._record113(cycle_stage=stage))
+            self.assertTrue(ok, errors)
+
+    def test_v113_hypothesis_112_stage_still_passes(self):
+        ok, errors = validate_record(self._record113(cycle_stage="HYPOTHESIS"))
+        self.assertTrue(ok, errors)
+
+    def test_v113_backward_compatible_without_new_fields(self):
+        # LEDGER/COMMIT bleiben gate-geschuetzt; ein 112-artiger Record
+        # ohne neue Felder bleibt auf nicht-ausfuehrenden Stufen gueltig.
+        ok, errors = validate_record(_record(
+            schema_version="113.0.0", cycle_stage="HYPOTHESIS"))
+        self.assertTrue(ok, errors)
+
+    def test_v113_ledger_without_authorization_stays_rejected(self):
+        ok, errors = validate_record(_record(schema_version="113.0.0"))
+        self.assertFalse(ok)
+        self.assertTrue(any("KEINE_AUSFUEHRUNG_OHNE_AUTORISIERUNG" in e for e in errors))
+
+    def test_unsupported_schema_version_rejected(self):
+        ok, errors = validate_record(_record(schema_version="99.0.0"))
+        self.assertFalse(ok)
+        self.assertTrue(any("schema_version ungueltig" in e for e in errors))
+
+    def test_invalid_risk_level_rejected(self):
+        ok, errors = validate_record(self._record113(risk_level="EXTREME"))
+        self.assertFalse(ok)
+        self.assertTrue(any("risk_level" in e for e in errors))
+
+    def test_high_risk_requires_recovery_path(self):
+        ok, errors = validate_record(self._record113(risk_level="HIGH"))
+        self.assertFalse(ok)
+        self.assertTrue(any("RECOVERY_FIRST" in e for e in errors))
+
+    def test_high_risk_without_available_rollback_rejected(self):
+        ok, errors = validate_record(self._record113(
+            risk_level="HIGH",
+            rollback={"available": False, "procedure": "n/a"},
+        ))
+        self.assertFalse(ok)
+        self.assertTrue(any("RECOVERY_FIRST" in e for e in errors))
+
+    def test_high_risk_with_valid_rollback_passes(self):
+        ok, errors = validate_record(self._record113(
+            risk_level="HIGH",
+            rollback={"available": True, "procedure": "branch revert, merge rueckgaengig"},
+        ))
+        self.assertTrue(ok, errors)
+
+    def test_execution_without_authorization_rejected(self):
+        rec = self._record113()
+        del rec["authorization"]
+        ok, errors = validate_record(rec)
+        self.assertFalse(ok)
+        self.assertTrue(any("KEINE_AUSFUEHRUNG_OHNE_AUTORISIERUNG" in e for e in errors))
+
+    def test_execution_with_unverified_authorization_rejected(self):
+        ok, errors = validate_record(self._record113(
+            authorization={"auth_verified": False, "scope": "none", "credential_ref": "x"},
+        ))
+        self.assertFalse(ok)
+        self.assertTrue(any("SYNTAX_ERTEILT_KEINE_BERECHTIGUNG" in e for e in errors))
+
+    def test_commit_requires_ci_pass(self):
+        ok, errors = validate_record(self._record113(
+            cycle_stage="COMMIT",
+            ci_checks={"overall_status": "UNKNOWN", "checks": []},
+        ))
+        self.assertFalse(ok)
+        self.assertTrue(any("EVIDENCE_BEFORE_COMMITMENT" in e for e in errors))
+
+    def test_commit_requires_nonempty_evidence(self):
+        ok, errors = validate_record(self._record113(
+            cycle_stage="COMMIT", evidence=[]))
+        self.assertFalse(ok)
+        self.assertTrue(any("evidence-Eintrag" in e for e in errors))
+
+    def test_origin_bad_actor_type_rejected(self):
+        rec = self._record113()
+        rec["origin"]["actor_type"] = "ROBOT_OVERLORD"
+        ok, errors = validate_record(rec)
+        self.assertFalse(ok)
+        self.assertTrue(any("actor_type" in e for e in errors))
+
+    def test_rollback_unknown_field_rejected(self):
+        ok, errors = validate_record(self._record113(
+            risk_level="HIGH",
+            rollback={"available": True, "procedure": "revert merge", "phantom": "x"},
+        ))
+        self.assertFalse(ok)
+        self.assertTrue(any("rollback" in e for e in errors))
+
+    def test_112_still_rejects_new_fields(self):
+        ok, errors = validate_record(_record(risk_level="LOW"))
+        self.assertFalse(ok)
+        self.assertTrue(any("unbekannte Felder" in e for e in errors))

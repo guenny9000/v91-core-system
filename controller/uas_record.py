@@ -34,7 +34,7 @@ null Fehlerqualitaet, Software OPTIMAL, null von drei Abweichungen,
 'VALID verifiziert', 'Harmonie', 'Das System ist perfekt', 'nicht
 mehr an GitHub-Tokens gebunden, sondern an Syntax gebunden') - das
 sind STATUS-BEHAUPTUNGEN ohne Beleg; sie werden NICHT erzeugt,
-NICHT bestaetigt und NICHT als Zustand uebernommen (STATUSZEILE != 
+NICHT bestaetigt und NICHT als Zustand uebernommen (STATUSZEILE !=
 EVIDENZ, SYNTAX ERSETZT KEINE PRUEFUNG). Der IACL-Teil (Agent A
 stuetzt sich auf das Schema von Agent B) ist hier als VALIDIERER
 umgesetzt; ein netzwerkfaehiger Kommunikations-Layer existiert
