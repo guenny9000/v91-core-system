@@ -8,7 +8,7 @@ es dupliziert keine Umsetzung (NO_DUPLICATE_SYSTEMS).
 ## Auftrag
 
 MAX-BEST ist nicht auf bisherige Beispiele beschraenkt. Jeder Beteiligte
-	entdeckt eigenstaendig Chancen und setzt die wirksamste realistische
+entdeckt eigenstaendig Chancen und setzt die wirksamste realistische
 Massnahme um, soweit autorisiert. Keine Beschaeftigungstherapie, keine
 Doppelarbeit, keine erfundenen Erfolge (UNKNOWN != PASS, DEKLARIERT !=
 HERGESTELLT).
