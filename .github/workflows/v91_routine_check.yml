@@ -9,7 +9,9 @@
 name: V91 Routine Check
 on:
   schedule:
+    # 02:17 UTC Nachtpost + 06:00 UTC == 07:00 Ortszeit Berlin (Betreiber-Tagesrhythmus, Winterzeit UTC+1).
     - cron: "17 2 * * *"
+    - cron: "0 6 * * *"
   workflow_dispatch: {}
 permissions:
   contents: read
