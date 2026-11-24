@@ -17,7 +17,7 @@ import json
 import re
 import sys
 from dataclasses import dataclass, field
-from datetime import datetime
+from datetime import datetime, timedelta
 from pathlib import Path
 
 DATE_FORMAT = "%d.%m.%Y"
@@ -76,18 +76,32 @@ def _violation(line_number: int, rule: str, detail: str) -> dict:
     return {"line": line_number, "rule": rule, "detail": detail}
 
 
-def lint_text(text: str) -> LintResult:
+def lint_text(text: str, today: datetime | None = None) -> LintResult:
     """Prueft Index-Text gegen die Regel-#138-Strukturregeln.
 
     ERROR-Regeln (blockieren):
       TAG_START_END_MISMATCH  - Start-Tag != End-Tag
       BAD_DATE                - Datum kein gueltiges dd.mm.yyyy
       YEAR_OUT_OF_RANGE       - Jahr ausserhalb 2025-2026
+      DATUM_IN_ZUKUNFT        - Session-Datum liegt nach dem Pruefzeitpunkt
       DUPLICATE_PRIMARY_PR   - Primaer-PR in zwei Session-Zeilen
     WARN-Regeln (blockieren nicht):
       START_TAG_WITHOUT_END_TAG - Zeile mit (VIBE-...) aber ohne [VIBE-...]
+
+    Ehrlichkeit zur Zeitreferenz: Session-Daten werden in Berliner
+    Ortszeit geschrieben, CI/CLI pruefen in UTC. Die Referenz verlaengert
+    sich deshalb um 2 Stunden Toleranzfenster (UTC+2-Sommerzeit deckt
+    das schlimmste Offset ab). Ein Datum mehr als ~2h vor der
+    Systemzeit-Zukunft ist ein chronologischer Fehler
+    (DATUM != BEHAUPTUNG, MERGE-STEMPEL binden, LINT != WAHRHEIT:
+    geprueft wird die Form der Chronologie gegen den kalendariischen
+    Pruefzeitpunkt, nicht ob der Merge wirklich an jenem Tag lag - das
+    bleibt Git-Nachweis-Aufgabe des Audits). Der Parameter 'today'
+    ersetzt die Referenz KOMPLETT (ohne Toleranz, fuer deterministische
+    Tests); nur die Default-Referenz (CLI/CI) bekommt das 2-h-Fenster.
     """
     result = LintResult()
+    reference = today if today is not None else datetime.now() + timedelta(hours=2)
     primary_pr_first_line: dict = {}
     for line_number, line in enumerate(text.splitlines(), start=1):
         entry = parse_entry(line, line_number)
@@ -106,6 +120,15 @@ def lint_text(text: str) -> LintResult:
                 if not (YEAR_MIN <= parsed.year <= YEAR_MAX):
                     result.errors.append(
                         _violation(line_number, "YEAR_OUT_OF_RANGE", entry.date)
+                    )
+                elif parsed.date() > reference.date():
+                    result.errors.append(
+                        _violation(
+                            line_number,
+                            "DATUM_IN_ZUKUNFT",
+                            "%s liegt nach Pruefzeitpunkt %s (MERGE-STEMPEL binden)"
+                            % (entry.date, reference.date().isoformat()),
+                        )
                     )
             except ValueError:
                 result.errors.append(_violation(line_number, "BAD_DATE", entry.date))
