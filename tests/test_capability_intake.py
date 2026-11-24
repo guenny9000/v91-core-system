@@ -2,9 +2,11 @@
 
 Verbindet controller.signed_manifest (Stage 1) mit
 controller.peer_directory (Trust-Registry) und erzwingt die
-node_id/key-Bindung. Ehrliche Grenzen: ADVERTISEMENT != AUTORISIERUNG,
-VERIFIZIERT != VERFUEGBAR, key_id bleibt eine Unterzeichner-Angabe.
+node_id/key-Bindung. STRICT-Modus schliesst die key_id-Luecke ueber
+controller.trusted_peer_registry (REUSE). Ehrliche Grenzen:
+ADVERTISEMENT != AUTORISIERUNG, VERIFIZIERT != VERFUEGBAR.
 """
+import base64
 import json
 from pathlib import Path
 from datetime import datetime, timezone
@@ -14,6 +16,7 @@ import pytest
 from controller.capability_intake import (
     ACCEPTED_ADVERTISEMENT,
     HONESTY_NOTE,
+    HONESTY_NOTE_KEY_BOUND,
     REJECTED,
     admit_capability_manifest,
     main as cli_main,
@@ -247,7 +250,138 @@ def test_verdict_to_dict_roundtrip(keypair, directory):
     json.dumps(as_dict)  # serialisierbar (Berichtspflicht)
 
 
+# ---------- STRICT-Modus: key_id-Registry-Bindung (luecken-schliessend) ----------
+
+
+def _registry_for(keypair, key_id="key-1", status="active", peer=PEER):
+    return {
+        "peers": {
+            peer: {
+                "keys": {
+                    key_id: {
+                        "algorithm": "Ed25519",
+                        "public_key_b64": base64.b64encode(keypair[1]).decode("ascii"),
+                        "status": status,
+                    }
+                }
+            }
+        }
+    }
+
+
+def test_strict_registry_accept(keypair, directory):
+    _register(directory, keypair)
+    signed = sign_manifest(base_manifest(), keypair[0])
+    verdict = admit_capability_manifest(
+        signed, peer_id=PEER, directory=directory, now=NOW_ISO,
+        key_registry=_registry_for(keypair))
+    assert verdict.state == ACCEPTED_ADVERTISEMENT
+    assert HONESTY_NOTE_KEY_BOUND in verdict.reason
+    assert HONESTY_NOTE not in verdict.reason
+
+
+def test_strict_unknown_key_id_rejected(keypair, directory):
+    _register(directory, keypair)
+    signed = sign_manifest(base_manifest(key_id="key-other"), keypair[0])
+    verdict = admit_capability_manifest(
+        signed, peer_id=PEER, directory=directory, now=NOW_ISO,
+        key_registry=_registry_for(keypair))
+    assert verdict.state == REJECTED
+    assert "not registry-bound" in verdict.reason
+
+
+def test_strict_revoked_registry_key_rejected(keypair, directory):
+    _register(directory, keypair)
+    signed = sign_manifest(base_manifest(), keypair[0])
+    verdict = admit_capability_manifest(
+        signed, peer_id=PEER, directory=directory, now=NOW_ISO,
+        key_registry=_registry_for(keypair, status="revoked"))
+    assert verdict.state == REJECTED
+    assert "not registry-bound" in verdict.reason
+
+
+def test_strict_registry_directory_mismatch_rejected(keypair, directory):
+    _register(directory, keypair)  # Trust-Eintrag: Key von keypair
+    other = generate_signing_keypair()
+    signed = sign_manifest(base_manifest(), keypair[0])
+    # Registry nennt einen ANDEREN Key fuer (PEER, key-1)
+    verdict = admit_capability_manifest(
+        signed, peer_id=PEER, directory=directory, now=NOW_ISO,
+        key_registry=_registry_for(other))
+    assert verdict.state == REJECTED
+    assert "differs from the peer_directory trust entry" in verdict.reason
+
+
+def test_strict_key_bound_to_other_peer_rejected(keypair, directory):
+    _register(directory, keypair, peer_id=PEER)
+    signed = sign_manifest(base_manifest(), keypair[0])
+    registry = _registry_for(keypair, peer="node-beta")
+    verdict = admit_capability_manifest(
+        signed, peer_id=PEER, directory=directory, now=NOW_ISO,
+        key_registry=registry)
+    assert verdict.state == REJECTED
+    assert "not registry-bound" in verdict.reason
+
+
+def test_strict_wrong_key_id_in_manifest_rejected(keypair, directory):
+    _register(directory, keypair)
+    # manifest behauptet key-9, registry kennt nur key-1
+    signed = sign_manifest(base_manifest(key_id="key-9"), keypair[0])
+    verdict = admit_capability_manifest(
+        signed, peer_id=PEER, directory=directory, now=NOW_ISO,
+        key_registry=_registry_for(keypair))
+    assert verdict.state == REJECTED
+    assert "not registry-bound" in verdict.reason
+
+
+def test_non_strict_path_unchanged(keypair, directory):
+    _register(directory, keypair)
+    signed = sign_manifest(base_manifest(key_id="key-behauptet"), keypair[0])
+    verdict = admit_capability_manifest(
+        signed, peer_id=PEER, directory=directory, now=NOW_ISO)
+    assert verdict.state == ACCEPTED_ADVERTISEMENT
+    assert HONESTY_NOTE in verdict.reason  # Luecke bleibt ehrlich benannt
+
+
+def test_cli_strict_registry(tmp_path, keypair):
+    real_now = int(datetime.now(tz=timezone.utc).timestamp())
+    directory = PeerDirectory(tmp_path / "peers.sqlite")
+    directory.add_peer(peer_id=PEER, public_key_hex=keypair[1].hex(),
+                       expires_at=real_now + 3600)
+    signed = sign_manifest(base_manifest(
+        issued_at="2020-01-01T00:00:00+00:00",
+        expires_at="2030-01-01T00:00:00+00:00"), keypair[0])
+    directory_path = tmp_path / "peers.sqlite"
+    manifest_path = tmp_path / "manifest.json"
+    manifest_path.write_text(json.dumps(signed), encoding="utf-8")
+    registry_path = tmp_path / "registry.json"
+    registry_path.write_text(json.dumps(_registry_for(keypair)),
+                             encoding="utf-8")
+    rc = cli_main([
+        "--manifest", str(manifest_path),
+        "--peer-id", PEER,
+        "--directory", str(directory_path),
+        "--now", "2026-11-24T12:00:00+00:00",
+        "--key-registry", str(registry_path),
+    ])
+    assert rc == 0
+
+
+def test_cli_strict_missing_registry_file_exit_two(tmp_path):
+    manifest_path = tmp_path / "manifest.json"
+    manifest_path.write_text("{}", encoding="utf-8")
+    rc = cli_main([
+        "--manifest", str(manifest_path),
+        "--peer-id", PEER,
+        "--directory", str(tmp_path / "peers.sqlite"),
+        "--now", NOW_ISO,
+        "--key-registry", str(tmp_path / "does-not-exist.json"),
+    ])
+    assert rc == 2  # unverarbeitbare Registry ist kein PASS (fail-closed)
+
+
 # ---------- CLI (E2E, echte Registry-Datei) ----------
+
 
 def _cli(tmp_path, manifest_obj, peer_id=PEER, now=NOW_ISO):
     directory_path = tmp_path / "peers.sqlite"
