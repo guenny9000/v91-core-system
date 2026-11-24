@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Tests – impact measurement from real-data CSV rows."""
 
+import json
 import os
 import sys
 
@@ -105,3 +106,18 @@ def test_summary_never_sums_per_sample_co2_changes_across_records(tmp_path):
     assert summary["verified_co2_saved_kg_per_sample"] is None
     assert summary["valid_impacts_co2_saved_kg_per_sample"] is None
     assert summary["co2_aggregation_status"] == "NOT_AGGREGATED_REQUIRES_WORKLOAD_DENOMINATOR_AND_SYSTEM_BOUNDARY"
+
+
+def test_summary_rejects_malformed_or_unrepresentable_co2_values(tmp_path):
+    path = tmp_path / "malformed-co2.jsonl"
+    records = [
+        {"payload": {"type": "impact", "status": "VALID", "co2_change_kg_per_sample": True}},
+        {"payload": {"type": "impact", "status": "VALID", "co2_change_kg_per_sample": 10**1000}},
+        {"payload": {"type": "impact", "status": "VALID", "co2_change_kg_per_sample": "nan"}},
+    ]
+    path.write_text("\n".join(json.dumps(record) for record in records), encoding="utf-8")
+    summary = verified_summary(str(path))
+    assert summary["impacts_total"] == 3
+    assert summary["impacts_valid"] == 3
+    assert summary["co2_change_kg_per_sample_records"] == []
+    assert summary["co2_change_values_invalid_count"] == 3
