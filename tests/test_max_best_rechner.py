@@ -89,9 +89,14 @@ class DomainTest(unittest.TestCase):
 
 class CliTest(unittest.TestCase):
     def test_exit_0_wenn_alles_berechenbar(self):
+        with tempfile.NamedTemporaryFile("w", suffix=".json",
+                                         delete=False) as tf:
+            json.dump({"gesamtnutzen": {"nutzen": 80, "schaden": 0,
+                                       "aufwand": 100}}, tf)
+            path = tf.name
         buf = io.StringIO()
         with redirect_stdout(buf):
-            code = mbr.main(["/tmp/a.json"])
+            code = mbr.main([path])
         self.assertEqual(code, 0)
         data = json.loads(buf.getvalue())
         self.assertEqual(data["bilanz"]["nicht_geprueft"], 0)
@@ -110,16 +115,21 @@ class CliTest(unittest.TestCase):
         self.assertEqual(data["restrisiko"]["status"], "NICHT_GEPRUEFT")
 
     def test_exit_2_bei_domainfehler(self):
+        with tempfile.NamedTemporaryFile("w", suffix=".json",
+                                         delete=False) as tf:
+            json.dump({"risiko": {"wahrscheinlichkeit": 1.5,
+                                  "schadenshoehe": 10}}, tf)
+            path = tf.name
         buf = io.StringIO()
         with redirect_stdout(buf):
-            code = mbr.main(["/tmp/c.json"])
+            code = mbr.main([path])
         self.assertEqual(code, 2)
         self.assertIn("fail-closed", buf.getvalue())
 
     def test_fehlende_datei_exit_2(self):
         buf = io.StringIO()
         with redirect_stdout(buf):
-            code = mbr.main(["/tmp/existiert-nicht-xyz.json"])
+            code = mbr.main(["/tmp/existiert-nicht-xyz-8f3a.json"])
         self.assertEqual(code, 2)
 
 
