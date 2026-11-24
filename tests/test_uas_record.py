@@ -234,6 +234,90 @@ class CliTest(unittest.TestCase):
             self.assertEqual(proc.returncode, 0)
 
 
+
+class CreationAndLifeProtectionTest(unittest.TestCase):
+    """113.0.0: optionales creation_and_life_protection-Objekt."""
+
+    def _record113(self, clp=None):
+        data = _record(schema_version="113.0.0", cycle_stage="HYPOTHESIS")
+        if clp is not None:
+            data["creation_and_life_protection"] = clp
+        return data
+
+    def _clp(self, **overrides):
+        base = {
+            "energy_kwh": 12.5, "co2_kg": 3.0, "water_l": 200, "material_kg": 1,
+            "e_waste_kg": 0.2, "habitats": ["AUENWALD"],
+            "long_term_restoration": "Renaturierung im 5-Jahres-Plan",
+        }
+        base.update(overrides)
+        return base
+
+    def test_valid_object_accepted(self):
+        ok, errors = validate_record(self._record113(self._clp()))
+        self.assertTrue(ok, errors)
+
+    def test_unknown_values_accepted(self):
+        ok, errors = validate_record(self._record113(
+            self._clp(energy_kwh="UNKNOWN", co2_kg="UNKNOWN", water_l="UNKNOWN",
+                      material_kg="UNKNOWN", e_waste_kg="UNKNOWN", habitats=["UNKNOWN"],
+                      long_term_restoration="UNBEKANNT")))
+        self.assertTrue(ok, errors)
+
+    def test_optional_field_absent_record_still_valid(self):
+        ok, errors = validate_record(self._record113())
+        self.assertTrue(ok, errors)
+
+    def test_negative_metric_rejected(self):
+        ok, errors = validate_record(self._record113(self._clp(energy_kwh=-1)))
+        self.assertFalse(ok)
+        self.assertTrue(any("energy_kwh" in e for e in errors))
+
+    def test_string_metric_rejected(self):
+        ok, errors = validate_record(self._record113(self._clp(co2_kg="3")))
+        self.assertFalse(ok)
+
+    def test_bool_metric_rejected(self):
+        ok, errors = validate_record(self._record113(self._clp(water_l=True)))
+        self.assertFalse(ok)
+
+    def test_missing_key_rejected(self):
+        clp = self._clp()
+        del clp["e_waste_kg"]
+        ok, errors = validate_record(self._record113(clp))
+        self.assertFalse(ok)
+        self.assertTrue(any("e_waste_kg" in e for e in errors))
+
+    def test_unknown_extra_key_rejected(self):
+        ok, errors = validate_record(self._record113(self._clp(biodiversitaet=5)))
+        self.assertFalse(ok)
+        self.assertTrue(any("unbekannte Felder" in e for e in errors))
+
+    def test_empty_habitats_rejected(self):
+        ok, errors = validate_record(self._record113(self._clp(habitats=[])))
+        self.assertFalse(ok)
+
+    def test_empty_habitat_item_rejected(self):
+        ok, errors = validate_record(self._record113(self._clp(habitats=[""])))
+        self.assertFalse(ok)
+
+    def test_empty_restoration_rejected(self):
+        ok, errors = validate_record(self._record113(self._clp(long_term_restoration=" ")))
+        self.assertFalse(ok)
+
+    def test_not_an_object_rejected(self):
+        data = self._record113()
+        data["creation_and_life_protection"] = ["liste"]
+        ok, errors = validate_record(data)
+        self.assertFalse(ok)
+
+    def test_field_rejected_on_112(self):
+        data = _record(cycle_stage="HYPOTHESIS")
+        data["creation_and_life_protection"] = self._clp()
+        ok, errors = validate_record(data)
+        self.assertFalse(ok)
+        self.assertTrue(any("unbekannte Felder" in e for e in errors))
+
 if __name__ == "__main__":
     unittest.main()
 
