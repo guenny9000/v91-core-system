@@ -176,13 +176,12 @@ class ResourceAdmissionGate:
         self._freshness = float(freshness_seconds)
         self._quota = normalized_quota
 
-    def _quota_violations(self, m: ResourceMeasurements) -> list[str]:
-        violations = []
-        for key, limit in self._quota.items():
-            value = getattr(m, key, None)
-            if value is not None and value > limit:
-                violations.append(key)
-        return violations
+    def _effective_capacity(self, key: str, measured: float) -> float:
+        """Apply a local ceiling to measured capacity; never reject a host merely
+        because its measured capacity is greater than the owner's quota.
+        """
+        limit = self._quota.get(key)
+        return min(measured, limit) if limit is not None else measured
 
     def request_admission(self, request: AdmissionRequest) -> AdmissionDecision:
         """Admit local work only if all requirements are measured, fresh and sufficient."""
@@ -215,27 +214,31 @@ class ResourceAdmissionGate:
                 VERDICT_DENIED,
                 f"Stale measurement (age {age:.1f}s > {self._freshness:.1f}s).",
                 measurements)
-        violations = self._quota_violations(measurements)
-        if violations:
-            return AdmissionDecision(
-                VERDICT_DENIED,
-                f"Local quota exceeded for: {violations}.",
-                measurements)
+        # A quota is a ceiling on what this gate may allocate, not a condition
+        # that the host's total measured capacity must itself satisfy.
+        capacities = {
+            "cpu_cores": self._effective_capacity("cpu_cores", measurements.cpu_cores),
+            "ram_mb": self._effective_capacity("ram_mb", measurements.ram_mb),
+            "disk_mb": self._effective_capacity("disk_mb", measurements.disk_mb),
+        }
+        if measurements.vram_mb is not None:
+            capacities["vram_mb"] = self._effective_capacity(
+                "vram_mb", measurements.vram_mb)
         deficits = []
-        if request.cpu_cores > measurements.cpu_cores:
-            deficits.append(f"cpu_cores {float(request.cpu_cores)} > {measurements.cpu_cores}")
-        if request.ram_mb > measurements.ram_mb:
-            deficits.append(f"ram_mb {request.ram_mb} > {measurements.ram_mb}")
-        if request.disk_mb > measurements.disk_mb:
-            deficits.append(f"disk_mb {request.disk_mb} > {measurements.disk_mb}")
+        if request.cpu_cores > capacities["cpu_cores"]:
+            deficits.append(f"cpu_cores {float(request.cpu_cores)} > local_cap {capacities['cpu_cores']}")
+        if request.ram_mb > capacities["ram_mb"]:
+            deficits.append(f"ram_mb {request.ram_mb} > local_cap {capacities['ram_mb']}")
+        if request.disk_mb > capacities["disk_mb"]:
+            deficits.append(f"disk_mb {request.disk_mb} > local_cap {capacities['disk_mb']}")
         if request.vram_mb is not None:
             if measurements.vram_mb is None:
                 return AdmissionDecision(
                     VERDICT_DENIED,
                     "VRAM required but never measured on this host (UNKNOWN is never unlimited).",
                     measurements)
-            if request.vram_mb > measurements.vram_mb:
-                deficits.append(f"vram_mb {request.vram_mb} > {measurements.vram_mb}")
+            if request.vram_mb > capacities["vram_mb"]:
+                deficits.append(f"vram_mb {request.vram_mb} > local_cap {capacities['vram_mb']}")
         if deficits:
             return AdmissionDecision(VERDICT_DENIED,
                                      f"Insufficient resources: {'; '.join(deficits)}.",
