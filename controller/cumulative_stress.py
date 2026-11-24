@@ -265,8 +265,7 @@ def _cli() -> int:
     text = json.dumps(report, indent=2, sort_keys=True)
     if args.output:
         with open(args.output, "w", encoding="utf-8") as handle:
-            handle.write(text + "
-")
+            handle.write(text + "\n")
     print(text)
     if report["state"] == NOT_REPORTED:
         # Ungueltige Payload-Eingaben werden exit 2 gemeldet,
