@@ -264,3 +264,13 @@ def test_cgroup_v2_uses_tightest_quota_across_ancestors(tmp_path):
 def test_cgroup_v2_parser_rejects_malformed_content():
     with pytest.raises(ValueError):
         _parse_cgroup_v2_cpu_max("bad quota")
+
+
+
+def test_cgroup_v1_cpu_controller_is_not_mistaken_for_unlimited(tmp_path):
+    cgroup_file = tmp_path / "proc-cgroup"
+    cgroup_file.write_text("2:cpu,cpuacct:/tenant.slice", encoding="utf-8")
+    with pytest.raises(ValueError, match="cgroup v1 CPU quota is unsupported"):
+        _read_cgroup_v2_cpu_quota_cores(
+            cgroup_file=str(cgroup_file), mount_root=str(tmp_path / "cgroup")
+        )
