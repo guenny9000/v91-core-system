@@ -1,5 +1,10 @@
 #!/usr/bin/env python3
 """
+V91-SYSTEM-HEADER (AGATHON-SEALED v2.4)
+---------------------------------------------------------------------
+STATUS: ACTIVE | VERIFICATION: REQUIRED (CLAIM != EVIDENCE)
+AXIOM: Schöpfung dient dem Erhalt, der Regeneration und der Zukunft.
+---------------------------------------------------------------------
 V91 emergency supply and communications readiness assessment.
 
 This module evaluates operator-supplied evidence as REPORTED, never as
