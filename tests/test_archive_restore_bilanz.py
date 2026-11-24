@@ -197,7 +197,6 @@ def test_cli_exit_code_one_on_stale_backup(tmp_path, capsys):
     os.utime(str(archiv), (age, age))
     rc = arb.main(["--backup-dir", str(backup),
                    "--target-path", str(tmp_path),
-                   "--max-age-hours", "24",
                    "--critical-file", str(archiv)])
     assert rc == 1
 
