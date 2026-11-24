@@ -11,10 +11,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v6
         with:
           python-version: '3.11'
 
@@ -112,7 +112,7 @@ jobs:
           cat audit_hashes.txt
 
       - name: Upload Hash Artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: audit-hashes
           path: |
@@ -120,7 +120,7 @@ jobs:
             audit_hashes.sha256
 
       - name: Upload Global Status Snapshot
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: global-status
           path: global-status.json
