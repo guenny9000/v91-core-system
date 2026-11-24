@@ -1,0 +1,65 @@
+{
+  "structure_id": "de_offene_wissenschaft_deal_open_access_2026",
+  "assessor": "vibe_session_2026-11-24_max_best_vollautonomie_lauf_4",
+  "assessed_at_structure": "2026-11-24T19:35:00Z",
+  "note": "Struktur-Einschaetzung fuer den Struktur-Review-Waechter (controller/structure_review.py, PR #170): Offene Wissenschaft in Deutschland - Projekt DEAL und die Open-Access-Transformation wissenschaftlicher Publikationen. Anlass: offener Entdeckungs- und Umsetzungsauftrag des Betreibers 24.11.2026 (offener Suchraum #454, Feld 'offene Wissenschaft'). Alle Zahlen sind FREMDQUELLEN-Angaben, keine V91-Messung; DATENBASIS != MESSUNG, BELEGT_EINSCHAETZUNG != VERIFIZIERT, REVIEW != ENTSCHEIDUNG. Keine Abschaltliste, keine Handlungsempfehlung an Dritte.",
+  "criteria": {
+    "gesellschaftlicher_nutzen": {
+      "status": "BELEGT",
+      "evidence": "Open Access macht Forschungsergebnisse weltweit frei zugaenglich (Sichtbarkeit, Reichweite, Nachnutzung). Der DEAL-Konsortialrahmen buendelt das Verhandlungsgewicht der deutschen Wissenschaftsorganisationen (HRK verhandelt fuer die Allianz); erste Vertragsphase 2019-2023 mit Wiley und Springer Nature: ueber 105.000 Publikationen, davon 97 Prozent Open Access; laut DEAL-Broschuere sind damit rund zwei Drittel der Forschungsergebnisse aus Deutschland weltweit frei zugaenglich, vor der DEAL-Initiative waren es rund 30 Prozent.",
+      "source": "https://open-access.network/services/news/artikel/deal-97-prozent-open-access",
+      "assessed_at": "2026-11-24T19:35:00Z"
+    },
+    "menschenrechtsvertraeglichkeit": {
+      "status": "BELEGT",
+      "evidence": "Freier Zugang zu wissenschaftlichen Erkenntnissen reduziert Informationsungleichheit zwischen gut und schlecht ausgestatteten Institutionen und Laendern. In den einsehbaren Quellen kein Anhaltspunkt fuer diskriminierende Wirkung; direkte Auswirkungen wurden nicht gemessen und bleiben UNKNOWN.",
+      "source": "https://open-access.network/services/news/artikel/deal-97-prozent-open-access",
+      "assessed_at": "2026-11-24T19:35:00Z"
+    },
+    "kosten_und_ressourcenverbrauch": {
+      "status": "PROBLEM_BELEGT",
+      "evidence": "Belegtes Problem: Die Transformation ist nicht kostenneutral verteilt. Laut DEAL-Rueckblick wurde die Servicepauschale reduziert (Teilnahmevertraege: 100 Euro netto je Hybrid- und Gold-Artikel), und das Kostenmodell fasst Publikations- und Lesezugriff in einem festen Pauschalbetrag (PAR Fee je Artikel) zusammen. Eine o-bib-Analyse auf Basis der OpenAPC-Daten und des Open Access Monitor (Stand 13.03.2026) kommt zu dem Befund, dass selbst eine Netto-Einsparung von rund 50 Mio. Euro auf Gesamtebene durch das neue Preismodell auf Ebene einzelner Einrichtungen zu einer ANDEREN Kostenverteilung fuehrt - manche Institutionen zahlen deutlich mehr als vorher. Die Verteilungswirkung je Einrichtung blieb in den einsehbaren Quellen unquantifiziert und ist UNKNOWN; keine V91-Zwischenrechnung.",
+      "source": "https://www.o-bib.de/bib/article/download/6260/9626/36660 ; https://deal-konsortium.de/images/2025/Jahresr%C3%BCckblick_Webinar_20251216.pdf",
+      "assessed_at": "2026-11-24T19:35:00Z"
+    },
+    "transparenz": {
+      "status": "BELEGT",
+      "evidence": "Oeffentliche Datenbasis: DEAL-Broschuere 'Die ersten DEAL-Vertraege 2019-2023' (deutsch/englisch frei verfuegbar), Open Access Monitor (open-access-monitor.de), OpenAPC-Daten fuer Publikationskosten, DEAL-Jahresrueckblick inkl. Webinar-Aufzeichnungen, Preis-Webinarreihe 'Reden wir ueber Preise' mit Kostentransparenz-Blitzumfrage fuer Autorinnen und Autoren. Vertraege mit allen drei grossen Verlagen (Wiley ab 2019, Springer Nature ab 2020, Elsevier-Abkommen nach Unterzeichnung 2023, fuenf Jahre nach gescheiterter Erstverhandlung).",
+      "source": "https://open-access.network/services/news/artikel/elsevier-und-deal-schliessen-open-access-vertrag ; https://deal-konsortium.de/aktuelles/nachlese-deal-jahresrueckblick-2025 ; https://www.o-bib.de/bib/article/download/6260/9626/36660",
+      "assessed_at": "2026-11-24T19:35:00Z"
+    },
+    "nachhaltigkeit": {
+      "status": "BELEGT",
+      "evidence": "Struktureller Fortschritt: 97 Prozent Open Access der DEAL-Publikationen 2019-2023; Vertragsverlaengerungen Wiley/Springer Nature bis 2028 und Elsevier-Vertrag laufen, damit stehen alle drei groessten kommerziellen Verlage im selben zentralen Abrechnungsrahmen; Dauerhafte Kontrollinfrastruktur: Open Access Monitor und OpenAPC als wiederkehrende oeffentliche Kontrolldaten. Ehrliche Grenze: die Gesamtquote deutscher Publikationen im Open Access liegt laut DEAL-Broschuere bei rund zwei Dritteln, nicht bei der vollen Abdeckung (nicht-DEAL-Verlage und Nicht-Teilnehmer bleiben); Folgewirkung auf Wissenschaftskommunikation wurde nicht gemessen und bleibt UNKNOWN.",
+      "source": "https://open-access.network/services/news/artikel/deal-97-prozent-open-access ; https://www.fz-juelich.de/de/zb/open-science/open-access/oa-barometer/2024",
+      "assessed_at": "2026-11-24T19:35:00Z"
+    },
+    "missbrauchsrisiken": {
+      "status": "NICHT_GEPRUEFT",
+      "evidence": "",
+      "source": "",
+      "assessed_at": "2026-11-24T19:35:00Z"
+    },
+    "alternativen_und_verbesserbarkeit": {
+      "status": "BELEGT",
+      "evidence": "Bekannte Hebel im Rahmen: zentraler PAR Fee statt Einzel-APC-Improvisation, Kostentransparenz-Webinare fuer Autorinnen und Autoren, 'Publish at no cost'-Optionen je Vertrag, reduzierte Servicepauschale, Kostenmodellierungstools des Konsortiums. Ausserhalb des DEAL-Rahmens bestehende Alternativen (Diamant Open Access, Repositorien) wurden in den einsehbaren Quellen nicht quantifiziert und bleiben fuer diesen Datensatz UNKNOWN; Bewertung und Veraenderung bleiben politische Arbeit ausserhalb dieses Datensatzes.",
+      "source": "https://deal-konsortium.de/aktuelles/nachlese-deal-jahresrueckblick-2025 ; https://deal-konsortium.de/component/sppagebuilder/page/36",
+      "assessed_at": "2026-11-24T19:35:00Z"
+    }
+  },
+  "review_result": {
+    "verdict": "NEGATIVE_FINDING_PROBLEMS_BELEGT",
+    "criteria_belegt": 5,
+    "criteria_problem_belegt": 1,
+    "criteria_ungeprueft": 1,
+    "problems": [
+      "kosten_und_ressourcenverbrauch"
+    ],
+    "ungeprueft": [
+      "missbrauchsrisiken"
+    ],
+    "tool": "controller/structure_review.py @ main 394fd25 (PR #170-Linie)",
+    "run_at": "2026-11-24T19:35:00Z",
+    "reproduce": "python3 controller/structure_review.py --report-json docs/structure-reviews/de-offene-wissenschaft-deal-open-access-2026.json"
+  }
+}
