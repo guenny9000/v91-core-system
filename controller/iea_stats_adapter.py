@@ -216,3 +216,126 @@ ADAPTER_PROTOCOL = {
     "unknown_record": "wert=null, status NICHT_GEPRUEFT, grund",
     "aenderungen": "JEDE Quelle ein eigener Sensor_ID-Namensraum",
 }
+
+
+# ---------------------------------------------------------------
+# Cross-Check gegen weitere KATALOGQUELLEN (z. B. FAO/WHO, soweit
+# sie spaeter als eigene Adapter existieren). Antwort auf den
+# externen Integrationsplan vom 25.11.2026, der hier NUR in den
+# Teilen uebernommen wird, die keine Regeln brechen (REVIEW siehe
+# docs/V91-IEA-PLAN-REVIEW-2026-11-25.md).
+#
+# ABGELEHNT aus dem Plan: Schluessel in der URL, Konfig-Datei mit
+# Key im Repo, Zweit-Ledger, 'VERIFIED' bei deckungsgleichen
+# Katalogen. UEBERNOMMEN: EVIDENZ-Vergleich, Batch-Poll,
+# Divergenz-Records.
+# ---------------------------------------------------------------
+
+KATALOG_KONGRUENT = "KATALOG_KONGRUENT"
+KATALOG_DIVERGENT = "KATALOG_DIVERGENT"
+
+
+def cross_check(wert: Any, evidenz: Any,
+                toleranz: float = 0.0) -> dict[str, Any]:
+    """Vergleicht EINEN geprueften Wert gegen Evidenz-Katalogwerte.
+
+    evidenz: Mapping quelle -> wert (JEDE Quelle liefert ihre Zahl
+    selbst, z. B. {'fao': 0.34, 'who': 0.33}). Keine Quelle wird
+    bevorzugt; NICHT-numerische Evidenz zaehlt als fehlend.
+
+    Ergebnis-Status:
+    - KATALOG_KONGRUENT: ALLE vorhandenen Zahlenwerte stimmen
+      innerhalb der Toleranz ueberein.
+    - KATALOG_DIVERGENT: mind. ein Evidenzwert weicht ab
+      (Abweichungen werden einzeln aufgefuehrt, nicht gemittelt).
+
+    KONGRUENZ != VERIFIZIERT: zwei Kataloge koennen gemeinsam
+    falsch oder gemeinsam gerundet sein; der Status begruendet
+    KEINE ECHTVERIFIZIERUNG (CLAIM != EVIDENCE bleibt).
+    """
+    if not isinstance(evidenz, dict) or not evidenz:
+        return {"status": NICHT_GEPRUEFT,
+                "grund": "keine Evidenzquellen vorhanden"}
+    zahlen: dict[str, float] = {}
+    fehlend: list[str] = []
+    for quelle, ewert in evidenz.items():
+        if (isinstance(ewert, (int, float)) and not isinstance(ewert, bool)
+                and ewert == ewert):
+            zahlen[str(quelle)] = float(ewert)
+        else:
+            fehlend.append(str(quelle))
+    if wert is None or isinstance(wert, bool) or not isinstance(
+            wert, (int, float)):
+        return {"status": NICHT_GEPRUEFT,
+                "grund": "claim-wert fehlt oder ist keine Zahl",
+                "evidenz_fehlend": fehlend}
+    if not zahlen:
+        return {"status": NICHT_GEPRUEFT,
+                "grund": "keine numerischen Evidenzwerte",
+                "evidenz_fehlend": fehlend}
+    if toleranz < 0:
+        raise ValueError("toleranz muss >= 0 sein")
+    abweichungen: dict[str, Any] = {}
+    for quelle, ezahl in zahlen.items():
+        if abs(float(wert) - ezahl) > toleranz:
+            abweichungen[quelle] = ezahl
+    if abweichungen:
+        return {"status": KATALOG_DIVERGENT,
+                "abweichungen": abweichungen,
+                "toleranz": toleranz,
+                "evidenz_fehlend": fehlend}
+    return {"status": KATALOG_KONGRUENT,
+            "uebereinstimmung": zahlen,
+            "toleranz": toleranz,
+            "evidenz_fehlend": fehlend}
+
+
+def cross_check_record(ledger: Any, metric: str, region: str,
+                       wert: Any, evidenz: Any,
+                       toleranz: float = 0.0) -> dict[str, Any]:
+    """EIN Cross-Check, EIN Ledger-Record (Nie-stiller-Verwurf-Regel).
+
+    Divergent => Record mit status NICHT_GEPRUEFT und
+    fehler_status KATALOG_DIVERGENT samt JEDER Einzelabweichung.
+    """
+    befund = cross_check(wert, evidenz, toleranz)
+    abruf_ts = _utc_now_iso()
+    status = befund["status"]
+    if status in (NICHT_GEPRUEFT, KATALOG_DIVERGENT):
+        record = {
+            "sensor_id": SOURCE_ID + ":" + region, "quelle": SOURCE_ID,
+            "metrik": metric, "region": region, "wert": None,
+            "status": NICHT_GEPRUEFT, "fehler_status": status,
+            "grund": befund.get("grund", "Kataloge weichen ab"),
+            "abweichungen": befund.get("abweichungen", {}),
+            "evidenz_fehlend": befund.get("evidenz_fehlend", []),
+            "toleranz": toleranz, "ablauf_ts_utc": abruf_ts,
+            "honesty_limits": HONESTY_LIMITS,
+        }
+    else:
+        record = {
+            "sensor_id": SOURCE_ID + ":" + region, "quelle": SOURCE_ID,
+            "metrik": metric, "region": region, "wert": float(wert),
+            "status": KATALOG_KONGRUENT,
+            "uebereinstimmung": befund.get("uebereinstimmung", {}),
+            "evidenz_fehlend": befund.get("evidenz_fehlend", []),
+            "toleranz": toleranz, "ablauf_ts_utc": abruf_ts,
+            "hinweis": ("KONGRUENZ != VERIFIZIERT: Katalogwerte "
+                        "bleiben CLAIMs mit Herkunft"),
+            "honesty_limits": HONESTY_LIMITS,
+        }
+    _append(ledger, record)
+    return record
+
+
+def poll_batch(ledger: Any, metrics: list, region: str,
+               **kwargs: Any) -> list:
+    """Pollt MEHRERE Metriken SEQUENZIELL (KEIN ThreadPool noetig:
+    drei Katalogaufrufe sind I/O-gebunden und unregelmaessig; Ehrliche
+    Sequenz erzeugt reproduzierbare Ledger-Reihenfolge, PARALLEL waere
+    Reihenfolge-Zufall ohne Mehrwert [REPRODUZIERBARKEIT > SCHNELLIGKEIT]).
+    Je Metrik GENAU EIN Record (poll_once-Regel unveraendert)."""
+    ergebnisse = []
+    for metric in metrics:
+        ergebnisse.append(poll_once(ledger, metric, region, **kwargs))
+    return ergebnisse
