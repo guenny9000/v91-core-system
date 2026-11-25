@@ -11,6 +11,13 @@ Append-only hash-chain ledger (JSON Lines).
 Tamper-EVIDENT, not tamper-proof: anyone with write access to the file can
 rewrite the whole chain. Use an external anchor (e.g. publish the head hash)
 for stronger guarantees.
+
+Concurrency contract (since the 25.11.2026 hardening): append runs under
+the INTERPROCESS exclusive_ledger_lock (controller/ledger_lock.py) and
+re-reads seq/head from the file inside the critical section, so separate
+processes cannot append with a stale head. Single-machine only; the ledger
+lock builds no distributed guarantee (LOCK != BEWEIS, verify_chain bleibt
+Massstab).
 """
 
 import hashlib
@@ -18,7 +25,13 @@ import hmac
 import json
 import os
 import threading
+from pathlib import Path
 from typing import Any
+
+try:
+    from controller.ledger_lock import exclusive_ledger_lock
+except ImportError:  # direkter Start aus controller/ (flat-Pfad)
+    from ledger_lock import exclusive_ledger_lock
 
 GENESIS = "0" * 64
 
@@ -81,24 +94,50 @@ class HashChainLedger:
                         head = json.loads(line)["hash"]
         return head
 
+    def _read_state(self) -> tuple[int, str]:
+        """seq und head NEU von der Datei lesen (fuer den kritischen
+        Abschnitt unter Interprozess-Lock). Der In-Memory-Zustand
+        gilt erst wieder NACH dem Abgleich (EXTERNE APPENDS MOEGLICH).
+
+        Fremdbefund-Nachmessung 25.11.2026 (externes Review, P0):
+        threading.Lock schuetzt nur EINEN Prozess; der vorhandene
+        Baustein controller/ledger_lock.py (aus PR #517/#529) wurde
+        vom HashChainLedger bisher NICHT verwendet. Zwei Prozesse
+        mit separat geladenem Kopf haetten mit veraltetem prev_hash
+        geschrieben. LOCK != BEWEIS: Verifikation bleibt Massstab.
+        """
+        seq = 0
+        head = GENESIS
+        if os.path.exists(self.path):
+            with open(self.path, encoding="utf-8") as fh:
+                for line in fh:
+                    if line.strip():
+                        head = json.loads(line)["hash"]
+                        seq += 1
+        return seq, head
+
     @property
     def head(self) -> str:
         return self._head
 
     def append(self, payload: dict[str, Any], timestamp: str) -> dict[str, Any]:
         with self._lock:
-            digest = compute_hash(self._head, self._seq, timestamp, payload)
-            record = {
-                "seq": self._seq,
-                "timestamp": timestamp,
-                "prev_hash": self._head,
-                "payload": payload,
-                "hash": digest,
-            }
-            with open(self.path, "a", encoding="utf-8") as fh:
-                fh.write(json.dumps(record, sort_keys=True, ensure_ascii=False) + "\n")
-                fh.flush()
-                os.fsync(fh.fileno())
-            self._seq += 1
-            self._head = digest
-            return record
+            with exclusive_ledger_lock(Path(self.path)):
+                # Kritischer Abschnitt: Neuabgleich + append gehoeren
+                # zusammen (Vertrag aus controller/ledger_lock.py).
+                self._seq, self._head = self._read_state()
+                digest = compute_hash(self._head, self._seq, timestamp, payload)
+                record = {
+                    "seq": self._seq,
+                    "timestamp": timestamp,
+                    "prev_hash": self._head,
+                    "payload": payload,
+                    "hash": digest,
+                }
+                with open(self.path, "a", encoding="utf-8") as fh:
+                    fh.write(json.dumps(record, sort_keys=True, ensure_ascii=False) + "\n")
+                    fh.flush()
+                    os.fsync(fh.fileno())
+                self._seq += 1
+                self._head = digest
+                return record
