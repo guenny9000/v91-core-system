@@ -59,6 +59,13 @@ class TestHappyPath:
         assert r["status"] == NORMALIZED
         assert r["saved_per_workload_unit"] == pytest.approx(-2.0)
 
+    def test_no_improvement_status_is_preserved_when_normalized(self):
+        impact = dict(IMPACT, status="NO_IMPROVEMENT", saved_per_sample=-3.0)
+        r = normalize_impact(impact, _rows(1.5, 1.5), "h", "sys", WS, WE)
+        assert r["status"] == NORMALIZED
+        assert r["impact_status"] == "NO_IMPROVEMENT"
+        assert r["saved_per_workload_unit"] == pytest.approx(-2.0)
+
     def test_status_and_counts_reported(self):
         r = normalize_impact(IMPACT, _rows(1.0, 2.0, 3.0), "u", "sys", WS, WE)
         assert r["n_workload_samples"] == 3
@@ -150,6 +157,17 @@ class TestFailClosed:
     def test_impact_missing_saved_rejected(self):
         with pytest.raises(WorkloadNormError):
             normalize_impact({"unit": "kWh"}, _rows(1.0, 2.0), "u", "s", WS, WE)
+
+    def test_quarantined_impact_cannot_be_normalized(self):
+        impact = dict(IMPACT, status="QUARANTINE")
+        with pytest.raises(WorkloadNormError, match="cannot be normalized"):
+            normalize_impact(impact, _rows(1.0, 2.0), "u", "s", WS, WE)
+
+    def test_unknown_or_missing_impact_status_cannot_be_normalized(self):
+        for status in (None, "UNKNOWN", "INDEPENDENTLY_VERIFIED"):
+            impact = dict(IMPACT, status=status)
+            with pytest.raises(WorkloadNormError, match="cannot be normalized"):
+                normalize_impact(impact, _rows(1.0, 2.0), "u", "s", WS, WE)
 
     def test_impact_bool_saved_rejected(self):
         with pytest.raises(WorkloadNormError):
