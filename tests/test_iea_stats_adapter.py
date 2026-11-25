@@ -158,3 +158,95 @@ class AdapterRegeln(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class CrossCheck(unittest.TestCase):
+    """Cross-Check gegen Katalog-Evidenz: KONGRUENZ != VERIFIZIERT."""
+
+    def test_kongruent(self):
+        b = iea.cross_check(0.34, {"fao": 0.34, "who": 0.34})
+        self.assertEqual(b["status"], iea.KATALOG_KONGRUENT)
+        self.assertEqual(b["uebereinstimmung"], {"fao": 0.34, "who": 0.34})
+
+    def test_divergent(self):
+        b = iea.cross_check(0.34, {"fao": 0.34, "who": 0.90})
+        self.assertEqual(b["status"], iea.KATALOG_DIVERGENT)
+        self.assertEqual(b["abweichungen"], {"who": 0.90})
+
+    def test_toleranz(self):
+        b = iea.cross_check(0.34, {"fao": 0.341}, toleranz=0.01)
+        self.assertEqual(b["status"], iea.KATALOG_KONGRUENT)
+        with self.assertRaises(ValueError):
+            iea.cross_check(0.34, {"fao": 0.34}, toleranz=-0.1)
+
+    def test_keine_evidenz(self):
+        self.assertEqual(iea.cross_check(0.34, {}).get("grund"),
+                         "keine Evidenzquellen vorhanden")
+        b = iea.cross_check(0.34, {"fao": None})
+        self.assertEqual(b["status"], iea.NICHT_GEPRUEFT)
+
+    def test_claim_fehlt(self):
+        b = iea.cross_check(None, {"fao": 0.34})
+        self.assertEqual(b["status"], iea.NICHT_GEPRUEFT)
+
+    def test_bool_und_nan_evidenz_zaehlen_als_fehlend(self):
+        b = iea.cross_check(0.34, {"a": True, "b": float("nan")})
+        self.assertEqual(b["status"], iea.NICHT_GEPRUEFT)
+        self.assertEqual(sorted(b["evidenz_fehlend"]), ["a", "b"])
+
+
+class CrossCheckRecord(LedgerBase):
+    """JEDE Cross-Check-Ebene erzeugt GENAU EINEN Ledger-Record."""
+
+    def test_divergent_landet_als_unknown_mit_abweichungen(self):
+        rec = iea.cross_check_record(
+            self.ledger, "strommix_anteil", "DEU", 0.34,
+            {"fao": 0.34, "who": 0.90})
+        self.assertEqual(rec["status"], iea.NICHT_GEPRUEFT)
+        self.assertEqual(rec["fehler_status"], iea.KATALOG_DIVERGENT)
+        self.assertEqual(rec["abweichungen"], {"who": 0.90})
+        self.assertEqual(len(self.records()), 1)
+        self.assertEqual(verify_chain(self.ledger.path)["chain_valid"],
+                         True)
+
+    def test_kongruent_bleibt_claim_nicht_verifiziert(self):
+        rec = iea.cross_check_record(
+            self.ledger, "strommix_anteil", "DEU", 0.34, {"fao": 0.34})
+        self.assertEqual(rec["status"], iea.KATALOG_KONGRUENT)
+        self.assertIn("KONGRUENZ != VERIFIZIERT", rec["hinweis"])
+        self.assertNotIn("VERIFIED", rec["status"])
+
+
+class PollBatch(LedgerBase):
+    def setUp(self):
+        super().setUp()
+        import os
+        os.environ["IEA_API_KEY"] = "k-test"
+        self.addCleanup(os.environ.pop, "IEA_API_KEY", None)
+
+    def test_batch_ein_record_je_metrik(self):
+        def fetch(url, key):
+            assert "api_key" not in url  # Schluessel im Header, nie URL
+            if "strommix" in url:
+                return json.dumps({"values": {"strommix_anteil": 0.34}})
+            return json.dumps({"values": {"co2_intensitaet": 420.0}})
+        recs = iea.poll_batch(
+            self.ledger, ["strommix_anteil", "co2_intensitaet"], "DEU",
+            fetch=fetch,
+            url_builder=lambda m, r: "https://api.example/" + m)
+        self.assertEqual(len(recs), 2)
+        self.assertEqual([r["status"] for r in recs],
+                         ["VALID", "VALID"])
+        self.assertEqual(len(self.records()), 2)
+        self.assertEqual(verify_chain(self.ledger.path)["chain_valid"],
+                         True)
+
+    def test_batch_sequenz_key_nie_in_url(self):
+        gesehene = []
+        def fetch(url, key):
+            gesehene.append(url)
+            return json.dumps({"values": {"strommix_anteil": 0.34}})
+        iea.poll_batch(self.ledger, ["strommix_anteil"], "DEU",
+                       fetch=fetch,
+                       url_builder=lambda m, r: "https://api.example/")
+        self.assertTrue(all("k-test" not in u for u in gesehene))
