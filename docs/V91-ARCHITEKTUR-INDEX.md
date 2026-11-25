@@ -17,6 +17,7 @@ Stand: 21. November 2026, main-Stand nach PR #327/#328; VIBE-XLIX-Reparatur #284
 - docs/V91-MANUELLER-LERNBLOCK.md (PR #133) - manueller Lernblock (Modell-Drill ohne Hardware).
 - docs/V91-EVIDENCE-EXCHANGE.md (PR #135) - Evidence-Exchange-Format Stufe B.
 - docs/V91-TAGESBERICHT-STANDARD.md (PR #130) - Tagesbericht-Standard.
+- docs/V91-ERKENNTNIS-UND-REVISIONSPROTOKOLL.md (neues Ergaenzungsprotokoll; Erkenntnisstatus, Nachweisfelder, Wirkungspruefung und jederzeitige Revision; DOKUMENTIERT != IMPLEMENTIERT).
 - docs/V91-MAX-BEST-NETWORK-POLICY.md - Netzwerk-Grundsaetze.
 - docs/AXIOM_HEADER.md - AGATHON-Header-Vorgabe fuer ALLE NEUEN controller/*.py.
 
