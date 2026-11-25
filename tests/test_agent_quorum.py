@@ -109,6 +109,7 @@ def test_bad_reviewer_configuration_rejected():
         review_with_quorum(
             REQUEST, reviewer_ids=("agent-a", "agent-a", "agent-c"),
             reviewers={}, member_keys=KEYS, min_sequence_by_agent=FLOORS,
+            now_provider=lambda: REQUEST.now,
         )
     except ValueError:
         pass
