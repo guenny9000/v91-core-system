@@ -22,6 +22,16 @@ class ErkenntnisRevisionProtokollTests(unittest.TestCase):
     def test_ascii_encoding_contract(self):
         self.assertTrue(all(ord(ch) < 128 for ch in self.text))
 
+    def test_truth_is_not_granted_by_a_status_marker(self):
+        self.assertIn("Wahrheit bezeichnet hier die Wirklichkeit", self.flat)
+        self.assertIn("kann Wahrheit nicht per", self.flat)
+
+    def test_display_glyphs_have_stable_codepoint_mapping(self):
+        for codepoint in ("U+003F", "U+25C9", "U+223F", "U+2713",
+                          "U+2197", "U+27F3", "U+25C7", "U+0021",
+                          "U+2727"):
+            self.assertIn(codepoint, self.text)
+
     def test_all_status_markers_are_defined(self):
         for marker in ("CLAIM", "OBS", "MEAS", "VER", "IMP", "REMEAS",
                        "UNK", "DISPUTED", "REV"):
