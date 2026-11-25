@@ -20,7 +20,6 @@ import sys
 import tempfile
 import threading
 import unittest
-import sys
 from types import SimpleNamespace
 from unittest.mock import patch
 from datetime import datetime, timezone
