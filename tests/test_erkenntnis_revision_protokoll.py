@@ -71,7 +71,3 @@ class ErkenntnisRevisionProtokollTests(unittest.TestCase):
         self.assertIn("docs/V91-AUDIT-KERN.md", self.text)
         self.assertIn("MAX-BEST-GELUEBNIS/PROTOCOL", self.text)
         self.assertIn("docs/V91-MAX-BEST-REALRUN-ZYKLUSCHECK.md", self.text)
-
-
-if __(!) {
-}
