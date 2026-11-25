@@ -3,7 +3,8 @@ import re
 from pathlib import Path
 
 DOC = Path(__file__).resolve().parents[1] / "docs" / "V91-FORMELN.md"
-T = DOC.read_text(encoding="ascii")
+RAW = DOC.read_text(encoding="ascii")
+T = re.sub(r"\s+", " ", RAW)  # umbruch-normalisiert fuer Phrasen-Asserts
 
 
 def test_formel_w():  assert "W_t = alpha * A_t + beta * M_t + gamma * D_t - delta * S_t" in T
@@ -27,15 +28,18 @@ def test_kein_messanspruch():
 
 
 def test_negativsonde_kein_zweiter_rechner():
-    assert "KEINEN zweiten Rechner" in T
+    assert "Es gibt KEINEN zweiten Rechner" in T
+    assert "max_best_rechner" in T
     assert "ALLEINVERBINDLICH" in T
-    assert re.search(r"automatisch ausgewertet", T)
-    assert "ausgewertet werden" not in T.replace("von KEINEM Modul automatisch ausgewertet", "")
+    assert "von KEINEM Modul automatisch ausgewertet" in T
+    for verbot in ("Modul rechnet W_t", "W_t wird automatisch berechnet",
+                   "Formeln werden von Modul X implementiert"):
+        assert verbot not in T
 
 
 def test_negativsonde_keine_implementationsbehauptung():
-    for verbot in ("implementierte Auswertung ist aktiv", "Modul rechnet W_t"):
-        assert verbot not in T
+    assert "implementierte Auswertung ist aktiv" not in T
+    assert "Messwerte liegen vor" not in T
 
 
 def test_verweis_ziele_existieren():
@@ -45,8 +49,8 @@ def test_verweis_ziele_existieren():
 
 
 def test_ascii_pure():
-    T.encode("ascii")
+    RAW.encode("ascii")
 
 
 def test_grenze_size():
-    assert len(T.encode()) < 8192
+    assert len(RAW.encode()) < 8192
