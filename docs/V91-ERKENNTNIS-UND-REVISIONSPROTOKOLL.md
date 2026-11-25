@@ -13,6 +13,11 @@ weder docs/V91-AUDIT-KERN.md noch MAX-BEST-GELUEBNIS/PROTOCOL oder Messpfade.
 Dieses Protokoll macht sichtbar, welchen Erkenntnisstatus eine Aussage hat,
 worauf er beruht und wann er erneut geprueft werden muss.
 
+Wahrheit bezeichnet hier die Wirklichkeit unabhaengig davon, was jemand
+behauptet oder ein System anzeigt. Das Protokoll kann Wahrheit nicht per
+Statuszeichen verleihen; es ordnet nur Aussagen und die Belege, mit denen
+sie in einem begrenzten Geltungsbereich geprueft werden.
+
 Kernsatz:
 EIN ZEICHEN IST KEIN BELEG. EIN BELEG IST KEINE UNBEGRENZTE WAHRHEIT.
 EINE PRUEFUNG IST KEINE VERBESSERUNG. EINE VERBESSERUNG BRAUCHT
@@ -28,6 +33,20 @@ Die Marker sind neu entwickelte V91-Kennzeichnungen. Sie sind keine
 historischen Runen, Hieroglyphen oder uebernommenen Kulturzeichen.
 Grafische Glyphen koennen in Oberflaechen zusaetzlich angezeigt werden;
 die ausgeschriebenen Kennungen sind die maschinen- und textstabile Form.
+Die optionale grafische Zuordnung (Unicode-Codepunkt) lautet:
+
+- CLAIM: U+003F (?)
+- OBS: U+25C9 (Kreis mit Punkt)
+- MEAS: U+223F (Sinuswelle)
+- VER: U+2713 (Haken)
+- IMP: U+2197 (Pfeil nach rechts oben)
+- REMEAS: U+27F3 (Kreispfeil)
+- UNK: U+25C7 (offene Raute)
+- DISPUTED: U+0021 (Ausrufezeichen)
+- REV: U+2727 (Sternchen)
+
+Die Unicode-Zuordnung ist nur Darstellungshilfe. Wenn ein Zeichen fehlt,
+anders aussieht oder nicht lesbar ist, gilt weiterhin die Textkennung.
 
 - ? CLAIM: Aussage oder Annahme; noch nicht nachgewiesen.
 - OBS: Beobachtung; Wahrnehmung mit Beobachter, Ort/Kontext und Zeitpunkt.
