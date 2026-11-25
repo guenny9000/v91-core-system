@@ -33,6 +33,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import math
 import sys
 from datetime import datetime
 from pathlib import Path
@@ -79,12 +80,19 @@ def load_series(path: Path) -> list[dict[str, Any]]:
             if not isinstance(rec, dict) or rec.get("schema") != SERIES_SCHEMA:
                 raise SolarEvalError(f"line {line_no}: SCHEMA_MISMATCH")
             watt = rec.get("watt")
-            if isinstance(watt, bool) or not isinstance(watt, (int, float)) or watt < 0:
+            if isinstance(watt, bool) or not isinstance(watt, (int, float)):
                 raise SolarEvalError(f"line {line_no}: WATT_INVALID")
             try:
-                datetime.fromisoformat(str(rec["timestamp"]))
+                if not math.isfinite(watt) or watt < 0:
+                    raise SolarEvalError(f"line {line_no}: WATT_INVALID")
+            except OverflowError as exc:
+                raise SolarEvalError(f"line {line_no}: WATT_INVALID") from exc
+            try:
+                timestamp = datetime.fromisoformat(str(rec["timestamp"]))
             except (KeyError, ValueError) as exc:
                 raise SolarEvalError(f"line {line_no}: TIMESTAMP_INVALID") from exc
+            if timestamp.tzinfo is None or timestamp.utcoffset() is None:
+                raise SolarEvalError(f"line {line_no}: TIMESTAMP_TIMEZONE_REQUIRED")
             records.append({"timestamp": rec["timestamp"], "watt": watt})
     if not records:
         raise SolarEvalError("SERIES_EMPTY")

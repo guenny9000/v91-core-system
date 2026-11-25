@@ -115,6 +115,28 @@ class SolarEvalSeriesTest(unittest.TestCase):
         with self.assertRaises(se.SolarEvalError):
             se.load_series(series)
 
+    def test_non_finite_watt_fail_closed(self):
+        series = self.tmp_path / "non_finite.jsonl"
+        for watt in (float("nan"), float("inf"), float("-inf")):
+            series.write_text(json.dumps({
+                "schema": se.SERIES_SCHEMA,
+                "timestamp": "2026-11-25T12:00:00+01:00",
+                "watt": watt,
+            }) + "\n", encoding="utf-8")
+            with self.subTest(watt=repr(watt)):
+                with self.assertRaises(se.SolarEvalError):
+                    se.load_series(series)
+
+    def test_timestamp_without_timezone_fail_closed(self):
+        series = self.tmp_path / "naive_timestamp.jsonl"
+        series.write_text(json.dumps({
+            "schema": se.SERIES_SCHEMA,
+            "timestamp": "2026-11-25T12:00:00",
+            "watt": 12,
+        }) + "\n", encoding="utf-8")
+        with self.assertRaisesRegex(se.SolarEvalError, "TIMESTAMP_TIMEZONE_REQUIRED"):
+            se.load_series(series)
+
     def test_manifest_nur_aus_verifizierter_evidenz(self):
         series = self.tmp_path / "s.jsonl"
         _write_series(series)
