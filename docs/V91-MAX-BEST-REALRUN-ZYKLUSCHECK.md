@@ -11,7 +11,7 @@ Der Fremd-Entwurf wiederholt uebergreifend bereits kanonisierte
 Grundsaetze. Die Grundsaetze bleiben NUR im bestehenden Kanon:
 - docs/V91-MAX-BEST-GELUEBNIS.md - Nachweis vor Behauptung, Sorgfalt
 - docs/V91-MAX-BEST-PROTOCOL.md - deterministischer Verbesserungszyklus
-- docs/V91-MAX-BEST-ENTDECKUNGSAUFTRAG.md - Chancensuche, REUSE vor Neubau
+- docs/V91-MAX-BEST-ENTDECKUNGSAUFTRAG.md - Chancensuche (REUSE_BEFORE_BUILD)
 - docs/V91-MAX-BEST-ZUSAMMENARBEIT.md - Kooperation ohne Gleichschaltung
 
 Dieses Dokument nimmt AUSSCHLIESSLICH den neuen, im Kanon fehlenden Kern
