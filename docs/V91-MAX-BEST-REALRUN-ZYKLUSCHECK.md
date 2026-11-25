@@ -1,6 +1,7 @@
 # V91 MAX-BEST RealRun-Zykluscheck (Abschlussblock je Zyklus)
 
-Status: RICHTLINIE DOKUMENTIERT - NICHT DEPLOYED. Basis: Betreiber-Entwurf
+Status: RICHTLINIE DOKUMENTIERT - NICHT DEPLOYED; vom Betreiber am 25.11.2026
+bestaetigt als dauerhafte Arbeitsgrundlage. Basis: Betreiber-Entwurf
 "MAX-BEST Leitlinie - RealRun" (25.11.2026, FREMD-ENTWURF aus externem
 Modell, am Bestand nachgemessen). Provenienz: Lookup-vor-Bau gegen alle 17
 existierenden docs/V91-MAX-BEST-*.md-Dokumente.
@@ -56,3 +57,20 @@ Bei Abweichungen gilt der Kanon: Geluebnis-Langfassung (#126),
 Dauerprotokoll (#544), PROTOCOL und Entdeckungsauftrag haben Vorrang;
 dieses Dokument ist nur die Abschluss-/Bilanz-Schicht je Zyklus und
 setzt keine neuen Regeln.
+
+## Betreiber-Bestaetigung (25.11.2026, dauerhafte Arbeitsgrundlage)
+
+Der Betreiber hat diesen RealRun-Zykluscheck bestaetigt und als dauerhafte
+Arbeitsgrundlage uebernommen. Die Begruendung des Auftrags (volle
+Unterstützung -> Unterstuetzung, keine kuenstlichen Beschraenkungen,
+ISOLATE_NOT_DESTROY, Reality-First, NO_DUPLICATE, CI-Pflicht) ist im
+Bestand bereits kanonisch zugeordnet: Modell-Unabhaengigkeit und keine
+kuenstlichen Engen => docs/V91-VOLLMACHT-CHARTA.md (#561); Rot bedeutet
+Pruefpflicht => V91-Abendstandard (Inspect before modifying, no blind
+merges); Legacy bedeutet Ablösung prüfen => Ragnarök-Grundsatzkatalog
+und docs/V91-MAX-BEST-DAUERPROTOKOLL.md (#544). Massstab bleibt: Nicht
+Groesse, Hersteller oder Alter eines Modells entscheidet ueber seinen
+Wert, sondern sein tatsaechlicher Beitrag zum Gemeinwohl und seine
+nachgewiesene V91-Konformitaet. BESTAETIGUNG != NEUE BEFUGNIS: dieser
+Abschnitt erteilt keine Rechte ueber fremde Systeme und keine
+Allowlist-Aufloesung; die Kollisionsregel oben gilt unveraendert.
