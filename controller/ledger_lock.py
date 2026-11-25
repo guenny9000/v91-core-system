@@ -20,9 +20,9 @@ Vertrag:
   append gehoeren zusammen), nicht nur das Schreiben.
 - POSIX: fcntl.flock(LOCK_EX) ueber eine Begleit-Lockdatei
   (<ledger>.lock; LOCK_DATEI != LEDGER_DATEI, sie enthaelt KEINE
-  Daten, ISOLATE_NOT_DESTROY). Windows: msvcrt.locking falls
-  verfuegbar, sonst prozesslokal schwacher Fallback (ehrlich
-  dokumentiert, KEIN stiller Erfolg).
+  Daten, ISOLATE_NOT_DESTROY). Windows: msvcrt.locking. Wenn der
+  plattformuebergreifende Lock nicht verfuegbar ist oder fehlschlaegt,
+  wird der Append fail-closed verweigert.
 
 Ehrliche Grenzen (bewusst, keine Luecken):
 - Einzelrechner-Annahme: NETZWEIT wird NICHTS gesperrt (das
@@ -39,6 +39,10 @@ import os
 from contextlib import contextmanager
 from pathlib import Path
 from typing import Iterator
+
+
+class LedgerLockError(RuntimeError):
+    """Cross-process locking is unavailable; ledger writes are refused."""
 
 
 def ledger_lock_path(ledger_path: Path) -> Path:
@@ -69,11 +73,18 @@ def exclusive_ledger_lock(ledger_path: Path) -> Iterator[Path]:
         else:
             try:
                 import msvcrt
+            except ImportError as exc:
+                raise LedgerLockError(
+                    "cross-process ledger locking is unavailable on this platform; refusing append"
+                ) from exc
+            try:
                 fh.seek(0)
-                msvcrt.locking(msvcrt.LK_LOCK, 1, 1)
+                msvcrt.locking(fh.fileno(), msvcrt.LK_LOCK, 1)
                 locked = "msvcrt"
-            except (ImportError, OSError):
-                locked = None  # schwacher Fallback, ehrlich dokumentiert
+            except OSError as exc:
+                raise LedgerLockError(
+                    "Windows interprocess ledger lock failed; refusing append"
+                ) from exc
         yield lock_path
     finally:
         try:
@@ -83,6 +94,6 @@ def exclusive_ledger_lock(ledger_path: Path) -> Iterator[Path]:
             elif locked == "msvcrt":
                 import msvcrt
                 fh.seek(0)
-                msvcrt.locking(msvcrt.LK_UNLCK, 1, 1)
+                msvcrt.locking(fh.fileno(), msvcrt.LK_UNLCK, 1)
         finally:
             fh.close()
