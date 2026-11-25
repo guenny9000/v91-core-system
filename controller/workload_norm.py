@@ -165,6 +165,21 @@ def normalize_impact(impact: Any, workload_rows: Any, workload_unit: Any,
         raise WorkloadNormError("impact['saved_per_sample'] must be a finite number")
     saved = float(saved)
 
+    # A denominator must never promote an upstream quarantined or unknown
+    # impact calculation into a NORMALIZED result. Preserve NO_IMPROVEMENT
+    # so worsening/non-improving measurements can still be normalized
+    # without being misrepresented as savings.
+    impact_status = impact.get("status")
+    if not isinstance(impact_status, str) or impact_status not in ("VALID", "NO_IMPROVEMENT"):
+        raise WorkloadNormError(
+            "impact['status'] must be VALID or NO_IMPROVEMENT; "
+            "quarantined or unknown impact results cannot be normalized"
+        )
+    if impact_status == "VALID" and saved <= 0:
+        raise WorkloadNormError("VALID impact must have saved_per_sample > 0")
+    if impact_status == "NO_IMPROVEMENT" and saved > 0:
+        raise WorkloadNormError("NO_IMPROVEMENT impact must not have saved_per_sample > 0")
+
     w_unit = _require_nonempty_str(workload_unit, "workload_unit")
     boundary = _require_nonempty_str(system_boundary, "system_boundary")
     ws = _parse_tz_timestamp(window_start, "window_start")
@@ -179,6 +194,7 @@ def normalize_impact(impact: Any, workload_rows: Any, workload_unit: Any,
 
     result: Dict[str, Any] = {
         "normalized_unit": f"{unit}/{w_unit}",
+        "impact_status": impact_status,
         "workload_unit": w_unit,
         "system_boundary": boundary,
         "window_start": ws.isoformat(),
