@@ -235,6 +235,7 @@ class OrchestrationIntegrationTests(unittest.TestCase):
             member_keys={"rev-a": KEY_A.encode(), "rev-b": KEY_B.encode(),
                          "rev-c": KEY_C.encode()},
             min_sequence_by_agent={"rev-a": 5, "rev-b": 5, "rev-c": 5},
+            now_provider=lambda: request.now,
         )
         self.assertEqual(outcome.decision, Decision.ACCEPT)
         self.assertEqual(outcome.votes_received, 2)
@@ -283,6 +284,7 @@ class OrchestrationIntegrationTests(unittest.TestCase):
             member_keys={"rev-a": KEY_A.encode(), "rev-b": KEY_B.encode(),
                          "rev-c": KEY_C.encode()},
             min_sequence_by_agent={"rev-a": 5, "rev-b": 5, "rev-c": 5},
+            now_provider=lambda: request.now,
         )
         self.assertIn("rev-c", asked)
         self.assertEqual(outcome.decision, Decision.NO_QUORUM)

@@ -16,23 +16,24 @@ REQUEST = ReviewRequest(
 FLOORS = {agent: 0 for agent in IDS}
 
 
-def adapter(agent_id, approve=True, sequence=1):
+def adapter(agent_id, approve=True, sequence=1, issued_at=None):
     def review(digest, epoch, policy_version, evidence, deadline):
         assert policy_version == "v1"
         assert evidence == REQUEST.evidence
         assert deadline == REQUEST.deadline
         return sign_vote(
             agent_id=agent_id, proposal_digest=digest, epoch=epoch,
-            sequence=sequence, issued_at=REQUEST.now, approve=approve,
+            sequence=sequence, issued_at=REQUEST.now if issued_at is None else issued_at, approve=approve,
             agent_key=KEYS[agent_id],
         )
     return review
 
 
-def run(reviewers):
+def run(reviewers, now_provider=lambda: REQUEST.now):
     return review_with_quorum(
         REQUEST, reviewer_ids=IDS, reviewers=reviewers,
         member_keys=KEYS, min_sequence_by_agent=FLOORS,
+        now_provider=now_provider,
     )
 
 
@@ -108,8 +109,73 @@ def test_bad_reviewer_configuration_rejected():
         review_with_quorum(
             REQUEST, reviewer_ids=("agent-a", "agent-a", "agent-c"),
             reviewers={}, member_keys=KEYS, min_sequence_by_agent=FLOORS,
+            now_provider=lambda: REQUEST.now,
         )
     except ValueError:
         pass
     else:
         raise AssertionError("duplicate reviewer identities must fail closed")
+
+
+def test_deadline_expired_before_first_call_contacts_no_provider():
+    called = []
+    def provider(agent):
+        def call(*args):
+            called.append(agent)
+            return adapter(agent)(*args)
+        return call
+    result = run({agent: provider(agent) for agent in IDS}, now_provider=lambda: REQUEST.deadline)
+    assert result.decision is Decision.NO_QUORUM
+    assert result.votes_requested == ()
+    assert result.votes_received == 0
+    assert result.deadline_expired is True
+    assert called == []
+
+
+def test_response_returning_at_deadline_is_discarded_and_third_is_not_called():
+    times = iter([1198, 1199, 1199, 1200, 1200, 1200, 1200])
+    reviewers = {
+        "agent-a": adapter("agent-a", True, issued_at=1198),
+        "agent-b": adapter("agent-b", True, issued_at=1199),
+        "agent-c": adapter("agent-c", True, issued_at=1199),
+    }
+    result = run(reviewers, now_provider=lambda: next(times))
+    assert result.decision is Decision.NO_QUORUM
+    assert result.votes_requested == ("agent-a", "agent-b")
+    assert result.votes_received == 1
+    assert result.deadline_expired is True
+
+
+def test_votes_received_before_deadline_remain_evaluable_after_deadline():
+    times = iter([1198, 1198, 1198, 1199, 1201])
+    reviewers = {
+        "agent-a": adapter("agent-a", True, issued_at=1198),
+        "agent-b": adapter("agent-b", True, issued_at=1198),
+        "agent-c": adapter("agent-c", True, issued_at=1198),
+    }
+    result = run(reviewers, now_provider=lambda: next(times))
+    assert result.decision is Decision.ACCEPT
+    assert result.votes_requested == ("agent-a", "agent-b")
+    assert result.votes_received == 2
+    assert result.deadline_expired is True
+
+
+def test_signed_vote_issued_at_deadline_is_rejected():
+    reviewers = {
+        "agent-a": adapter("agent-a", True, issued_at=REQUEST.deadline),
+        "agent-b": adapter("agent-b", True, issued_at=REQUEST.deadline),
+        "agent-c": adapter("agent-c", True, issued_at=REQUEST.deadline),
+    }
+    result = run(reviewers)
+    assert result.decision is Decision.NO_QUORUM
+    assert result.votes_received == 0
+
+
+def test_fresh_clock_must_not_move_backwards():
+    times = iter([1001, 1000])
+    try:
+        run({agent: adapter(agent) for agent in IDS}, now_provider=lambda: next(times))
+    except ValueError as exc:
+        assert "moved backwards" in str(exc)
+    else:
+        raise AssertionError("backwards clock must fail closed")
