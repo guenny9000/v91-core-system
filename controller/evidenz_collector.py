@@ -96,6 +96,17 @@ def _require_sha256(value: Any, field: str) -> str:
     return cleaned
 
 
+def _require_now(value: Any) -> datetime.datetime:
+    """now darf ein ISO-8601-String oder tz-aware datetime sein (CLI/Tests gemeinsam)."""
+    if isinstance(value, str):
+        return _require_iso_tz(value, "now")
+    if isinstance(value, datetime.datetime):
+        if value.tzinfo is None:
+            raise EvidenzCollectorError("now must be timezone-aware; naive timestamps are rejected")
+        return value
+    raise EvidenzCollectorError("now needs a tz-aware datetime or an ISO-8601 string")
+
+
 def _require_commit_sha(value: Any, field: str) -> str:
     text = _require_nonempty_str(value, field)
     if len(text) != 40 or any(c not in "0123456789abcdef" for c in text.lower()):
@@ -150,7 +161,7 @@ def collect_evidence(plan: Any, now: Any) -> Dict[str, Any]:
     items = plan.get("items")
     if not isinstance(items, list) or not items:
         raise EvidenzCollectorError("items must be a non-empty list")
-    now_dt = _require_iso_tz(now, "now")
+    now_dt = _require_now(now)
     verified = 0
     results: List[Dict[str, Any]] = []
     seen_labels: set = set()
