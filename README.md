@@ -122,7 +122,7 @@ On Windows, start the stack with `docker compose up -d --build`. To submit a rea
 
 ## License
 
-© 2026 Sebastian (guenny9000) – Alle Rechte vorbehalten
+MIT (see LICENSE). Operator selection 2026-11-25, consistent with the freeware grant of 2026-11-22 (free use and spread for all). See CONTRIBUTING.md for the binding participation rules.
 
 ## Ledger & Stewardship Gate (advisory)
 
