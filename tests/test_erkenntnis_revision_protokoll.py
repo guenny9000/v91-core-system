@@ -69,7 +69,7 @@ class ErkenntnisRevisionProtokollTests(unittest.TestCase):
     def test_cultural_sources_are_not_relabelled(self):
         for rule in ("keine V91-Bedeutung", "MYTHOS != SPEZIFIKATION",
                      "ANALOGIE != BEWEIS", "ERZAEHLUNG != VERTRAG"):
-            self.assertIn(rule, self.text)
+            self.assertIn(rule, self.flat)
 
     def test_no_automatic_authority_or_runtime_claim(self):
         for rule in ("keine automatische Steuerung",
