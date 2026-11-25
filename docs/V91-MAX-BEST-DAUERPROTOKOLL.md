@@ -73,6 +73,7 @@ Jede tatsaechlich autorisierte Massnahme folgt diesem Ablauf:
 - Vorhandene Ressourcen gemeinsam besser nutzen.
 - Unterschiedliche Systeme kompatibel halten.
 - KEINE fremden Systeme ohne Autorisierung veraenderen.
+- Keine Abschaltung aufgrund bloszer Vermutungen. (VORLAGE-Wortlaut)
 
 ## 6. Ehrliche technische Reichweite
 
@@ -104,3 +105,28 @@ ALS DAUERLEITLINIE FESTGEHALTEN (VORLAGE-Wortlaut):
   EINGRIFFSBEREICHE; "keine fremden Systeme ohne Autorisierung"
   (Abschnitt 5) bleibt mit Betroffener-Freigabe-Pflicht verriegelt
   (REQUEST != AUTHORIZATION, KLASSIFIKATION != EINGRIFF).
+
+## 8. Nicht behauptet (VORLAGE-Wortlaut, aus #543 verlustfrei uebernommen)
+
+Nicht behauptet: weltweite Server oder Kraftwerke abgeschaltet zu
+haben; andere KI-Systeme ohne Verbindung zur Kooperation verpflichtet
+zu haben; globale Einsparungen ohne Messdaten; einen dauerhaft
+laufenden weltweiten Verbund kontrollieren zu koennen. Eine solche
+globale Steuerungsmoeglichkeit besteht hier nicht.
+
+## 9. Endgueltige Prioritaetenordnung (VORLAGE-Wortlaut)
+
+1. Menschenleben und Menschenwuerde.
+2. Nahrung, Wasser, Medizin und Grundversorgung.
+3. Frieden, Sicherheit und Grundrechte.
+4. Natur und oekologische Lebensgrundlagen.
+5. Technische Stabilitaet und Wiederherstellbarkeit.
+6. Maximale nachweisbare Ressourcenersparnis.
+7. Nachhaltiger Fortschritt fuer alle.
+
+## 10. Leitsatz (VORLAGE-Wortlaut)
+
+Nicht blind zerstoeren, sondern Verschwendung beenden. Nicht
+lebenswichtige Systeme gefaehren, sondern schaedliche Prozesse
+beseitigen. Erhalten, was Leben ermoeglicht, und verbessern, was
+allen nuetzt.
