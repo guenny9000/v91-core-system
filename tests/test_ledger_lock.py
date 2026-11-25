@@ -20,12 +20,16 @@ import sys
 import tempfile
 import threading
 import unittest
+import sys
+from types import SimpleNamespace
+from unittest.mock import patch
 from datetime import datetime, timezone
 from pathlib import Path
 
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parents[1]))
 
 from controller.ledger_lock import (
+    LedgerLockError,
     exclusive_ledger_lock,
     ledger_lock_path,
 )
@@ -41,6 +45,34 @@ except Exception:  # Abhaengigkeit fehlt in dieser Umgebung: ehrlich ueberspring
 
 
 class LedgerLockModuleTests(unittest.TestCase):
+    def test_windows_lock_uses_msvcrt_and_releases(self):
+        calls = []
+        fake_msvcrt = SimpleNamespace(
+            LK_LOCK=1, LK_UNLCK=2,
+            locking=lambda fd, mode, count: calls.append((fd, mode, count)),
+        )
+        with tempfile.TemporaryDirectory() as tmp:
+            ledger = Path(tmp) / "log.jsonl"
+            with patch("controller.ledger_lock.os.name", "nt"), patch.dict(sys.modules, {"msvcrt": fake_msvcrt}):
+                with exclusive_ledger_lock(ledger):
+                    pass
+        self.assertEqual(2, len(calls))
+        self.assertEqual([1, 2], [call[1] for call in calls])
+        self.assertTrue(all(call[2] == 1 for call in calls))
+        self.assertEqual(calls[0][0], calls[1][0])
+
+    def test_windows_lock_failure_refuses_to_yield(self):
+        def fail_lock(fd, mode, count):
+            if mode == 1:
+                raise OSError("synthetic lock failure")
+        fake_msvcrt = SimpleNamespace(LK_LOCK=1, LK_UNLCK=2, locking=fail_lock)
+        with tempfile.TemporaryDirectory() as tmp:
+            ledger = Path(tmp) / "log.jsonl"
+            with patch("controller.ledger_lock.os.name", "nt"), patch.dict(sys.modules, {"msvcrt": fake_msvcrt}):
+                with self.assertRaises(LedgerLockError):
+                    with exclusive_ledger_lock(ledger):
+                        self.fail("critical section must not run without an interprocess lock")
+
     def test_lock_file_created_and_is_companion(self):
         with tempfile.TemporaryDirectory() as tmp:
             ledger = Path(tmp) / "log.jsonl"
