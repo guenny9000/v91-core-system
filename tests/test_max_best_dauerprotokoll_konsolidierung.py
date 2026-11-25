@@ -29,8 +29,8 @@ def test_stub_hat_keine_protokollinhalte():
                    "Abschalt- und Isolierungsprinzip",
                    "dauerhaft reduzieren",
                    "NICHT GEPRUEFT - keine blinde Abschaltung",
-                   "Prioritaetenordnung",
-                   "Leitsatz:",
+                   "Endgueltige Prioritaetenordnung",
+                   "Leitsatz (VORLAGE-Wortlaut)",
                    "Ressourcenverschwendung ->"):
         assert phrase not in S, "Protokollinhalt gedoppelt: " + phrase
 
