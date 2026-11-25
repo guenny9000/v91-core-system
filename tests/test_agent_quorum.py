@@ -132,7 +132,7 @@ def test_deadline_expired_before_first_call_contacts_no_provider():
 
 
 def test_response_returning_at_deadline_is_discarded_and_third_is_not_called():
-    times = iter([1198, 1199, 1199, 1200, 1200])
+    times = iter([1198, 1199, 1199, 1200, 1200, 1200, 1200])
     reviewers = {
         "agent-a": adapter("agent-a", True, issued_at=1198),
         "agent-b": adapter("agent-b", True, issued_at=1199),
