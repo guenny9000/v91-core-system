@@ -1,0 +1,48 @@
+name: V91 Governance CI
+
+# 3-Wege-Verbindung (Messreihe-Ledger-Manifest) als MECHANISMUS-Gate.
+# Ehrliche Abgrenzung: ein gruener Build hier beweist, dass das
+# governance-GATE funktioniert und die Ledger-/Audit-Bausteine intakt
+# sind - NICHT, dass eine reale physische Messreihe oder eine globale
+# Datenquelle (M_global) in Betrieb ist (SCRIPTED != INSTALLED,
+# UNKNOWN != PASS, GATE != MESSUNG).
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  governance-gate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v5
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.11'
+
+      - name: Install Dependencies
+        run: pip install --no-cache-dir pytest cryptography
+
+      - name: Governance Chain Unit Tests
+        run: |
+          set -o pipefail
+          pytest tests/test_solar_eval.py tests/test_ledger_gate.py \
+                 tests/test_measurement_pipeline.py tests/test_model_run_manifest.py \
+                 -v | tee governance_pytest.log
+          tail -n 1 governance_pytest.log
+
+      - name: Solar-Eval Gate Selbsttest (Mechanismus ohne Daten-Fiktion)
+        run: python -m controller.v91_solar_eval --self-check
+
+      - name: Compile runtime modules
+        run: python -m py_compile controller/*.py
+
+      - name: Governance-Summary
+        run: |
+          echo "### V91 Governance Gate" >> "$GITHUB_STEP_SUMMARY"
+          echo "Gate-Mechanismus VERIFIZIERT; reale Messreihe: NICHT_GEPRUEFT (erfordert Betreiber-Datenquelle)" >> "$GITHUB_STEP_SUMMARY"
