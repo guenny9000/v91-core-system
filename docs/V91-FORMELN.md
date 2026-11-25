@@ -101,3 +101,13 @@ E = N_nuetzlich / R_eingesetzt
 6. Optimierung NUR innerhalb der zulaessigen Handlungsmenge.
 7. Eine Formel beschreibt ein MODELL; sie erteilt KEINE
    Berechtigung und beweist KEINE Tatsache.
+
+## Ausfuehrbarkeit der Leitformeln (25.11.2026, P6)
+
+Die vier Leitformeln (W_t, G_t, B_n, Q_repo) sind maschinenpruefbar
+ausfuehrbar in controller/max_best_leitformeln.py. Die Pruefdisziplin
+wird REUSE aus controller/max_best_rechner.py uebernommen
+(Unknown-Propagation als NICHT_GEPRUEFT, fail-closed Domains, KEIN
+stilles Clampen, KEINE Personenbewertung). FORMEL != MESSUNG bleibt:
+alle Eingaben sind ANGABEN; das Modul misst nichts und entscheidet
+nichts (RECHNEN != ENTSCHEIDEN, ZAHLEN_BINDEN_NICHT unveraendert).
