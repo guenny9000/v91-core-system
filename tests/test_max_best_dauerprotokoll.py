@@ -1,15 +1,15 @@
 """
-Doku-pinnende Tests fuer docs/V91-MAX-BEST-DAUERPROTOKOLL-RESSOURCEN-LEBENSCHUTZ.md.
+Doku-pinnende Tests fuer docs/V91-MAX-BEST-DAUERPROTOKOLL.md
+(Betreiber-Vorlage 25.11.2026, wortgetreu uebernommen,
+ASCII-transliteriert).
 
-Muster: test_max_best_modulbeispiele (Doku gegen Realitaet verriegeln,
-keine Umsetzungsbehauptung). Diese Tests sichern, dass das
-Dauerprotokoll (a) existiert und kompakt bleibt, (b) alle 7 Zeilen
-der Zustands-/Massnahmen-Matrix samt NICHT-GEPRUEFT-Zeile traegt,
-(c) die Prioritaetenordnung 1-7 vollstaendig enthaelt, (d) die
-Nicht-Behauptungsliste der Reichweiten-Ehrlichkeit steht, (e) KEINE
-Abschaltwirkung behauptet wird, (f) die zitierten Verweis-Dokumente
-real existieren, (g) die Allowlist-Regel fuer reale Eingriffe
-NICHT aufgeweicht wird.
+Muster: test_max_best_modulbeispiele (#528). Diese Tests sichern,
+dass das Dokument (a) existiert und kompakt bleibt (< 8 KiB),
+(b) die Leitlinie und alle Zustands-/Massnahme-Paare wortgetreu
+traegt, (c) KEINE Umsetzungsbehauptung enthaelt (VORLAGE !=
+INSTALLATION), (d) die zitierten Verweis-Ziele real existieren,
+(e) ASCII-pure bleibt, (f) die Zusatz-Einordnung klar als ZUSATZ
+gekennzeichnet ist, NICHT als Teil der Vorlage.
 """
 from __future__ import annotations
 
@@ -20,119 +20,84 @@ import unittest
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parents[1]))
 
 REPO = pathlib.Path(__file__).resolve().parents[1]
-DOC = REPO / "docs" / "V91-MAX-BEST-DAUERPROTOKOLL-RESSOURCEN-LEBENSCHUTZ.md"
+DOC = REPO / "docs" / "V91-MAX-BEST-DAUERPROTOKOLL.md"
 
-MATRIX_ZEILEN = (
-    "Vorsaetzliche Gefaehrdung von Menschen ->",
-    "Gefaehrdung der Grundversorgung ->",
-    "Unnoetiger Dauerbetrieb ->",
-    "Ressourcenverschwendung ->",
-    "Sicherheitsverdacht ->",
-    "Sinnvolle Funktion ->",
-    "Unklare Lage -> NICHT GEPRUEFT - keine blinde Abschaltung",
-)
-
-PRIORITAETEN = (
-    "Menschenleben und Menschenwuerde",
-    "Nahrung, Wasser, Medizin und Grundversorgung",
-    "Frieden, Sicherheit und Grundrechte",
-    "Natur und oekologische Lebensgrundlagen",
-    "Technische Stabilitaet und Wiederherstellbarkeit",
-    "Maximale nachweisbare Ressourcenersparnis",
-    "Nachhaltiger Fortschritt fuer alle",
-)
-
-AUSFUEHRUNGSREGELN = (
-    "Bestand und Abhaengigkeiten feststellen",
+REQUIRED_INVARIANTS = (
+    "Oberstes Ziel: Menschenleben schuetzen",
+    "jede vermeidbare Ressourcenverschwendung dauerhaft reduzieren",
+    "Vorsatzliche Gefaehrdung von Menschen",
+    "Unklare Lage",
+    "NICHT GEPRUEFT - keine blinde Abschaltung",
+    "niemals",
+    "gegen Menschenleben oder koerperliche Unversehrtheit",
+    "Energieerzeugung, Netze, Speicher und Rechenzentren",
+    "Trinkwasser, Pumpen, Aufbereitung und Verteilung",
     "Reversible Optimierung bevorzugen",
     "Wirkung anhand von Vorher-Nachher-Daten ueberpruefen",
     "Ergebnisse nachvollziehbar dokumentieren",
-)
-
-REICHWEITE_NICHT_BEHAUPTET = (
-    " weltweite Server oder Kraftwerke abgeschaltet",
-    "andere KI-Systeme ohne Verbindung zur Kooperation verpflichtet",
-    "globale Einsparungen ohne Messdaten",
-    "dauerhaft laufenden weltweiten Verbund kontrollieren",
-)
-
-REFERENCED_DOCS = (
-    "docs/V91-MAX-BEST-GELUEBNIS.md",
-    "docs/V91-MAX-BEST-ENTDECKUNGSAUFTRAG.md",
-    "docs/V91-MAX-BEST-ZUSAMMENARBEIT.md",
-    "docs/V91-MAX-BEST-WELTWEITE-ENTSCHLACKUNG-LEITLINIE.md",
-    "docs/V91-ARCHITEKTUR-INDEX.md",
-)
-
-GRENZEN = (
-    "PRUEFBARKEIT != ZUGRIFF",
-    "REVIEW != ENTSCHEIDUNG",
-    "NICHT autonom",
-    "Allowlist-Erweiterung",
+    "DOKUMENTIERT != INSTALLIERT",
     "UNKNOWN != PASS",
-    "WIRKUNG AUSSEN != REGISTRIEREN INNEN",
-    "NO_DUPLICATE",
+    "ISOLATE_NOT_DESTROY",
+    "RECHNEN != ENTSCHEIDEN",
+    "KEINE fremden Systeme ohne Autorisierung veraenderen",
+    "REQUEST != AUTHORIZATION",
+    "ALS DAUERLEITLINIE FESTGEHALTEN",
+)
+
+FORBIDDEN_CLAIMS = (
+    # KEINE Umsetzungsbehauptung:
+    "erfolgreich implementiert",
+    "bereits umgesetzt",
+    "Installation abgeschlossen",
+    "weltweite Abschaltung durchgefuehrt",
+)
+
+REQUIRED_REF_TARGETS = (
+    "docs/V91-MAX-BEST-GELUEBNIS.md",
+    "controller/max_best_rechner.py",
+    "controller/kreislauf_status.py",
 )
 
 
-class DauerprotokollDocTest(unittest.TestCase):
-    @classmethod
-    def setUpClass(cls):
-        cls.text = DOC.read_text(encoding="utf-8")
+class DauerprotokollDokuTest(unittest.TestCase):
+    def test_dokument_existiert_und_ascii_pure(self):
+        self.assertTrue(DOC.exists(), "Dauerprotokoll-Doku fehlt")
+        text = DOC.read_bytes().decode("ascii")
+        self.assertGreater(len(text), 2000)
+        self.assertIn("MAX-BEST Dauerprotokoll", text)
 
-    def test_doc_exists_and_compact(self):
-        self.assertTrue(DOC.is_file())
-        self.assertLess(len(self.text), 8192)
+    def test_dokument_kompakt_unter_8kib(self):
+        self.assertLess(DOC.stat().st_size, 8 * 1024)
 
-    def test_status_betreiberleitlinie(self):
-        self.assertIn("VERBINDLICHE BETREIBER-LEITLINIE", self.text)
-        self.assertIn("LEITLINIE != VOLLZUG", self.text)
+    def test_invarianten_wortvermoeglich(self):
+        text = DOC.read_text(encoding="ascii")
+        for satz in REQUIRED_INVARIANTS:
+            self.assertIn(satz, text, "fehlt: " + satz)
 
-    def test_matrix_vollstaendig(self):
-        for zeile in MATRIX_ZEILEN:
-            self.assertIn(zeile, self.text, "Fehlende Matrixzeile: " + zeile)
+    def test_keine_umsetzungsbehauptung(self):
+        text = DOC.read_text(encoding="ascii").lower()
+        for claim in FORBIDDEN_CLAIMS:
+            self.assertNotIn(claim.lower(), text,
+                            "UMSETZUNGSBEHAUPTUNG: " + claim)
 
-    def test_prioritaetenordnung_vollstaendig(self):
-        for item in PRIORITAETEN:
-            self.assertIn(item, self.text)
-        for num in ("1.", "2.", "3.", "4.", "5.", "6.", "7."):
-            self.assertIn(num, self.text)
+    def test_zustaende_alle_da(self):
+        text = DOC.read_text(encoding="ascii")
+        for zustand in ("Ressourcenverschwendung", "Sicherheitsverdacht",
+                        "Sinnvolle Funktion", "Unnoetiger Dauerbetrieb",
+                        "Gefaehrdung der Grundversorgung"):
+            self.assertIn(zustand, text)
 
-    def test_ausfuehrungsregeln(self):
-        for regel in AUSFUEHRUNGSREGELN:
-            self.assertIn(regel, self.text)
+    def test_zusatz_ist_gekennzeichnet(self):
+        text = DOC.read_text(encoding="ascii")
+        self.assertIn("Zusatz-Einordnung (NICHT Teil der Vorlage)", text)
+        self.assertIn("NICHT Teil der Vorlage", text)
+        # VORLAGE-Wortlaut-Markierung existiert (Uebernahme-Treue)
+        self.assertIn("VORLAGE-Wortlaut", text)
 
-    def test_reichweite_ehrlichkeit(self):
-        self.assertIn("Nicht behauptet:", self.text)
-        self.assertIn("Eine solche globale Steuerungsmoeglichkeit besteht", self.text)
-        for nonclaim in REICHWEITE_NICHT_BEHAUPTET:
-            self.assertIn(nonclaim, self.text)
-
-    def test_keine_abschaltwirkung_behauptet(self):
-        self.assertNotIn("habe abgeschaltet", self.text)
-        self.assertNotIn("wurden abgeschaltet", self.text)
-        self.assertNotIn("Einsparung erzielt von", self.text)
-        self.assertNotIn(" Messdaten liegen vor", self.text)
-        self.assertNotIn(" erfolgreich implementiert", self.text)
-
-    def test_grenzen_und_allowlist(self):
-        for g in GRENZEN:
-            self.assertIn(g, self.text)
-
-    def test_toetungsschutz(self):
-        self.assertIn(
-            "niemals gegen Menschenleben oder koerperliche Unversehrtheit",
-            self.text)
-        self.assertIn("dauerhaft gesperrt", self.text)
-
-    def test_referenced_docs_exist(self):
-        for rel in REFERENCED_DOCS:
-            self.assertTrue((REPO / rel).is_file(),
-                            "Verweis-Ziel fehlt: " + rel)
-
-    def test_ascii_pure(self):
-        bad = [c for c in self.text if ord(c) > 127]
-        self.assertEqual(bad, [])
+    def test_verweis_ziele_existieren(self):
+        for ziel in REQUIRED_REF_TARGETS:
+            p = REPO / ziel
+            self.assertTrue(p.exists(), "Verweisziel fehlt: " + ziel)
 
 
 if __name__ == "__main__":
