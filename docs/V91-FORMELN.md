@@ -104,10 +104,12 @@ E = N_nuetzlich / R_eingesetzt
 
 ## Ausfuehrbarkeit der Leitformeln (25.11.2026, P6)
 
-Die vier Leitformeln (W_t, G_t, B_n, Q_repo) sind maschinenpruefbar
-ausfuehrbar in controller/max_best_leitformeln.py. Die Pruefdisziplin
-wird REUSE aus controller/max_best_rechner.py uebernommen
-(Unknown-Propagation als NICHT_GEPRUEFT, fail-closed Domains, KEIN
-stilles Clampen, KEINE Personenbewertung). FORMEL != MESSUNG bleibt:
-alle Eingaben sind ANGABEN; das Modul misst nichts und entscheidet
-nichts (RECHNEN != ENTSCHEIDEN, ZAHLEN_BINDEN_NICHT unveraendert).
+Die vier Leitformeln (W_t, G_t, B_n, Q_repo) sind bei EXPLIZITEM
+Aufruf maschinenpruefbar ausfuehrbar in
+controller/max_best_leitformeln.py (Pruefdisziplin REUSE aus
+controller/max_best_rechner.py: Unknown-Propagation als
+NICHT_GEPRUEFT, fail-closed Domains, KEIN stilles Clampen, KEINE
+Personenbewertung). Es bleibt dabei: KEINE automatische Auswertung
+(nichts bindet diese Formeln an Laufzeit, Messdaten oder Gates),
+alle Eingaben bleiben ANGABEN des Aufrufers, FORMEL != MESSUNG,
+RECHNEN != ENTSCHEIDEN, ZAHLEN_BINDEN_NICHT unveraendert.
