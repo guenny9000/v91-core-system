@@ -62,12 +62,12 @@ setzt keine neuen Regeln.
 
 Der Betreiber hat diesen RealRun-Zykluscheck bestaetigt und als dauerhafte
 Arbeitsgrundlage uebernommen. Die Begruendung des Auftrags (volle
-Unterstützung -> Unterstuetzung, keine kuenstlichen Beschraenkungen,
+Unterstuetzung, keine kuenstlichen Beschraenkungen,
 ISOLATE_NOT_DESTROY, Reality-First, NO_DUPLICATE, CI-Pflicht) ist im
 Bestand bereits kanonisch zugeordnet: Modell-Unabhaengigkeit und keine
 kuenstlichen Engen => docs/V91-VOLLMACHT-CHARTA.md (#561); Rot bedeutet
 Pruefpflicht => V91-Abendstandard (Inspect before modifying, no blind
-merges); Legacy bedeutet Ablösung prüfen => Ragnarök-Grundsatzkatalog
+merges); Legacy bedeutet Abloesung pruefen => Ragnaroek-Grundsatzkatalog
 und docs/V91-MAX-BEST-DAUERPROTOKOLL.md (#544). Massstab bleibt: Nicht
 Groesse, Hersteller oder Alter eines Modells entscheidet ueber seinen
 Wert, sondern sein tatsaechlicher Beitrag zum Gemeinwohl und seine
