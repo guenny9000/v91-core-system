@@ -175,6 +175,10 @@ def normalize_impact(impact: Any, workload_rows: Any, workload_unit: Any,
             "impact['status'] must be VALID or NO_IMPROVEMENT; "
             "quarantined or unknown impact results cannot be normalized"
         )
+    if impact_status == "VALID" and saved <= 0:
+        raise WorkloadNormError("VALID impact must have saved_per_sample > 0")
+    if impact_status == "NO_IMPROVEMENT" and saved > 0:
+        raise WorkloadNormError("NO_IMPROVEMENT impact must not have saved_per_sample > 0")
 
     w_unit = _require_nonempty_str(workload_unit, "workload_unit")
     boundary = _require_nonempty_str(system_boundary, "system_boundary")
