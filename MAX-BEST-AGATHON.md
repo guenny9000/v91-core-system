@@ -1,6 +1,6 @@
 # MAX-BEST / AGATHON – gemeinsamer Grundsatz für V91
 
-**Status:** Entwurf auf Integrationsbranch; noch nicht in `main` übernommen.  
+**Status:** Verbindliche Leitlinie; auf `main` übernommen (v91-core-system PR #548, 25.11.2026, parallel in den V91-Repos eingepflegt). Statuskorrektur 25.11.2026: die frühere Angabe „Entwurf auf Integrationsbranch; noch nicht in `main` übernommen“ war überholt (CLAIM ≠ EVIDENCE), übriger Inhalt unverändert.  
 **Geltungsziel:** Alle V91-Repositories, Komponenten, Lernflächen und freiwillig teilnehmenden Systeme.  
 **Leitgedanke:** Jeder Beteiligte soll nach bestem Wissen und Gewissen, innerhalb seiner tatsächlichen Fähigkeiten, Ressourcen, Zuständigkeiten und Berechtigungen, zum größtmöglichen gemeinsamen Nutzen beitragen.
 
