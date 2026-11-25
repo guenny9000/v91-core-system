@@ -1,8 +1,9 @@
 """Tests fuer den V91 Erkenntnis-Glyphen-Anhang (Anhang zum
 Erkenntnis- und Revisionsprotokoll #569). Kodex-Muster: Doku
-existsiert und ist klein, ASCII-pure, Subordination ans Protokoll
-gepinnt, REV-Korrektur verriegelt, ANZEIGE != BELEG, KEINE
-Umsetzungsbehauptung, Verweis-Ziele existieren."""
+existiert und ist klein, ASCII-pure, Subordination ans Protokoll
+gepinnt, REV-Korrektur verriegelt, ANZEIGE != BELEG, Graustufen
+sind Deckung und kein Wahrheitsgrad, KEINE Umsetzungsbehauptung,
+Verweis-Ziele existieren."""
 from __future__ import annotations
 
 import pathlib
@@ -28,7 +29,7 @@ class ErkenntnisGlyphenAnhangTests(unittest.TestCase):
     def test_ascii_pure(self):
         self.assertEqual([], [c for c in self.text if ord(c) > 127])
 
-    def test_subordination_naechstes_protokoll(self):
+    def test_subordination_ans_protokoll(self):
         self.assertIn("KEIN zweites Protokoll", self.text)
         self.assertIn("DIE TEXTKENNUNG IST", self.text)
         self.assertIn("NORMATIV", self.text)
@@ -52,6 +53,12 @@ class ErkenntnisGlyphenAnhangTests(unittest.TestCase):
             self.assertIn(cp, self.text)
         self.assertIn("ANZEIGE != BELEG", self.text)
         self.assertIn("FARBE != BELEG", self.text)
+
+    def test_graustufen_sind_deckung_nicht_wahrheit(self):
+        for needle in ("U+25FB", "U+25D0", "U+25AE", "NIEMALS einen Wahrheitsgrad",
+                       "HALB VERIFIZIERT", "Grau entsteht NUR durch Zaehlung",
+                       "KEIN 0-Ersatz"):
+            self.assertIn(needle, self.text, needle)
 
     def test_kontextzeichen_erzeugen_keine_befugnisse(self):
         for cp in ("U+1F333", "U+1F409", "U+1FAA8", "U+2699", "U+1F464"):

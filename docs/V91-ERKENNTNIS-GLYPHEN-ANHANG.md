@@ -15,9 +15,9 @@ nur als Unicode-Codepunkte angegeben (ASCII-pure Datei).
 - KORRIGIERT: Der Entwurf setzte ein Refresh-Symbol (U+1F504) an
   die Stelle von REV. Das kollidiert mit REMEAS (U+27F3,
   Kreispfeil). REV bleibt auf U+2727 (Sternchen) gepinnt,
-  passend zu #569. EINE DREHUNG IST KEINE REVISION;
-  REVISION BRAUCHT ANLASS, NEUEN BELEG UND PROVENIENZVERWEIS.
-- ERGANZT: Ergebnis-Farben und Kontext-Zeichen sind reine
+  passend zu #569. EINE DREHUNG IST KEINE REVISION; REVISION
+  BRAUCHT ANLASS, NEUEN BELEG UND PROVENIENZVERWEIS.
+- ERGAENZT: Ergebnis-Farben und Kontext-Zeichen sind reine
   ANZEIGE. FARBE != BELEG, EMOJI != STATUS-QUELLE. Die
   normative Statussprache bleibt im Protokoll #569 und im Kanon
   (UNKNOWN != PASS, NICHT_GEPRUEFT, DOKUMENTIERT != IMPLEMENTIERT).
@@ -74,7 +74,35 @@ bleiben unberuehrt.
 | + | IMP + REMEAS | Kombination im selben Kontext |
 | :: | MEAS ::Issue-101 | Metadaten-Bindung/Referenz |
 
-## 6. Kettenregeln (Kontexterhalt)
+## 6. Schwarz-Weiss- und Graustufen-Anzeige (Deckung, NICHT Wahrheitsgrad)
+
+Zweck: farbunabhaengige Darstellung (Terminal, Druck, Schwarz-
+Weiss-Modell-Umgebungen ohne Farbtreue). Graustufen zeigen
+AUSSCHLIESSLICH ABDECKUNG gezaehlter Einheiten (n von m),
+NIEMALS einen Wahrheitsgrad.
+
+| Zeichen (CP) | Bedeutung |
+| U+25FB leer | Einheit offen / nicht geprueft |
+| U+25D0 halbfarbig | Teilschritt abgearbeitet (Prozess, keine Wahrheit) |
+| U+25D4 / U+25D5 | Viertel-/Dreiviertel-Fortschritt von Teilschritten |
+| U+25BE / U+25AE | gefuellt: Einheit MIT BELEG abgeschlossen (im Rahmen) |
+
+Regeln:
+1. WAHRHEIT IST BINAER PRO AUSSAGE: eine Aussage ist mit Beleg
+   verifiziert oder nicht. "HALB VERIFIZIERT" IST UNVERIFIZIERT.
+   Grau entsteht NUR durch Zaehlung mehrerer Einheiten.
+2. MUSTER: [U+25AE U+25AE U+25FB U+25FB 2/4 VER ::Verweis] -
+   2 von 4 Aussagen des Verweises verifiziert; Zaehlung und
+   Belegverweis in Textform sind Pflicht.
+3. 0 von m bleibt vollstaendig offen: KEIN Auffuellen, KEIN
+   Rundungserfolg, KEIN 0-Ersatz (UNKNOWN != PASS gilt auch
+   hier). Grau ist ANZEIGE, kein Beleg.
+4. Schwarz/Weiss binaer: weiss/offen (U+25AF) weist auf UNKNOWN
+   oder offene Pruefung hin, gefuellt/schwarz (U+25AE) auf
+   ABGESCHLOSSEN-MIT-BELEG im genannten Rahmen; Fail-Closed
+   bleibt U+26D4 aus Tabelle C.
+
+## 7. Kettenregeln (Kontexterhalt)
 
 1. REIHENFOLGE: Erst der Bereich (z.B. U+2699), dann Erkenntnis-
    oder Handlungsschritte (CLAIM U+2192 MEAS U+2192 VER U+2192
@@ -92,12 +120,13 @@ verifiziert, verbessert und gegen Baseline nachgemessen.
 REV ist keine Kette, sondern jederzeit ueberall zulaessig (#569
 Abschnitt 6).
 
-## 7. Grenzen dieses Anhangs
+## 8. Grenzen dieses Anhangs
 
 Emojis und Glyphen sind Darstellungshilfen fuer Menschen und
 Protokolle; sie sind weder Maschinenvertrag noch zweite
-Statusquelle. Die Textkennung aus #569 bleibt normativ. Fehlt
-eine Glyphe, wird sie falsch dargestellt oder veraendert sich
-ihre Bedeutung, gilt allein der Text. DOKUMENTIERT !=
-IMPLEMENTIERT; eine technische Auswertung dieser Tabellen
-benoetigte einen eigenen Entwurf mit Tests und Autorisierung.
+Statusquelle, auch nicht in Schwarz-Weiss. Die Textkennung aus
+#569 bleibt normativ. Fehlt eine Glyphe, wird sie falsch
+dargestellt oder veraendert sich ihre Bedeutung, gilt allein der
+Text. DOKUMENTIERT != IMPLEMENTIERT; eine technische Auswertung
+dieser Tabellen benoetigte einen eigenen Entwurf mit Tests und
+Autorisierung.
