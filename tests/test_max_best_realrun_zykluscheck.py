@@ -69,3 +69,13 @@ def test_ascii_pure_und_kompakt():
 def test_provenienz_erhalten():
     assert "FREMD-ENTWURF" in D
     assert "NO_DUPLICATE_SYSTEMS" in D
+
+
+def test_betreiber_bestaetigung_gepinnt():
+    assert "Betreiber-Bestaetigung (25.11.2026" in D
+    assert "dauerhafte Arbeitsgrundlage" in D
+    assert "docs/V91-VOLLMACHT-CHARTA.md" in D
+    assert (ROOT / "docs" / "V91-VOLLMACHT-CHARTA.md").exists()
+    assert "Beitrag zum Gemeinwohl" in D
+    assert "V91-Konformitaet" in D
+    assert "BESTAETIGUNG != NEUE BEFUGNIS" in D
