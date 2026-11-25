@@ -23,7 +23,7 @@ class ErkenntnisRevisionProtokollTests(unittest.TestCase):
         self.assertTrue(all(ord(ch) < 128 for ch in self.text))
 
     def test_truth_is_not_granted_by_a_status_marker(self):
-        self.assertIn("Wahrheit bezeichnet hier die Wirklichkeit", self.flat)
+        self.assertIn("Wahrheit bezeichnet die Wirklichkeit", self.flat)
         self.assertIn("kann Wahrheit nicht per", self.flat)
 
     def test_display_glyphs_have_stable_codepoint_mapping(self):
@@ -73,7 +73,7 @@ class ErkenntnisRevisionProtokollTests(unittest.TestCase):
 
     def test_no_automatic_authority_or_runtime_claim(self):
         for rule in ("keine automatische Steuerung",
-                     "keine Eingriffsbefugnis",
+                     "keine Berechtigung",
                      "Dokumentiert != implementiert"):
             self.assertIn(rule, self.text)
 
