@@ -48,6 +48,7 @@ Ehrliche Grenzen:
 from __future__ import annotations
 
 import json
+import math
 import os
 import pathlib
 import sys
@@ -259,8 +260,12 @@ def cross_check(wert: Any, evidenz: Any,
     zahlen: dict[str, float] = {}
     fehlend: list[str] = []
     for quelle, ewert in evidenz.items():
+        # Zahlenhaertung 25.11.2026 (Fremdbefund-Nachmessung): NaN und
+        # +/-inf sind KEINE verwertbaren Katalogwerte (inf haette
+        # abs(inf - inf) > toleranz zu False gemacht und somit
+        # KATALOG_KONGRUENT geloggt). Fail-closed: zahlen als fehlend.
         if (isinstance(ewert, (int, float)) and not isinstance(ewert, bool)
-                and ewert == ewert):
+                and ewert == ewert and math.isfinite(ewert)):
             zahlen[str(quelle)] = float(ewert)
         else:
             fehlend.append(str(quelle))
@@ -269,10 +274,21 @@ def cross_check(wert: Any, evidenz: Any,
         return {"status": NICHT_GEPRUEFT,
                 "grund": "claim-wert fehlt oder ist keine Zahl",
                 "evidenz_fehlend": fehlend}
+    if not math.isfinite(wert):
+        # Zahlenhaertung 25.11.2026: inf/NAN-Claims sind keine
+        # Kongruenz-Freigabe wert (UNKNOWN != PASS, fail-closed).
+        return {"status": NICHT_GEPRUEFT,
+                "grund": "claim-wert ist nicht endlich (inf/nan)",
+                "evidenz_fehlend": fehlend}
     if not zahlen:
         return {"status": NICHT_GEPRUEFT,
                 "grund": "keine numerischen Evidenzwerte",
                 "evidenz_fehlend": fehlend}
+    if (not isinstance(toleranz, (int, float)) or isinstance(toleranz, bool)
+            or not math.isfinite(toleranz)):
+        # Zahlenhaertung 25.11.2026: toleranz=NaN haette JEDE
+        # Abweichung passiert (Vergleich gegen NaN ist immer False).
+        raise ValueError("toleranz muss endlich und >= 0 sein")
     if toleranz < 0:
         raise ValueError("toleranz muss >= 0 sein")
     abweichungen: dict[str, Any] = {}
