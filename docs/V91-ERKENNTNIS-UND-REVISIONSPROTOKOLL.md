@@ -127,8 +127,9 @@ Schuldnachweis.
 
 ## 7. Arbeitszyklus und Verknuepfung
 
-Der vorhandene MAX-BEST-/RealRun-Zyklus bleibt massgeblich. Dieses
-Protokoll konkretisiert darin den Erkenntnis- und Nachweisteil:
+Der vorhandene MAX-BEST-/RealRun-Zyklus bleibt massgeblich
+(docs/V91-MAX-BEST-REALRUN-ZYKLUSCHECK.md). Dieses Protokoll
+konkretisiert darin den Erkenntnis- und Nachweisteil:
 
 Entdecken -> Frage/CLAIM abgrenzen -> Beobachten/Messen -> Bewerten und
 verifizieren -> Bewahren/Verbessern/Erforschen -> Wirkung nachweisen ->
