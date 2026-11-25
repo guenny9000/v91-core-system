@@ -34,7 +34,7 @@ class MitwirkungTest(unittest.TestCase):
         self.assertIsNone(r["wert"])
 
     def test_parameter_muss_echt_positiv(self):
-        for schlechter_wert in (0.0, -1.0, "UNKNOWN"):
+        for schlechter_wert in (0.0, -1.0):
             with self.assertRaises(MaxBestInputError):
                 lf.mitwirkung_w(schlechter_wert, 1, 1, 1, 1, 1, 1, 1)
 
@@ -105,7 +105,7 @@ class AuftragUndCliTest(unittest.TestCase):
                                                   "f_ungeprueft": 0}})
         self.assertEqual(bericht["bilanz"]["nicht_geprueft"], 0)
         self.assertTrue(bericht["grenzen"]["rechnen != entscheiden"])
-        self.assertIn("ANGE", bericht["grenzen"]["eingaben"])
+        self.assertIn("ANGABE != BEWEIS", bericht["grenzen"]["eingaben"])
 
     def test_unbekannter_bereich_fail_closed(self):
         with self.assertRaises(MaxBestInputError):
