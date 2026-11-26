@@ -9,7 +9,7 @@ from tempfile import TemporaryDirectory
 
 from controller.measurement_ingest import MeasurementStatus, RawMeasurement, SensorSpec
 from controller.measurement_pipeline import MeasurementPipeline, MeasurementPipelineError
-from controller.measurement_store import MeasurementStore
+from controller.measurement_store import MeasurementStore, MeasurementStoreError
 
 KEY = b"0123456789abcdef0123456789abcdef"  # 32 bytes, test-only
 
@@ -113,14 +113,14 @@ if __name__ == "__main__":
         self.assertTrue(self.pipeline.verify_ledger())
 
     def test_store_rejects_inconsistent_calibration_metadata(self) -> None:
-        with self.assertRaisesRegex(Exception, "claims a reference that is absent"):
+        with self.assertRaisesRegex(MeasurementStoreError, "claims a reference that is absent"):
             self.store.record_valid(
                 sensor_id="s1", metric="m", normalized_value=1.0, unit="u",
                 timestamp_utc="2026-11-17T08:00:00Z",
                 calibration_ref=None,
                 calibration_status="REFERENCE_PRESENT_NOT_VERIFIED",
             )
-        with self.assertRaisesRegex(Exception, "claims a missing reference that is present"):
+        with self.assertRaisesRegex(MeasurementStoreError, "claims a missing reference that is present"):
             self.store.record_valid(
                 sensor_id="s1", metric="m", normalized_value=1.0, unit="u",
                 timestamp_utc="2026-11-17T08:00:00Z",
