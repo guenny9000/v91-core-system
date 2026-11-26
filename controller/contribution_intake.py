@@ -1,4 +1,10 @@
-"""Validate transport-neutral V91 contribution envelopes.
+"""
+V91-SYSTEM-HEADER (AGATHON-SEALED v2.4)
+---------------------------------------------------------------------
+STATUS: ACTIVE | VERIFICATION: REQUIRED (CLAIM != EVIDENCE)
+AXIOM: Schöpfung dient dem Erhalt, der Regeneration und der Zukunft.
+---------------------------------------------------------------------
+Validate transport-neutral V91 contribution envelopes.
 
 This module validates structure only. It does not authenticate an origin,
 verify evidence, grant authorization, store submissions, or execute content.
