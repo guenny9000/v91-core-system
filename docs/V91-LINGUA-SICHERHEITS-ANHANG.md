@@ -4,6 +4,10 @@ Status: ANHANG zu docs/V91-LINGUA-KERN.md (#571). KEIN zweiter
 Sprachkern, kein Parser, kein Workflow. Der KERN #571 bleibt
 alleinverbindlich. DOKUMENTIERT != IMPLEMENTIERT: Der Parser-Bau
 bleibt OFFEN und NUR mit Betreiber-Autorisierung (Stufe 3).
+Nachtrag 26.11.2026: Betreiber-Go erteilt; die Schritte 1
+GRAMMATIK und 2 PARSER sind umgesetzt (docs/V91-LINGUA-GRAMMATIK.md
+und controller/lingua_parser.py); die Schritte 3 MODELLTESTS und
+4 KOOPERATION bleiben OFFEN.
 
 Provenienz: Betreiber-Feinabnahme 26.11.2026, 00:39 Berlin, nach
 Merge von #571 (alle drei CI-Workflows am exakten Merge-Commit

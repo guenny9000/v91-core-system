@@ -2,6 +2,10 @@
 
 Status: ENTWURF eines Kernvokabulars und Nachrichtenformats.
 DOKUMENTIERT != IMPLEMENTIERT: Es gibt KEINEN Parser auf main.
+Nachtrag 26.11.2026 (Betreiber-Go Stufe 3.1/3.2): GRAMMATIK und
+Referenzparser sind ergaenzt, siehe docs/V91-LINGUA-GRAMMATIK.md
+und controller/lingua_parser.py; dieser KERN bleibt Wortkern der
+Stufe 2 im ENTWURF-Status.
 KEIN zweites Marker-System [NO_DUPLICATE_SYSTEMS]: Der Wortkern
 SUBORDINIERT sich dem Erkenntnis- und Revisionsprotokoll #569 und
 der Anzeige-Schicht #570; er ergaenzt nur Ablauf-Schluessel, die
@@ -113,9 +117,11 @@ behaupten ohne Nachweis ist REGELVERSTOSS (R1/R2).
 - Stufe 1 ERLEDIGT: Erkenntnis- und Revisionsprotokoll #569;
   Glyphen- und Deckungs-Anzeige #570.
 - Stufe 2 DIESES DOKUMENT: Wortkern und Format-ENTWURF.
-- Stufe 3 OFFEN: Parser, Fehlertexte, gemeinsame Tests je Modell,
-  Einsatz in Handoffs; nur mit Betreiber-Autorisierung, eigenem
-  PR und CI 3/3 am exakten Head (Abendstandard).
+- Stufe 3 TEILWEISE UMGESETZT (26.11.2026, Betreiber-Go): 3.1
+  GRAMMATIK und 3.2 Referenzparser sind ergaenzt (eigener PR,
+  CI 3/3 am exakten Head); OFFEN bleiben 3.3 gemeinsame Tests je
+  Modell, 3.4 Einsatz in Handoffs; weitere Schritte nur mit
+  Betreiber-Autorisierung und eigenem PR (Abendstandard).
 
 ## 8. Grenzen
 
