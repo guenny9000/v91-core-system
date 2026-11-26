@@ -40,6 +40,17 @@ Vertrag:
   Schreiben. Schreibfehler brechen fail-closed ab. Dedup-Lesen UND Append stehen gemeinsam unter dem exklusiven Datei-Lock aus controller/ledger_lock.py (REUSE aus #529, der dort ehrlich offen dokumentierte Rest); der Netz-Abruf bleibt bewusst AUSSERHALB des Locks (kein Netz im kritischen Abschnitt). LOCK != BEWEIS: der Lock verhindert Interleaving, die Verifikation bleibt Massstab.
 - KEIN Daemon, KEIN Timer, KEIN automatischer Lauf: der Abruf ist
   ein geplanter Schritt des Betreibers (SCRIPTED != RUNNING).
+- Stufe-4-Screening (Bestandsaufnahme #492 nannte die fehlende
+  Secret-/PII-Pruefung im Abrufpfad als LUECKE am Messstand
+  26.11.2026; diese Erweiterung schliesst die Abruf-Seite): JEDE
+  Aufnahme wird vor der Ablage durch controller/bridge_screening
+  auf vertrauliche Muster geprueft (REUSE der Secret-Muster aus
+  controller/secret_scan.py plus E-Mail/IBAN-Formen); Fundstellen
+  werden im abgelegten Text durch [REDACTIERT] ersetzt, der
+  SHA-256-Nachweis bleibt eine Hashung ueber den ROHTEXT, und das
+  Gate (drei feste Zustaende) bleibt davon UNBERUEHRT (GATE !=
+  SCREENING: ein Secret ist kein destruktives Muster und umgekehrt).
+  Details und Grenzen: docs/V91-BRIDGE-SECRET-SCREENING-2026-11-26.md.
 
 Ehrliche Grenzen:
 - ABGEHOLT != GEPRUEFT: der Ledger beweist nur Aufnahme und Hash,
@@ -68,6 +79,12 @@ from datetime import datetime, timezone
 from typing import Any, Callable
 
 from controller.ledger_lock import exclusive_ledger_lock
+from controller.bridge_screening import (
+    SCREENING_HONESTY_LIMITS,
+    SCREENING_STATUS_CLEAN,
+    SCREENING_STATUS_REDACTED,
+    screen_text,
+)
 
 _SCRIPT_DIR = str(pathlib.Path(__file__).resolve().parent)
 while _SCRIPT_DIR in sys.path:
@@ -103,7 +120,8 @@ HONESTY_LIMITS = (
     "ABGEHOLT != GEPRUEFT, AUFGENOMMEN != VERIFIZIERT, "
     "BLOCKLIST == MUSTER != GARANTIE, KEIN Code-Ausfuehrung, "
     "KEIN Daemon, KEIN Timer, SCRIPTED != RUNNING, "
-    "FELD_ERTEILT_KEINE_BERECHTIGUNG, ISOLATE_NOT_DESTROY"
+    "FELD_ERTEILT_KEINE_BERECHTIGUNG, ISOLATE_NOT_DESTROY, "
+    "GATE != SCREENING, " + SCREENING_HONESTY_LIMITS
 )
 
 FetchFn = Callable[[str, str], list[dict[str, Any]]]
@@ -173,6 +191,7 @@ def collect_kerns(
         "records_new": 0,
         "records_known": 0,
         "gate_counts": {GATE_ACCEPTED: 0, GATE_BLOCKED: 0, GATE_MISSING_MARKER: 0},
+        "screening_counts": {SCREENING_STATUS_CLEAN: 0, SCREENING_STATUS_REDACTED: 0},
         "honesty_limits": HONESTY_LIMITS,
     }
 
@@ -194,6 +213,7 @@ def collect_kerns(
                 continue
             known.add(digest)
             status = gate_payload(body)
+            screening = screen_text(body)
             new_records.append({
                 "timestamp_utc": datetime.now(timezone.utc).isoformat(),
                 "issue_number": issue.get("number"),
@@ -201,9 +221,14 @@ def collect_kerns(
                 "repo": repo,
                 "sha256": digest,
                 "gate_status": status,
-                "payload": body,
+                "screening_status": screening["status"],
+                "screening_findings": screening["findings"],
+                "payload": screening["redacted_text"],
             })
             report["gate_counts"][status] = report["gate_counts"].get(status, 0) + 1
+            report["screening_counts"][screening["status"]] = (
+                report["screening_counts"].get(screening["status"], 0) + 1
+            )
 
         if new_records:
             ledger_path.parent.mkdir(parents=True, exist_ok=True)
