@@ -40,10 +40,12 @@ Ehrliche Grenzen:
 - Der Adapter pollt NICHT von selbst: kein Daemon, kein Scheduler
   (SCRIPTED != INSTALLED); der Betriebstab (z. B. cron) bleibt
   Betreiber-Aufgabe.
-- FAO- und WHO-Adapter existieren auf main NICHT; die hier
-  definierte Adapter-Schnittstelle ist bewusst generisch gehalten,
-  damit beide denselben Pfad nutzen koennen, ohne dass deren
-  Existenz behauptet wird (VISION_UNIMPLEMENTED != BEHAUPTET).
+- FAO- und WHO-Adapter existieren als EIGENE Module
+  (controller/fao_stats_adapter.py, controller/who_stats_adapter.py)
+  und nutzen denselben Pfad wie dieser Referenz-Adapter; der
+  IEA-Adapter selbst bleibt OHNE FAO/WHO-Symbole
+  (PROTOKOLLTRENNUNG: gleicher Pfad, getrennte Module, keine
+  Existenzbehauptung im IEA-Namensraum).
 """
 from __future__ import annotations
 
@@ -89,7 +91,7 @@ HONESTY_LIMITS = (
     "CLAIM != EVIDENCE, KATALOG != SENSOR, ABRUF == MOMENTAUFNAHME, "
     "UNKNOWN != PASS, KEINE_STUMME_KORREKTUR, SCRIPTED != RUNNING, "
     "kein Daemon, API-Schluessel NUR aus Umgebung, FAO/WHO-Adapter "
-    "auf main VISION_UNIMPLEMENTED"
+    "als eigene Module (fao_stats_adapter/who_stats_adapter)"
 )
 
 
