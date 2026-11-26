@@ -159,7 +159,7 @@ class MeasurementStore:
         if calibration_ref is not None:
             if not isinstance(calibration_ref, str) or not calibration_ref.strip() or len(calibration_ref) > 2048:
                 raise MeasurementStoreError("calibration_ref must be a non-empty opaque reference of at most 2048 characters")
-        if calibration_status not in {
+        if not isinstance(calibration_status, str) or calibration_status not in {
             "UNKNOWN", "MISSING_REFERENCE", "REFERENCE_PRESENT_NOT_VERIFIED"
         }:
             raise MeasurementStoreError("calibration_status is not a supported evidence state")
