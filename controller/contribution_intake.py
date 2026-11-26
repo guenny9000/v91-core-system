@@ -208,7 +208,11 @@ def validate_contribution(payload: Any) -> tuple[bool, list[str]]:
             if entry is not None:
                 _text(entry.get("reference"), f"{path}.reference", errors)
                 _text(entry.get("description"), f"{path}.description", errors)
-                if entry.get("status") not in EVIDENCE_STATUSES:
+                evidence_status = entry.get("status")
+                if (
+                    not isinstance(evidence_status, str)
+                    or evidence_status not in EVIDENCE_STATUSES
+                ):
                     errors.append(
                         f"{path}.status: must use the V91-COMMS-1 evidence status chain"
                     )
@@ -222,7 +226,11 @@ def validate_contribution(payload: Any) -> tuple[bool, list[str]]:
         errors,
     )
 
-    if root.get("status") not in CONTRIBUTION_STATUSES:
+    contribution_status = root.get("status")
+    if (
+        not isinstance(contribution_status, str)
+        or contribution_status not in CONTRIBUTION_STATUSES
+    ):
         errors.append("status: unsupported contribution workflow status")
 
     try:
