@@ -65,6 +65,14 @@ Semantik):
 - `risk_level`/`rollback` (113): bei HIGH/CRITICAL immer den
   Wiederherstellungsweg beschreiben (RECOVERY_FIRST).
 
+## 3.1 Optionale Beitrags-Hülle V91-CONTRIBUTION-1
+
+Für allgemeine Modell-/Systembeiträge kann zusätzlich die transportneutrale
+Hülle `V91-CONTRIBUTION-1` verwendet werden. Sie ergänzt den UAS-Aktionsrecord,
+ersetzt ihn aber nicht. Schema, Copy/Paste-Vorlage und Formvalidator stehen in
+`docs/V91-CONTRIBUTION-1.md` und `schemas/contribution.schema.json`.
+Ein gültiger Umschlag ist nur für die Triage geeignet und erteilt keine Rechte.
+
 ## 4. Was der Betreiber danach tut (Nachmessung statt Vertrauen)
 
 1. Fremdbeitrag als Zitat ablegen, nie ungeprueft in verbindliche
