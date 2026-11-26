@@ -29,7 +29,7 @@ Pull Requests je Kandidat.
 
 Eine Repository OHNE Branches hat keinen aenderbaren Hauptinhalt;
 Archivierung ist hier verlustfrei (KEIN Byte geht verloren, der
-Verlauf bleibt lesbar und vom Eigentuemers freigebbar).
+Verlauf bleibt lesbar und vom Eigentuemer freigebbar).
 
 ## 3. NICHT archivierte Repos (Betreiber-Konto, mit Begruendung)
 
@@ -80,7 +80,7 @@ beiden Wege:
    gh repo archive guenny9000/New-project --yes
    gh repo archive guenny9000/guenn --yes
    gh repo archive guenny9000/.antigravity-ide --yes
-2) Web-Oberflaeche: github.com/<_betreiber>/<repo> ->
+2) Web-Oberflaeche: github.com/guenny9000/<repo> ->
    Settings -> General -> Danger Zone -> Archive this repository.
 
 Aufhebung je Repository: gh repo unarchive guenny9000/<repo> --yes.
