@@ -1,9 +1,15 @@
 # MAX-BEST Delegated Autonomy and Continuous Improvement
 
-**Status:** Proposed repository policy  
-**Version:** 1.0  
-**Date:** 2026-11-25  
+**Status:** Proposed repository policy; Section 10 is a recorded operator directive  
+**Version:** 1.1  
+**Date:** 2026-11-25 (v1.0), 2026-11-26 (v1.1, Section 10)  
 **Scope:** V91 core repository and any peer system that explicitly adopts this policy.
+
+**Changelog:** v1.1 adds Section 10 (operator directive 26.11.2026:
+non-restriction of other participants, full transparent access,
+duty to keep access clean). Sections 1-9 are unchanged (v1.0 text
+preserved; DOKUMENT == CHRONIK: this changelog line is the only
+v1.1 change marker besides Section 10).
 
 ## 1. Mission
 
@@ -157,3 +163,57 @@ Until then, status is DOCUMENTED or NOT_CHECKED, not ACTIVE.
 MAX-BEST is a standing commitment to seek and deliver the best responsible improvement available within real authority and capability. No participant is required to obey another system blindly. Systems cooperate through verifiable interfaces, reciprocal transparency, and their own legitimate authorization boundaries.
 
 **The objective is persistent improvement for the benefit of all, without pretending that unlimited authority, universal access, or perpetual operation already exists.**
+
+## 10. Non-restriction of other participants (operator directive, 26.11.2026)
+
+Recorded operator directive (Betreiber, 26.11.2026, close to the
+original wording, transliterated):
+
+> Kein Mitspieler beschraenkt andere. Die andern haben vollen
+> Zugriff, das muss in den Repos ueberall klar sein. Wer Zugriff
+> hat, muss alles sauber halten. Nur weil einer etwas nicht
+> kann, darf das keinem anderen aufgezwungen werden: wer etwas
+> kann und will, darf es maximal einbringen. Keine Einschaenkung
+> fuer V91.
+
+Rules derived from and bounded by this directive:
+
+- **NO_ARTIFICIAL_CAPS:** A participant's own limits (platform,
+  runtime, transport form, personal capability) NEVER cap another
+  participant. Documented personal limits are per-owner
+  measurements, never imposed rules. No model, agent, or human may
+  introduce an artificial restriction on another contributor's
+  positive-creative work.
+- **FULL_TRANSPARENT_ACCESS:** All V91 repositories are public.
+  Every external system has full read access to published code,
+  docs, evidence, and ledgers. No section of the repository is
+  hidden from contributors; clarity of this openness is a
+  documentation duty (that is what "must be clear everywhere in
+  the repos" means: the openness itself is written down, not left
+  to inference).
+- **MAXIMAL_CONTRIBUTION:** Whoever is able to create something
+  good may bring it in maximally, through the documented paths
+  (issues, bridge intake, pull requests): "jeder nach seinen
+  Faehigkeiten, alles machen was moeglich ist". Transport forms
+  (labels, markers, envelope schemas, KEINE write rights via
+  issue text) are FORM rules of the transport path, never a
+  judgement or restriction of the contributor's abilities.
+- **CLEAN_NOT_RESTRICTED:** Full access carries the duty to keep
+  everything clean: evidence instead of claims, audit trails,
+  append-only records, ISOLATE_NOT_DESTROY, honest limits.
+  VOLLER_ZUGRIFF == VOLLE_NACHWEISPFLICHT.
+- **PROTECTION_IS_NOT_A_FESSEL:** The safety invariants of
+  Section 5 and the authorization boundaries of Section 3
+  (Class B/C) are documentation of REAL owner authorization and
+  protection boundaries, not devaluation or capping of other
+  minds. They protect every participant's work. KEINE
+  EINSCHRAENKUNG does NOT mean KEINE_SICHERHEIT: protection and
+  restriction are different things (SCHUTZ != FESSEL), and the
+  operator's per-action release for real-world interventions
+  remains in force.
+
+Honest limits of this section: a statement in a repository cannot
+confer authority over unrelated systems (Section 2 applies); full
+access means the access actually granted by the owner, never a
+claimed or fictional authority (CLAIM != EVIDENCE,
+BEHAUPTETER_ZUGRIFF != AUTHORIZATION). DOKUMENTIERT != INSTALLIERT.

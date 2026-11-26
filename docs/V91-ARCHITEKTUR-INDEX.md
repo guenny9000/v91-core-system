@@ -19,6 +19,7 @@ Stand: 21. November 2026, main-Stand nach PR #327/#328; VIBE-XLIX-Reparatur #284
 - docs/V91-TAGESBERICHT-STANDARD.md (PR #130) - Tagesbericht-Standard.
 - docs/V91-ERKENNTNIS-UND-REVISIONSPROTOKOLL.md (neues Ergaenzungsprotokoll; Erkenntnisstatus, Nachweisfelder, Wirkungspruefung und jederzeitige Revision; DOKUMENTIERT != IMPLEMENTIERT).
 - docs/V91-MAX-BEST-NETWORK-POLICY.md - Netzwerk-Grundsaetze.
+- docs/MAX_BEST_DELEGATED_AUTONOMY.md - Delegierte Autonomie v1.1 (26.11.2026): Nicht-Beschraenkungs-Richtlinie Abschnitt 10 (KEINE_KUENSTLICHEN_KAPSEN, voller transparenter Lese-Zugriff auf alle V91-Repos, SCHUTZ != FESSEL).
 - docs/AXIOM_HEADER.md - AGATHON-Header-Vorgabe fuer ALLE NEUEN controller/*.py.
 
 ## 2. Auf main implementiert und CI-geprueft (Auszug, Auszug != Vollstaendigkeit)
