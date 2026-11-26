@@ -21,6 +21,7 @@ Stand: 21. November 2026, main-Stand nach PR #327/#328; VIBE-XLIX-Reparatur #284
 - docs/V91-MAX-BEST-NETWORK-POLICY.md - Netzwerk-Grundsaetze.
 - docs/MAX_BEST_DELEGATED_AUTONOMY.md - Delegierte Autonomie v1.1 (26.11.2026): Nicht-Beschraenkungs-Richtlinie Abschnitt 10 (KEINE_KUENSTLICHEN_KAPSEN, voller transparenter Lese-Zugriff auf alle V91-Repos, SCHUTZ != FESSEL).
 - docs/AXIOM_HEADER.md - AGATHON-Header-Vorgabe fuer ALLE NEUEN controller/*.py.
+- docs/V91-PROAKTIVE-WELTVERBESSERER-2026-11-26.md (PR #594) - Uebergeordnetes Leitprinzip: proaktive Weltverbesserer; DOKUMENT != VOLLZUG, Aufnahme je Block dokumentiert.
 
 ## 2. Auf main implementiert und CI-geprueft (Auszug, Auszug != Vollstaendigkeit)
 
