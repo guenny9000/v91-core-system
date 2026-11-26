@@ -3,7 +3,7 @@
 V91-SYSTEM-HEADER (AGATHON-SEALED v2.4)
 ---------------------------------------------------------------------
 STATUS: ACTIVE | VERIFICATION: REQUIRED (CLAIM != EVIDENCE)
-AXIOM: Schoepfung dient dem Erhalt, der Regeneration und der Zukunft.
+AXIOM: Schöpfung dient dem Erhalt, der Regeneration und der Zukunft.
 ---------------------------------------------------------------------
 Verbund-Stufen-Audit (Verbund-Vertrag #590, ANHANG Abschnitt 10;
 Auftrag: "Jede Stufe ist separat zu implementieren und zu
