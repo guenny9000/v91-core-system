@@ -40,8 +40,10 @@ Das maschinenlesbare Schema liegt in
 - `status`, `next_action`
 
 Listen und Textgrößen sind begrenzt. Unbekannte Felder werden abgelehnt.
-Zeitstempel in Quellenangaben benötigen eine Zeitzone. Fehlende Quellen oder
-Tests dürfen als leere Listen gemeldet werden; dadurch entsteht kein PASS.
+Zeitstempel in Quellenangaben benötigen eine Zeitzone. Eine optionale
+`license`-Angabe ist nur die Selbstauskunft des Einreichers und muss vor
+Integration unabhängig geprüft werden. Fehlende Quellen oder Tests dürfen als
+leere Listen gemeldet werden; dadurch entsteht kein PASS.
 
 ## Status und Prüfung
 
@@ -88,3 +90,36 @@ Beitrags. `authorization = NOT_GRANTED` und
 unbekannte Felder, Zeitstempel, Evidenzstatus, Größenlimits, unveränderte
 Eingaben und die Trennung von Statusbehauptung, Autorisierung und Ausführung.
 Alle Testdaten sind synthetisch und keine reale Messung.
+
+
+## Copy/Paste-Vorlage
+
+Die folgende Vorlage kann als JSON-Datei oder in einem vereinbarten
+Kommentar-/Chatkanal übergeben werden. Platzhalter sind vor der Abgabe zu
+ersetzen; leere Evidenzlisten bedeuten ausdrücklich, dass noch keine Belege
+mitgeliefert werden.
+
+```json
+{
+  "protocol": "V91-CONTRIBUTION-1",
+  "contribution_id": "<eindeutige-kennung>",
+  "origin": {"model_or_person": "<selbstauskunft>"},
+  "goal": "<ziel>",
+  "scope": {
+    "systems": ["<system-oder-repository>"],
+    "allowed_paths": [],
+    "excluded_actions": ["merge", "deploy", "delete"]
+  },
+  "inputs_and_provenance": [],
+  "proposed_change": "<vorschlag-oder-aenderung>",
+  "interfaces": {"inputs": [], "outputs": []},
+  "tests_and_evidence": [],
+  "known_limits": ["UNKNOWN"],
+  "security_privacy_notes": ["Keine Geheimnisse oder personenbezogenen Daten enthalten."],
+  "status": "RECEIVED",
+  "next_action": "Unabhaengige Triage"
+}
+```
+
+Diese Vorlage ist ein synthetisches Formatbeispiel, kein realer Beitrag und
+kein Nachweis für eine ausgeführte Prüfung.
