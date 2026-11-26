@@ -143,8 +143,10 @@ class AdapterRegeln(unittest.TestCase):
         self.assertLess(iea.METRIC_SPECS["strommix_anteil"].maximum, 1.1)
 
     def test_fao_who_nicht_behauptet(self):
-        """FAO/WHO-Adapter existieren auf main NICHT: der IEA-Adapter
-        formuliert NUR das gemeinsame Protokoll, keine Existenz."""
+        """Die IEA-API bleibt frei von FAO/WHO-Symbolen: die Adapter
+        existieren als EIGENE Module (fao_stats_adapter/
+        who_stats_adapter); das Protokoll ist getrennt, der IEA-
+        Namensraum bleibt zustandslos dafuer."""
         self.assertNotIn("fao_poll", dir(iea))
         self.assertNotIn("who_poll", dir(iea))
         self.assertIn("poll_once", iea.ADAPTER_PROTOCOL)
