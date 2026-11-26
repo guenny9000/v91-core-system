@@ -193,3 +193,19 @@ def test_unhashable_status_values_are_rejected_without_crashing():
     valid, errors = validate_contribution(payload)
     assert valid is False
     assert any("V91-COMMS-1" in error for error in errors)
+
+
+def test_license_claim_is_structural_metadata_only():
+    payload = _valid_contribution()
+    payload["inputs_and_provenance"][0]["license"] = "UNKNOWN"
+    valid, errors = validate_contribution(payload)
+    assert valid is True
+    assert errors == []
+
+
+def test_non_string_license_claim_is_rejected():
+    payload = _valid_contribution()
+    payload["inputs_and_provenance"][0]["license"] = False
+    valid, errors = validate_contribution(payload)
+    assert valid is False
+    assert any("license" in error for error in errors)
