@@ -91,9 +91,6 @@ class MeasurementPipelineTest(unittest.TestCase):
             MeasurementPipeline("not-a-store")  # type: ignore[arg-type]
 
 
-if __name__ == "__main__":
-    unittest.main()
-
 
     def test_present_calibration_reference_is_preserved_as_unverified(self) -> None:
         measurement = RawMeasurement(
@@ -127,3 +124,7 @@ if __name__ == "__main__":
                 calibration_ref="evidence://calibration/1",
                 calibration_status="MISSING_REFERENCE",
             )
+
+
+if __name__ == "__main__":
+    unittest.main()
