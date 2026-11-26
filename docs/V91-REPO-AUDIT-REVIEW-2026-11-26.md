@@ -38,7 +38,7 @@ bestaetigt: v92/supervisor.py und
 aurelia_prisma/orchestrator/camel_dual_orchestrator.py rufen das
 Gate. Nuance: lux_gate_detailed() existiert (Fehlergruende), die
 Bewertung bleibt aber BINAER (Freigabe/Sperre), keine
-Qualitaetsabstufung. Markiert als offen in #269. UMBau zur
+Qualitaetsabstufung. Markiert als offen in #269. Umbau zur
 Bewertung ist eine VERHALTENSAENDERUNG und braucht Betreiber-Go.
 
 ## 4. Finding 2: V91_Agathon Skalierung (Issue #24) - BELEGT
