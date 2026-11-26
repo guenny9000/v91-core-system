@@ -6,7 +6,7 @@ STATUS: ACTIVE | VERIFICATION: REQUIRED (CLAIM != EVIDENCE)
 AXIOM: Schöpfung dient dem Erhalt, der Regeneration und der Zukunft.
 ---------------------------------------------------------------------
 
-Regression-Stufen fuer V91 (Fremd-Kern des Betreiber-Uebermits
+Regression-Stufen fuer V91 (Fremd-Kern der Betreiber-Uebergabe
 26.11.2026: 5 Ebenen + Tier-0/1/2-Gewichtung). Reines DATENMODUL:
 jede Selektion ist ein messbarer VORSCHLAG, KEINE Verminderung
 bestehender CI-Pflicht. Die vorhandenen CI-Suiten laufen unveraendert
