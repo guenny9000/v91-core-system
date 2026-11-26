@@ -1,9 +1,14 @@
 # V91 Kern-Bridge: Standard-Intake (Issue #492-Rest, Anschluss an #509)
 
-Stand: 24.11.2026 | Gegenlesen am echten Code: controller/kern_bridge.py
-(9.4 KB, 19 Tests in tests/test_kern_bridge.py), Issue-Template
+Stand: 24.11.2026 | Gegenlesen aktualisiert 26.11.2026 am main
+dc887e4368d1b8b9b92c7cf21e1c478ba8253fb4 (Zahlen sind Messstand,
+kein Ewigkeitsanspruch): controller/kern_bridge.py (10410 B,
+22 Tests in tests/test_kern_bridge.py + 8 Verkettungs-Sonden in
+tests/test_kern_bridge_intake_std.py), Issue-Template
 .github/ISSUE_TEMPLATE/kern-bridge.md, Validator controller/uas_record.py
-(112.0.0/113.0.0), Kanon controller/uas_contract.py.
+(112.0.0/113.0.0), Kanon controller/uas_contract.py, Beitrags-Umschlag
+controller/contribution_intake.py (V91-CONTRIBUTION-1,
+schemas/contribution.schema.json, 17 Tests).
 
 STATUS: DOKUMENTIERT - GEGENLESEN | DOKUMENT != ZWEITE_WAHRHEIT,
 AUFGENOMMEN != VERIFIZIERT, FREMDBEFUND != V91-MESSUNG.
@@ -35,7 +40,10 @@ Abruf ist Betreiber-Lauf, KEIN Daemon, KEIN Timer (SCRIPTED != RUNNING).
 
 BLOCKLIST == MUSTER != GARANTIE: bekannte Formen werden erkannt,
 Unschaedlichkeit des Rests wird NICHT behauptet. Kein Makro-Scan,
-keine Code-Ausfuehrung.
+keine Code-Ausfuehrung. Die Blocklist prueft NUR destruktive
+Code-Muster: ein Secret- oder PII-Screening existiert im
+Abrufpfad NICHT (offene Luecke, siehe Bestandsaufnahme
+docs/V91-492-BESTANDSAUFNAHME-2026-11-26.md, Stufe 4).
 
 ## 3. Verkettung mit den Validatoren 112/113 (die eigentlich neue Klarheit)
 
@@ -68,3 +76,15 @@ echten Sonden verriegelt):
   gilt einmal; minimale Aenderung gilt als neu (KEIN semantisches Dedup).
 - Keine Automatisierung der Stufen 2-3: ein Auto-Aktivator waere ein
   Eingriffsdaemon und bleibt mandatswidrig.
+
+## 5. Nachmessung 26.11.2026 (STALE-Korrektur, Bestandsaufnahme #492)
+
+Die Zahlenerfassung vom 24.11.2026 ("9.4 KB, 19 Tests") war am
+Messstand 26.11.2026 veraltet und wurde nachgemessen:
+controller/kern_bridge.py misst 10410 B (Erweiterung um den
+exklusiven Ledger-Lock, REUSE aus #529), tests/test_kern_bridge.py
+enthaelt 22 Tests (Gate 6, Ledger 12, Lock 3, CLI 1), hinzu kommen
+8 Verkettungs-Sonden in tests/test_kern_bridge_intake_std.py.
+ZAHL == STAND != VERTRAG: jede kuenftige Erweiterung muss diese
+Kopfzeile erneut nachfuehren. Vollstaendiger Stufen-Abgleich:
+docs/V91-492-BESTANDSAUFNAHME-2026-11-26.md.
