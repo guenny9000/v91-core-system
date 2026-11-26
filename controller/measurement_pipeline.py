@@ -90,6 +90,8 @@ class MeasurementPipeline:
                 unit=measurement.unit,
                 timestamp_utc=result.timestamp_utc,
                 source=measurement.source,
+                calibration_ref=measurement.calibration_ref,
+                calibration_status=result.calibration_status,
             )
             return result
 
