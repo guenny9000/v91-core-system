@@ -67,7 +67,16 @@ DEFAULT_CAPACITY = 10000
 DEFAULT_MAX_RETRIES = 5
 DEFAULT_BASE_BACKOFF_SECONDS = 30.0
 DEFAULT_MAX_BACKOFF_SECONDS = 3600.0
+MAX_PAYLOAD_BYTES = 8192
+MAX_EVENT_ID_CHARS = 128
+MAX_SOURCE_REF_CHARS = 2048
+MAX_REASON_CHARS = 2048
+MAX_RETENTION_DAYS = 3650
 SECRET_KEY_PATTERN = re.compile(r"(passwort|password|secret|token|api[_-]?key|authorization|bearer)", re.IGNORECASE)
+SECRET_VALUE_PATTERN = re.compile(
+    r"(?:\b(?:passwort|password|secret|token|api[_-]?key|authorization)\b\s*[:=]\s*\S+|\bbearer\s+\S+)",
+    re.IGNORECASE,
+)
 FORBIDDEN_FIELD_PATTERN = re.compile(r"(patient|medizin|medic|diagnos|gesundheit|health|kranken)", re.IGNORECASE)
 
 
@@ -109,29 +118,86 @@ def _redact(obj: Any) -> Any:
 def _validate_event(alert: Dict[str, Any]) -> Dict[str, Any]:
     if not isinstance(alert, dict):
         raise AlarmOutboxError("alert must be an object")
+    allowed = {
+        "event_id", "source_ref", "severity", "begruendung",
+        "payload", "retention_tage",
+    }
+    unknown = set(alert) - allowed
+    if unknown:
+        raise AlarmOutboxError(
+            f"unknown alert fields are not allowed: {sorted(str(key) for key in unknown)}"
+        )
+
     def _check_keys(obj: Any, where: str) -> None:
         if isinstance(obj, dict):
             for key, value in obj.items():
-                if FORBIDDEN_FIELD_PATTERN.search(str(key)):
+                if not isinstance(key, str):
+                    raise AlarmOutboxError(f"{where}: object keys must be strings")
+                if FORBIDDEN_FIELD_PATTERN.search(key):
                     raise AlarmOutboxError(
                         f"personal or medical field {key!r} is not allowed in alert "
                         f"payloads ({where}; data minimization)"
                     )
                 _check_keys(value, where)
+        elif isinstance(obj, list):
+            for item in obj:
+                _check_keys(item, where)
 
-    _check_keys(alert, "top level")
-    _check_keys(alert.get("payload", {}), "payload")
+    _check_keys(alert, "alert")
     event_id = alert.get("event_id")
-    if not isinstance(event_id, str) or not event_id.strip():
-        raise AlarmOutboxError("event_id needs a non-empty string (stable event identity)")
+    if (
+        not isinstance(event_id, str)
+        or not event_id.strip()
+        or len(event_id) > MAX_EVENT_ID_CHARS
+    ):
+        raise AlarmOutboxError(
+            f"event_id needs a non-empty string of at most {MAX_EVENT_ID_CHARS} characters"
+        )
     source_ref = alert.get("source_ref")
-    if not isinstance(source_ref, str) or not source_ref.strip():
-        raise AlarmOutboxError("source_ref needs a non-empty string (evidence backlink)")
+    if (
+        not isinstance(source_ref, str)
+        or not source_ref.strip()
+        or len(source_ref) > MAX_SOURCE_REF_CHARS
+    ):
+        raise AlarmOutboxError(
+            f"source_ref needs a non-empty reference of at most {MAX_SOURCE_REF_CHARS} characters"
+        )
+    if SECRET_VALUE_PATTERN.search(source_ref):
+        raise AlarmOutboxError("source_ref appears to contain a secret; refusing storage")
     severity = alert.get("severity")
     if severity not in ("INFO", "WARNUNG", "KRITISCH"):
         raise AlarmOutboxError("severity must be one of INFO/WARNUNG/KRITISCH")
-    if not isinstance(alert.get("begruendung"), str) or not alert["begruendung"].strip():
-        raise AlarmOutboxError("begruendung (severity rationale) needs a non-empty string")
+    reason = alert.get("begruendung")
+    if (
+        not isinstance(reason, str)
+        or not reason.strip()
+        or len(reason) > MAX_REASON_CHARS
+    ):
+        raise AlarmOutboxError(
+            f"begruendung needs non-empty text of at most {MAX_REASON_CHARS} characters"
+        )
+    if SECRET_VALUE_PATTERN.search(reason):
+        raise AlarmOutboxError("begruendung appears to contain a secret; refusing storage")
+
+    payload = alert.get("payload", {})
+    if not isinstance(payload, dict):
+        raise AlarmOutboxError("payload must be an object")
+    try:
+        payload_bytes = json.dumps(
+            payload, sort_keys=True, ensure_ascii=True, allow_nan=False
+        ).encode("utf-8")
+    except (TypeError, ValueError) as exc:
+        raise AlarmOutboxError("payload must contain finite JSON-compatible values") from exc
+    if len(payload_bytes) > MAX_PAYLOAD_BYTES:
+        raise AlarmOutboxError(
+            f"payload exceeds the {MAX_PAYLOAD_BYTES}-byte limit"
+        )
+
+    retention = alert.get("retention_tage", 365)
+    if type(retention) is not int or not 1 <= retention <= MAX_RETENTION_DAYS:
+        raise AlarmOutboxError(
+            f"retention_tage must be an integer between 1 and {MAX_RETENTION_DAYS}"
+        )
     return dict(alert)
 
 
@@ -227,7 +293,7 @@ def create_event(
             "begruendung": alert["begruendung"].strip(),
             "payload": _redact(alert.get("payload", {})),
             "angelegt_am": _iso(now_dt),
-            "retention_tage": int(alert.get("retention_tage", 365)),
+            "retention_tage": alert.get("retention_tage", 365),
             "delivery_stadium": "DEAKTIVIERT",
         }
         _append_line(path, record)
@@ -264,7 +330,7 @@ def plan_delivery(
         "verwendung": "PLAN",
         "redirect_ablehnung": True,
         "timeout_s": 10,
-        "payload_limit_bytes": 8192,
+        "payload_limit_bytes": MAX_PAYLOAD_BYTES,
         "hinweis": "PLAN != VERSANDT: Ausfuehrung benoetigt einen getrennt geprueften Adapter",
     }
 
@@ -276,11 +342,11 @@ def next_backoff_seconds(
     rng: Optional[Callable[[], float]] = None,
 ) -> float:
     """Exponentieller Backoff mit Jitter (rng injizierbar, deterministisch testbar)."""
-    if retry_count < 0:
-        raise AlarmOutboxError("retry_count must be >= 0")
+    if type(retry_count) is not int or retry_count < 0:
+        raise AlarmOutboxError("retry_count must be a non-negative integer")
     if base <= 0 or maximum <= 0 or base > maximum:
         raise AlarmOutboxError("backoff bounds invalid: 0 < base <= maximum")
-    exponential = min(base * (2 ** retry_count), maximum)
+    exponential = maximum if retry_count >= 64 else min(base * (2 ** retry_count), maximum)
     jitter = rng() if rng is not None else 0.5
     if not 0.0 <= jitter <= 1.0:
         raise AlarmOutboxError("jitter source must return values in [0, 1]")
@@ -298,6 +364,10 @@ def record_transition(
 ) -> Dict[str, Any]:
     """Begrenzter Zustandsuebergang: RETRY_VERPLANT / CANCELLED / DEAD_LETTER."""
     now_dt = _require_now(now)
+    if type(retry_count) is not int or retry_count < 0:
+        raise AlarmOutboxError("retry_count must be a non-negative integer")
+    if type(max_retries) is not int or max_retries < 0:
+        raise AlarmOutboxError("max_retries must be a non-negative integer")
     path = pathlib.Path(outbox_path)
     with exclusive_ledger_lock(path):
         records = _load_records_locked(path)
