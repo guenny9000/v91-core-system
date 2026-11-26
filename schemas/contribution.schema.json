@@ -1,0 +1,103 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://v91.invalid/schemas/contribution.schema.json",
+  "title": "V91 transport-neutral contribution envelope",
+  "description": "Shape validation only; origin, evidence, safety, authorization and acceptance require separate review.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "protocol",
+    "contribution_id",
+    "origin",
+    "goal",
+    "scope",
+    "inputs_and_provenance",
+    "proposed_change",
+    "interfaces",
+    "tests_and_evidence",
+    "known_limits",
+    "security_privacy_notes",
+    "status",
+    "next_action"
+  ],
+  "properties": {
+    "protocol": {"const": "V91-CONTRIBUTION-1"},
+    "contribution_id": {"type": "string", "minLength": 1, "maxLength": 128},
+    "origin": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["model_or_person"],
+      "properties": {
+        "model_or_person": {"type": "string", "minLength": 1, "maxLength": 4096},
+        "provider": {"type": "string", "minLength": 1, "maxLength": 4096},
+        "session_or_date": {"type": "string", "minLength": 1, "maxLength": 4096}
+      }
+    },
+    "goal": {"type": "string", "minLength": 1, "maxLength": 4096},
+    "scope": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["systems"],
+      "properties": {
+        "systems": {"$ref": "#/$defs/stringList"},
+        "allowed_paths": {"$ref": "#/$defs/stringList"},
+        "excluded_actions": {"$ref": "#/$defs/stringList"}
+      }
+    },
+    "inputs_and_provenance": {
+      "type": "array",
+      "maxItems": 64,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["reference", "description"],
+        "properties": {
+          "reference": {"type": "string", "minLength": 1, "maxLength": 4096},
+          "description": {"type": "string", "minLength": 1, "maxLength": 4096},
+          "source": {"type": "string", "minLength": 1, "maxLength": 4096},
+          "retrieved_at": {"type": "string", "format": "date-time"}
+        }
+      }
+    },
+    "proposed_change": {"type": "string", "minLength": 1, "maxLength": 16384},
+    "interfaces": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["inputs", "outputs"],
+      "properties": {
+        "inputs": {"$ref": "#/$defs/stringList"},
+        "outputs": {"$ref": "#/$defs/stringList"}
+      }
+    },
+    "tests_and_evidence": {
+      "type": "array",
+      "maxItems": 64,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["reference", "description", "status"],
+        "properties": {
+          "reference": {"type": "string", "minLength": 1, "maxLength": 4096},
+          "description": {"type": "string", "minLength": 1, "maxLength": 4096},
+          "status": {
+            "enum": ["UNKNOWN", "DOCUMENTED", "IMPLEMENTED", "TESTED", "VERIFIED", "AUDITED", "PRODUCTION"]
+          },
+          "scope": {"type": "string", "minLength": 1, "maxLength": 4096}
+        }
+      }
+    },
+    "known_limits": {"$ref": "#/$defs/stringList"},
+    "security_privacy_notes": {"$ref": "#/$defs/stringList"},
+    "status": {
+      "enum": ["RECEIVED", "TRIAGED", "TESTING", "ACCEPTED", "INTEGRATED", "REJECTED", "DEFERRED"]
+    },
+    "next_action": {"type": "string", "minLength": 1, "maxLength": 4096}
+  },
+  "$defs": {
+    "stringList": {
+      "type": "array",
+      "maxItems": 64,
+      "items": {"type": "string", "minLength": 1, "maxLength": 4096}
+    }
+  }
+}
