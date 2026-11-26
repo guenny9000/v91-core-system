@@ -56,15 +56,18 @@ class EchterBestandTest(unittest.TestCase):
                          "controller/verbund_arbeitszyklus.py")
         self.assertGreater(stufe["evidenz"][0]["test_funktionen"], 0)
 
-    def test_stufe_b_teilweise_mit_offenen_luecken(self):
+    def test_stufe_b_belegt_mit_geschalossener_luecke(self):
         stufe = self.nach_stufe["B"]
+        # PR #600 schloss die Luecken (getrennte Instanzen + E2E):
+        # alle 5 Primitive vorhanden, Restluecke dokumentiert offen.
         self.assertEqual(stufe["verdikt"], "TEILWEISE_BELEGT")
         self.assertGreater(len(stufe["evidenz"]), 1)
         self.assertTrue(all(
             b["modul_vorhanden"] and b["test_funktionen"] > 0
             for b in stufe["evidenz"]))
-        self.assertIn("getrennte lokale Testinstanzen NICHT_GEFUNDEN",
-                      stufe["offene_luecken"])
+        joined = " ".join(stufe["offene_luecken"])
+        self.assertIn("Kriterium 1 von #592", joined)
+        self.assertNotIn("getrennte lokale Testinstanzen", joined)
 
     def test_stufe_c_nicht_gefunden(self):
         stufe = self.nach_stufe["C"]

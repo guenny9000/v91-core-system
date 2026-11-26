@@ -73,10 +73,11 @@ STUFEN: Tuple[Tuple[str, str, Tuple[Tuple[str, str], ...], Tuple[str, ...]], ...
             ("controller/signed_manifest.py", "tests/test_signed_manifest.py"),
             ("controller/capability_intake.py", "tests/test_capability_intake.py"),
             ("controller/peer_sync.py", "tests/test_peer_sync.py"),
+            ("controller/verbund_peer_eingang.py",
+             "tests/test_verbund_peer_eingang.py"),
         ),
         (
-            "getrennte lokale Testinstanzen NICHT_GEFUNDEN",
-            "Ende-zu-Ende-Verbindung aller Primitiven NICHT_GEFUNDEN",
+            "echte zwei-Node-Wirkung bleibt Laufzeit-Arbeit (Kriterium 1 von #592)",
         ),
     ),
     (
