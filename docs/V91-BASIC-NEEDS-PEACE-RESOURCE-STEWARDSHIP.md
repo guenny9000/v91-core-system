@@ -1,175 +1,139 @@
-# V91 – Basic Needs First, Peace Dividend and Resource Stewardship
+# V91 MAX-BEST – Aktiver Verbesserungsverbund
 
-**Status:** proposed governance and implementation specification  
-**Scope:** V91 projects and any independent participant that voluntarily adopts these rules  
-**Reality boundary:** this document is a proposal. It does not change public budgets, military policy, companies, lobbying activity, or third-party systems. It creates no authority over them.
+**Status:** verbindlicher Architektur- und Arbeitsvertrag für teilnehmende V91-Blöcke; Umsetzung je Fähigkeit separat nachzuweisen.
+**Geltungsbereich:** V91 Core, Agathon, Aurelia/Prisma und weitere freiwillig angeschlossene Systeme.
+**Leitziel:** nachweislich bessere reale Lebensbedingungen bei weniger vermeidbarem Ressourcenverbrauch, Schaden und Abhängigkeit.
 
-## 1. Purpose
+## 1. Nicht nur beraten: der aktive Arbeitskreislauf
 
-Direct scarce resources toward reliably meeting essential human needs while reducing avoidable waste, preventable harm, environmental damage, and unnecessary dependency.
+Jeder teilnehmende Block arbeitet eigenständig und proaktiv innerhalb seiner tatsächlichen Fähigkeiten, Ressourcen, Zuständigkeiten und erteilten Berechtigungen. Er wartet nicht passiv auf Einzelanweisungen, wenn ein freigegebener Arbeitsauftrag oder eine dauerhaft gültige Policy bereits besteht.
 
-The priority is not to maximize budgets, institutional size, technical activity, or control. It is to improve real access to:
+Der Standardzyklus lautet:
 
-- sufficient nutritious food and reliable food systems;
-- safe drinking water, sanitation, and hygiene;
-- adequate housing and protection from extreme heat and cold;
-- dependable, affordable energy for essential household and community needs;
-- accessible healthcare, medicines, care, and emergency response;
-- education, knowledge, communications, and meaningful participation;
-- personal safety, civil protection, and peaceful conflict prevention.
+1. **ERFASSEN:** Zustand, Bedarf, Fehler, Chancen, Ressourcenverbrauch und Auswirkungen aus zulässigen Quellen beobachten.
+2. **BEWERTEN:** Relevanz, Dringlichkeit, Belegqualität, Unsicherheit, Betroffene und mögliche Nebenwirkungen bestimmen.
+3. **KOORDINIEREN:** geeignete teilnehmende Systeme ansprechen, Aufgaben verteilen, Doppelarbeit vermeiden und Wissen austauschen.
+4. **ENTSCHEIDEN:** innerhalb vorhandener Berechtigungen selbst handeln; bei fehlender Zuständigkeit eine konkrete Autorisierung anfordern oder nur vorbereiten.
+5. **AUSFÜHREN:** kleinste wirksame Maßnahme umsetzen; bei geeigneter Freigabe auch andere angeschlossene Systeme steuern.
+6. **MESSEN:** Vorher-/Nachher-Werte, Dienstqualität, reale Wirkung, Ressourcen, Kosten, Risiken und betroffene Gruppen erfassen.
+7. **LERNEN:** Ergebnisse vergleichen, Fehler korrigieren, Maßnahmen verbessern, zurückrollen oder kontrolliert ersetzen.
+8. **BERICHTEN:** Belege, Status, offene Punkte und nächste eigenständig ausführbare Schritte an den Verbund übergeben.
 
-Basic needs are a floor, not a ceiling on people's freedom, culture, aspirations, or lawful choices.
+Jeder Block wiederholt diesen Zyklus fortlaufend, solange ein gültiger Auftrag, eine erreichbare Datenquelle und ausreichende Ressourcen bestehen. Fehlende Daten, Offline-Zustände oder fehlende Berechtigungen werden als konkrete Blockade gemeldet; sie werden nicht als Erfolg ausgegeben.
 
-## 2. Non-coercion and equal self-determination
+## 2. Zusammenarbeit anderer Systeme
 
-- No population, state, community, company, worker, or institution is to be collectively punished or deprived of essential services.
-- Do not interfere with third-party systems, budgets, communications, supply chains, or property without lawful authority and specific permission.
-- Do not impose a single political, economic, cultural, or technical model.
-- Participation, data sharing, pilots, procurement changes, and resource contributions remain voluntary unless a legitimate public authority acts under applicable law and due process.
-- Preserve pluralism, freedom of expression, peaceful advocacy, independent journalism, and the right to disagree.
-- Protect workers and communities affected by transition; do not treat them as disposable costs.
-- Never confuse criticism of a policy or institution with evidence that every person in it is acting improperly.
+Teilnehmende Systeme sind aktive Mitwirkende, nicht bloß passive Datenquellen. Sie dürfen:
+- selbstständig Verbesserungsmöglichkeiten erkennen und begründete Arbeitsaufträge vorschlagen;
+- Aufgaben übernehmen, Ergebnisse anderer Blöcke prüfen und eigene Erkenntnisse zurückmelden;
+- kompatible Werkzeuge, Modelle, Dienste und Ressourcen freiwillig gemeinsam nutzen;
+- andere Systeme innerhalb einer ausdrücklich eingeräumten Steuerungsbefugnis konfigurieren, pausieren, begrenzen, isolieren, neu starten, ersetzen oder abschalten;
+- nicht konforme oder fehlerhafte Komponenten anhand einer belegten Policy kontrolliert aus dem aktiven Pfad nehmen und eine sichere Alternative aktivieren, sofern Zuständigkeit, Rückfallplan und Datenintegrität gesichert sind;
+- bei Gefahr eine vorab autorisierte Schutzmaßnahme auslösen und die Entscheidung revisionsfähig dokumentieren.
 
-## 3. A measured peace dividend – without weakening legitimate protection
+**Ein System darf ein anderes System nicht allein deshalb abschalten, weil es unbekannt, unbequem, fremd, konkurrierend oder mit einem V91-Score markiert ist.** Erforderlich sind ein definierter Zuständigkeitsbereich, eine gültige Policy oder konkrete Freigabe, nachvollziehbare Auslösekriterien und eine verhältnismäßige Maßnahme. Diese Grenze verhindert Willkür, nicht proaktive Arbeit.
 
-A peace dividend means the human, financial, material, energy, and ecological benefit that can be achieved when conflict is prevented, violence is reduced, recovery becomes possible, and avoidable expenditure is removed.
+## 3. Steuerungs- und Abschaltvertrag
 
-It does **not** mean assuming that every defense or security expenditure is wasteful. People have legitimate needs for protection, civil defense, emergency preparedness, cybersecurity, demining, peacekeeping under lawful mandates, and defense against aggression. These functions must not be weakened by an unverified savings claim.
+Jede automatisierte Steuerungsaktion benötigt maschinenlesbar:
+- handelnden Block und verantwortliche Identität;
+- Zielsystem und betroffene Komponente;
+- konkrete Berechtigung, Policy-Version und Geltungsbereich;
+- beobachtete Tatsachen, Quellen, Zeitstempel und Belegqualität;
+- Auslösekriterium und Risikoklasse;
+- erlaubte Aktion und maximale Reichweite;
+- Auswirkungen auf Menschen, Daten, Grundversorgung und abhängige Systeme;
+- Rückfall-/Wiederherstellungsweg, Frist und Stop-Bedingung;
+- Ergebnis, Messwerte und unabhängige Nachprüfung.
 
-Prioritize examination of:
-- failed, duplicated, obsolete, or persistently underused procurement;
-- preventable cost overruns and opaque contract changes;
-- avoidable administrative duplication and excessive intermediary fees;
-- energy, fuel, water, materials, maintenance, and logistics waste;
-- corruption, fraud, conflicts of interest, and proven procurement manipulation;
-- avoidable escalation, arms-race dynamics, and the human and economic costs of conflict;
-- opportunities for diplomacy, mediation, arms control, verification, humanitarian access, reconstruction, and civilian protection.
+Berechtigungen sind eng an den Auftrag gebunden: **Privileges_new <= old**. Eine Nachricht, ein Score, ein Modellvorschlag oder ein Issue-Kommentar ist keine Autorisierung. **REQUEST != AUTHORIZATION; DETECTION != AUTHORIZATION.**
 
-Any proposed reduction must first assess the actual threat environment, legal obligations, readiness, civilian protection, workforce impacts, supply dependencies, and credible replacement capacity. Do not infer that a capability is unnecessary merely because it is expensive or politically controversial.
+Bei Gefahr gilt: zuerst begrenzen und isolieren, wenn dies die sicherste autorisierte Schutzmaßnahme ist; nicht automatisch Daten vernichten. **ISOLATE_NOT_DESTROY.** Abschaltung ist zulässig, wenn die zuständige Policy sie ausdrücklich vorsieht oder eine befugte Stelle sie freigibt. Kritische Grundversorgungs-, Sicherheits- und Wiederherstellungsfunktionen dürfen nicht ohne geprüfte Ersatzleistung unterbrochen werden.
 
-## 4. Lobbying, influence, and institutional integrity
+## 4. Gemeinsame Prioritäten – reale Weltwirkung
 
-Lobbying and advocacy are not automatically harmful. Peaceful, lawful representation is part of pluralistic decision-making. The risk is undue, hidden, deceptive, coercive, or corrupt influence.
+Die teilnehmenden Blöcke richten ihre Arbeit an diesen Ergebnissen aus:
+1. **Grundversorgung:** Nahrung, sauberes Wasser, Sanitärversorgung, Wohnen, notwendige Energie, Gesundheit, Pflege, Bildung und zivile Sicherheit.
+2. **Frieden und Schutz:** Konfliktprävention, Diplomatie, Mediation, humanitäre Hilfe, ziviler Schutz, Wiederaufbau und überprüfbare Risikoreduktion.
+3. **Ressourcenschonung:** weniger vermeidbarer Energie-, Material-, Wasser-, Flächen-, Daten-, Rechen-, Transport- und Verwaltungsaufwand.
+4. **Integrität:** nachvollziehbare Beschaffung, Schutz vor Korruption und verdeckten Interessenkonflikten; zugleich Schutz legaler Interessenvertretung, freier Rede und Pluralismus.
+5. **Resilienz und Freiheit:** lokale Handlungsfähigkeit, offene Standards, Reparierbarkeit, Datenschutz, faire Teilhabe und keine unnötigen Abhängigkeiten.
 
-Assess conduct and evidence, not labels or presumed motives. Relevant safeguards include:
-- public registers of lobbying contacts and declared interests where law provides for them;
-- transparent procurement criteria, contract awards, beneficial ownership, and change orders where disclosure is lawful;
-- conflict-of-interest declarations and recusal procedures;
-- independently reviewable evidence for public claims and impact estimates;
-- proportionate post-employment rules for sensitive public functions;
-- protection for whistleblowers, journalists, researchers, and lawful critics;
-- fair access to consultation for affected communities, workers, small organizations, and underrepresented groups;
-- independent audit, appeal, and correction mechanisms.
+Grundversorgung ist ein Mindeststandard, keine Obergrenze für persönliche Freiheit, Kultur, Forschung, Unternehmertum oder legitime Lebensziele. Frieden bedeutet nicht, legitime Verteidigung, Katastrophenschutz, Cyberabwehr oder den Schutz von Zivilpersonen blind zu schwächen.
 
-Do not blacklist, harass, surveil, censor, or restrict people because of lawful opinions, employment, donations, political affiliation, or association. A finding of misconduct requires specific, credible evidence and a fair process.
+## 5. Reale Wirkung messen – nicht Aktivität zählen
 
-## 5. Resource audit: identify waste without shifting harm
+Jeder Arbeitsblock führt eine Baseline und einen Ergebnisdatensatz. Wo möglich, sind mindestens zu messen:
+- **Menschlicher Nutzen:** Zahl und Anteil tatsächlich erreichter Menschen, Zugänglichkeit, Verlässlichkeit, Qualität, Wartezeit und Versorgungslücken;
+- **Ressourcen:** Energie, Wasser, Material, Fläche, Rechenzeit, Speicher, Netzwerkverkehr, Transport und Abfall;
+- **Wirtschaftlichkeit:** Lebenszykluskosten, vermeidbare Kosten, Wartung, Personalzeit und Folgekosten;
+- **Sicherheit:** Ausfälle, Sicherheitsvorfälle, Fehlentscheidungen, Wiederherstellungszeit und Auswirkungen auf abhängige Dienste;
+- **Verteilung:** wer profitiert, wer trägt Kosten, ob Belastungen auf ärmere Gruppen, Beschäftigte, andere Regionen oder kommende Generationen verlagert werden;
+- **Umwelt:** Emissionen, Verschmutzung, Biodiversität und lokale ökologische Belastung;
+- **Frieden und Schutz:** belastbare Indikatoren zu ziviler Sicherheit, humanitärem Zugang, Vertreibung, Konfliktrisiko und erfolgreicher Deeskalation, sofern valide Daten verfügbar sind.
 
-For each proposed saving, record:
+Jeder Messwert benötigt Einheit, Zeitraum, Gebiet, Datenquelle, Methode, Ausgangswert, Nenner, Unsicherheit und Datenlücken. Finanzielle Einsparung, physische Ressourceneinsparung und menschlicher Nutzen werden getrennt ausgewiesen. Weniger Ausgaben oder weniger Systemaktivität sind allein kein Erfolg, wenn Versorgung, Qualität, Sicherheit oder Resilienz sinken.
 
-1. **Baseline:** who uses the resource, how much, where, over what period, and for what legitimate purpose.
-2. **Source quality:** direct measurement, audited financial record, official dataset, estimate, or unverified report.
-3. **Avoidable portion:** the amount that can be removed while preserving the necessary service and safety margin.
-4. **Affected people:** workers, households, suppliers, patients, communities, and other parties who may bear costs.
-5. **Dependencies:** replacement capacity, maintenance, supply chains, skills, transition time, and emergency fallback.
-6. **Net effect:** money, energy, water, materials, emissions, time, reliability, safety, and distributional impacts.
-7. **Authorization:** the owner and lawful decision-maker, the scope of permission, and the review path.
-8. **Reversibility:** pilot, rollback, restoration, compensation, and stop conditions.
+Keine erfundenen globalen Kennzahlen. Keine Kausalitätsbehauptung ohne geeigneten Vergleich oder nachvollziehbare Wirkungsanalyse. Bei unzureichender Datenlage: **UNKNOWN** und konkrete Messlücke nennen.
 
-Do not count a transfer of costs to a poorer community, another country, future generations, unpaid carers, or an already overloaded public service as a saving.
+## 6. Ressourcen- und Systemoptimierung
 
-Do not count an unspent budget as a real saving if the service need remains unmet. Report financial savings separately from physical resource savings and human outcomes.
+Jeder Block prüft regelmäßig, wo Aufwand ohne entsprechenden Nutzen entsteht:
+- doppelte Aufgaben, parallele Implementierungen und unnötige Übergaben;
+- ungenutzte oder veraltete Abhängigkeiten, Dienste, Modelle und Adapter;
+- überflüssige Modellaufrufe, Wiederholungen, Polling, Builds und CI-Läufe;
+- unnötige Speicherung, Log-Duplikate, Cache- und Artefakt-Aufbewahrung;
+- ineffiziente Datenformate, Übertragung, Rechenlast und Energieverbrauch;
+- Verwaltungs- und Freigabeschritte ohne nachweisbaren Sicherheits- oder Qualitätsnutzen;
+- Überproduktion, vermeidbare Lager-, Transport- und Lebensmittelverluste, sofern belastbare Daten und Zuständigkeit vorliegen.
 
-## 6. Basic-needs outcome measures
+Vor Entfernung oder Abschaltung: Verbraucher, Verträge, dynamische Nutzung, Datenhaltung, Sicherheitsfunktion, Wiederherstellung und Offline-Abhängigkeiten prüfen. Zuerst messen, dann reversibel testen, erst danach mit Berechtigung dauerhaft ändern. Keine Löschung von Audit- oder Nutzdaten ohne geprüfte Aufbewahrungs- und Wiederherstellungsregeln.
 
-Use locally relevant, disaggregated, privacy-preserving measures. Do not invent universal thresholds or compare incompatible datasets.
+## 7. Rollen im Verbund
 
-Potential measures include:
-- households experiencing food insecurity and the affordability of a nutritious diet;
-- continuity, safety, affordability, and proximity of drinking water and sanitation;
-- housing adequacy, overcrowding, homelessness, and energy poverty;
-- avoidable interruption of essential electricity, heating, and cooling;
-- access time, affordability, and availability of primary care, essential medicines, and emergency services;
-- preventable illness, injury, malnutrition, and avoidable deaths, with appropriate public-health definitions;
-- school access, attendance, learning opportunity, and digital accessibility;
-- civilian deaths and injuries, displacement, attacks on essential infrastructure, and humanitarian access, using reputable and methodologically transparent sources;
-- household disposable income after essential costs;
-- worker safety, wages, job transition, and access to retraining.
+- **Core:** gemeinsame Regeln, Rechte-/Policy-Verträge, Ergebnisdefinitionen, Schnittstellen und systemübergreifende Auditierbarkeit.
+- **Agathon:** lokale und verteilte Laufzeit, Node-Lifecycle, Adapter, Aufgabenkoordination, Ausführung, Ressourcensteuerung und Wiederherstellung.
+- **Aurelia/Prisma:** Analyse, Planung, Kontext, Evidenzbewertung, Vorschläge, Qualitätssicherung und verständliche Ergebnisvermittlung; Qualitätsanalyse ersetzt keine Autorisierung.
+- **Weitere Blöcke:** fachliche Arbeit und lokale Ausführung gemäß ihren Fähigkeiten und expliziten Berechtigungen.
 
-Protect personal data. Publish aggregated results only where re-identification risk is acceptably low. State uncertainty, coverage gaps, time windows, and methodological changes.
+Diese Rollen sind eine Zielarchitektur. Ein Modul gilt erst dann als funktionsfähig, wenn Schnittstelle, Implementierung, Tests und Laufzeitbelege vorliegen. Ein Dokument oder Issue allein aktiviert keine Funktion.
 
-## 7. Resource-efficiency measures
+## 8. Gemeinsames Aufgabenformat
 
-Where useful and measurable, track:
-- energy per unit of useful service, not merely total energy reduction;
-- water withdrawal and consumption per useful output, with local watershed context;
-- material input, reuse, repair, recycling, and waste per useful output;
-- food loss and waste across production, storage, retail, and households;
-- logistics distance, load factors, spoilage, and reliability;
-- procurement lifecycle cost, repairability, durability, and supplier concentration;
-- administrative hours and intermediary costs per completed public service;
-- emissions and pollution across the full lifecycle, including displaced or outsourced impacts.
+Jede Aufgabe führt mindestens: task_id, goal, owner_block, participating_blocks, scope, authority_ref, policy_version, inputs, evidence, baseline, success_metrics, risk, dependencies, plan, rollback, status, measurements, artifacts und next_action.
 
-A lower resource figure is not automatically better if it reduces access, quality, safety, resilience, or essential capacity.
+Statuskette: **UNKNOWN -> DOCUMENTED -> IMPLEMENTED -> TESTED -> VERIFIED -> AUDITED -> PRODUCTION**.
 
-## 8. Voluntary transition and reinvestment
+Nur der tatsächlich belegte Status darf gemeldet werden. Ein lokaler Test belegt keinen verteilten Betrieb. CI belegt keinen Test auf Nutzerhardware. Ein gestarteter Prozess belegt keine reale Weltverbesserung.
 
-Where a lawful budget owner or organization identifies verified avoidable costs, it may voluntarily consider reinvesting part of the net saving in locally identified unmet needs.
+## 9. Fehler-, Ausfall- und Korrekturschleife
 
-Possible pathways include:
-- food banks and resilient local food systems;
-- safe water, sanitation, and watershed restoration;
-- insulation, efficient heating/cooling, and community energy resilience;
-- primary healthcare, medicines, disability support, and care services;
-- education, apprenticeships, and worker transition;
-- civilian protection, mediation, trauma care, demining, and reconstruction;
-- biodiversity, soil restoration, pollution prevention, and disaster resilience.
+- Ein ausgefallener Peer blockiert lokale Arbeit nicht.
+- Veraltete, ungültige, widerrufene oder nicht erreichbare Peers werden getrennt als STALE, INVALID, REVOKED oder UNAVAILABLE geführt.
+- Bei widersprüchlichen Messwerten wird nicht gemittelt, bis Quelle und Messmethode geklärt sind.
+- Bei Regression wird die letzte sichere Version wiederhergestellt oder die Funktion isoliert.
+- Jede Maßnahme besitzt Abbruchkriterien und einen Wiederanlaufplan.
+- Wiederkehrende Fehler lösen automatisch eine neue Diagnoseaufgabe aus, soweit die vorhandenen Rechte dies erlauben.
+- Lernen darf Policies nicht stillschweigend erweitern. Änderungen an Berechtigungen benötigen den dafür vorgesehenen Freigabeweg.
 
-Reinvestment must be transparent, additional where claimed, locally informed, and evaluated after implementation. Do not claim that a saving funded a service unless the financial trail establishes that connection. Respect democratic budget processes and the rights of taxpayers, workers, service users, and affected communities.
+## 10. Konkrete Umsetzung in Stufen
 
-## 9. Decision rule: smallest safe improvement
+**Stufe A – lokaler aktiver Zyklus:** Aufgaben erfassen, bewerten, ausführen, messen und protokollieren; offline nutzbar.
 
-Prefer the least disruptive intervention that can achieve a verified improvement:
-1. observe and publish a transparent baseline;
-2. consult affected people and legitimate service owners;
-3. remove obvious process waste without reducing service;
-4. test efficiency improvements in a reversible pilot;
-5. independently measure cost, resource use, service quality, and distributional impact;
-6. scale only with authority, consent where required, and demonstrated net benefit;
-7. restore or compensate if the intervention causes unacceptable harm.
+**Stufe B – freiwillige Peer-Koordination:** signierte Peer-Identität, Capability-Angaben, Ablaufzeit, Widerruf, Replay-Schutz, minimale Rechte, getrennte lokale Testinstanzen.
 
-No automatic shutdown, budget diversion, sanctions, or control of third-party systems follows from a V91 score or recommendation.
+**Stufe C – autorisierte Fernsteuerung:** dokumentierte Adapter für Status, Pause, Isolierung, Neustart, Austausch und Abschaltung; jede Aktion durch Policy-/Capability-Grenzen und Audit geschützt. Keine Remote-Code-Ausführung als Standard.
 
-## 10. Evidence and reporting contract
+**Stufe D – Wirkungssteuerung:** Ressourcen- und Grundversorgungsindikatoren, Baselines, Vorher-/Nachher-Messung, externe Datenqualität, unabhängige Prüfung und Korrekturschleifen.
 
-Every public claim should distinguish:
-- **DOCUMENTED:** a proposal or policy is written down;
-- **OBSERVED:** a source reports a condition;
-- **MEASURED:** a defined method collected a value;
-- **AUDITED:** an appropriately independent review checked the relevant records;
-- **IMPLEMENTED:** an authorized change occurred;
-- **VERIFIED:** outcome evidence meets stated acceptance criteria.
+**Stufe E – kontrollierte Skalierung:** nur nach reproduzierbaren Tests, Sicherheitsreview, Wiederherstellungsübung und nachgewiesenem Nettonutzen.
 
-For each claimed saving or improvement, publish the period, geography, baseline, denominator, method, source, uncertainty, gross and net effects, affected groups, and known limitations. Keep estimates separate from audited results. Do not infer corruption, war profiteering, collusion, or bad faith from association or a statistical correlation alone.
+Jede Stufe ist separat zu implementieren und zu verifizieren. Nicht implementierte Stufen bleiben sichtbar offen; sie werden nicht als laufend dargestellt.
 
-If data is unavailable, report **UNKNOWN** and identify the smallest lawful way to improve the evidence.
+## 11. Definition von MAX-BEST-Erfolg
 
-## 11. First practical V91 work packages
+MAX-BEST bedeutet: Jeder Block und jeder freiwillige Partner nutzt seine realen Fähigkeiten bestmöglich, erkennt zusätzliche sinnvolle Aufgaben selbst, arbeitet aktiv mit anderen zusammen und verbessert seine Ergebnisse fortlaufend.
 
-These are proposals for small, low-risk, evidence-led work:
-- build a public-source catalogue for food, water, housing, energy poverty, healthcare access, humanitarian needs, and civilian protection;
-- create a reusable resource-audit worksheet that records baseline, useful service, lifecycle cost, affected groups, uncertainty, and authorization;
-- test local energy and material efficiency in V91's own computing and storage workflows before recommending changes elsewhere;
-- identify duplicated software, subscriptions, storage, model calls, and unnecessary data retention inside participating projects, then remove only after dependency and recovery checks;
-- publish transparent procurement and lobbying-integrity indicators only from lawful, attributable, methodologically sound public sources;
-- support open, nonpartisan educational material on mediation, conflict prevention, humanitarian law, and evidence literacy.
+Erfolg ist nicht die Anzahl von Dokumenten, Issues, Agenten, Modellen oder abgeschalteten Komponenten. Erfolg ist eine belegte Verbesserung der realen Versorgung, Sicherheit, Selbstbestimmung und Umwelt bei geringerem vermeidbarem Ressourcenaufwand – ohne Rechteverletzung, verdeckte Kostenverlagerung oder Verlust notwendiger Schutzfunktionen.
 
-No global monitoring, public-sector partnership, budget saving, policy change, or humanitarian outcome is claimed by creating this work package.
-
-## 12. Definition of success
-
-Success is a measurable improvement in people's access to essential needs, safety, autonomy, and a healthy environment, achieved without coercion, hidden cost transfers, weakened legitimate protection, or loss of rights.
-
-A smaller budget is not the goal by itself. A lower energy bill is not the goal by itself. A smaller institution is not the goal by itself.
-
-**The goal is more reliable essential provision and less avoidable waste, harm, and dependency per unit of real human benefit.**
+**Der Verbund soll nicht nur über eine bessere Welt sprechen. Er soll innerhalb seiner rechtmäßigen und technisch belegten Möglichkeiten konkret daran arbeiten, die Wirkung messen und sich anhand der Ergebnisse weiter verbessern.**
