@@ -179,3 +179,17 @@ def test_schema_required_fields_match_validator_contract():
         "status",
         "next_action",
     }
+
+
+def test_unhashable_status_values_are_rejected_without_crashing():
+    payload = _valid_contribution()
+    payload["status"] = {"unexpected": "object"}
+    valid, errors = validate_contribution(payload)
+    assert valid is False
+    assert any("workflow status" in error for error in errors)
+
+    payload = _valid_contribution()
+    payload["tests_and_evidence"][0]["status"] = ["not", "a", "status"]
+    valid, errors = validate_contribution(payload)
+    assert valid is False
+    assert any("V91-COMMS-1" in error for error in errors)
