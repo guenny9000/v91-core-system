@@ -140,12 +140,33 @@ class MeasurementStore:
                 pass
         return record
 
-    def record_valid(self, *, sensor_id: str, metric: str, normalized_value: float,
-                     unit: str, timestamp_utc: str, source: str = "unknown") -> dict[str, Any]:
-        """Persist a validated measurement with its provenance."""
+    def record_valid(
+        self,
+        *,
+        sensor_id: str,
+        metric: str,
+        normalized_value: float,
+        unit: str,
+        timestamp_utc: str,
+        source: str = "unknown",
+        calibration_ref: str | None = None,
+        calibration_status: str = "UNKNOWN",
+    ) -> dict[str, Any]:
+        """Persist a validated measurement and its calibration evidence state."""
         for name, value in (("sensor_id", sensor_id), ("metric", metric), ("unit", unit), ("timestamp_utc", timestamp_utc)):
             if not isinstance(value, str) or not value.strip():
                 raise MeasurementStoreError(f"{name} must be a non-empty string")
+        if calibration_ref is not None:
+            if not isinstance(calibration_ref, str) or not calibration_ref.strip() or len(calibration_ref) > 2048:
+                raise MeasurementStoreError("calibration_ref must be a non-empty opaque reference of at most 2048 characters")
+        if not isinstance(calibration_status, str) or calibration_status not in {
+            "UNKNOWN", "MISSING_REFERENCE", "REFERENCE_PRESENT_NOT_VERIFIED"
+        }:
+            raise MeasurementStoreError("calibration_status is not a supported evidence state")
+        if calibration_ref is None and calibration_status == "REFERENCE_PRESENT_NOT_VERIFIED":
+            raise MeasurementStoreError("calibration status claims a reference that is absent")
+        if calibration_ref is not None and calibration_status == "MISSING_REFERENCE":
+            raise MeasurementStoreError("calibration status claims a missing reference that is present")
         if isinstance(normalized_value, bool) or not isinstance(normalized_value, (int, float)):
             raise MeasurementStoreError("normalized_value must be numeric")
         try:
@@ -162,6 +183,8 @@ class MeasurementStore:
             "unit": unit,
             "source_time_utc": timestamp_utc,
             "source": source,
+            "calibration_ref": calibration_ref,
+            "calibration_status": calibration_status,
         }
         return self._append(record)
 
