@@ -13,6 +13,7 @@ from controller.alarm_outbox import (
     current_state,
     event_id_from,
     next_backoff_seconds,
+    MAX_PAYLOAD_BYTES,
     plan_delivery,
     read_state,
     record_transition,
@@ -253,3 +254,64 @@ def test_gebiete_keine_netzwerkfaehigkeit_im_modul():
     src = pathlib.Path(mod.__file__).read_text(encoding="utf-8")
     for banned in ("import socket", "import requests", "import http.client", "urllib.request"):
         assert banned not in src
+
+
+def test_payload_is_object_json_safe_and_bounded(tmp_path):
+    path = tmp_path / "v91_alarm_outbox.jsonl"
+    with pytest.raises(AlarmOutboxError, match="payload must be an object"):
+        create_event(path, _alert("evt-list", payload=["not", "an", "object"]), NOW)
+    with pytest.raises(AlarmOutboxError, match="JSON-compatible"):
+        create_event(path, _alert("evt-object", payload={"bad": object()}), NOW)
+    with pytest.raises(AlarmOutboxError, match="byte limit"):
+        create_event(
+            path,
+            _alert("evt-large", payload={"data": "x" * MAX_PAYLOAD_BYTES}),
+            NOW,
+        )
+
+
+def test_nested_sensitive_fields_inside_lists_are_rejected(tmp_path):
+    path = tmp_path / "v91_alarm_outbox.jsonl"
+    payload = {"items": [{"health_record": "must not be stored"}]}
+    with pytest.raises(AlarmOutboxError, match="data minimization"):
+        create_event(path, _alert("evt-health", payload=payload), NOW)
+
+
+def test_unknown_event_fields_are_rejected(tmp_path):
+    path = tmp_path / "v91_alarm_outbox.jsonl"
+    alert = _alert("evt-extra")
+    alert["operator_override"] = True
+    with pytest.raises(AlarmOutboxError, match="unknown alert fields"):
+        create_event(path, alert, NOW)
+
+
+def test_retention_is_a_bounded_positive_integer(tmp_path):
+    path = tmp_path / "v91_alarm_outbox.jsonl"
+    for value in (0, -1, True, 1.5, "365", 3651):
+        alert = _alert(f"evt-retention-{value}")
+        alert["retention_tage"] = value
+        with pytest.raises(AlarmOutboxError, match="retention_tage"):
+            create_event(path, alert, NOW)
+
+
+def test_secret_assignments_in_reference_or_reason_are_rejected(tmp_path):
+    path = tmp_path / "v91_alarm_outbox.jsonl"
+    alert = _alert("evt-secret-ref")
+    alert["source_ref"] = "https://example.invalid/?api_key=do-not-store"
+    with pytest.raises(AlarmOutboxError, match="secret"):
+        create_event(path, alert, NOW)
+
+    alert = _alert("evt-secret-reason")
+    alert["begruendung"] = "token=do-not-store"
+    with pytest.raises(AlarmOutboxError, match="secret"):
+        create_event(path, alert, NOW)
+
+
+def test_retry_parameters_must_be_non_negative_integers(tmp_path):
+    path = tmp_path / "v91_alarm_outbox.jsonl"
+    create_event(path, _alert("evt-retry"), NOW)
+    for value in (-1, True, 1.5, "1"):
+        with pytest.raises(AlarmOutboxError, match="retry_count"):
+            record_transition(path, "evt-retry", "RETRY_VERPLANT", LATER, retry_count=value)
+        with pytest.raises(AlarmOutboxError, match="max_retries"):
+            record_transition(path, "evt-retry", "RETRY_VERPLANT", LATER, max_retries=value)
