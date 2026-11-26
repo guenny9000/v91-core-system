@@ -173,7 +173,7 @@ def validate_contribution(payload: Any) -> tuple[bool, list[str]]:
             entry = _object(
                 item,
                 path,
-                {"reference", "description", "source", "retrieved_at"},
+                {"reference", "description", "source", "license", "retrieved_at"},
                 {"reference", "description"},
                 errors,
             )
@@ -182,6 +182,8 @@ def validate_contribution(payload: Any) -> tuple[bool, list[str]]:
                 _text(entry.get("description"), f"{path}.description", errors)
                 if "source" in entry:
                     _text(entry["source"], f"{path}.source", errors)
+                if "license" in entry:
+                    _text(entry["license"], f"{path}.license", errors)
                 if "retrieved_at" in entry:
                     _timestamp(entry["retrieved_at"], f"{path}.retrieved_at", errors)
 
