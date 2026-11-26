@@ -1,12 +1,17 @@
 # V91 Kern-Bridge: Standard-Intake (Issue #492-Rest, Anschluss an #509)
 
-Stand: 24.11.2026 | Gegenlesen aktualisiert 26.11.2026 am main
-dc887e4368d1b8b9b92c7cf21e1c478ba8253fb4 (Zahlen sind Messstand,
-kein Ewigkeitsanspruch): controller/kern_bridge.py (10410 B,
+Stand: 24.11.2026 | Gegenlesen 1 aktualisiert 26.11.2026 am main
+dc887e4368d1b8b9b92c7cf21e1c478ba8253fb4, Gegenlesen 2 am Branch
+feat/v91-bridge-secret-screening-20261126 (Zahlen sind Messstand,
+kein Ewigkeitsanspruch): controller/kern_bridge.py (11749 B,
 22 Tests in tests/test_kern_bridge.py + 8 Verkettungs-Sonden in
-tests/test_kern_bridge_intake_std.py), Issue-Template
-.github/ISSUE_TEMPLATE/kern-bridge.md, Validator controller/uas_record.py
-(112.0.0/113.0.0), Kanon controller/uas_contract.py, Beitrags-Umschlag
+tests/test_kern_bridge_intake_std.py + 23 Screening-Tests in
+tests/test_bridge_screening.py), Secret-/PII-Screening-Baustein
+controller/bridge_screening.py (6966 B, siehe
+docs/V91-BRIDGE-SECRET-SCREENING-2026-11-26.md), Issue-Template
+.github/ISSUE_TEMPLATE/kern-bridge.md, Validator
+controller/uas_record.py (112.0.0/113.0.0), Kanon
+controller/uas_contract.py, Beitrags-Umschlag
 controller/contribution_intake.py (V91-CONTRIBUTION-1,
 schemas/contribution.schema.json, 17 Tests).
 
@@ -41,9 +46,15 @@ Abruf ist Betreiber-Lauf, KEIN Daemon, KEIN Timer (SCRIPTED != RUNNING).
 BLOCKLIST == MUSTER != GARANTIE: bekannte Formen werden erkannt,
 Unschaedlichkeit des Rests wird NICHT behauptet. Kein Makro-Scan,
 keine Code-Ausfuehrung. Die Blocklist prueft NUR destruktive
-Code-Muster: ein Secret- oder PII-Screening existiert im
-Abrufpfad NICHT (offene Luecke, siehe Bestandsaufnahme
-docs/V91-492-BESTANDSAUFNAHME-2026-11-26.md, Stufe 4).
+Code-Muster: gegen die Stufe-4-Luecke der Bestandsaufnahme
+(docs/V91-492-BESTANDSAUFNAHME-2026-11-26.md) prueft seit dem
+Screening-Ausbau controller/bridge_screening.py JEDE Aufnahme
+zusaetzlich auf Secret-/PII-Muster und redigiert Fundstellen vor
+der Ablage ([REDACTIERT]; sha256 bleibt Rohtext-Nachweis, das
+bleibt aber ein zusaetzlicher Schritt: GATE != SCREENING,
+SECRET != DESTRUKTIV, SCREEN == MUSTER != GARANTIE). Details:
+docs/V91-BRIDGE-SECRET-SCREENING-2026-11-26.md - damit ist die
+Stufe 4 (Bestandsaufnahme #492) an der Abruf-Seite geschlossen.
 
 ## 3. Verkettung mit den Validatoren 112/113 (die eigentlich neue Klarheit)
 

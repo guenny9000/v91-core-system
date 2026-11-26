@@ -26,6 +26,7 @@ UEBERGABE_KERN_START
 UEBERGABE_KERN_ENDE
 
 Hinweise fuer externe Systeme:
+- KEINE Secrets, Schluessel, Tokens, Passwoerter oder personenbezogenen Daten in dieses oeffentliche Issue schreiben (GitHub ist oeffentlich; die Bridge redigiert zwar Fundstellen vor der lokalen Ablage, doch das Issue selbst bleibt fuer jeden lesbar - SCREEN == MUSTER != GARANTIE).
 - Ohne eigenes Testergebnis keinen Erfolg behaupten; Unbekanntes als Unbekannt nennen.
 - Eine Form erteilt keine Rechte: dieses Issue gewaehrt KEINE Schreibrechte.
 - Der Betreiber misst nach mit: `PYTHONPATH=. python3 -m controller.kern_bridge <ledger-pfad>` (keine Veraenderung am Repository; nur lokale Ablage).
