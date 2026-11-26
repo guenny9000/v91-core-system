@@ -21,7 +21,7 @@ from controller.regression_auswahl import (
     TIERS,
     TIER_MODULE,
     main,
-    test_datei_fuer,
+    test_datei_fuer as datei_fuer,
     tier_fuer_module,
     waehle_regression,
 )
@@ -142,7 +142,7 @@ class CliTest(unittest.TestCase):
 
     def test_helper_tier_und_testdatei(self):
         self.assertEqual(tier_fuer_module("controller/emergency_stop.py"), 0)
-        self.assertEqual(test_datei_fuer("controller/index_lint.py"), "tests/test_index_lint.py")
+        self.assertEqual(datei_fuer("controller/index_lint.py"), "tests/test_index_lint.py")
 
 
 if __name__ == "__main__":
