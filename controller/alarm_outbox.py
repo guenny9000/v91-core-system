@@ -61,6 +61,11 @@ try:  # Paket-Import (Tests/CI starten ab Wurzel)
 except ImportError:  # Skript-Modus
     from ledger_lock import LedgerLockError, exclusive_ledger_lock  # type: ignore
 
+try:  # Delivery-Guard (Issue #520-Rest, offline, kein Netz im Kern)
+    from controller.alarm_delivery_guard import DeliveryGuardError, pruefe_adressen, pruefe_grenzen
+except ImportError:
+    from alarm_delivery_guard import DeliveryGuardError, pruefe_adressen, pruefe_grenzen  # type: ignore
+
 SCHEMA_EVENT = "v91.alarm_outbox.event.v1"
 SCHEMA_TRANSITION = "v91.alarm_outbox.transition.v1"
 DEFAULT_CAPACITY = 10000
@@ -324,13 +329,27 @@ def plan_delivery(
         raise AlarmOutboxError(f"unknown event_id: {event_id}")
     if state.get("state") in ("DEAD_LETTER", "CANCELLED"):
         raise AlarmOutboxError(f"event {event_id} is terminal ({state.get('state')}); no delivery planning")
+    # Delivery-Guard (REUSE, KEINE zweite Grenzen-Logik): strikte
+    # Timeouts/Payload-Grenzen/Redirect-Pflicht + optionale SSRF-Pruefung
+    # mitgegebener Aufloesungen. Ohne Aufloesung bleibt UNKNOWN (UNKNOWN != PASS).
+    try:
+        grenzen = pruefe_grenzen(config)
+        adressen = config.get("aufloesung")
+        if adressen is None:
+            aufloesung = "NICHT_GEPRUEFT"
+            gepruefte_adressen: list = []
+        else:
+            gepruefte_adressen = pruefe_adressen(adressen)
+            aufloesung = "PRUEFUNG_BESTANDEN"
+    except DeliveryGuardError as exc:
+        raise AlarmOutboxError(f"delivery guard: {exc}") from exc
     return {
         "event_id": event_id,
         "ziel": ziel,
         "verwendung": "PLAN",
-        "redirect_ablehnung": True,
-        "timeout_s": 10,
-        "payload_limit_bytes": MAX_PAYLOAD_BYTES,
+        **grenzen,
+        "aufloesung": aufloesung,
+        "adressen": gepruefte_adressen,
         "hinweis": "PLAN != VERSANDT: Ausfuehrung benoetigt einen getrennt geprueften Adapter",
     }
 
