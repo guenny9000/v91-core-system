@@ -172,7 +172,29 @@ class ScreenTextUnitTest(unittest.TestCase):
     def test_pii_forms_are_documented_pair(self):
         self.assertEqual([kind for kind, _ in bs.PII_PATTERNS],
                          ["email", "iban_de",
-                          "tel_international_de", "tel_national_de"])
+                          "tel_international_de", "tel_national_de",
+                          "adresse_de"])
+
+    def test_adresse_vollstaendig_redacted(self):
+        for form in ("Musterstraße 12, 36041 Alsfeld",
+                     "Hauptstrasse 7 36037 Fulda",
+                     "Königstraße 3a, D-36037 Fulda",
+                     "Am Markt 4, 10117 Berlin"):
+            result = bs.screen_text("sende an " + form + " bitte")
+            self.assertNotIn(form, result["redacted_text"], form)
+            self.assertIn("adresse_de",
+                          {f["kind"] for f in result["findings"]}, form)
+
+    def test_adresse_teilform_bleibt_unberuehrt(self):
+        # Unterblocken ist dokumentiert: Teiladressen sind nicht
+        # eindeutig personenbeziehbar und wuerden Fehlalarme erzeugen.
+        for harmlos in ("in der Musterstraße 5 ohne Ort",
+                        "PLZ 36041 Alsfeld allein",
+                        "Treffpunkt: Weg 12, dann links"):
+            result = bs.screen_text(harmlos)
+            self.assertEqual(result["status"], bs.SCREENING_STATUS_CLEAN, harmlos)
+            self.assertNotIn("adresse_de",
+                            {f["kind"] for f in result["findings"]})
 
     def test_telefon_international_geschrieben_redacted(self):
         for form in ("+49 30 12345678", "+4917612345678",
