@@ -75,3 +75,33 @@ KEIT, von der CI nicht als Import vorausgesetzt).
 - secret_scan CLEAN, fiction_scan CLEAN, index_lint 13/13 OK.
 - CI-Beweis: siehe PR und Verifikationskommentar (3/3 am exakten
   Head ist die mergebedingung, lokale Laeufe sind KEIN Ersatz).
+
+## Prune-Vollzug 2026-11-27 (Vibe-Abendlauf, Issue #591)
+
+STATUS: VOLLZOGEN am Abendlauf 27.11.2026 unter der Betreiber-Standing-
+Freigabe vom 24.11./27.11.2026 ("immer alles erlauben", Voll-Autonom
+fuer die eigenen Repos). Der Vorlauf vom 26.11. hatte den Prune als
+Betreiber-Entscheidung zurueckgestellt; die Standing-Freigabe deckt
+diese reversible Strukturentscheidung (REVERSIBEL bevorzugt,
+git revert genuegt).
+
+Nachmessung vor dem Vollzug (controller/dependency_audit.py, AST,
+stdlib-only, Wurzel = Repository-Baum, frischer main-Stand 27.11.):
+
+- numpy: NICHT_GEFUNDEN_IN_PY (0 Fundstellen) -> ENTFERNT aus
+  requirements.txt und aus der Install-Liste des Windows-Prueflaufs
+  (.github/workflows/windows-local-verify.yml).
+- redis: NICHT_GEFUNDEN_IN_PY (0 Fundstellen) -> ENTFERNT aus
+  requirements.txt.
+- cryptography: GENUTZT (20+ Fundstellen, u. a. ledger_anchor,
+  federation_sender/receiver, signed_manifest, encrypted_store)
+  -> BLEIBT.
+- pytest: GENUTZT nur in tests/ -> Dev-Extra in requirements-dev.txt,
+  ENTFERNT aus requirements.txt (war doppelt deklariert).
+
+Ehrliche Grenzen (unveraendert): NICHT_GEFUNDEN != UNGENUTZT; Nutzung
+ausserhalb des gescannten Baums bleibt UNKNOWN. Der Befund altert mit
+jedem Commit; NACHMESSUNG PFLICHT nach jedem neuen Dependency-PR.
+Verriegelung: tests/test_requirements_prune_2026_11_27.py pinnt die
+Runtime-Menge auf {cryptography} und verweigert stille Rueckkehr von
+numpy/redis/pytest in requirements.txt (REGRESSION != RUECKKEHR).

@@ -1,9 +1,11 @@
 # Runtime dependencies for v91-core-system
 # Pin minor versions; patch may float for security fixes.
-numpy>=1.26,<2.0
-redis>=5.0,<6.0
+# Prune 2026-11-27 (Issue #591, Vibe-Abendlauf, Betreiber-Standing-
+# Freigabe "immer alles erlauben"): numpy und redis ENTFERNT.
+# Nachmessung mit controller/dependency_audit.py (AST, stdlib-only)
+# am main 27.11.2026: numpy 0 Import-Fundstellen, redis 0 Import-
+# fundstellen, cryptography 20+ (GENUTZT). Nutzung ausserhalb des
+# gescannten Baums bleibt UNKNOWN (MESSUNG_AM_BAUM != GESAMTWAHRHEIT).
+# pytest ist Dev-Extra und GENUTZT nur in tests/; es liegt in
+# requirements-dev.txt und wurde aus dieser Runtime-Datei entfernt.
 cryptography>=42.0,<47.0
-
-# Dev / test extras (not installed in the production image)
-# Install with:  pip install -r requirements-dev.txt
-pytest>=8.0,<9.0
