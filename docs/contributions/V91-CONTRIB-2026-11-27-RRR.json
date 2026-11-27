@@ -1,0 +1,65 @@
+{
+  "contribution_id": "V91-CONTRIB-2026-11-27-RRR",
+  "goal": "Bruecke von der Makro-Analyse zu V91 Real-World Resource Redirection: Mittel-Bilanz je Massnahme und Umleitungsrechnung mit VERPFLICHTENDEM Sozialpuffer und Status-Trennung FAKT/ANNAHME/NICHT_GEPRUEFT",
+  "inputs_and_provenance": [
+    {
+      "description": "via Sebastian relayter Beitrag: Wirkungsrechner- und Umleitungsmodul-Entwurf (stdlib-only)",
+      "reference": "Entwurfstext (2 Python-Bausteine + Rahmenanalyse)",
+      "retrieved_at": "2026-11-27T21:00:00+00:00",
+      "source": "Chat-Relay 27.11.2026"
+    },
+    {
+      "description": "Nachmessung der Referenzbasis: 66,2 Mrd EUR (teilweise) klimaschaedlich 2024, davon 38,4 Mrd eindeutig; die im Entwurf behauptete 43-Mrd-EEA-Zahl wurde NICHT bestaetigt",
+      "reference": "FOES/Bertelsmann-Stiftung Klima-Subventionsbericht 2026",
+      "source": "foes.de / bertelsmann-stiftung.de (Websuche 27.11.2026)"
+    }
+  ],
+  "interfaces": {
+    "inputs": [
+      "Szenario-JSON {quellen, module}",
+      "Massnahmen-Liste im Code"
+    ],
+    "outputs": [
+      "Mittel-Bilanz JSON",
+      "Umleitungsergebnis JSON"
+    ]
+  },
+  "known_limits": [
+    "RECHENMODELL != HAUSHALT, keine reale Umleitung von Bundesmitteln",
+    "Stueckkosten, Abbauraten und Sozialquoten sind ANNAHME-Richtwerte",
+    "WIRKUNG_GERECHNET != WIRKUNG_GEMESSEN; Messkanon bleibt wirkungs_assessment"
+  ],
+  "next_action": "TRIAGE",
+  "origin": {
+    "model_or_person": "Externes Modell (anonym, via Betreiber-Relay)",
+    "session_or_date": "27.11.2026, Chat-Relay mobil"
+  },
+  "proposed_change": "Integration als controller/resource_redirection.py (ASCII-transliteriert, Mojo-Bake-Fix, Sektor-Validierung fail-closed nachgetragen, Referenzbasis auf FOES 38,4 Mrd korrigiert) + tests/test_resource_redirection.py",
+  "protocol": "V91-CONTRIBUTION-1",
+  "scope": {
+    "excluded_actions": [
+      "keine Umleitung realer Bundesmittel",
+      "kein Zugriff auf fremde Systeme"
+    ],
+    "systems": [
+      "v91-core-system"
+    ]
+  },
+  "security_privacy_notes": [
+    "keine vertraulichen Inhalte",
+    "keine Netz- oder Fremdzugriffe, kein Vollzug"
+  ],
+  "status": "RECEIVED",
+  "tests_and_evidence": [
+    {
+      "description": "Status-Trennung, Fail-Closed-Sonden, Sozialpuffer-VOR-Verteilung, Sektor-Skala, CLI exit 0/1",
+      "reference": "tests/test_resource_redirection.py",
+      "status": "TESTED"
+    },
+    {
+      "description": "EEA-43-Mrd-Zahl nicht bestaetigt; FOES 66,2/38,4 Mrd 2024 als ANNAHME-Referenz uebernommen",
+      "reference": "Referenzbasis-Nachmessung 27.11.2026",
+      "status": "DOCUMENTED"
+    }
+  ]
+}
