@@ -92,12 +92,17 @@ STUFEN: Tuple[Tuple[str, str, Tuple[Tuple[str, str], ...], Tuple[str, ...]], ...
         "D",
         "Wirkungssteuerung",
         (
-            ("controller/messmatrix.py", "tests/test_messmatrix.py"),
+            # Ehrlichkeitsfix: controller/messmatrix.py existierte nie; die
+            # reale Implementierung ist v91_impact_metrics/metrics.py
+            # (Phantom-Evidenz misst nichts, CLAIM != EVIDENCE).
+            ("v91_impact_metrics/metrics.py", "tests/test_messmatrix.py"),
             ("controller/impact.py", "tests/test_impact.py"),
             ("controller/autarky_metrics.py", "tests/test_autarky_metrics.py"),
+            ("controller/baseline_register.py", "tests/test_baseline_register.py"),
         ),
         (
-            "Baseline/Vorher-Nachher je Kennzahl nicht flächendeckend",
+            "Baseline-Register je Kennzahl vorhanden (baseline_register), "
+            "flaechendeckende echte Baselines brauchen Messdaten",
             "reale Weltwirkung NICHT GEPRUEFT (Messdaten #101/#103 fehlen)",
         ),
     ),

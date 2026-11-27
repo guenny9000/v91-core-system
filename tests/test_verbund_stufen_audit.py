@@ -34,10 +34,15 @@ class StufenDefinitionTest(unittest.TestCase):
                         "Kanon-Verweisziel fehlt")
 
     def test_verdikt_vokabular_geschlossen(self):
+        # Evidenzpfade duerfen nur in belegten Quellwurzeln liegen; seit
+        # dem Ehrlichkeitsfix auch v91_impact_metrics/ (reale
+        # messmatrix-Implementierung statt Phantom controller/messmatrix.py).
+        erlaubte_prefixe = ("controller/", "v91_impact_metrics/")
         for stufe, beschreibung, bausteine, luecken in vsa.STUFEN:
             self.assertTrue(beschreibung)
             for modul, testdatei in bausteine:
-                self.assertTrue(modul.startswith("controller/"))
+                self.assertTrue(modul.startswith(erlaubte_prefixe),
+                                "unerlaubter Evidenzpfad: " + modul)
                 self.assertTrue(testdatei.startswith("tests/"))
 
 
@@ -80,6 +85,14 @@ class EchterBestandTest(unittest.TestCase):
         self.assertEqual(stufe["verdikt"], "TEILWEISE_BELEGT")
         joined = " ".join(stufe["offene_luecken"])
         self.assertIn("#101/#103", joined)
+        # Ehrlichkeitspins: keine Phantom-Evidenz, Baseline-Register
+        # als Stufe-D-Baustein, alle Module existieren wirklich.
+        module = [b["modul"] for b in stufe["evidenz"]]
+        self.assertNotIn("controller/messmatrix.py", module)
+        self.assertIn("v91_impact_metrics/metrics.py", module)
+        self.assertIn("controller/baseline_register.py", module)
+        self.assertTrue(all(b["modul_vorhanden"] and b["test_funktionen"] > 0
+                             for b in stufe["evidenz"]))
 
     def test_stufe_e_nicht_gefunden(self):
         self.assertEqual(self.nach_stufe["E"]["verdikt"],
