@@ -164,4 +164,4 @@ Grenzen: BESTANDSAUFNAHME != FIX, BELEGT != GELOEST, ein Verdikt
 gilt NUR am Messstand dc887e43, keine Zeitreihe. NICHT_GEPRUEFT:
 echtes oeffentliches Bridge-Issue-Posting Dritter, Semgrep-Scans,
 Offline-Hardware.
-NACHERHEBUNG 27.11.: Stufe-1-Abgleich erfolgt, siehe TEXTABGLEICH-Doc.
+NACHERHEBUNGEN 27.11.: siehe V91-492-NACHERHEBUNGEN-2026-11-27.md
