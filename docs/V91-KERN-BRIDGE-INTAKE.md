@@ -7,7 +7,7 @@ kein Ewigkeitsanspruch): controller/kern_bridge.py (11749 B,
 22 Tests in tests/test_kern_bridge.py + 8 Verkettungs-Sonden in
 tests/test_kern_bridge_intake_std.py + 30 Screening-Tests in
 tests/test_bridge_screening.py), Secret-/PII-Screening-Baustein
-controller/bridge_screening.py (8831 B nach Telefon-Redaktion und
+controller/bridge_screening.py (8832 B nach Telefon-Redaktion und
 Adress-Redaktion (Erweiterung II) vom 27.11.2026; Ursprungsmessung
 6966 B am 26.11. bzw. 7919 B nach Erweiterung I, siehe
 docs/V91-BRIDGE-SECRET-SCREENING-2026-11-26.md), Issue-Template
