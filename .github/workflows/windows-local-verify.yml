@@ -31,7 +31,10 @@ jobs:
           python-version: "3.11"
 
       - name: Install test dependency
-        run: python -m pip install pytest numpy
+        # Prune 2026-11-27 (Issue #591): numpy removed from the install
+        # list; dependency_audit.py finds 0 imports of numpy in the
+        # repository tree (INSTALLATION != NUTZUNG).
+        run: python -m pip install pytest
 
       - name: Run local verification script without Docker
         shell: pwsh
