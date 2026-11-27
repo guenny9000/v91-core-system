@@ -32,10 +32,12 @@ Vertrag:
 Ehrliche Grenzen:
 - SCREEN == MUSTER != GARANTIE: erkannt werden die bekannten
   hochsignaligen Formen; die Unschaedlichkeit des Rests wird
-  NICHT behauptet. Namen, Adressen und freie persoenliche
-  Beschreibungen werden NICHT erkannt; Telefonnummern werden
-  NUR als deutsche Formen erkannt (27.11.-Erweiterung), mit
-  dokumentiertem Over-Blocking (z. B. ISBN mit fuehrender 0
+  NICHT behauptet. Namen und Teiladressen (nur Strasse, nur
+  PLZ+Ort) sowie freie persoenliche Beschreibungen werden
+  NICHT erkannt; Telefonnummern werden NUR als deutsche
+  Formen erkannt (27.11.-Erweiterung), vollstaendige deutsche
+  Postadressen EINER Zeile seit der 27.11.-Erweiterung II, jeweils
+  mit dokumentiertem Over-Blocking (z. B. ISBN mit fuehrender 0
   kann mitredigiert werden: PII-SCHUTZ VOR BEQUEMLICHKEIT,
   die Redaktion ist ueber den Quell-Bezug reversibel).
 - Zuweisungen mit Platzhalterwerten (test/example/dummy/...),
@@ -78,6 +80,19 @@ PII_PATTERNS: tuple[tuple[str, re.Pattern[str]], ...] = (
      re.compile(r"(?<![0-9+])\+49(?:[ \-/]*[0-9]){7,14}(?![0-9])")),
     ("tel_national_de",
      re.compile(r"(?<![0-9+])0(?:[ \-/]*[0-9]){6,13}(?![0-9])")),
+    # Postadresse (27.11.-Erweiterung II): NUR vollstaendige deutsche
+    # Adresse EINER Zeile (Strassenname mit Suffix + Hausnummer +
+    # PLZ + Ort). Hoehere Falschtreffer-Risiken bewusst NICHT
+    # erkannt: Teiladressen (nur Strasse, nur PLZ+Ort) und freie
+    # Namen bleiben unberuehrt (MUSTER != GARANTIE, Unterblocken
+    # bei Teiladressen dokumentiert; vollstaendige Adresse =
+    # personenbeziehbar und damit redaktionswuerdig).
+    ("adresse_de",
+     re.compile(
+         r"(?:[A-ZÄÖÜ][\wäöüß\-]* ){0,3}"
+         r"[\wäöüß\-]*(?i:straße|strasse|weg|platz|allee|gasse|ring|damm|ufer|chaussee|markt)"
+         r" {1,3}\d{1,5}[a-zA-Z]?,? (?:D-)?\d{5} [A-ZÄÖÜ][\wäöüß\-]+"
+     )),
 )
 
 _PRIVKEY_BEGIN = re.compile("-----BEGIN " + "[A-Z ]*" + "PRIVATE KEY-----")
@@ -86,8 +101,9 @@ _PRIVKEY_END = re.compile("-----END " + "[A-Z ]*" + "PRIVATE KEY-----")
 SCREENING_HONESTY_LIMITS = (
     "SCREEN == MUSTER != GARANTIE, REDAKTION VOR ABLAGE, "
     "SHA = ROHTEXT, ABLAGE = REDAKTION, KEINE Previews, "
-    "Namen/Adressen werden NICHT erkannt, Telefonnummern NUR als "
-    "DE-Formen mit dokumentiertem Over-Blocking, "
+    "Namen und Teiladressen werden NICHT erkannt, Telefonnummern "
+    "NUR als DE-Formen, Adressen NUR als vollstaendige DE-"
+    "Postadresse, jeweils mit dokumentiertem Over-Blocking, "
     "GATE != SCREENING (SECRET != DESTRUKTIV)"
 )
 
