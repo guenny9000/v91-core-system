@@ -1,7 +1,7 @@
 name: V91 Governance CI
 
 # 3-Wege-Verbindung (Messreihe-Ledger-Manifest) als MECHANISMUS-Gate.
-# Ehrliche Abgrenzung: ein grüner Build hier beweist, dass das
+# Ehrliche Abgrenzung: ein gruener Build hier beweist, dass das
 # governance-GATE funktioniert und die Ledger-/Audit-Bausteine intakt
 # sind - NICHT, dass eine reale physische Messreihe oder eine globale
 # Datenquelle (M_global) in Betrieb ist (SCRIPTED != INSTALLED,
