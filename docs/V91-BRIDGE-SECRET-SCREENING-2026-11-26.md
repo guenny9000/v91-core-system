@@ -39,8 +39,13 @@ unangetastet (BESTANDSAUFNAHME != FIX).
   unberuehrt). Bekanntes Over-Blocking: Ziffern-Anhaenge
   (Durchwahl) und z. B. ISBN mit fuehrender 0 werden mitredigiert
   (PII-SCHUTZ VOR BEQUEMLICHKEIT, Redaktion ueber Quell-Bezug
-  reversibel). Modul jetzt 7919 B (Ursprungsmessung 6966 B),
-  28 Screening-Tests (vorher 23).
+  reversibel). Modul nach Erweiterung I: 7919 B, 28 Screening-Tests.
+- ERWEITERUNG II 27.11.2026 (#613, Adress-Redaktion): vollstaendige
+  deutsche Postadresse EINER Zeile (Strassenname mit Suffix +
+  Hausnummer + 5-stellige PLZ + Ort) wird redigiert; Teiladressen
+  (nur Strasse bzw. nur PLZ+Ort) und freie Namen bleiben bewusst
+  UNERKANNT (dokumentiertes Unterblocken, MUSTER != GARANTIE).
+  Modul jetzt 8832 B, 30 Screening-Tests.
 - Mehrzeilige PRIVATE-KEY-Bloecke werden als Ganzes redigiert
   (BEGIN-Zeile bis END-Zeile inclusive).
 - Fundstellen werden im abgelegten Text durch [REDACTIERT]

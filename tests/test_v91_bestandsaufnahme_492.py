@@ -131,7 +131,7 @@ class IntakeDocNachmessungTest(unittest.TestCase):
         self.assertIn("11749 B", self.text)
         self.assertIn("22 Tests", self.text)
         self.assertIn("8 Verkettungs-Sonden", self.text)
-        self.assertIn("8831 B", self.text)  # Screening-Baustein nach Telefon-+Adress-Erweiterung 27.11.
+        self.assertIn("8832 B", self.text)  # Screening-Baustein nach Telefon-+Adress-Erweiterung 27.11.
         self.assertIn("30 Screening-Tests", self.text)
 
     def test_messstand_and_stale_note_pinned(self):
