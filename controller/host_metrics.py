@@ -40,6 +40,11 @@ from pathlib import Path
 from typing import Any, Dict, Optional
 
 if __package__ in (None, ""):  # direkter CLI-Aufruf: sys.path erweitern
+    # #460-Lektion: im Skript-Modus schattet controller/controller.py das
+    # Namespace-Paket; der Skript-Ordner wird deshalb entfernt (idempotent).
+    _SCRIPT_DIR = str(Path(__file__).resolve().parent)
+    while _SCRIPT_DIR in sys.path:
+        sys.path.remove(_SCRIPT_DIR)
     sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from controller.mess_pilot import MessPilotError, PilotLog
