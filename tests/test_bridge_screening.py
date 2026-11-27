@@ -171,7 +171,53 @@ class ScreenTextUnitTest(unittest.TestCase):
 
     def test_pii_forms_are_documented_pair(self):
         self.assertEqual([kind for kind, _ in bs.PII_PATTERNS],
-                         ["email", "iban_de"])
+                         ["email", "iban_de",
+                          "tel_international_de", "tel_national_de"])
+
+    def test_telefon_international_geschrieben_redacted(self):
+        for form in ("+49 30 12345678", "+4917612345678",
+                     "+49/6621/123456"):
+            result = bs.screen_text("ruf " + form + " an")
+            self.assertNotIn(form, result["redacted_text"], form)
+            self.assertIn("tel_international_de",
+                          {f["kind"] for f in result["findings"]}, form)
+
+    def test_telefon_national_geschrieben_redacted(self):
+        for form in ("0176 1234 5678", "030-1234-567", "06621/12 34 56",
+                     "0800 1234567"):
+            result = bs.screen_text("ruf " + form + " an")
+            self.assertNotIn(form, result["redacted_text"], form)
+            self.assertIn("tel_national_de",
+                          {f["kind"] for f in result["findings"]}, form)
+
+    def test_telefon_kein_digitierter_nachbar(self):
+        # Buchstaben unmittelbar vor/nach der Nummer duerfen NICHT
+        # absorbiert werden; Ziffern-Zusatzgruppen (Durchwahl) werden
+        # bewusst mitredigiert (dokumentiertes Over-Blocking).
+        line = "id x0176 1234 5678y 34 Ende"
+        result = bs.screen_text(line)
+        self.assertNotIn("0176 1234 5678", result["redacted_text"])
+        self.assertIn("y", result["redacted_text"])
+        self.assertIn("34", result["redacted_text"])
+        line2 = "ruf 0176 1234 5678 34 durchwahl"
+        result2 = bs.screen_text(line2)
+        self.assertNotIn("5678 34", result2["redacted_text"])  # absorbiert
+
+    def test_keine_telefon_falschtreffer_alltag(self):
+        for harmlos in ("Datum: 27.11.2026 im Bericht",
+                        "PLZ 36041 Alsfeld",
+                        "Uhrzeit 07:30 Uhr",
+                        "kurz 0123 45 bleibt"):
+            result = bs.screen_text(harmlos)
+            self.assertEqual(result["status"], bs.SCREENING_STATUS_CLEAN, harmlos)
+            self.assertNotIn("tel_", json.dumps(result["findings"]))
+
+    def test_telefon_overblocking_isbn_dokumentiert(self):
+        # Bekanntes, dokumentiertes Over-Blocking: ISBN mit fuehrender 0
+        # wird mitredigiert (PII-SCHUTZ VOR BEQUEMLICHKEIT, reversibel).
+        result = bs.screen_text("buch 0-306-40615-2 alt")
+        self.assertIn("tel_national_de",
+                      {f["kind"] for f in result["findings"]})
 
     def test_non_string_fails_closed(self):
         with self.assertRaises(TypeError):

@@ -32,8 +32,12 @@ Vertrag:
 Ehrliche Grenzen:
 - SCREEN == MUSTER != GARANTIE: erkannt werden die bekannten
   hochsignaligen Formen; die Unschaedlichkeit des Rests wird
-  NICHT behauptet. Telefonnummern, Namen, Adressen und freie
-  persoenliche Beschreibungen werden NICHT erkannt.
+  NICHT behauptet. Namen, Adressen und freie persoenliche
+  Beschreibungen werden NICHT erkannt; Telefonnummern werden
+  NUR als deutsche Formen erkannt (27.11.-Erweiterung), mit
+  dokumentiertem Over-Blocking (z. B. ISBN mit fuehrender 0
+  kann mitredigiert werden: PII-SCHUTZ VOR BEQUEMLICHKEIT,
+  die Redaktion ist ueber den Quell-Bezug reversibel).
 - Zuweisungen mit Platzhalterwerten (test/example/dummy/...),
   Variablen-Referenzen ($) und Pfadwerten (/) gelten wie im
   Datei-Scanner als Konfiguration, NICHT als Secret-Literal
@@ -59,10 +63,21 @@ REDACTION_MARKER = "[REDACTIERT]"
 
 # Personenbezogene Formen (neu gegenueber controller/secret_scan.py,
 # weil der Datei-Scanner repo-Dateien prueft, nicht Issue-Rohtexte).
+# Telefon (27.11.-Erweiterung): nur deutsche Formen; internationale
+# Form verlangt +49 plus 7-14 weitere Ziffern, nationale Form
+# fuehrende 0 plus 6-13 weitere Ziffern (Gesamt 7-14 Ziffern), jeweils
+# mit Leerstelle/Bindestrich/Schraegstrich als Trennern. Kuerzere
+# Ziffernfolgen (Postleitzahlen, Uhrzeiten, Datumsfragmente) bleiben
+# unberuehrt; Over-Blocking (z. B. ISBN mit fuehrender 0) ist
+# dokumentiert und bewusst in Kauf genommen (REDAKTION reversibel).
 PII_PATTERNS: tuple[tuple[str, re.Pattern[str]], ...] = (
     ("email",
      re.compile(r"\b[A-Za-z0-9._%+-]+@[A-Za-z0-9-]+(?:\.[A-Za-z0-9-]+)+\b")),
     ("iban_de", re.compile(r"\bDE[0-9]{2}(?:[ ]?[0-9]{4}){4}[ ]?[0-9]{2}\b")),
+    ("tel_international_de",
+     re.compile(r"(?<![0-9+])\+49(?:[ \-/]*[0-9]){7,14}(?![0-9])")),
+    ("tel_national_de",
+     re.compile(r"(?<![0-9+])0(?:[ \-/]*[0-9]){6,13}(?![0-9])")),
 )
 
 _PRIVKEY_BEGIN = re.compile("-----BEGIN " + "[A-Z ]*" + "PRIVATE KEY-----")
@@ -71,7 +86,8 @@ _PRIVKEY_END = re.compile("-----END " + "[A-Z ]*" + "PRIVATE KEY-----")
 SCREENING_HONESTY_LIMITS = (
     "SCREEN == MUSTER != GARANTIE, REDAKTION VOR ABLAGE, "
     "SHA = ROHTEXT, ABLAGE = REDAKTION, KEINE Previews, "
-    "Telefonnummern/Namen/Adressen werden NICHT erkannt, "
+    "Namen/Adressen werden NICHT erkannt, Telefonnummern NUR als "
+    "DE-Formen mit dokumentiertem Over-Blocking, "
     "GATE != SCREENING (SECRET != DESTRUKTIV)"
 )
 

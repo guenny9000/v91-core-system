@@ -5,9 +5,10 @@ dc887e4368d1b8b9b92c7cf21e1c478ba8253fb4, Gegenlesen 2 am Branch
 feat/v91-bridge-secret-screening-20261126 (Zahlen sind Messstand,
 kein Ewigkeitsanspruch): controller/kern_bridge.py (11749 B,
 22 Tests in tests/test_kern_bridge.py + 8 Verkettungs-Sonden in
-tests/test_kern_bridge_intake_std.py + 23 Screening-Tests in
+tests/test_kern_bridge_intake_std.py + 28 Screening-Tests in
 tests/test_bridge_screening.py), Secret-/PII-Screening-Baustein
-controller/bridge_screening.py (6966 B, siehe
+controller/bridge_screening.py (7919 B nach Telefon-Redaktions-
+Erweiterung vom 27.11.2026; Ursprungsmessung 6966 B am 26.11., siehe
 docs/V91-BRIDGE-SECRET-SCREENING-2026-11-26.md), Issue-Template
 .github/ISSUE_TEMPLATE/kern-bridge.md, Validator
 controller/uas_record.py (112.0.0/113.0.0), Kanon

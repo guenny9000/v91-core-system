@@ -29,9 +29,18 @@ unangetastet (BESTANDSAUFNAHME != FIX).
   dieselben Pattern-Objekte, KEINE zweite Liste
   (NO_DUPLICATE_SYSTEMS, gegen Objekt-Identitaet getestet).
 - Neu und nur hier: personenbezogene Formen E-Mail und deutsche
-  IBAN (DE + 20 Ziffern, leerstellen-tolerant). Telefonnummern,
-  Namen, Adressen und freie Text-Beschreibungen werden NICHT
+  IBAN (DE + 20 Ziffern, leerstellen-tolerant). Namen,
+  Adressen und freie Text-Beschreibungen werden NICHT
   erkannt (ehrliche Grenze, siehe Abschnitt 5).
+  ERWEITERUNG 27.11.2026 (Telefon-Redaktion): deutsche Telefon-
+  nummern werden jetzt redigiert (+49-Form und nationale 0-Form,
+  7-14 Ziffern mit Leerstelle/Bindestrich/Schraegstrich als
+  Trennern; kurze Alltagsfolgen wie PLZ/Uhrzeit/Datum bleiben
+  unberuehrt). Bekanntes Over-Blocking: Ziffern-Anhaenge
+  (Durchwahl) und z. B. ISBN mit fuehrender 0 werden mitredigiert
+  (PII-SCHUTZ VOR BEQUEMLICHKEIT, Redaktion ueber Quell-Bezug
+  reversibel). Modul jetzt 7919 B (Ursprungsmessung 6966 B),
+  28 Screening-Tests (vorher 23).
 - Mehrzeilige PRIVATE-KEY-Bloecke werden als Ganzes redigiert
   (BEGIN-Zeile bis END-Zeile inclusive).
 - Fundstellen werden im abgelegten Text durch [REDACTIERT]
