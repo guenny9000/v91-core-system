@@ -30,6 +30,19 @@ UEBERNAHME-AENDERUNGEN am Entwurf (offengelegt, NACHTRAG != ENTWURF):
 - Sektor-Validierung fail-closed nachgetragen (Literal prueft zur
   Laufzeit nichts), Ziel-Statuskette wie im Entwurf verriegelt.
 
+#626-Nachtrag (28.11.2026): Finanz-Evidenz und Wirkungs-Evidenz sind
+getrennt (Issue #626). WirkungsMassnahme traegt SEITENGETRENNT
+status/quelle (WIRKUNGS-Seite) und mittel_status/mittel_nachweis/
+mittel_stufe (MITTEL-Seite); BERECHNET ist keine Finanz-Evidenz,
+Mittel-FAKT erfordert Nachweis UND harte Stufe (VERFUEGT oder weiter).
+berechne_umleitung erhaelt je Quelle den Status im Ergebnis
+(Quellen-Liste, Status-Summen, Gesamt-Label, ANNAHME-Quellen-IDs und
+NICHT_GEPRUEFTE-Quellen-IDs); Modul-Ergebnisse trennen MODELLERTE
+Allokation/Einheiten von NICHT GEPRUEFTER Lieferung; die
+Mittelstufen jenseits der Rechnung (verfuegt, transferiert,
+ausgegeben, unabhaengig verifiziert) bleiben NICHT_GEPRUEFT (None),
+NIEMALS 0. MITTEL_BERECHNET != MITTEL_BEREITGESTELLT.
+
 Regeln (fail-closed):
 - Status nur FAKT / ANNAHME / NICHT_GEPRUEFT. FAKT erfordert
   Messwert UND Quelle; ANNAHME erfordert benannte Annahme.
@@ -69,6 +82,18 @@ EvidenzStatus = Literal["FAKT", "ANNAHME", "NICHT_GEPRUEFT"]
 ERLAUBTE_EVIDENZ: tuple[EvidenzStatus, ...] = ("FAKT", "ANNAHME", "NICHT_GEPRUEFT")
 ERLAUBTE_SEKTOREN: tuple[str, ...] = ("RENATURIERUNG", "WASSER", "KREISLAUFWIRTSCHAFT")
 
+MittelStufe = Literal[
+    "BERECHNET", "VERFUEGT", "TRANSFERIERT", "AUSGEGEBEN", "UNABHAENGIG_VERIFIZIERT"
+]
+ERLAUBTE_MITTELSTUFEN: tuple[MittelStufe, ...] = (
+    "BERECHNET", "VERFUEGT", "TRANSFERIERT", "AUSGEGEBEN", "UNABHAENGIG_VERIFIZIERT",
+)
+# Stufen, die tatsaechliche Mittelbewegung BELEGEN duerfen; BERECHNET
+# ist per Definition keine Finanz-Evidenz (RECHNEN != VOLLZUG).
+HARTE_MITTELSTUFEN: tuple[str, ...] = (
+    "VERFUEGT", "TRANSFERIERT", "AUSGEGEBEN", "UNABHAENGIG_VERIFIZIERT",
+)
+
 
 def _require_finite_number(value: object, field_name: str) -> None:
     """Reject bools, non-numbers, NaN and infinities before calculations."""
@@ -81,17 +106,29 @@ def _require_finite_number(value: object, field_name: str) -> None:
     if not finite:
         raise ValueError(f"{field_name} must be a finite number (Fail-Closed).")
 
-SCHEMA_VERSION = "v91-resource-redirection-1.0"
+SCHEMA_VERSION = "v91-resource-redirection-1.1"
 QUELLE_REFERENZ_2024 = (
     "FOES/Bertelsmann-Stiftung, Klima-Subventionsbericht 2026: "
     "38,4 Mrd EUR eindeutig klimaschaedliche Subventionen 2024 "
     "(66,2 Mrd inkl. teilweise klimaschaedlicher); ANNAHME-Referenz"
 )
+MITTELSTUFEN_HINWEIS = (
+    "MITTEL_BERECHNET != MITTEL_BEREITGESTELLT; RECHNEN != VOLLZUG; "
+    "Stufen jenseits der Berechnung bleiben NICHT_GEPRUEFT (null), "
+    "NIEMALS 0-Ersatz. Belege je Stufe sind separat nachzuweisen."
+)
 
 
 @dataclass(frozen=True)
 class WirkungsMassnahme:
-    """Eine Massnahme mit Mitteln, Zielwert und Evidenz-Status."""
+    """Eine Massnahme mit Mitteln, Zielwert und getrennter Evidenz.
+
+    Wirkungs-Evidenz (status/quelle) belegt die gemessene Wirkung;
+    Mittel-Evidenz (mittel_status/mittel_nachweis/mittel_stufe) belegt
+    die tatsaechliche Mittelbereitstellung. BEIDE sind getrennt:
+    Wirkungs-FAKT ohne Mittel-FAKT bleibt Mittel-seitig
+    NICHT_GEPRUEFT (Issue #626).
+    """
 
     massnahme_id: str
     bereich: str
@@ -104,6 +141,9 @@ class WirkungsMassnahme:
     quelle: str = ""
     soziale_absicherung: str = ""
     tags: tuple[str, ...] = field(default_factory=tuple)
+    mittel_status: EvidenzStatus = "NICHT_GEPRUEFT"
+    mittel_nachweis: str = ""
+    mittel_stufe: MittelStufe = "BERECHNET"
 
     def __post_init__(self) -> None:
         for name, value in (("mittel_eur", self.mittel_eur), ("zielwert", self.zielwert)):
@@ -112,6 +152,14 @@ class WirkungsMassnahme:
             _require_finite_number(self.ist_wert, "ist_wert")
         if self.status not in ERLAUBTE_EVIDENZ:
             raise ValueError(f"Ungueltiger EvidenzStatus (Fail-Closed): {self.status!r}")
+        if self.mittel_status not in ERLAUBTE_EVIDENZ:
+            raise ValueError(
+                f"Ungueltiger mittel_status (Fail-Closed): {self.mittel_status!r}"
+            )
+        if self.mittel_stufe not in ERLAUBTE_MITTELSTUFEN:
+            raise ValueError(
+                f"Ungueltige mittel_stufe (Fail-Closed): {self.mittel_stufe!r}"
+            )
         if self.mittel_eur < 0 or self.zielwert <= 0:
             raise ValueError("Mittel muessen >= 0 und Zielwert > 0 sein (Fail-Closed).")
         if self.status == "FAKT":
@@ -122,6 +170,21 @@ class WirkungsMassnahme:
         if self.status == "ANNAHME" and not self.quelle.strip():
             raise ValueError(
                 "Status 'ANNAHME' erfordert eine benannte Annahme in quelle (Fail-Closed)."
+            )
+        if self.mittel_status == "FAKT":
+            if not self.mittel_nachweis.strip():
+                raise ValueError(
+                    "mittel_status 'FAKT' erfordert einen Mittel-Nachweis (Fail-Closed)."
+                )
+            if self.mittel_stufe not in HARTE_MITTELSTUFEN:
+                raise ValueError(
+                    "Mittel-FAKT mit mittel_stufe 'BERECHNET' ist keine "
+                    "Finanz-Evidenz (Fail-Closed): harte Stufe erforderlich."
+                )
+        if self.mittel_status == "ANNAHME" and not self.mittel_nachweis.strip():
+            raise ValueError(
+                "mittel_status 'ANNAHME' erfordert eine benannte Annahme "
+                "in mittel_nachweis (Fail-Closed)."
             )
 
 
@@ -193,7 +256,7 @@ class ZielModul:
         ):
             _require_finite_number(value, name)
         if self.status not in ERLAUBTE_EVIDENZ:
-            raise ValueError(f"Ungueltiger Status (Fail-Closed): {self.status!r}")
+            raise ValueError(f"Ungueltiger EvidenzStatus (Fail-Closed): {self.status!r}")
         if self.sektor not in ERLAUBTE_SEKTOREN:
             raise ValueError(
                 f"sektor muss einer von {ERLAUBTE_SEKTOREN} sein (Fail-Closed)."
@@ -209,10 +272,21 @@ class ZielModul:
 
 
 def berechne_wirkungsbilanz(massnahmen: list[WirkungsMassnahme]) -> str:
-    """Nach EvidenzStatus getrennte Wirkungs- und Mittelbilanz als JSON."""
+    """Nach EvidenzStatus getrennte Wirkungs- und Mittelbilanz als JSON.
+
+    belegte_mittel_eur zaehlt NUR Mittel-seitig belegte Mittel
+    (mittel_status == FAKT); gemessene Wirkung allein belegt KEINE
+    Mittel (Issue #626).
+    """
     gesamt_mittel = sum(m.mittel_eur for m in massnahmen)
-    belegte_mittel = sum(m.mittel_eur for m in massnahmen if m.status == "FAKT")
-    ungepruefte_mittel = sum(m.mittel_eur for m in massnahmen if m.status != "FAKT")
+    belegte_mittel = sum(m.mittel_eur for m in massnahmen if m.mittel_status == "FAKT")
+    annahme_mittel = sum(m.mittel_eur for m in massnahmen if m.mittel_status == "ANNAHME")
+    ungepruefte_mittel = sum(
+        m.mittel_eur for m in massnahmen if m.mittel_status == "NICHT_GEPRUEFT"
+    )
+    stufen_summen: dict[str, float] = {stufe: 0.0 for stufe in ERLAUBTE_MITTELSTUFEN}
+    for m in massnahmen:
+        stufen_summen[m.mittel_stufe] += m.mittel_eur
 
     eintraege = []
     for m in massnahmen:
@@ -231,8 +305,11 @@ def berechne_wirkungsbilanz(massnahmen: list[WirkungsMassnahme]) -> str:
                 "ist_wert": m.ist_wert,
                 "einheit": m.erwartete_wirkung_einheit,
                 "erfuellungsgrad": erfuellungsgrad,
-                "status": m.status,
-                "quelle": m.quelle,
+                "wirkungs_status": m.status,
+                "wirkungs_quelle": m.quelle,
+                "mittel_status": m.mittel_status,
+                "mittel_nachweis": m.mittel_nachweis,
+                "mittel_stufe": m.mittel_stufe,
                 "soziale_absicherung": m.soziale_absicherung,
                 "tags": list(m.tags),
             }
@@ -240,19 +317,45 @@ def berechne_wirkungsbilanz(massnahmen: list[WirkungsMassnahme]) -> str:
 
     payload = {
         "schema_version": SCHEMA_VERSION,
+        "evidenz_trennung": (
+            "wirkungs_status/wirkungs_quelle = WIRKUNGS-Evidenz; "
+            "mittel_status/mittel_nachweis/mittel_stufe = MITTEL-Evidenz"
+        ),
         "gesamt_mittel_eur": round(gesamt_mittel, 2),
         "belegte_mittel_eur": round(belegte_mittel, 2),
-        "ungepruefte_oder_annahme_mittel_eur": round(ungepruefte_mittel, 2),
+        "annahme_mittel_eur": round(annahme_mittel, 2),
+        "ungepruefte_mittel_eur": round(ungepruefte_mittel, 2),
+        "mittelstufen_summen_eur": {
+            stufe: round(betrag, 2) for stufe, betrag in stufen_summen.items()
+        },
         "eintraege": eintraege,
     }
     return json.dumps(payload, ensure_ascii=False, indent=2, sort_keys=True)
+
+
+def _gesamt_status(quellen: list[UmleitungsQuelle]) -> EvidenzStatus:
+    """Aggregat-Label: die schwaechste Quellen-Evidenz dominiert."""
+    if not quellen:
+        return "NICHT_GEPRUEFT"
+    statuses = {q.status for q in quellen}
+    if "NICHT_GEPRUEFT" in statuses:
+        return "NICHT_GEPRUEFT"
+    if "ANNAHME" in statuses:
+        return "ANNAHME"
+    return "FAKT"
 
 
 def berechne_umleitung(
     quellen: list[UmleitungsQuelle],
     module: list[ZielModul],
 ) -> dict[str, object]:
-    """Sozialpuffer, Nettomittel je Modul und erreichbare Wirkungs-Einheiten."""
+    """Sozialpuffer, Nettomittel je Modul und erreichbare Wirkungs-Einheiten.
+
+    Status je Quelle bleibt im Ergebnis erhalten (Quellen-Liste,
+    Status-Summen, Gesamt-Label); NICHT_GEPRUEFETE Quellen tragen zur
+    Szenario-Zahl bei, werden aber im Aggregat NICHT als Fakt
+    ausgewiesen (Issue #626).
+    """
     if not module:
         raise ValueError("Mindestens ein ZielModul ist erforderlich (Fail-Closed).")
 
@@ -263,6 +366,31 @@ def berechne_umleitung(
     brutto_gesamt = sum(q.brutto_umleitung_eur for q in quellen)
     sozial_gesamt = sum(q.sozial_puffer_eur for q in quellen)
     netto_gesamt = sum(q.netto_projekt_budget_eur for q in quellen)
+
+    quellen_ergebnisse: list[dict[str, object]] = []
+    status_summen: dict[str, dict[str, float]] = {
+        status: {
+            "brutto_umleitung_eur": 0.0,
+            "sozial_absicherung_eur": 0.0,
+            "netto_projekt_budget_eur": 0.0,
+        }
+        for status in ERLAUBTE_EVIDENZ
+    }
+    for q in quellen:
+        quellen_ergebnisse.append(
+            {
+                "quelle_id": q.quelle_id,
+                "bezeichnung": q.bezeichnung,
+                "status": q.status,
+                "nachweis": q.nachweis,
+                "brutto_umleitung_eur": round(q.brutto_umleitung_eur, 2),
+                "sozial_puffer_eur": round(q.sozial_puffer_eur, 2),
+                "netto_projekt_budget_eur": round(q.netto_projekt_budget_eur, 2),
+            }
+        )
+        status_summen[q.status]["brutto_umleitung_eur"] += q.brutto_umleitung_eur
+        status_summen[q.status]["sozial_absicherung_eur"] += q.sozial_puffer_eur
+        status_summen[q.status]["netto_projekt_budget_eur"] += q.netto_projekt_budget_eur
 
     modul_ergebnisse: list[dict[str, object]] = []
     for m in module:
@@ -277,15 +405,43 @@ def berechne_umleitung(
                 "status": m.status,
                 "budget_eur": round(budget_eur, 2),
                 "einheiten": round(einheiten, 2),
+                "einheiten_status": m.status,
                 "wirkung_einheit": m.wirkung_einheit,
+                # MODELLIERTE Allokation != gemessene Lieferung:
+                # gelieferte_einheiten bleibt NICHT_GEPRUEFT (Issue #626).
+                "gelieferte_einheiten": None,
+                "lieferung_status": "NICHT_GEPRUEFT",
             }
         )
 
     return {
         "schema_version": SCHEMA_VERSION,
+        "szenario_typ": "MODELLRECHNUNG",
+        "gesamt_status": _gesamt_status(quellen),
+        "annahme_quellen": [q.quelle_id for q in quellen if q.status == "ANNAHME"],
+        "ungepruefte_quellen": [
+            q.quelle_id for q in quellen if q.status == "NICHT_GEPRUEFT"
+        ],
+        "quellen": quellen_ergebnisse,
+        "status_summen": {
+            status: {
+                "brutto_umleitung_eur": round(werte["brutto_umleitung_eur"], 2),
+                "sozial_absicherung_eur": round(werte["sozial_absicherung_eur"], 2),
+                "netto_projekt_budget_eur": round(werte["netto_projekt_budget_eur"], 2),
+            }
+            for status, werte in status_summen.items()
+        },
         "brutto_umleitung_eur": round(brutto_gesamt, 2),
         "sozial_absicherung_eur": round(sozial_gesamt, 2),
         "netto_projekt_budget_eur": round(netto_gesamt, 2),
+        "mittelstufen": {
+            "berechnet_eur": round(netto_gesamt, 2),
+            "verfuegt_eur": None,
+            "transferiert_eur": None,
+            "ausgegeben_eur": None,
+            "unabhaengig_verifiziert_eur": None,
+        },
+        "mittelstufen_hinweis": MITTELSTUFEN_HINWEIS,
         "module": modul_ergebnisse,
         "referenz": QUELLE_REFERENZ_2024,
     }
