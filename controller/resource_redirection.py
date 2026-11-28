@@ -53,6 +53,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import math
 import sys
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -67,6 +68,18 @@ from typing import Literal  # noqa: E402
 EvidenzStatus = Literal["FAKT", "ANNAHME", "NICHT_GEPRUEFT"]
 ERLAUBTE_EVIDENZ: tuple[EvidenzStatus, ...] = ("FAKT", "ANNAHME", "NICHT_GEPRUEFT")
 ERLAUBTE_SEKTOREN: tuple[str, ...] = ("RENATURIERUNG", "WASSER", "KREISLAUFWIRTSCHAFT")
+
+
+def _require_finite_number(value: object, field_name: str) -> None:
+    """Reject bools, non-numbers, NaN and infinities before calculations."""
+    if isinstance(value, bool) or not isinstance(value, (int, float)):
+        raise ValueError(f"{field_name} must be a finite number (Fail-Closed).")
+    try:
+        finite = math.isfinite(value)
+    except OverflowError:
+        finite = False
+    if not finite:
+        raise ValueError(f"{field_name} must be a finite number (Fail-Closed).")
 
 SCHEMA_VERSION = "v91-resource-redirection-1.0"
 QUELLE_REFERENZ_2024 = (
@@ -93,6 +106,10 @@ class WirkungsMassnahme:
     tags: tuple[str, ...] = field(default_factory=tuple)
 
     def __post_init__(self) -> None:
+        for name, value in (("mittel_eur", self.mittel_eur), ("zielwert", self.zielwert)):
+            _require_finite_number(value, name)
+        if self.ist_wert is not None:
+            _require_finite_number(self.ist_wert, "ist_wert")
         if self.status not in ERLAUBTE_EVIDENZ:
             raise ValueError(f"Ungueltiger EvidenzStatus (Fail-Closed): {self.status!r}")
         if self.mittel_eur < 0 or self.zielwert <= 0:
@@ -121,6 +138,12 @@ class UmleitungsQuelle:
     nachweis: str = ""
 
     def __post_init__(self) -> None:
+        for name, value in (
+            ("basis_subvention_eur", self.basis_subvention_eur),
+            ("abbau_anteil", self.abbau_anteil),
+            ("sozial_absicherung_anteil", self.sozial_absicherung_anteil),
+        ):
+            _require_finite_number(value, name)
         if self.status not in ERLAUBTE_EVIDENZ:
             raise ValueError(f"Ungueltiger Status (Fail-Closed): {self.status!r}")
         if self.basis_subvention_eur < 0:
@@ -164,6 +187,11 @@ class ZielModul:
     tags: tuple[str, ...] = field(default_factory=tuple)
 
     def __post_init__(self) -> None:
+        for name, value in (
+            ("kosten_pro_einheit_eur", self.kosten_pro_einheit_eur),
+            ("gewichtung_anteil", self.gewichtung_anteil),
+        ):
+            _require_finite_number(value, name)
         if self.status not in ERLAUBTE_EVIDENZ:
             raise ValueError(f"Ungueltiger Status (Fail-Closed): {self.status!r}")
         if self.sektor not in ERLAUBTE_SEKTOREN:
