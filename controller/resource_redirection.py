@@ -30,9 +30,24 @@ UEBERNAHME-AENDERUNGEN am Entwurf (offengelegt, NACHTRAG != ENTWURF):
 - Sektor-Validierung fail-closed nachgetragen (Literal prueft zur
   Laufzeit nichts), Ziel-Statuskette wie im Entwurf verriegelt.
 
+NACHTRAG #626 (28.11.2026, Review-Befund via Betreiber-Relay): GETRENNTE
+Evidenz-Achsen und Schaetzungs-Kennzeichnung.
+- (1) Wirkungs-Messung belegt KEINE Mittelfluesse:
+  WirkungsMassnahme hat jetzt wirkungs_status/wirkungsquelle UND
+  mittel_status/mittelquelle; belegte_mittel_eur zaehlt NUR
+  mittel_status == FAKT (MITTELBELEG != WIRKUNGSBELEG, #626-1).
+- (2) berechne_umleitung weist quellen_nach_status und
+  aggregat_ist_rein_fakt aus; NICHT_GEPRUEFT-Quellen fliessen
+  nicht unmarkiert in Aggregate (#626-2).
+- (3) Modul-Budgets/Einheiten sind fuer status != FAKT (oder
+  nicht reinen FAKT-Quellen) Schaetzungen: budget_ist_schaetzung
+  je Modul, modul_budgets_sind_schaetzungen gesamt (#626-3).
+- Schema-Version 1.0 -> 1.1 (Ausgabefelder erweitert).
+
 Regeln (fail-closed):
-- Status nur FAKT / ANNAHME / NICHT_GEPRUEFT. FAKT erfordert
-  Messwert UND Quelle; ANNAHME erfordert benannte Annahme.
+- Status nur FAKT / ANNAHME / NICHT_GEPRUEFT, je Evidenz-Achse.
+  FAKT erfordert Messwert UND Quelle auf der jeweiligen Achse;
+  ANNAHME erfordert benannte Annahme auf der jeweiligen Achse.
 - Erfuellungsgrad wird NUR aus FAKT-Eintraegen berechnet; ohne
   Messwert bleibt er None (NICHT_GEPRUEFT wird nie durch 0 ersetzt).
 - Der Sozialpuffer (Haushaltsausgleich, Qualifizierung, faire
@@ -81,7 +96,7 @@ def _require_finite_number(value: object, field_name: str) -> None:
     if not finite:
         raise ValueError(f"{field_name} must be a finite number (Fail-Closed).")
 
-SCHEMA_VERSION = "v91-resource-redirection-1.0"
+SCHEMA_VERSION = "v91-resource-redirection-1.1"
 QUELLE_REFERENZ_2024 = (
     "FOES/Bertelsmann-Stiftung, Klima-Subventionsbericht 2026: "
     "38,4 Mrd EUR eindeutig klimaschaedliche Subventionen 2024 "
@@ -91,7 +106,15 @@ QUELLE_REFERENZ_2024 = (
 
 @dataclass(frozen=True)
 class WirkungsMassnahme:
-    """Eine Massnahme mit Mitteln, Zielwert und Evidenz-Status."""
+    """Massnahme mit GETRENNTER Evidenz fuer Wirkung und Mittel (#626).
+
+    Zwei Evidenz-Achsen (CLAIM != EVIDENCE je Achse):
+    - wirkungs_status/wirkungsquelle: Nachweis der WIRKUNGS-Messung
+      (FAKT erfordert ist_wert UND wirkungsquelle).
+    - mittel_status/mittelquelle: Nachweis der MITTEL-Bereitstellung
+      (FAKT erfordert mittelquelle). Eine Wirkungs-Messung belegt
+      KEINE Mittelfluesse: MITTELBELEG != WIRKUNGSBELEG.
+    """
 
     massnahme_id: str
     bereich: str
@@ -100,8 +123,10 @@ class WirkungsMassnahme:
     erwartete_wirkung_einheit: str
     zielwert: float
     ist_wert: float | None
-    status: EvidenzStatus
-    quelle: str = ""
+    wirkungs_status: EvidenzStatus
+    wirkungsquelle: str = ""
+    mittel_status: EvidenzStatus = "NICHT_GEPRUEFT"
+    mittelquelle: str = ""
     soziale_absicherung: str = ""
     tags: tuple[str, ...] = field(default_factory=tuple)
 
@@ -110,18 +135,37 @@ class WirkungsMassnahme:
             _require_finite_number(value, name)
         if self.ist_wert is not None:
             _require_finite_number(self.ist_wert, "ist_wert")
-        if self.status not in ERLAUBTE_EVIDENZ:
-            raise ValueError(f"Ungueltiger EvidenzStatus (Fail-Closed): {self.status!r}")
+        for status_name, status in (
+            ("wirkungs_status", self.wirkungs_status),
+            ("mittel_status", self.mittel_status),
+        ):
+            if status not in ERLAUBTE_EVIDENZ:
+                raise ValueError(
+                    f"Ungueltiger EvidenzStatus ({status_name}, Fail-Closed): {status!r}"
+                )
         if self.mittel_eur < 0 or self.zielwert <= 0:
             raise ValueError("Mittel muessen >= 0 und Zielwert > 0 sein (Fail-Closed).")
-        if self.status == "FAKT":
-            if self.ist_wert is None or not self.quelle.strip():
-                raise ValueError(
-                    "Status 'FAKT' erfordert gemessenen ist_wert und Quelle (Fail-Closed)."
-                )
-        if self.status == "ANNAHME" and not self.quelle.strip():
+        if self.wirkungs_status == "FAKT" and (
+            self.ist_wert is None or not self.wirkungsquelle.strip()
+        ):
             raise ValueError(
-                "Status 'ANNAHME' erfordert eine benannte Annahme in quelle (Fail-Closed)."
+                "wirkungs_status 'FAKT' erfordert gemessenen ist_wert und "
+                "wirkungsquelle (Fail-Closed)."
+            )
+        if self.wirkungs_status == "ANNAHME" and not self.wirkungsquelle.strip():
+            raise ValueError(
+                "wirkungs_status 'ANNAHME' erfordert eine benannte Annahme "
+                "in wirkungsquelle (Fail-Closed)."
+            )
+        if self.mittel_status == "FAKT" and not self.mittelquelle.strip():
+            raise ValueError(
+                "mittel_status 'FAKT' erfordert einen Mittel-Nachweis in "
+                "mittelquelle (Fail-Closed)."
+            )
+        if self.mittel_status == "ANNAHME" and not self.mittelquelle.strip():
+            raise ValueError(
+                "mittel_status 'ANNAHME' erfordert eine benannte Annahme "
+                "in mittelquelle (Fail-Closed)."
             )
 
 
@@ -209,16 +253,27 @@ class ZielModul:
 
 
 def berechne_wirkungsbilanz(massnahmen: list[WirkungsMassnahme]) -> str:
-    """Nach EvidenzStatus getrennte Wirkungs- und Mittelbilanz als JSON."""
+    """Nach EvidenzStatus getrennte Wirkungs- und Mittelbilanz als JSON.
+
+    belegte_mittel_eur zaehlt NUR mittel_status == FAKT (#626-1):
+    Eine Wirkungs-Messung (wirkungs_status == FAKT) belegt KEINE
+    Mittelfluesse. Mittel- und Wirkungs-Evidenz getrennt ausweisen.
+    """
     gesamt_mittel = sum(m.mittel_eur for m in massnahmen)
-    belegte_mittel = sum(m.mittel_eur for m in massnahmen if m.status == "FAKT")
-    ungepruefte_mittel = sum(m.mittel_eur for m in massnahmen if m.status != "FAKT")
+    belegte_mittel = sum(m.mittel_eur for m in massnahmen if m.mittel_status == "FAKT")
+    ungepruefte_mittel = sum(m.mittel_eur for m in massnahmen if m.mittel_status != "FAKT")
+    mittel_nach_status = {
+        status: round(
+            sum(m.mittel_eur for m in massnahmen if m.mittel_status == status), 2
+        )
+        for status in ERLAUBTE_EVIDENZ
+    }
 
     eintraege = []
     for m in massnahmen:
         erfuellungsgrad = (
             round(m.ist_wert / m.zielwert, 4)
-            if (m.status == "FAKT" and m.ist_wert is not None)
+            if (m.wirkungs_status == "FAKT" and m.ist_wert is not None)
             else None
         )
         eintraege.append(
@@ -231,8 +286,10 @@ def berechne_wirkungsbilanz(massnahmen: list[WirkungsMassnahme]) -> str:
                 "ist_wert": m.ist_wert,
                 "einheit": m.erwartete_wirkung_einheit,
                 "erfuellungsgrad": erfuellungsgrad,
-                "status": m.status,
-                "quelle": m.quelle,
+                "wirkungs_status": m.wirkungs_status,
+                "wirkungsquelle": m.wirkungsquelle,
+                "mittel_status": m.mittel_status,
+                "mittelquelle": m.mittelquelle,
                 "soziale_absicherung": m.soziale_absicherung,
                 "tags": list(m.tags),
             }
@@ -243,6 +300,7 @@ def berechne_wirkungsbilanz(massnahmen: list[WirkungsMassnahme]) -> str:
         "gesamt_mittel_eur": round(gesamt_mittel, 2),
         "belegte_mittel_eur": round(belegte_mittel, 2),
         "ungepruefte_oder_annahme_mittel_eur": round(ungepruefte_mittel, 2),
+        "mittel_nach_status_eur": mittel_nach_status,
         "eintraege": eintraege,
     }
     return json.dumps(payload, ensure_ascii=False, indent=2, sort_keys=True)
@@ -264,11 +322,33 @@ def berechne_umleitung(
     sozial_gesamt = sum(q.sozial_puffer_eur for q in quellen)
     netto_gesamt = sum(q.netto_projekt_budget_eur for q in quellen)
 
+    # #626-2: Aggregat nach EvidenzStatus aufschluesseln; NICHT_GEPRUEFT-
+    # Quellen fliessen nie unmarkiert in Gesamtzahlen ein.
+    quellen_nach_status: dict[str, dict[str, object]] = {}
+    for status in ERLAUBTE_EVIDENZ:
+        teil = [q for q in quellen if q.status == status]
+        quellen_nach_status[status] = {
+            "anzahl_quellen": len(teil),
+            "brutto_umleitung_eur": round(
+                sum(q.brutto_umleitung_eur for q in teil), 2
+            ),
+            "sozial_absicherung_eur": round(
+                sum(q.sozial_puffer_eur for q in teil), 2
+            ),
+            "netto_projekt_budget_eur": round(
+                sum(q.netto_projekt_budget_eur for q in teil), 2
+            ),
+        }
+    aggregat_ist_rein_fakt = all(q.status == "FAKT" for q in quellen)
+
     modul_ergebnisse: list[dict[str, object]] = []
     for m in module:
         anteil_normiert = m.gewichtung_anteil / summe_gewichte
         budget_eur = netto_gesamt * anteil_normiert
         einheiten = budget_eur / m.kosten_pro_einheit_eur
+        # #626-3: Budget/Einheiten sind Schaetzungen, solange Modulkosten
+        # NICHT als FAKT belegt sind ODER die Quellen nicht rein FAKT sind.
+        budget_ist_schaetzung = (m.status != "FAKT") or (not aggregat_ist_rein_fakt)
         modul_ergebnisse.append(
             {
                 "modul_id": m.modul_id,
@@ -278,6 +358,7 @@ def berechne_umleitung(
                 "budget_eur": round(budget_eur, 2),
                 "einheiten": round(einheiten, 2),
                 "wirkung_einheit": m.wirkung_einheit,
+                "budget_ist_schaetzung": budget_ist_schaetzung,
             }
         )
 
@@ -286,7 +367,12 @@ def berechne_umleitung(
         "brutto_umleitung_eur": round(brutto_gesamt, 2),
         "sozial_absicherung_eur": round(sozial_gesamt, 2),
         "netto_projekt_budget_eur": round(netto_gesamt, 2),
+        "quellen_nach_status": quellen_nach_status,
+        "aggregat_ist_rein_fakt": aggregat_ist_rein_fakt,
         "module": modul_ergebnisse,
+        "modul_budgets_sind_schaetzungen": any(
+            e["budget_ist_schaetzung"] for e in modul_ergebnisse  # type: ignore[index]
+        ),
         "referenz": QUELLE_REFERENZ_2024,
     }
 

@@ -6,6 +6,12 @@ bei FAKT ohne Messwert/Quelle, Sozialpuffer VOR Verteilung,
 Sektor-Validierung, ANNAHME-Referenz nach der FOES-Nachmessung
 (KEINE Uebernahme der unbestaetigten 43-Mrd-Zahl des Entwurfs),
 RECHENMODELL != HAUSHALT.
+
+NACHTRAG #626 (28.11.2026): GETRENNTE Evidenz-Achsen fuer Wirkung
+(wirkungs_status/wirkungsquelle) und Mittel (mittel_status/
+mittelquelle); belegte_mittel_eur zaehlt NUR mittel_status == FAKT;
+berechne_umleitung weist quellen_nach_status, aggregat_ist_rein_fakt
+und budget_ist_schaetzung aus.
 """
 import json
 import math
@@ -29,8 +35,10 @@ def _fakt_massnahme(**overrides):
         erwartete_wirkung_einheit="Liter Speichervolumen",
         zielwert=500.0,
         ist_wert=120.0,
-        status="FAKT",
-        quelle="Lokale Zaehlerablesung Node-1",
+        wirkungs_status="FAKT",
+        wirkungsquelle="Lokale Zaehlerablesung Node-1",
+        mittel_status="NICHT_GEPRUEFT",
+        mittelquelle="",
         soziale_absicherung="Offenes Gemeinschaftsmodul",
         tags=("wasser", "alsfeld"),
     )
@@ -50,36 +58,78 @@ class WirkungsbilanzTest(unittest.TestCase):
                 erwartete_wirkung_einheit="Reparierte Geraete / Jahr",
                 zielwert=400.0,
                 ist_wert=None,
-                status="NICHT_GEPRUEFT",
+                wirkungs_status="NICHT_GEPRUEFT",
+                mittel_status="NICHT_GEPRUEFT",
                 soziale_absicherung="Tarifnahe Qualifizierungsstellen",
                 tags=("reparatur", "arbeit"),
             ),
         ]
         bericht = json.loads(rr.berechne_wirkungsbilanz(liste))
-        self.assertEqual(bericht["schema_version"], "v91-resource-redirection-1.0")
+        self.assertEqual(bericht["schema_version"], "v91-resource-redirection-1.1")
         self.assertEqual(bericht["gesamt_mittel_eur"], 26200.0)
-        self.assertEqual(bericht["belegte_mittel_eur"], 1200.0)
-        self.assertEqual(bericht["ungepruefte_oder_annahme_mittel_eur"], 25000.0)
+        # #626-1: Wirkungs-FAKT belegt KEINE Mittel -> 0 EUR belegte Mittel
+        self.assertEqual(bericht["belegte_mittel_eur"], 0.0)
+        self.assertEqual(bericht["ungepruefte_oder_annahme_mittel_eur"], 26200.0)
+        self.assertEqual(
+            bericht["mittel_nach_status_eur"],
+            {"FAKT": 0.0, "ANNAHME": 0.0, "NICHT_GEPRUEFT": 26200.0},
+        )
+        # Wirkungs-Seite bleibt separat ausgewiesen
         self.assertEqual(bericht["eintraege"][0]["erfuellungsgrad"], 0.24)
+        self.assertEqual(bericht["eintraege"][0]["wirkungs_status"], "FAKT")
         self.assertIsNone(bericht["eintraege"][1]["erfuellungsgrad"])
 
     def test_fail_closed_bei_fakt_ohne_messwert(self):
         with self.assertRaises(ValueError):
             _fakt_massnahme(ist_wert=None)
 
-    def test_fail_closed_bei_fakt_ohne_quelle(self):
+    def test_fail_closed_wirkungsfakt_ohne_wirkungsquelle(self):
         with self.assertRaises(ValueError):
-            _fakt_massnahme(quelle="   ")
+            _fakt_massnahme(wirkungsquelle="   ")
 
     def test_annahme_erfordert_benannte_annahme(self):
         with self.assertRaises(ValueError):
             _fakt_massnahme(
-                status="ANNAHME", ist_wert=None, quelle="",
+                wirkungs_status="ANNAHME", ist_wert=None, wirkungsquelle="",
             )
 
     def test_unzulaessiger_status_fail_closed(self):
         with self.assertRaises(ValueError):
-            _fakt_massnahme(status="GESCHAETZT")
+            _fakt_massnahme(wirkungs_status="GESCHAETZT")
+        with self.assertRaises(ValueError):
+            _fakt_massnahme(mittel_status="GESCHAETZT")
+
+    def test_mittel_fakt_wird_nur_mit_mittelbeleg_zaehlig(self):
+        liste = [
+            _fakt_massnahme(
+                mittel_status="FAKT",
+                mittelquelle="Kassenbericht Modul-Fonds 2026",
+            )
+        ]
+        bericht = json.loads(rr.berechne_wirkungsbilanz(liste))
+        self.assertEqual(bericht["belegte_mittel_eur"], 1200.0)
+        self.assertEqual(bericht["mittel_nach_status_eur"]["FAKT"], 1200.0)
+        self.assertEqual(bericht["ungepruefte_oder_annahme_mittel_eur"], 0.0)
+
+    def test_mittel_annahme_wird_nicht_als_belegt_zaehlig(self):
+        liste = [
+            _fakt_massnahme(
+                mittel_status="ANNAHME",
+                mittelquelle="Richtwert: geplante Foerdersumme",
+            )
+        ]
+        bericht = json.loads(rr.berechne_wirkungsbilanz(liste))
+        self.assertEqual(bericht["belegte_mittel_eur"], 0.0)
+        self.assertEqual(bericht["ungepruefte_oder_annahme_mittel_eur"], 1200.0)
+        self.assertEqual(bericht["mittel_nach_status_eur"]["ANNAHME"], 1200.0)
+
+    def test_fail_closed_mittelfakt_ohne_mittelquelle(self):
+        with self.assertRaises(ValueError):
+            _fakt_massnahme(mittel_status="FAKT", mittelquelle="")
+
+    def test_mittel_annahme_erfordert_benannte_annahme(self):
+        with self.assertRaises(ValueError):
+            _fakt_massnahme(mittel_status="ANNAHME", mittelquelle="  ")
 
     def test_negative_mittel_und_zielwert_fail_closed(self):
         with self.assertRaises(ValueError):
@@ -115,6 +165,17 @@ class UmleitungTest(unittest.TestCase):
         # Kreislauf-Modul: 624 Mio / 45.000 EUR je Platzjahr
         self.assertEqual(module[2]["budget_eur"], 624_000_000.0)
         self.assertEqual(module[2]["einheiten"], 13866.67)
+        # #626-2/#626-3: ANNAHME-Quelle -> Aggregat nicht rein FAKT,
+        # alle Modul-Budgets als Schaetzung ausgewiesen
+        self.assertFalse(res["aggregat_ist_rein_fakt"])
+        self.assertEqual(
+            res["quellen_nach_status"]["ANNAHME"]["brutto_umleitung_eur"],
+            3_840_000_000.0,
+        )
+        self.assertEqual(res["quellen_nach_status"]["FAKT"]["anzahl_quellen"], 0)
+        self.assertTrue(res["modul_budgets_sind_schaetzungen"])
+        for modul in module:
+            self.assertTrue(modul["budget_ist_schaetzung"])
 
     def test_referenz_ist_foes_nicht_die_unbestaetigte_43_mrd(self):
         res = rr.standard_szenario_beispiel()
@@ -205,6 +266,56 @@ class UmleitungTest(unittest.TestCase):
         self.assertEqual(res["brutto_umleitung_eur"], 100.0)
         self.assertEqual(res["sozial_absicherung_eur"], 50.0)
         self.assertEqual(res["module"][0]["budget_eur"], 50.0)  # SOZIAL_SCHUTZ_VOR_PROJEKT
+
+    def test_quellen_nach_status_und_aggregatkennzeichnung(self):
+        q_fakt = rr.UmleitungsQuelle(
+            quelle_id="Q-FAKT", bezeichnung="Belegter Abbau",
+            basis_subvention_eur=200.0, abbau_anteil=0.5,
+            sozial_absicherung_anteil=0.0, status="FAKT",
+            nachweis="Haushaltsstellung belegt",
+        )
+        q_unklar = rr.UmleitungsQuelle(
+            quelle_id="Q-UNKLAR", bezeichnung="Ungepruefter Posten",
+            basis_subvention_eur=100.0, abbau_anteil=1.0,
+            sozial_absicherung_anteil=0.0, status="NICHT_GEPRUEFT",
+        )
+        m = rr.ZielModul(
+            modul_id="M0", sektor="WASSER", titel="t",
+            kosten_pro_einheit_eur=10.0, wirkung_einheit="m3",
+            gewichtung_anteil=1.0, status="FAKT", nachweis="Kostenrahmen belegt",
+        )
+        res = rr.berechne_umleitung([q_fakt, q_unklar], [m])
+        self.assertEqual(res["brutto_umleitung_eur"], 200.0)
+        # #626-2: NICHT_GEPRUEFT fliesst nicht unmarkiert ins Aggregat
+        self.assertFalse(res["aggregat_ist_rein_fakt"])
+        self.assertEqual(
+            res["quellen_nach_status"]["FAKT"]["brutto_umleitung_eur"], 100.0
+        )
+        self.assertEqual(
+            res["quellen_nach_status"]["NICHT_GEPRUEFT"]["brutto_umleitung_eur"], 100.0
+        )
+        self.assertEqual(res["quellen_nach_status"]["ANNAHME"]["anzahl_quellen"], 0)
+        # #626-3: Selbst FAKT-Modul-Budgets bleiben Schaetzungen,
+        # solange Quellen nicht rein FAKT sind
+        self.assertTrue(res["module"][0]["budget_ist_schaetzung"])
+        self.assertTrue(res["modul_budgets_sind_schaetzungen"])
+
+    def test_rein_fakt_szenario_ohne_schaetzungsflag(self):
+        q_fakt = rr.UmleitungsQuelle(
+            quelle_id="Q-FAKT", bezeichnung="Belegter Abbau",
+            basis_subvention_eur=100.0, abbau_anteil=1.0,
+            sozial_absicherung_anteil=0.0, status="FAKT",
+            nachweis="Haushaltsstellung belegt",
+        )
+        m = rr.ZielModul(
+            modul_id="M0", sektor="WASSER", titel="t",
+            kosten_pro_einheit_eur=10.0, wirkung_einheit="m3",
+            gewichtung_anteil=1.0, status="FAKT", nachweis="Kostenrahmen belegt",
+        )
+        res = rr.berechne_umleitung([q_fakt], [m])
+        self.assertTrue(res["aggregat_ist_rein_fakt"])
+        self.assertFalse(res["module"][0]["budget_ist_schaetzung"])
+        self.assertFalse(res["modul_budgets_sind_schaetzungen"])
 
 
     def test_non_finite_redirection_amounts_and_unit_costs_fail_closed(self):
