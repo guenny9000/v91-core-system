@@ -8,6 +8,7 @@ Sektor-Validierung, ANNAHME-Referenz nach der FOES-Nachmessung
 RECHENMODELL != HAUSHALT.
 """
 import json
+import math
 import subprocess
 import sys
 import tempfile
@@ -85,6 +86,15 @@ class WirkungsbilanzTest(unittest.TestCase):
             _fakt_massnahme(mittel_eur=-1.0)
         with self.assertRaises(ValueError):
             _fakt_massnahme(zielwert=0.0)
+
+
+    def test_non_finite_measurement_numbers_fail_closed(self):
+        for field, value in (("mittel_eur", math.nan), ("zielwert", math.inf), ("ist_wert", -math.inf)):
+            with self.subTest(field=field):
+                with self.assertRaises(ValueError):
+                    _fakt_massnahme(**{field: value})
+        with self.assertRaises(ValueError):
+            _fakt_massnahme(mittel_eur=True)
 
 
 class UmleitungTest(unittest.TestCase):
@@ -195,6 +205,31 @@ class UmleitungTest(unittest.TestCase):
         self.assertEqual(res["brutto_umleitung_eur"], 100.0)
         self.assertEqual(res["sozial_absicherung_eur"], 50.0)
         self.assertEqual(res["module"][0]["budget_eur"], 50.0)  # SOZIAL_SCHUTZ_VOR_PROJEKT
+
+
+    def test_non_finite_redirection_amounts_and_unit_costs_fail_closed(self):
+        for value in (math.nan, math.inf, -math.inf):
+            with self.subTest(source_amount=value):
+                with self.assertRaises(ValueError):
+                    rr.UmleitungsQuelle(
+                        quelle_id="Q-NONFINITE", bezeichnung="x",
+                        basis_subvention_eur=value, abbau_anteil=0.1,
+                        sozial_absicherung_anteil=0.2, status="ANNAHME",
+                        nachweis="test assumption",
+                    )
+            with self.subTest(unit_cost=value):
+                with self.assertRaises(ValueError):
+                    rr.ZielModul(
+                        modul_id="M-NONFINITE", sektor="WASSER", titel="x",
+                        kosten_pro_einheit_eur=value, wirkung_einheit="m3",
+                        gewichtung_anteil=1.0, status="NICHT_GEPRUEFT",
+                    )
+        with self.assertRaises(ValueError):
+            rr.UmleitungsQuelle(
+                quelle_id="Q-BOOL", bezeichnung="x", basis_subvention_eur=True,
+                abbau_anteil=0.1, sozial_absicherung_anteil=0.2,
+                status="ANNAHME", nachweis="test assumption",
+            )
 
 
 class CliTest(unittest.TestCase):
