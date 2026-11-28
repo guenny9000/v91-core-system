@@ -10,6 +10,7 @@ from __future__ import annotations
 import os
 import sys
 import tempfile
+from datetime import datetime
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "controller"))
 
@@ -23,6 +24,12 @@ from index_lint import (  # noqa: E402
 CLEAN_LINE = (
     "- 22.11.2026 #359 (VIBE-LXVIII) Kurzlauf-Validierer Wirkungsregister; "
     "Mehrere Fachbegriffe im Text; SCRIPTED != INSTALLED. [VIBE-LXVIII]"
+)
+
+# Eckiges Einzel-Tag-Format (Format-Drift ab #593, z. B. reale Zeile #629):
+SQUARE_LINE = (
+    "- 28.11.2026 #629 [VIBE-CLVI] NACHWEIS-CHECK-EHRLICH "
+    "(Inhalt; UNKNOWN != PASS.)"
 )
 
 
@@ -69,12 +76,48 @@ def test_duplicate_primary_pr_is_error():
     text = (
         CLEAN_LINE
         + "\n"
-        + CLEAN_LINE.replace("#359", "#359").replace("(VIBE-LXVIII)", "(VIBE-LXIX)").replace(
-            "[VIBE-LXVIII]", "[VIBE-LXIX]"
+        + CLEAN_LINE.replace("#359", "#359").replace("(VIBE-LXVIII)", "(VIBE-LXVIX)").replace(
+            "[VIBE-LXVIII]", "[VIBE-LXVIX]"
         )
     )
     result = lint_text(text)
     assert any(e["rule"] == "DUPLICATE_PRIMARY_PR" for e in result.errors)
+
+
+def test_square_entry_parses():
+    entry = parse_entry(SQUARE_LINE, 1)
+    assert entry is not None
+    assert entry.date == "28.11.2026"
+    assert entry.prs == "#629"
+    assert entry.start_tag == "CLVI"
+    # Einzel-Tag: Start == End per Definition (kein MISMATCH moeglich).
+    assert entry.end_tag == "CLVI"
+
+
+def test_square_line_is_linted_not_ignored():
+    result = lint_text(SQUARE_LINE)
+    assert result.ok
+    assert len(result.entries) == 1
+    assert not result.warnings
+
+
+def test_square_future_date_is_error():
+    text = SQUARE_LINE.replace("28.11.2026", "29.11.2026")
+    result = lint_text(text, today=datetime(2026, 11, 28))
+    assert not result.ok
+    assert any(e["rule"] == "DATUM_IN_ZUKUNFT" for e in result.errors)
+
+
+def test_duplicate_across_formats_is_error():
+    square_dup = SQUARE_LINE.replace("#629", "#359")
+    result = lint_text(CLEAN_LINE + "\n" + square_dup)
+    assert any(e["rule"] == "DUPLICATE_PRIMARY_PR" for e in result.errors)
+
+
+def test_square_mixed_with_klammer_counts_both():
+    result = lint_text(CLEAN_LINE + "\n" + SQUARE_LINE)
+    assert result.ok
+    assert len(result.entries) == 2
 
 
 def test_start_tag_without_end_tag_is_warning_not_error():
