@@ -33,6 +33,17 @@ SESSION_RE = re.compile(
     r"\[VIBE-(?P<end_tag>[A-Z0-9]+)\]$"
 )
 
+# Neuere Session-Zeile (Format-Drift ab #593): eckiger Einzel-Tag,
+# kein Klammer-Start-Tag, kein End-Tag:
+# - 28.11.2026 #629 [VIBE-CLVI] NACHWEIS-CHECK-EHRLICH (...)
+# Start-Tag == End-Tag (per Definition konsistent, kein
+# TAG_START_END_MISMATCH moeglich); geprueft werden BAD_DATE,
+# YEAR_OUT_OF_RANGE, DATUM_IN_ZUKUNFT und DUPLICATE_PRIMARY_PR.
+SESSION_SQUARE_RE = re.compile(
+    r"^- (?P<date>\d{2}\.\d{2}\.\d{4}) (?P<prs>#\d+(?:/#\d+)*) "
+    r"\[VIBE-(?P<start_tag>[A-Z0-9]+)\] (?P<body>.+)$"
+)
+
 # Zeile mit Start-Tag, aber ohne End-Tag (historisches Format, nur WARN).
 START_ONLY_RE = re.compile(
     r"^- (?P<date>\d{2}\.\d{2}\.\d{4}) #\d+(?:/#\d+)* \(VIBE-[A-Z0-9]+\)"
@@ -62,7 +73,17 @@ class LintResult:
 def parse_entry(line: str, line_number: int) -> Entry | None:
     match = SESSION_RE.match(line.rstrip("\n"))
     if match is None:
-        return None
+        match = SESSION_SQUARE_RE.match(line.rstrip("\n"))
+        if match is None:
+            return None
+        # Eckiges Einzel-Tag-Format (Drift ab #593): Start == End.
+        return Entry(
+            line_number=line_number,
+            date=match.group("date"),
+            prs=match.group("prs"),
+            start_tag=match.group("start_tag"),
+            end_tag=match.group("start_tag"),
+        )
     return Entry(
         line_number=line_number,
         date=match.group("date"),
@@ -85,6 +106,10 @@ def lint_text(text: str, today: datetime | None = None) -> LintResult:
       YEAR_OUT_OF_RANGE       - Jahr ausserhalb 2025-2026
       DATUM_IN_ZUKUNFT        - Session-Datum liegt nach dem Pruefzeitpunkt
       DUPLICATE_PRIMARY_PR   - Primaer-PR in zwei Session-Zeilen
+    Geprueft werden BEIDE Session-Zeilen-Formate: die Klammer-Form
+    (VIBE-...) ... [VIBE-...] und die eckige Einzel-Tag-Form
+    [VIBE-...] (Format-Drift ab #593, vormals fuer den Lint
+    unsichtbar - LINT-LUECKE != GEPRUEFT).
     WARN-Regeln (blockieren nicht):
       START_TAG_WITHOUT_END_TAG - Zeile mit (VIBE-...) aber ohne [VIBE-...]
 
