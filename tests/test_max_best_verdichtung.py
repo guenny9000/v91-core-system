@@ -11,10 +11,16 @@ Reihenfolge), (c) KEINE Umsetzungsbehauptung enthaelt
 (DOKUMENTIERT != INSTALLIERT), (d) die zitierten Verweis-Ziele
 real existieren, (e) ASCII-pure bleibt, (f) die Zusatz-Abschnitte
 klar als ZUSATZ gekennzeichnet sind, NICHT als Teil der Vorlage.
+
+Dauerlehre #547: Phrasen-Asserts muessen Zeilenumbruch-normalisiert
+pruefen (re.sub \\s+), sonst schlaegt ein Zeilenumbruch INNERHALB
+der Phrase fehl (Rot-Ursache des ersten Laufs dieses PR: 2 statt 3
+ZUSATZ-Vorkommen, weil der Header-Umbruch die Phrase zerriss).
 """
 from __future__ import annotations
 
 import pathlib
+import re
 import sys
 import unittest
 
@@ -22,6 +28,12 @@ sys.path.insert(0, str(pathlib.Path(__file__).resolve().parents[1]))
 
 REPO = pathlib.Path(__file__).resolve().parents[1]
 DOC = REPO / "docs" / "V91-MAX-BEST-VERDICHTUNG.md"
+
+
+def _normalisiert(text: str) -> str:
+    """Zeilenumbrueche/Mehrfach-Leerzeichen -> Einzel-Leerzeichen."""
+    return re.sub(r"\s+", " ", text)
+
 
 REQUIRED_INVARIANTS = (
     "Alles, was nachweisbar",
@@ -104,22 +116,22 @@ class MaxBestVerdichtungDokuTest(unittest.TestCase):
         self.assertLess(DOC.stat().st_size, 8 * 1024)
 
     def test_invarianten_wortvermoeglich(self):
-        text = DOC.read_text(encoding="ascii")
+        text = _normalisiert(DOC.read_text(encoding="ascii"))
         for satz in REQUIRED_INVARIANTS:
             self.assertIn(satz, text, "fehlt: " + satz)
 
     def test_mehr_prioritaeten_alle_da(self):
-        text = DOC.read_text(encoding="ascii")
+        text = _normalisiert(DOC.read_text(encoding="ascii"))
         for p in MEHR_PRIORITAETEN:
             self.assertIn(p, text, "Mehr-Prioritaet fehlt: " + p)
 
     def test_weniger_prioritaeten_alle_da(self):
-        text = DOC.read_text(encoding="ascii")
+        text = _normalisiert(DOC.read_text(encoding="ascii"))
         for p in WENIGER_PRIORITAETEN:
             self.assertIn(p, text, "Weniger-Prioritaet fehlt: " + p)
 
     def test_endlosschleife_stationen_in_reihenfolge(self):
-        text = DOC.read_text(encoding="ascii")
+        text = _normalisiert(DOC.read_text(encoding="ascii"))
         pos = -1
         for station in SCHLEIFEN_STATIONEN:
             p = text.find(station, pos + 1)
@@ -127,20 +139,20 @@ class MaxBestVerdichtungDokuTest(unittest.TestCase):
             pos = p
 
     def test_keine_umsetzungsbehauptung(self):
-        text = DOC.read_text(encoding="ascii").lower()
+        text = _normalisiert(DOC.read_text(encoding="ascii")).lower()
         for claim in FORBIDDEN_CLAIMS:
             self.assertNotIn(claim.lower(), text,
                             "UMSETZUNGSBEHAUPTUNG: " + claim)
 
     def test_zusatz_ist_gekennzeichnet(self):
-        text = DOC.read_text(encoding="ascii")
+        text = _normalisiert(DOC.read_text(encoding="ascii"))
         self.assertIn("ZUSATZ, NICHT Teil der Vorlage", text)
         self.assertIn("wortgetreu", text)
         self.assertGreaterEqual(
             text.count("ZUSATZ, NICHT Teil der Vorlage"), 3)
 
     def test_transliteration_dokumentiert(self):
-        text = DOC.read_text(encoding="ascii")
+        text = _normalisiert(DOC.read_text(encoding="ascii"))
         self.assertIn("Umlaute transliteriert", text)
         self.assertIn("UNENDLICH", text)
 
