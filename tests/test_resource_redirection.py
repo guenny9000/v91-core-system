@@ -6,6 +6,14 @@ bei FAKT ohne Messwert/Quelle, Sozialpuffer VOR Verteilung,
 Sektor-Validierung, ANNAHME-Referenz nach der FOES-Nachmessung
 (KEINE Uebernahme der unbestaetigten 43-Mrd-Zahl des Entwurfs),
 RECHENMODELL != HAUSHALT.
+
+#626-Regressionen (28.11.2026): Finanz-Evidenz ist getrennt von
+Wirkungs-Evidenz. Gemessene Wirkung belegt KEINE Mittel; Mittel-FAKT
+erfordert Nachweis UND harte Stufe; NICHT_GEPRUEFTE Quellen bleiben
+im Aggregat sichtbar (Gesamt-Label, Status-Summen, IDs);
+Modul-Lieferung bleibt NICHT_GEPRUEFT (MODELLIERTE_ALLOKATION !=
+GEMESSENE_LIEFERUNG); Mittelstufen jenseits der Berechnung bleiben
+None. MITTEL_BERECHNET != MITTEL_BEREITGESTELLT.
 """
 import json
 import math
@@ -33,6 +41,9 @@ def _fakt_massnahme(**overrides):
         quelle="Lokale Zaehlerablesung Node-1",
         soziale_absicherung="Offenes Gemeinschaftsmodul",
         tags=("wasser", "alsfeld"),
+        mittel_status="FAKT",
+        mittel_nachweis="Gemeinde-Haushaltsplan 2026, Position 05 (Mittel-Freigabe)",
+        mittel_stufe="TRANSFERIERT",
     )
     basis.update(overrides)
     return rr.WirkungsMassnahme(**basis)
@@ -56,12 +67,19 @@ class WirkungsbilanzTest(unittest.TestCase):
             ),
         ]
         bericht = json.loads(rr.berechne_wirkungsbilanz(liste))
-        self.assertEqual(bericht["schema_version"], "v91-resource-redirection-1.0")
+        self.assertEqual(bericht["schema_version"], "v91-resource-redirection-1.1")
         self.assertEqual(bericht["gesamt_mittel_eur"], 26200.0)
         self.assertEqual(bericht["belegte_mittel_eur"], 1200.0)
-        self.assertEqual(bericht["ungepruefte_oder_annahme_mittel_eur"], 25000.0)
+        self.assertEqual(bericht["annahme_mittel_eur"], 0.0)
+        self.assertEqual(bericht["ungepruefte_mittel_eur"], 25000.0)
         self.assertEqual(bericht["eintraege"][0]["erfuellungsgrad"], 0.24)
         self.assertIsNone(bericht["eintraege"][1]["erfuellungsgrad"])
+        # Evidenz-Seiten sind je Eintrag getrennt ausgewiesen (#626)
+        self.assertEqual(bericht["eintraege"][0]["wirkungs_status"], "FAKT")
+        self.assertEqual(bericht["eintraege"][0]["wirkungs_quelle"], "Lokale Zaehlerablesung Node-1")
+        self.assertEqual(bericht["eintraege"][0]["mittel_status"], "FAKT")
+        self.assertEqual(bericht["eintraege"][0]["mittel_stufe"], "TRANSFERIERT")
+        self.assertEqual(bericht["eintraege"][1]["mittel_status"], "NICHT_GEPRUEFT")
 
     def test_fail_closed_bei_fakt_ohne_messwert(self):
         with self.assertRaises(ValueError):
@@ -87,7 +105,6 @@ class WirkungsbilanzTest(unittest.TestCase):
         with self.assertRaises(ValueError):
             _fakt_massnahme(zielwert=0.0)
 
-
     def test_non_finite_measurement_numbers_fail_closed(self):
         for field, value in (("mittel_eur", math.nan), ("zielwert", math.inf), ("ist_wert", -math.inf)):
             with self.subTest(field=field):
@@ -95,6 +112,86 @@ class WirkungsbilanzTest(unittest.TestCase):
                     _fakt_massnahme(**{field: value})
         with self.assertRaises(ValueError):
             _fakt_massnahme(mittel_eur=True)
+
+
+class MittelEvidenzTrennungTest(unittest.TestCase):
+    """#626: Finanz-Evidenz und Wirkungs-Evidenz sind NICHT austauschbar."""
+
+    def test_gemessene_wirkung_ohne_mittelbeleg_zaehlt_nicht_als_belegte_mittel(self):
+        liste = [_fakt_massnahme(mittel_status="NICHT_GEPRUEFT", mittel_nachweis="", mittel_stufe="BERECHNET")]
+        bericht = json.loads(rr.berechne_wirkungsbilanz(liste))
+        # Wirkung ist gemessen (FAKT, erfuellungsgrad bleibt 0.24) ...
+        self.assertEqual(bericht["eintraege"][0]["erfuellungsgrad"], 0.24)
+        self.assertEqual(bericht["eintraege"][0]["wirkungs_status"], "FAKT")
+        # ... aber die Mittel bleiben NICHT_GEPRUEFT, nicht belegt, nicht 0:
+        self.assertEqual(bericht["eintraege"][0]["mittel_status"], "NICHT_GEPRUEFT")
+        self.assertEqual(bericht["belegte_mittel_eur"], 0.0)
+        self.assertEqual(bericht["ungepruefte_mittel_eur"], 1200.0)
+        self.assertEqual(bericht["gesamt_mittel_eur"], 1200.0)
+
+    def test_mittel_fakt_erfordert_nachweis_und_harte_stufe(self):
+        with self.assertRaises(ValueError):
+            _fakt_massnahme(mittel_nachweis="   ")
+        # BERECHNET ist keine Finanz-Evidenz:
+        with self.assertRaises(ValueError):
+            _fakt_massnahme(mittel_stufe="BERECHNET")
+
+    def test_mittel_annahme_erfordert_benannte_annahme(self):
+        with self.assertRaises(ValueError):
+            _fakt_massnahme(mittel_status="ANNAHME", mittel_nachweis="  ")
+
+    def test_unzulaessige_mittel_stufe_fail_closed(self):
+        with self.assertRaises(ValueError):
+            _fakt_massnahme(mittel_stufe="GESCHAETZT")
+
+    def test_mittelstufen_summen_nach_stufe_getrennt(self):
+        liste = [
+            _fakt_massnahme(),
+            _fakt_massnahme(
+                massnahme_id="V91-WIRK-0003",
+                mittel_eur=800.0,
+                mittel_stufe="AUSGEGEBEN",
+            ),
+            _fakt_massnahme(
+                massnahme_id="V91-WIRK-0004",
+                mittel_eur=300.0,
+                mittel_status="NICHT_GEPRUEFT",
+                mittel_nachweis="",
+                mittel_stufe="BERECHNET",
+            ),
+        ]
+        bericht = json.loads(rr.berechne_wirkungsbilanz(liste))
+        summen = bericht["mittelstufen_summen_eur"]
+        self.assertEqual(summen["TRANSFERIERT"], 1200.0)
+        self.assertEqual(summen["AUSGEGEBEN"], 800.0)
+        self.assertEqual(summen["BERECHNET"], 300.0)
+        self.assertEqual(summen["VERFUEGT"], 0.0)
+        self.assertEqual(bericht["belegte_mittel_eur"], 2000.0)
+        self.assertEqual(bericht["ungepruefte_mittel_eur"], 300.0)
+
+
+def _quelle(quelle_id, basis, status, nachweis=""):
+    return rr.UmleitungsQuelle(
+        quelle_id=quelle_id,
+        bezeichnung="Quelle " + quelle_id,
+        basis_subvention_eur=basis,
+        abbau_anteil=0.10,
+        sozial_absicherung_anteil=0.50,
+        status=status,
+        nachweis=nachweis,
+    )
+
+
+def _modul(modul_id="M0", status="NICHT_GEPRUEFT"):
+    return rr.ZielModul(
+        modul_id=modul_id,
+        sektor="WASSER",
+        titel="Modul " + modul_id,
+        kosten_pro_einheit_eur=10.0,
+        wirkung_einheit="m3",
+        gewichtung_anteil=1.0,
+        status=status,
+    )
 
 
 class UmleitungTest(unittest.TestCase):
@@ -206,7 +303,6 @@ class UmleitungTest(unittest.TestCase):
         self.assertEqual(res["sozial_absicherung_eur"], 50.0)
         self.assertEqual(res["module"][0]["budget_eur"], 50.0)  # SOZIAL_SCHUTZ_VOR_PROJEKT
 
-
     def test_non_finite_redirection_amounts_and_unit_costs_fail_closed(self):
         for value in (math.nan, math.inf, -math.inf):
             with self.subTest(source_amount=value):
@@ -230,6 +326,98 @@ class UmleitungTest(unittest.TestCase):
                 abbau_anteil=0.1, sozial_absicherung_anteil=0.2,
                 status="ANNAHME", nachweis="test assumption",
             )
+
+
+class QuellenStatusImAggregatTest(unittest.TestCase):
+    """#626: Per-Quelle-Status bleibt im Umleitungs-Ergebnis erhalten."""
+
+    def test_nicht_gepruefte_quelle_dominiert_gesamtlabel(self):
+        quellen = [
+            _quelle("Q-FAKT", 100.0, "FAKT", "Bundeshaushaltsbericht"),
+            _quelle("Q-UNBEKANNT", 900.0, "NICHT_GEPRUEFT"),
+        ]
+        res = rr.berechne_umleitung(quellen, [_modul()])
+        self.assertEqual(res["gesamt_status"], "NICHT_GEPRUEFT")
+        self.assertEqual(res["ungepruefte_quellen"], ["Q-UNBEKANNT"])
+        self.assertEqual(res["annahme_quellen"], [])
+        # Numerische Summen bleiben Szenario-Zahlen, aber je Status getrennt:
+        self.assertEqual(res["status_summen"]["FAKT"]["brutto_umleitung_eur"], 10.0)
+        self.assertEqual(
+            res["status_summen"]["NICHT_GEPRUEFT"]["brutto_umleitung_eur"], 90.0
+        )
+        self.assertEqual(res["brutto_umleitung_eur"], 100.0)
+        # Per-Quelle-Abbildung bleibt vollstaendig:
+        self.assertEqual(res["quellen"][0]["status"], "FAKT")
+        self.assertEqual(res["quellen"][0]["brutto_umleitung_eur"], 10.0)
+        self.assertEqual(res["quellen"][1]["status"], "NICHT_GEPRUEFT")
+        self.assertEqual(res["quellen"][1]["brutto_umleitung_eur"], 90.0)
+
+    def test_annahme_quellen_werden_im_aggregat_gelistet(self):
+        quellen = [
+            _quelle("Q-FAKT", 100.0, "FAKT", "Bundeshaushaltsbericht"),
+            _quelle("Q-ANNAHME", 300.0, "ANNAHME", "Modellannahme 30 % Anteil"),
+        ]
+        res = rr.berechne_umleitung(quellen, [_modul()])
+        self.assertEqual(res["gesamt_status"], "ANNAHME")
+        self.assertEqual(res["annahme_quellen"], ["Q-ANNAHME"])
+        self.assertEqual(res["ungepruefte_quellen"], [])
+        # Die benannte Annahme bleibt sichtbar (kein stummer Fakt):
+        annahme = [q for q in res["quellen"] if q["quelle_id"] == "Q-ANNAHME"][0]
+        self.assertIn("Modellannahme", annahme["nachweis"])
+        self.assertEqual(
+            res["status_summen"]["ANNAHME"]["brutto_umleitung_eur"], 30.0
+        )
+
+    def test_nur_fakt_quellen_erhalten_fakt_gesamtlabel(self):
+        res = rr.berechne_umleitung(
+            [_quelle("Q-FAKT", 100.0, "FAKT", "Bundeshaushaltsbericht")], [_modul()]
+        )
+        self.assertEqual(res["gesamt_status"], "FAKT")
+        self.assertEqual(res["annahme_quellen"], [])
+        self.assertEqual(res["ungepruefte_quellen"], [])
+
+    def test_leere_quellliste_bleibt_nicht_geprueft(self):
+        res = rr.berechne_umleitung([], [_modul()])
+        self.assertEqual(res["gesamt_status"], "NICHT_GEPRUEFT")
+        self.assertEqual(res["brutto_umleitung_eur"], 0.0)
+
+    def test_standardbeispiel_ist_aggregat_annahme(self):
+        res = rr.standard_szenario_beispiel()
+        self.assertEqual(res["gesamt_status"], "ANNAHME")
+        self.assertEqual(res["annahme_quellen"], ["FOSSIL-DE-2024"])
+        self.assertEqual(res["szenario_typ"], "MODELLRECHNUNG")
+
+
+class MittelstufenUndLieferungTest(unittest.TestCase):
+    """#626: Berechnete Allokation != verfuegt/transferiert/ausgegeben/verifiziert."""
+
+    def test_mittelstufen_jenseits_der_rechnung_bleiben_none(self):
+        res = rr.berechne_umleitung(
+            [_quelle("Q1", 100.0, "ANNAHME", "n")], [_modul()]
+        )
+        stufen = res["mittelstufen"]
+        self.assertEqual(stufen["berechnet_eur"], 5.0)
+        # RECHNEN != VOLLZUG: keine Stufe wird als 0-Ersatz behauptet:
+        self.assertIsNone(stufen["verfuegt_eur"])
+        self.assertIsNone(stufen["transferiert_eur"])
+        self.assertIsNone(stufen["ausgegeben_eur"])
+        self.assertIsNone(stufen["unabhaengig_verifiziert_eur"])
+        self.assertIn("MITTEL_BERECHNET != MITTEL_BEREITGESTELLT", res["mittelstufen_hinweis"])
+        self.assertIn("RECHNEN != VOLLZUG", res["mittelstufen_hinweis"])
+
+    def test_unbekannte_modullieferung_bleibt_nicht_geprueft(self):
+        res = rr.berechne_umleitung(
+            [_quelle("Q1", 100.0, "FAKT", "Bundeshaushaltsbericht")],
+            [_modul("M-UNBEKANNT", status="NICHT_GEPRUEFT")],
+        )
+        modul = res["module"][0]
+        # Modellierte Schaetzung bleibt numerisch (Szenario) ...
+        self.assertEqual(modul["budget_eur"], 5.0)
+        self.assertEqual(modul["einheiten"], 0.5)
+        self.assertEqual(modul["einheiten_status"], "NICHT_GEPRUEFT")
+        # ... aber die LIEFERUNG ist nie gemessen (MODELL != MESSUNG):
+        self.assertIsNone(modul["gelieferte_einheiten"])
+        self.assertEqual(modul["lieferung_status"], "NICHT_GEPRUEFT")
 
 
 class CliTest(unittest.TestCase):
